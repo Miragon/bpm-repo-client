@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Menu/MenuBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Menu/MenuBar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +71,7 @@
       <workItem from="1620721857672" duration="331000" />
       <workItem from="1620722254807" duration="255000" />
       <workItem from="1620722513225" duration="9081000" />
-      <workItem from="1620767329058" duration="2891000" />
+      <workItem from="1620767329058" duration="3497000" />
     </task>
     <task id="LOCAL-00001" summary="Update Modeler URLs">
       <created>1620297569688</created>

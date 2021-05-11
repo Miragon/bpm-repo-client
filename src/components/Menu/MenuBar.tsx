@@ -9,7 +9,8 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        zIndex: theme.zIndex.appBar,
+        boxShadow: theme.shadows[4],
+        zIndex: theme.zIndex.modal,
         backgroundColor: COLORS.primary,
         padding: "0.5rem calc(0.5rem + 44px) 0.5rem 0.5rem",
         flexDirection: "row",

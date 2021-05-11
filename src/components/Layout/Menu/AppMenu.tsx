@@ -33,9 +33,11 @@ const useStyles = makeStyles((theme) => ({
         display: "none"
     },
     drawerPaper: {
+        marginTop: "56px",
         boxShadow: theme.shadows[24],
         width: "65px",
         padding: "0px",
+        height: "calc(100% - 56px)",
         background: theme.palette.primary.main,
         overflow: "hidden",
         transition: "width .3s",
@@ -60,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 300
     },
     drawerContent: {
-        marginTop: "44px",
         display: "flex",
         flexDirection: "column",
         flexGrow: 1
