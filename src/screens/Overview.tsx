@@ -1,34 +1,26 @@
-import React, {useEffect} from 'react';
-import DiagramContainer from "./Elements/DiagramContainer";
+import { observer } from "mobx-react";
+import React, { useEffect } from 'react';
 import '../App.css';
-import {useStore} from "../providers/RootStoreProvider";
-import {observer} from "mobx-react";
+import { useStore } from "../providers/RootStoreProvider";
+import CreateContainer from "./Elements/CreateContainer";
 import RecentDiagrams from "./Elements/RecentDiagrams";
-import StarredDiagrams from "./Elements/StarredDiagrams";
 import RepoContainer from "./Elements/RepoContainer";
+import StarredDiagrams from "./Elements/StarredDiagrams";
 
-
-const Overview: React.FC =  observer(() => {
-    //{store.repoStore.fetchAllRepos()}
+const Overview: React.FC = observer(() => {
     const store = useStore();
 
-//    const [repository, setRepository] = useState<BpmnRepositoryTO>();
-
-
     useEffect(() => {
-        (async () => await store.repoStore.initialize())();
-
+        store.repoStore.initialize();
     }, [store.repoStore])
 
-
-
     return (
-        <div>
-            <RepoContainer/>
-            <RecentDiagrams/>
-            <StarredDiagrams/>
-            <DiagramContainer category="Frequently used - no Endpoint included so far"/>
-        </div>
+        <>
+            <CreateContainer />
+            <RepoContainer />
+            <RecentDiagrams />
+            <StarredDiagrams />
+        </>
     );
 });
 

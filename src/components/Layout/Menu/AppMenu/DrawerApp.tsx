@@ -1,5 +1,5 @@
-import {Button} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React from "react";
 
@@ -8,16 +8,18 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        height: "80px",
+        height: "64px",
         color: "white",
         justifyContent: "flex-start",
         margin: "0px 0",
-
+        "&:hover": {
+            backgroundColor: "rgba(255, 255, 255, 0.1)"
+        }
     },
     drawerAppContainerActive: {
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
+        backgroundColor: "rgba(255, 255, 255, 0.1) !important",
         "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.1) !important"
+            backgroundColor: "rgba(255, 255, 255, 0.1) !important"
         }
     },
     drawerAppIcon: {
@@ -38,15 +40,14 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "left",
         marginLeft: "10px",
         top: "2px",
+        fontWeight: 600
     },
     drawerAppTitleActive: {
-        color: theme.palette.secondary.main,
-        fontWeight: 600
+        color: theme.palette.secondary.main
     },
     drawerAppDescription: {
         fontSize: "0.85rem",
         color: "white",
-        fontWeight: 300,
         textTransform: "none",
         wordWrap: "break-word",
         marginLeft: "10px",
@@ -93,10 +94,10 @@ const DrawerApp: React.FC<Props> = props => {
                 )
             })}
             <div className={classes.drawerText}>
-            <div className={clsx(classes.drawerAppTitle,
-            props.active && classes.drawerAppTitleActive)}>{props.title}</div>
+                <div className={clsx(classes.drawerAppTitle,
+                    props.active && classes.drawerAppTitleActive)}>{props.title}</div>
                 <div className={clsx(classes.drawerAppDescription,
-            props.active && classes.drawerAppDescriptionActive)}>{props.description}</div>
+                    props.active && classes.drawerAppDescriptionActive)}>{props.description}</div>
             </div>
         </Button>
     );
@@ -104,21 +105,21 @@ const DrawerApp: React.FC<Props> = props => {
 //            <div className={classes.drawerAppDescription}>{props.description}</div>
 /*
  Removed - was in front of button close tag
-            {props.description && (
-                <div className={classes.drawerText}>
-                    {title}
-                    <Typography
-                        className={clsx(
-                            classes.drawerAppDescription,
-                            props.active && classes.drawerAppDescriptionActive
-                        )}
-                        variant="body2">
-                        {props.description}
-                    </Typography>
-                </div>
-            )}
+ {props.description && (
+ <div className={classes.drawerText}>
+ {title}
+ <Typography
+ className={clsx(
+ classes.drawerAppDescription,
+ props.active && classes.drawerAppDescriptionActive
+ )}
+ variant="body2">
+ {props.description}
+ </Typography>
+ </div>
+ )}
 
-            {!props.description && title}
+ {!props.description && title}
 
 
  */

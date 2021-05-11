@@ -1,16 +1,23 @@
-import {useAuth0} from "@auth0/auth0-react";
-import {CircularProgress, makeStyles} from "@material-ui/core";
-import React, {useState} from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { CircularProgress, makeStyles } from "@material-ui/core";
+import React, { useState } from "react";
 import Menu from "./Menu";
 import Router from "./Router";
 
 const useStyles = makeStyles(() => ({
-    // Der Inhalt der Anwendung außer das Menü
+    contentWrapper: {
+        flexGrow: 1,
+        display: "flex",
+        paddingLeft: "65px"
+    },
     content: {
-        borderTop: "1px solid #AAA",
+        display: "flex",
         flexGrow: 1,
         flexDirection: "column",
-        maxHeight: "calc(100vh - 60px)"
+        maxHeight: "calc(100vh - 60px)",
+        padding: "40px 16px",
+        maxWidth: "1232px",
+        margin: "0 auto"
     },
     loadingScreen: {
         display: "flex",
@@ -42,7 +49,13 @@ const Layout = (): any => {
     //const [securityIsOn, setSecurityIsOn] = useState<boolean>(true);
     const [initializing, setInitializing] = useState<boolean>(false);
     const [initialized, setInitialized] = useState<boolean>(false);
-    const {loginWithRedirect, isAuthenticated, isLoading, error, getAccessTokenSilently} = useAuth0();
+    const {
+        loginWithRedirect,
+        isAuthenticated,
+        isLoading,
+        error,
+        getAccessTokenSilently
+    } = useAuth0();
 
 
     if (isLoading) {
@@ -79,8 +92,10 @@ const Layout = (): any => {
     return (
         <>
             <Menu />
-            <div className={classes.content}>
-                <Router />
+            <div className={classes.contentWrapper}>
+                <div className={classes.content}>
+                    <Router />
+                </div>
             </div>
         </>
     );

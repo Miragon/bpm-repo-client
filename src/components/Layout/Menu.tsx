@@ -1,15 +1,13 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {Add} from "@material-ui/icons";
+import { Popover } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Add } from "@material-ui/icons";
 import React from "react";
-import {useHistory} from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
+import { useHistory } from "react-router-dom";
+import flowSquadIcon from "../../FlowSquadLogo.svg";
 import MenuBar from "../Menu/MenuBar";
 import MenuLogo from "../Menu/MenuLogo";
 import AppMenu from "./Menu/AppMenu";
-import {Popover} from "@material-ui/core";
-import CreateDiagramForm from "../../screens/Elements/CreateDiagramForm";
-import ImportDiagramForm from "../../screens/Elements/ImportDiagramForm";
-import Dropdown from 'react-bootstrap/Dropdown';
-import flowSquadIcon from "../../FlowSquadLogo.svg";
 
 const useStyles = makeStyles((theme) => ({
     menuComponent: {
@@ -51,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             backgroundColor: theme.palette.secondary.main,
             color: theme.palette.primary.main,
-            border: "1px solid "+theme.palette.primary.main
+            border: "1px solid " + theme.palette.primary.main
 
         }
     },
@@ -138,7 +136,7 @@ const Menu: React.FC = () => {
             <div className={classes.menu}>
                 <MenuLogo onClick={() => history.push("/")} />
             </div>
-                <div>
+            <div>
                 <Dropdown>
                     <Dropdown.Toggle className={classes.addButton}>
                         {React.createElement(Add, {
@@ -148,7 +146,8 @@ const Menu: React.FC = () => {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className={classes.dropdownContent}>
-                        <Dropdown.Item className={classes.dropdownItem} onClick={handleClickAdd}>New BPMN Diagram</Dropdown.Item>
+                        <Dropdown.Item className={classes.dropdownItem} onClick={handleClickAdd}>New
+                            BPMN Diagram</Dropdown.Item>
                         <Popover
                             id={idImport}
                             open={open}
@@ -163,11 +162,11 @@ const Menu: React.FC = () => {
                                 horizontal: 'center',
                             }}
                         >
-                            <CreateDiagramForm/>
                         </Popover>
-                        <Dropdown.Item className={classes.dropdownItem} >New DMN</Dropdown.Item>
+                        <Dropdown.Item className={classes.dropdownItem}>New DMN</Dropdown.Item>
                         <Dropdown.Divider />
-                        <Dropdown.Item className={classes.dropdownItem} onClick={handleClickUpload}>Import File</Dropdown.Item>
+                        <Dropdown.Item className={classes.dropdownItem} onClick={handleClickUpload}>Import
+                            File</Dropdown.Item>
                         <Popover
                             id={id}
                             open={openImport}
@@ -182,12 +181,11 @@ const Menu: React.FC = () => {
                                 horizontal: 'center',
                             }}
                         >
-                            <ImportDiagramForm/>
                         </Popover>
                     </Dropdown.Menu>
                 </Dropdown>
-                </div>
-            <img className={classes.flowSquadIcon} src={flowSquadIcon}/>
+            </div>
+            <img className={classes.flowSquadIcon} src={flowSquadIcon} />
         </MenuBar>
 
     );
@@ -197,7 +195,7 @@ export default Menu;
 
 
 /*
-                    <CreateDiagramForm
-                        active={true}
-                    ></CreateDiagramForm>
+ <CreateDiagramForm
+ active={true}
+ ></CreateDiagramForm>
  */
