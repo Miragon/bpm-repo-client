@@ -4,8 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
     AccountCircle,
     BarChart,
-    Book,
     Brush,
+    FormatShapes,
     Help,
     Home,
     PowerSettingsNew,
@@ -108,14 +108,14 @@ const AppMenu: React.FC = () => {
                         icon={Home} />
 
                     <DrawerApp
-                        title="Repositories"
-                        onClick={() => window.open("/repositories", "_self")}
-                        icon={Book} />
-
-                    <DrawerApp
                         title="Modeler"
                         onClick={() => window.open("/modeler", "_self")}
                         icon={Brush} />
+
+                    <DrawerApp
+                        title="Forms"
+                        onClick={() => window.open("localhost:8082", "_blank")}
+                        icon={FormatShapes} />
 
                     <DrawerApp
                         title="Building Blocks"
