@@ -5,36 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Form/DropdownButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/PopupDialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsButtonRow.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsCheckbox.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsFormRow.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsSelect.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsSpacer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsText.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SettingsTextField.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/SimpleButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Form/Toast.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/Elements/CreateContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu/DrawerApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu/DrawerApp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/CreateDiagramForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/CreateDiagramDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/CreateRepoForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/CreateRepoDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/Holder/DiagramCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/Holder/DiagramCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/Holder/RepoCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/Holder/RepoCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/ImportDiagramForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/UploadDiagramDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/RecentDiagrams.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/RecentDiagrams.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/RepoContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/RepoContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Elements/StarredDiagrams.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/StarredDiagrams.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/VersionStore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/VersionStore.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/theme.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +70,7 @@
       <workItem from="1620721857672" duration="331000" />
       <workItem from="1620722254807" duration="255000" />
       <workItem from="1620722513225" duration="9081000" />
-      <workItem from="1620767329058" duration="2511000" />
+      <workItem from="1620767329058" duration="2891000" />
     </task>
     <task id="LOCAL-00001" summary="Update Modeler URLs">
       <created>1620297569688</created>
