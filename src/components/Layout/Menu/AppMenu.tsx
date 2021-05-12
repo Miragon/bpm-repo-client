@@ -119,7 +119,7 @@ const AppMenu: React.FC = () => {
 
                     <DrawerApp
                         title="Building Blocks"
-                        onClick={() => window.open("/blocks/", "_self")}
+                        onClick={() => window.open("/blocks/ui/", "_self")}
                         icon={Widgets} />
 
                     <DrawerApp
