@@ -109,17 +109,17 @@ const AppMenu: React.FC = () => {
 
                     <DrawerApp
                         title="Modeler"
-                        onClick={() => window.open("/modeler", "_self")}
+                        onClick={() => window.open("/modeler/", "_self")}
                         icon={Brush} />
 
                     <DrawerApp
                         title="Forms"
-                        onClick={() => window.open("localhost:8082", "_blank")}
+                        onClick={() => window.open("localhost:8082/", "_blank")}
                         icon={FormatShapes} />
 
                     <DrawerApp
                         title="Building Blocks"
-                        onClick={() => window.open("/blocks", "_self")}
+                        onClick={() => window.open("/blocks/", "_self")}
                         icon={Widgets} />
 
                     <DrawerApp
