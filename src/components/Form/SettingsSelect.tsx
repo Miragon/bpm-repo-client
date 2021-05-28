@@ -1,9 +1,9 @@
-import { makeStyles } from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 interface Props {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -4,15 +4,86 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="">
+    <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="Update Modeler URLs">
+      <change afterPath="$PROJECT_DIR$/src/api/base.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Exception/ErrorBoundary.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Exception/apiError.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/Functions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/screens/RegisterNewUserScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/state-test/ApiState.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/actions/diagramAction.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/actions/repositoryAction.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/actions/versionAction.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/apiResponseReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/dataSyncedReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/favoriteDiagramsReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/recentDiagramsReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/repositoriesReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/rootReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/uploadDiagramReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/store.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/docker/nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/configuration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/configuration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/custom.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/DropdownButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/DropdownButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/PopupDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/PopupDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsButtonRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsButtonRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsFormRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsFormRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsSelect.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsSelect.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsSpacer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsSpacer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsText.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsText.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SettingsTextField.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SettingsTextField.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/SimpleButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/SimpleButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form/Toast.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form/Toast.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu/DrawerApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Menu/AppMenu/DrawerApp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/providers/RootStoreProvider.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/CreateContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/CreateContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/CreateDiagramDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/CreateDiagramDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/CreateRepoDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/CreateRepoDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/Holder/DiagramCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/Holder/DiagramCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/Holder/RepoCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/Holder/RepoCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/RecentDiagrams.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/RecentDiagrams.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/RepoContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/RepoContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/StarredDiagrams.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/FavoriteDiagrams.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Elements/UploadDiagramDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Elements/UploadDiagramDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/DiagramStore.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/RepoStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/RootStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/VersionStore.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/theme.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -33,7 +104,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/Form" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/store/actions" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -46,10 +117,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/components/Form" />
-      <recent name="$PROJECT_DIR$/src/screens/Elements" />
+      <recent name="$PROJECT_DIR$/src/store/actions" />
+      <recent name="$PROJECT_DIR$/src/models" />
+      <recent name="$PROJECT_DIR$/src/constants" />
+      <recent name="$PROJECT_DIR$/src/state-test" />
+      <recent name="$PROJECT_DIR$/src/screens" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/Exception" />
+      <recent name="$PROJECT_DIR$/src/api" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -70,6 +146,9 @@
       <workItem from="1620722254807" duration="255000" />
       <workItem from="1620722513225" duration="9081000" />
       <workItem from="1620767329058" duration="8371000" />
+      <workItem from="1621235446706" duration="27629000" />
+      <workItem from="1621492752856" duration="24024000" />
+      <workItem from="1621793702710" duration="43655000" />
     </task>
     <task id="LOCAL-00001" summary="Update Modeler URLs">
       <created>1620297569688</created>
@@ -83,6 +162,18 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update Modeler URLs" />

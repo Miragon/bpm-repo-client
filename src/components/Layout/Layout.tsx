@@ -1,8 +1,11 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { CircularProgress, makeStyles } from "@material-ui/core";
-import React, { useState } from "react";
+import {useAuth0} from "@auth0/auth0-react";
+import {CircularProgress, makeStyles} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
 import Menu from "./Menu";
 import Router from "./Router";
+import {UserControllerApi} from "../../api/api";
+import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
+import helpers from "../../constants/Functions";
 
 const useStyles = makeStyles(() => ({
     contentWrapper: {
@@ -45,10 +48,13 @@ const useStyles = makeStyles(() => ({
 const Layout = (): any => {
 
     const classes = useStyles();
+    const [userController] = useState<UserControllerApi>(new UserControllerApi());
+
 
     //const [securityIsOn, setSecurityIsOn] = useState<boolean>(true);
     const [initializing, setInitializing] = useState<boolean>(false);
     const [initialized, setInitialized] = useState<boolean>(false);
+    const [userDoesExist, setUserDoesExist] = useState<boolean>(false);
     const {
         loginWithRedirect,
         isAuthenticated,
@@ -56,6 +62,19 @@ const Layout = (): any => {
         error,
         getAccessTokenSilently
     } = useAuth0();
+
+
+    useEffect(() => {
+        if (isAuthenticated && initialized) {
+            const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
+            userController.getUserInfo(config)
+                .then(() => setUserDoesExist(true))
+                .catch(() => setUserDoesExist(false));
+        }
+
+
+    }, [isAuthenticated, initialized, userController]);
+
 
 
     if (isLoading) {
@@ -88,6 +107,11 @@ const Layout = (): any => {
         //return null;
     }
 
+
+
+    if(!userDoesExist){
+        return <RegisterNewUserScreen/>
+    }
 
     return (
         <>

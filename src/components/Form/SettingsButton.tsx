@@ -1,4 +1,4 @@
-import { makeStyles, Theme } from "@material-ui/core";
+import {makeStyles, Theme} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import clsx from "clsx";
 import React from "react";

@@ -1,11 +1,17 @@
-import { MenuItem } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import React, { ChangeEvent, useCallback, useState } from "react";
+import {makeStyles} from "@material-ui/core/styles";
+import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import { useStore } from "../../providers/RootStoreProvider";
+import {BpmnDiagramTO, BpmnRepositoryRequestTO} from "../../api/models";
+import {useDispatch, useSelector} from "react-redux";
+import {toast, ToastContainer} from "react-toastify";
+import * as diagramAction from "../../store/actions/diagramAction";
+import * as versionAction from "../../store/actions/versionAction";
+import MenuItem from "@material-ui/core/MenuItem";
+import {RootState} from "../../store/reducers/rootReducer";
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles(() => ({
     input: {
@@ -23,8 +29,7 @@ interface Props {
 
 const UploadDiagramDialog: React.FC<Props> = props => {
     const classes = useStyles();
-    const store = useStore();
-
+    const dispatch = useDispatch();
     const {
         open, onCancelled
     } = props;
@@ -35,33 +40,43 @@ const UploadDiagramDialog: React.FC<Props> = props => {
     const [repository, setRepository] = useState("");
     const [file, setFile] = useState<string>("");
 
-    const repositories = store.repoStore.getListOfRepoNamesAndIds();
+    const allRepos: Array<BpmnRepositoryRequestTO> = useSelector((state: RootState) => state.repos.repos)
+    const uploadedDiagram: BpmnDiagramTO = useSelector((state: RootState) => state.uploadedDiagram.uploadedDiagram)
+
+
+    useEffect(() => {
+        if(uploadedDiagram != undefined){
+            dispatch(versionAction.createOrUpdateVersion(uploadedDiagram.bpmnRepositoryId, uploadedDiagram.bpmnDiagramId, file))
+        }
+    }, [dispatch, uploadedDiagram])
+
 
     const onCreate = useCallback(async () => {
-        const diagram = await store.diagramStore.createNewDiagram(title, description, repository);
-
-        if (!diagram.bpmnDiagramId) {
-            setError("Could not upload diagram.");
-            return;
+        try{
+            dispatch(diagramAction.uploadDiagram(repository, title, description))
+        } catch (err) {
+            toast.error(err);
         }
+    }, [title, description, repository, dispatch]);
 
-        await store.versionStore.importDiagramVersion(repository, diagram.bpmnDiagramId, file);
-        window.open((`/modeler/#/${repository}/${diagram.bpmnDiagramId}/latest/`))
-        document.location.reload();
-    }, [title, description, repository, store, file]);
+
 
     const onFileChanged = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const { target: { files } } = e;
         if (files != null && files.length > 0) {
             const file = files[0];
+            const fileExtension = file.name.substring(file.name.lastIndexOf("."), file.name.length)
+            if(fileExtension != ".bpmn"){
+                toast.error("File must be of type .bpmn")
+            }
             const reader = new FileReader();
             reader.addEventListener("load", (event: ProgressEvent<FileReader>) => {
                 if (typeof event.target?.result === "string") {
                     setFile(event.target?.result);
                 }
             });
-            reader.readAsDataURL(file);
+            reader.readAsText(file);
         }
     }, []);
 
@@ -90,12 +105,14 @@ const UploadDiagramDialog: React.FC<Props> = props => {
                     value={repository}
                     label="Target Repository"
                     onChanged={setRepository}>
-
-                    {repositories.map(repo => (
-                        <MenuItem key={repo.repoId} value={repo.repoId}>
-                            {repo.repoName}
+                    {allRepos?.map(repo => (
+                        <MenuItem
+                            key={repo.bpmnRepositoryId}
+                            value={repo.bpmnRepositoryId}>
+                            {repo.bpmnRepositoryName}
                         </MenuItem>
                     ))}
+
 
                 </SettingsSelect>
 
@@ -113,7 +130,7 @@ const UploadDiagramDialog: React.FC<Props> = props => {
                     onChanged={setDescription} />
 
             </SettingsForm>
-
+            <ToastContainer/>
         </PopupDialog>
     );
 };

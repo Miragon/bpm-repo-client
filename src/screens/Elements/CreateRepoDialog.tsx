@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, {useCallback, useState} from "react";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import { useStore } from "../../providers/RootStoreProvider";
+import {useDispatch} from "react-redux";
+import * as repositoryAction from "../../store/actions/repositoryAction";
 
 interface Props {
     open: boolean;
@@ -11,7 +12,8 @@ interface Props {
 }
 
 const CreateRepoDialog: React.FC<Props> = props => {
-    const store = useStore();
+
+    const dispatch = useDispatch();
 
     const { open, onCancelled, onCreated } = props;
 
@@ -19,13 +21,16 @@ const CreateRepoDialog: React.FC<Props> = props => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const onCreate = useCallback(async () => {
-        if (!(await store.repoStore.createRepo(title, description))) {
-            setError("Could not create repository!");
-        } else {
-            onCreated();
+
+    const onCreate = useCallback(() => {
+        try{
+            console.log(title + "    " + description)
+            dispatch(repositoryAction.createRepository(title, description))
+        } catch (err) {
+            console.log(err)
         }
-    }, [store.repoStore, onCreated, title, description]);
+    }, [dispatch, title, description])
+
 
     return (
         <PopupDialog
@@ -36,7 +41,10 @@ const CreateRepoDialog: React.FC<Props> = props => {
             secondTitle="Cancel"
             onSecond={onCancelled}
             firstTitle="Create"
-            onFirst={onCreate}>
+            onFirst={() => {
+                onCreate()
+                onCreated()}
+            }>
 
             <SettingsForm large>
 

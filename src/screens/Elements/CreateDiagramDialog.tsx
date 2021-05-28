@@ -1,10 +1,15 @@
-import { MenuItem } from '@material-ui/core';
-import React, { useCallback, useState } from "react";
+import React, {useCallback, useState} from "react";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import { useStore } from "../../providers/RootStoreProvider";
+import {BpmnRepositoryRequestTO} from "../../api/models";
+import {useDispatch, useSelector} from "react-redux";
+import * as diagramAction from "../../store/actions/diagramAction";
+import MenuItem from "@material-ui/core/MenuItem";
+import {RootState} from "../../store/reducers/rootReducer";
+import 'react-toastify/dist/ReactToastify.css';
+import {toast, ToastContainer} from "react-toastify";
 
 interface Props {
     open: boolean;
@@ -13,31 +18,30 @@ interface Props {
 }
 
 const CreateDiagramDialog: React.FC<Props> = props => {
-    const store = useStore();
 
     const {
         open, onCancelled, type
     } = props;
-
+    const dispatch = useDispatch();
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [repository, setRepository] = useState("");
 
-    const repositories = store.repoStore.getListOfRepoNamesAndIds();
+    const allRepos: Array<BpmnRepositoryRequestTO> = useSelector((state: RootState) => state.repos.repos)
+
 
     const onCreate = useCallback(async () => {
-        const diagram = await store.diagramStore.createNewDiagram(title, description, repository);
-
-        if (!diagram.bpmnDiagramId) {
-            setError("Could not create diagram.");
-            return;
+        try{
+            dispatch(diagramAction.createDiagram(repository, title, description, props.type))
+        } catch (err) {
+            console.log("err")
+            toast.error("abcde")
         }
+    }, [dispatch, repository, title, description, props.type])
 
-        await store.versionStore.createDiagramVersion(repository, diagram.bpmnDiagramId, type);
-        window.open("/modeler/#/" + repository + "/" + diagram.bpmnDiagramId + "/latest/");
-        document.location.reload();
-    }, [title, description, repository, type, store]);
+
+
 
     return (
         <PopupDialog
@@ -57,13 +61,13 @@ const CreateDiagramDialog: React.FC<Props> = props => {
                     value={repository}
                     label="Target Repository"
                     onChanged={setRepository}>
-
-                    {repositories.map(repo => (
-                        <MenuItem key={repo.repoId} value={repo.repoId}>
-                            {repo.repoName}
+                    {allRepos?.map(repo => (
+                        <MenuItem
+                        key={repo.bpmnRepositoryId}
+                        value={repo.bpmnRepositoryId}>
+                            {repo.bpmnRepositoryName}
                         </MenuItem>
                     ))}
-
                 </SettingsSelect>
 
                 <SettingsTextField
@@ -80,9 +84,15 @@ const CreateDiagramDialog: React.FC<Props> = props => {
                     onChanged={setDescription} />
 
             </SettingsForm>
-
+        <ToastContainer/>
         </PopupDialog>
     );
 };
-
+/* inside the settingsSelect paragraph
+                    {repositories.map(repo => (
+                        <MenuItem key={repo.repoId} value={repo.repoId}>
+                            {repo.repoName}
+                        </MenuItem>
+                    ))}
+ */
 export default CreateDiagramDialog;

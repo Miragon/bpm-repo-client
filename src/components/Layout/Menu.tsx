@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import React from "react";
 import MenuBar from "../Menu/MenuBar";
 import AppMenu from "./Menu/AppMenu";

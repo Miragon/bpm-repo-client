@@ -1,9 +1,9 @@
-import { makeStyles, Theme } from "@material-ui/core";
+import {makeStyles, Theme} from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
 import Refresh from "@material-ui/icons/Refresh";
-import Alert, { Color } from "@material-ui/lab/Alert";
+import Alert, {Color} from "@material-ui/lab/Alert";
 import clsx from "clsx";
 import React from "react";
 

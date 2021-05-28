@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import DescriptionIcon from '@material-ui/icons/Description';
 import PeopleIcon from '@material-ui/icons/People';
 import React from "react";
@@ -7,11 +7,11 @@ const useStyles = makeStyles((theme) => ({
     repoBox: {
         display: "flex",
         flexDirection: "column",
+        marginTop: "10px",
         transition: "box-shadow .3s",
         width: "calc((100% - 2rem) / 5)",
         height: "80px",
         marginRight: "0.5rem",
-        marginBottom: "0.5rem",
         borderRadius: "4px",
         background: `linear-gradient(to bottom, ${theme.palette.primary.main} 40%, ${theme.palette.primary.light} 90%)`,
         cursor: "pointer",
@@ -27,7 +27,9 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "left",
         padding: "1rem 1rem 0.5rem 1rem",
         fontSize: "14px",
-        fontWeight: "bold"
+        fontWeight: "bold",
+        maxHeight: "80%",
+        overflow: ""
     },
     repoDescription: {
         whiteSpace: "normal",
@@ -56,6 +58,7 @@ interface RepoProps {
     assignedUsers: number;
 }
 
+
 const RepoCard: React.FC<RepoProps> = props => {
     const classes = useStyles();
 
@@ -69,7 +72,7 @@ const RepoCard: React.FC<RepoProps> = props => {
                 <DescriptionIcon className={classes.icon} />
                 {props.existingDiagrams || 0}
                 <PeopleIcon className={classes.icon} />
-                {props.assignedUsers || 0}
+                {props.assignedUsers || 1}
             </div>
 
         </div>

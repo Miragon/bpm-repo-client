@@ -1,7 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import React from "react";
-import { useStore } from "../../../providers/RootStoreProvider";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -53,12 +52,12 @@ interface DiagramProps {
     updatedDate: Date | undefined;
     description: string;
     repositoryId: string;
+    diagramRepo: string;
     className?: string;
 }
 
 const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
     const classes = useStyles();
-    const store = useStore();
 
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
 
@@ -66,7 +65,7 @@ const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
         <div className={clsx(classes.container, props.className)}>
             <div className={classes.header}>
                 <span className={classes.repository}>
-                    {store.repoStore.getRepoName(props.repositoryId)}
+                    {props.diagramRepo}
                 </span>
                 <span className={classes.title}>
                     {props.diagramTitle}

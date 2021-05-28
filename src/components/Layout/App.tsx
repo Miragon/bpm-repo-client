@@ -4,7 +4,7 @@ import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import React from "react";
 import Theme from "../../theme";
 import Layout from "./Layout";
-import {RootStoreProvider} from "../../providers/RootStoreProvider";
+
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -14,17 +14,16 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
+
 const App: React.FC = () => {
     const classes = useStyles();
 
     return (
         <ThemeProvider theme={Theme}>
-            <RootStoreProvider>
                     <div className={classes.root}>
                         <CssBaseline/>
                         <Layout/>
                     </div>
-            </RootStoreProvider>
         </ThemeProvider>
     );
 };

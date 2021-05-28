@@ -1,8 +1,15 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { observer } from "mobx-react";
-import React, { useEffect } from "react";
-import { useStore } from "../../providers/RootStoreProvider";
+import {makeStyles} from "@material-ui/core/styles";
+import {observer} from "mobx-react";
+import React, {useCallback, useEffect} from "react";
 import RepoCard from "./Holder/RepoCard";
+import {BpmnRepositoryRequestTO} from "../../api/models";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/reducers/rootReducer";
+import * as repositoryAction from "../../store/actions/repositoryAction";
+import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
+import 'react-toastify/dist/ReactToastify.css';
+import {SYNC_STATUS} from "../../store/actions/diagramAction";
+
 
 const useStyles = makeStyles(() => ({
     header: {
@@ -13,31 +20,49 @@ const useStyles = makeStyles(() => ({
         fontSize: "20px"
     },
     container: {
-        overflowX: "auto",
         display: "flex",
         flexWrap: "wrap",
-        padding: "1rem 0"
+        padding: "1rem 0",
     }
 }));
 
 const RepoContainer: React.FC = observer(() => {
     const classes = useStyles();
-    const store = useStore();
+    const dispatch = useDispatch()
+
+
+    const allRepos: Array<BpmnRepositoryRequestTO> = useSelector((state: RootState) => state.repos.repos)
+    const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.dataSynced)
+    const fetchRepos = useCallback(() => {
+        try {
+            dispatch(repositoryAction.fetchRepositories())
+        } catch (err) {
+            console.log(err);
+        }
+    }, [dispatch])
 
     useEffect(() => {
-        store.repoStore.initialize();
-    }, [store.repoStore])
+        fetchRepos();
+        if(!syncStatus){
+            fetchRepos()
+            dispatch({type: SYNC_STATUS, dataSynced: false})
+        }
+
+    }, [dispatch, fetchRepos, syncStatus])
+
+
 
     return (
         <>
             <div className={classes.header}>
-                <div className={classes.headerText}>
+                <div className={classes.headerText} >
                     Repositories
                 </div>
             </div>
 
             <div className={classes.container}>
-                {store.repoStore.getAllRepos().map(repo => (
+                <ErrorBoundary>
+                {allRepos.map(repo => (
                     // eslint-disable-next-line react/jsx-key
                     <RepoCard
                         repoTitle={repo.bpmnRepositoryName}
@@ -45,7 +70,7 @@ const RepoContainer: React.FC = observer(() => {
                         existingDiagrams={repo.existingDiagrams}
                         assignedUsers={repo.assignedUsers} />
                 ))}
-
+                </ErrorBoundary>
             </div>
         </>
     );

@@ -1,9 +1,8 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
-import DropdownButton, { DropdownButtonItem } from "../../components/Form/DropdownButton";
+import {makeStyles} from "@material-ui/core/styles";
+import {observer} from "mobx-react";
+import React, {useState} from "react";
+import DropdownButton, {DropdownButtonItem} from "../../components/Form/DropdownButton";
 import SimpleButton from "../../components/Form/SimpleButton";
-import { useStore } from "../../providers/RootStoreProvider";
 import CreateDiagramDialog from "./CreateDiagramDialog";
 import CreateRepoDialog from "./CreateRepoDialog";
 import UploadDiagramDialog from "./UploadDiagramDialog";
@@ -24,16 +23,12 @@ const useStyles = makeStyles(() => ({
 
 const RepoContainer: React.FC = observer(() => {
     const classes = useStyles();
-    const store = useStore();
 
     const [createRepoOpen, setCreateRepoOpen] = useState(false);
     const [uploadDiagramOpen, setUploadDiagramOpen] = useState(false);
     const [createDiagramOpen, setCreateDiagramOpen] = useState(false);
     const [createDiagramType, setCreateDiagramType] = useState<"bpmn" | "dmn">("bpmn");
 
-    useEffect(() => {
-        store.repoStore.initialize();
-    }, [store.repoStore])
 
     const diagramOptions: DropdownButtonItem[] = [
         {
@@ -88,12 +83,7 @@ const RepoContainer: React.FC = observer(() => {
             </div>
             <CreateRepoDialog
                 open={createRepoOpen}
-                onCreated={() => {
-                    // TODO: How can we show the created repo here?
-                    document.location.reload();
-                    store.repoStore.fetchAllRepos();
-                    setCreateRepoOpen(false);
-                }}
+                onCreated={() => setCreateRepoOpen(false)}
                 onCancelled={() => setCreateRepoOpen(false)} />
 
             <CreateDiagramDialog
