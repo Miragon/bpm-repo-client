@@ -17,13 +17,12 @@ const reducer: CaseReducer = (state = initialState, action) => {
         case UNHANDLEDERROR:
             return {
                 ...state,
-                errorMessage: `Fehler ${action.errorMessage}`
+                errorMessage: action.errorMessage
             }
         case SUCCESS:
             return {
                 ...state,
                 successMessage: action.successMessage
-
             }
     }
     return state;

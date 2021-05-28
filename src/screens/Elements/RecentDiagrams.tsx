@@ -52,7 +52,6 @@ const RecentDiagrams: React.FC = observer(() => {
 
     useEffect(() => {
         fetchRecent()
-
     }, [dispatch, fetchRecent])
 
     return <div className={classes.diagramContainer}>

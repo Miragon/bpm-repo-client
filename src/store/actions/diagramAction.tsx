@@ -2,6 +2,8 @@ import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
 import helpers from "../../constants/Functions";
 import {BpmnDiagramUploadTO} from "../../api/models";
+import {defaultErrors} from "../../components/Exception/defaultErrors";
+import {ACTIVE_DIAGRAMS} from "./repositoryAction";
 
 export const GET_FAVORITE = "GET_FAVORITE"
 export const GET_RECENT = "GET_RECENT"
@@ -11,10 +13,6 @@ export const UNHANDLEDERROR = "UNHANDLEDERROR"
 export const SYNC_STATUS = "SYNC_STATUS"
 export const SUCCESS = "SUCCESS"
 
-const emptySvgPreview = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-    "<!-- created with bpmn-js / http://bpmn.io -->\n" +
-    "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n" +
-    "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"0\" height=\"0\" viewBox=\"0 0 0 0\" version=\"1.1\"></svg>"
 
 export const fetchFavoriteDiagrams = () => {
     return async (dispatch: Dispatch) => {
@@ -31,12 +29,26 @@ export const fetchFavoriteDiagrams = () => {
                 dispatch({type: UNHANDLEDERROR, errorMessage: response.status + "" + JSON.stringify(response)})
             }
         } catch (error){
-            if(error.response.data){
-                if(error.response.data.status === 409) {
-                    dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
-                }
-                else{
-                    dispatch({type: UNHANDLEDERROR, errorMessage: error.response.status})
+            if(error.response){
+                switch(error.response.data.status.toString()) {
+                    case "400":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["400"]})
+                        return;
+                    case "401":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["401"]})
+                        return;
+                    case "403":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["403"]})
+                        return;
+                    case "404":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["404"]})
+                        return;
+                    case "409":
+                        dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
+                        return;
+                    default:
+                        dispatch({type: UNHANDLEDERROR, errorMessage: `Error ${error.response.status}`})
+                        return;
 
                 }
             }
@@ -59,12 +71,28 @@ export const fetchRecentDiagrams = () => {
                 dispatch({type: UNHANDLEDERROR, errorMessage: response.status + "" + JSON.stringify(response)})
             }
         } catch (error){
-            if(error.response.data.status === 409) {
-                dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
-            }
-            else{
-                dispatch({type: UNHANDLEDERROR, errorMessage: error.response.status})
+            if(error.response){
+                switch(error.response.data.status.toString()) {
+                    case "400":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["400"]})
+                        return;
+                    case "401":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["401"]})
+                        return;
+                    case "403":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["403"]})
+                        return;
+                    case "404":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["404"]})
+                        return;
+                    case "409":
+                        dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
+                        return;
+                    default:
+                        dispatch({type: UNHANDLEDERROR, errorMessage: `Error ${error.response.status}`})
+                        return;
 
+                }
             }
         }
     }
@@ -78,7 +106,6 @@ export const createDiagram = (bpmnRepositoryId: string, bpmnDiagramName: string,
                 bpmnDiagramName: bpmnDiagramName,
                 bpmnDiagramDescription: bpmnDiagramDescription,
                 fileType: fileType,
-                svgPreview: emptySvgPreview
             }
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             const response = await diagramController.createOrUpdateDiagram(bpmnDiagramUploadTO, bpmnRepositoryId, config)
@@ -90,13 +117,69 @@ export const createDiagram = (bpmnRepositoryId: string, bpmnDiagramName: string,
                 dispatch({type: UNHANDLEDERROR, errorMessage: response.status + "" + JSON.stringify(response)})
             }
         } catch (error){
-            //#TODO kann der Fehler im Backend nur durch die error.response.data properties ausgelesen werden?
-            if(error.response.data.status === 409) {
-                dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
-            }
-            else{
-                dispatch({type: UNHANDLEDERROR, errorMessage: error.response.status})
+            if(error.response){
+                switch(error.response.data.status.toString()) {
+                    case "400":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["400"]})
+                        return;
+                    case "401":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["401"]})
+                        return;
+                    case "403":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["403"]})
+                        return;
+                    case "404":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["404"]})
+                        return;
+                    case "409":
+                        dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
+                        return;
+                    default:
+                        dispatch({type: UNHANDLEDERROR, errorMessage: `Error ${error.response.status}`})
+                        return;
 
+                }
+            }
+        }
+    }
+}
+
+export const fetchDiagramsFromRepo = (repoId: string) => {
+    return async (dispatch: Dispatch) => {
+        const diagramController = new api.BpmnDiagramControllerApi()
+        console.log("Requesting diagramrepos")
+        try{
+            const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
+            const response = await diagramController.getDiagramsFromRepo(repoId, config)
+            if(response.status === 200) {
+                dispatch({type: ACTIVE_DIAGRAMS, activeDiagrams: response.data})
+            }
+            else {
+                dispatch({type: UNHANDLEDERROR, errorMessage: response.status + "" + JSON.stringify(response)})
+            }
+        } catch (error){
+            if(error.response){
+                switch(error.response.data.status.toString()) {
+                    case "400":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["400"]})
+                        return;
+                    case "401":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["401"]})
+                        return;
+                    case "403":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["403"]})
+                        return;
+                    case "404":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["404"]})
+                        return;
+                    case "409":
+                        dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
+                        return;
+                    default:
+                        dispatch({type: UNHANDLEDERROR, errorMessage: `Error ${error.response.status}`})
+                        return;
+
+                }
             }
         }
     }
@@ -120,12 +203,28 @@ export const uploadDiagram = (bpmnRepositoryId: string, bpmnDiagramName: string,
                 dispatch({type: UNHANDLEDERROR, errorMessage: response.status + "" + JSON.stringify(response)})
             }
         } catch (error){
-            if(error.response.data.status === 409) {
-                dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
-            }
-            else{
-                dispatch({type: UNHANDLEDERROR, errorMessage: error.response.status})
+            if(error.response){
+                switch(error.response.data.status.toString()) {
+                    case "400":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["400"]})
+                        return;
+                    case "401":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["401"]})
+                        return;
+                    case "403":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["403"]})
+                        return;
+                    case "404":
+                        dispatch({type: UNHANDLEDERROR, errorMessage: defaultErrors["404"]})
+                        return;
+                    case "409":
+                        dispatch({type: HANDLEDERROR, errorMessage: error.response.data.message})
+                        return;
+                    default:
+                        dispatch({type: UNHANDLEDERROR, errorMessage: `Error ${error.response.status}`})
+                        return;
 
+                }
             }
         }
     }

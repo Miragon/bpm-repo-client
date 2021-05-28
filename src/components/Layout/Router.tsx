@@ -1,6 +1,7 @@
 import React from "react";
 import {Route, Switch} from "react-router-dom";
 import Overview from "../../screens/Overview";
+import Repository from "../../screens/Repository";
 
 const Router: React.FC = () => {
     return (
@@ -9,8 +10,8 @@ const Router: React.FC = () => {
                 exact path="/"
                 component={Overview}/>
 
-            <Route exact path ="/bpmnrepo"
-                   component={Overview}/>
+            <Route exact path ="/repository"
+                   component={Repository}/>
         </Switch>
     );
 };

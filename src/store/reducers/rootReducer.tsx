@@ -5,6 +5,8 @@ import favoriteDiagramReducer from "./favoriteDiagramsReducer"
 import uploadDiagramReducer from "./uploadDiagramReducer";
 import apiResponseReducer from "./apiResponseReducer";
 import dataSyncedReducer from "./dataSyncedReducer";
+import activeRepoReducer from "./activeRepoReducer";
+import activeDiagramsReducer from "./activeDiagramsReducer";
 
 export const rootReducer = combineReducers({
     recentDiagrams: diagramReducer,
@@ -12,7 +14,9 @@ export const rootReducer = combineReducers({
     repos: repoReducer,
     uploadedDiagram: uploadDiagramReducer,
     api: apiResponseReducer,
-    dataSynced: dataSyncedReducer
+    dataSynced: dataSyncedReducer,
+    activeRepo: activeRepoReducer,
+    activeDiagrams: activeDiagramsReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>

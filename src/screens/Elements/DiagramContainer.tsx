@@ -16,6 +16,5 @@ const DiagramContainer: React.FC<ContainerProps> = (props: ContainerProps) =>{
  </div>
         </div>
 }
-//<DiagramCard diagramTitle="From RecentDiagrams" updatedDate={undefined} description="Description description description description description" repoName="Sample Repo Name"/>
 
 export default DiagramContainer;

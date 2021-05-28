@@ -5,10 +5,12 @@ import RepoCard from "./Holder/RepoCard";
 import {BpmnRepositoryRequestTO} from "../../api/models";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
-import * as repositoryAction from "../../store/actions/repositoryAction";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import 'react-toastify/dist/ReactToastify.css';
-import {SYNC_STATUS} from "../../store/actions/diagramAction";
+import {fetchDiagramsFromRepo, SYNC_STATUS} from "../../store/actions/diagramAction";
+import {ACTIVE_REPO, fetchRepositories} from "../../store/actions/repositoryAction";
+import {useHistory} from "react-router-dom";
+import Repository from "../Repository";
 
 
 const useStyles = makeStyles(() => ({
@@ -29,13 +31,15 @@ const useStyles = makeStyles(() => ({
 const RepoContainer: React.FC = observer(() => {
     const classes = useStyles();
     const dispatch = useDispatch()
+    const history = useHistory();
+
 
 
     const allRepos: Array<BpmnRepositoryRequestTO> = useSelector((state: RootState) => state.repos.repos)
     const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.dataSynced)
     const fetchRepos = useCallback(() => {
         try {
-            dispatch(repositoryAction.fetchRepositories())
+            dispatch(fetchRepositories())
         } catch (err) {
             console.log(err);
         }
@@ -51,6 +55,11 @@ const RepoContainer: React.FC = observer(() => {
     }, [dispatch, fetchRepos, syncStatus])
 
 
+
+    const openRepoScreen = (repo: BpmnRepositoryRequestTO) => {
+        dispatch({type: ACTIVE_REPO, activeRepo: repo})
+        history.push("/repository")
+    }
 
     return (
         <>
@@ -68,7 +77,8 @@ const RepoContainer: React.FC = observer(() => {
                         repoTitle={repo.bpmnRepositoryName}
                         description={repo.bpmnRepositoryDescription}
                         existingDiagrams={repo.existingDiagrams}
-                        assignedUsers={repo.assignedUsers} />
+                        assignedUsers={repo.assignedUsers}
+                        onClick={() => openRepoScreen(repo)}/>
                 ))}
                 </ErrorBoundary>
             </div>

@@ -19,11 +19,11 @@ const Overview: React.FC = observer(() => {
 
     useEffect(() => {
             if(apiErrorState){
-                toast.error(apiErrorState)
+                toast.error(apiErrorState, {autoClose: 8000, pauseOnHover: true})
                 dispatch({type: HANDLEDERROR, errorMessage: ""})
             }
             if(apiSuccessState){
-                toast.success(apiSuccessState)
+                toast.success(apiSuccessState, {autoClose: 4000, pauseOnHover: true})
                 dispatch({type: SUCCESS, successMessage: ""})
             }
     }, [apiErrorState, apiSuccessState, dispatch])

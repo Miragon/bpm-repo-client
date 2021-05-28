@@ -1,7 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import DescriptionIcon from '@material-ui/icons/Description';
 import PeopleIcon from '@material-ui/icons/People';
-import React from "react";
+import React, {useEffect} from "react";
 
 const useStyles = makeStyles((theme) => ({
     repoBox: {
@@ -56,14 +56,16 @@ interface RepoProps {
     description: string;
     existingDiagrams: number;
     assignedUsers: number;
+    onClick?: () => void;
 }
 
 
 const RepoCard: React.FC<RepoProps> = props => {
     const classes = useStyles();
 
+
     return (
-        <div className={classes.repoBox}>
+        <div className={classes.repoBox} onClick={props.onClick}>
             <div className={classes.repoHeader}>
                 {props.repoTitle}
             </div>
