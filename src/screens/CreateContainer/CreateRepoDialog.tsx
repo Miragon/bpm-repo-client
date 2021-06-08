@@ -24,8 +24,8 @@ const CreateRepoDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(() => {
         try{
-            console.log(title + "    " + description)
             dispatch(repositoryAction.createRepository(title, description))
+            onCancelled()
         } catch (err) {
             console.log(err)
         }

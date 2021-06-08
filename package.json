@@ -14,8 +14,6 @@
     "@material-ui/styles": "^4.11.2",
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
-    "expo-auth-session": "~3.0.0",
-    "expo-secure-store": "^10.1.0",
     "mobx": "^6.1.8",
     "mobx-react": "^7.1.0",
     "portable-fetch": "^3.0.0",

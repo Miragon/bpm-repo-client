@@ -5,7 +5,6 @@ import {CaseReducer} from "@reduxjs/toolkit";
 
 const initialState = {
     recentDiagrams: Array<BpmnDiagramTO>()
-    //favoriteDiagrams: Array<BpmnDiagramTO>()
 }
 const reducer: CaseReducer = (state = initialState, action) => {
     switch (action.type) {

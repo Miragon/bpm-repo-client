@@ -1,12 +1,11 @@
 import {makeStyles} from "@material-ui/styles";
 import {observer} from "mobx-react";
 import React, {useCallback, useEffect} from "react";
-import './DiagramContainer.css'
 import DiagramCard from "./Holder/DiagramCard";
 import {BpmnDiagramTO, BpmnRepositoryRequestTO} from "../../api/models";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/reducers/rootReducer";
 import * as diagramAction from "../../store/actions/diagramAction";
+import {RootState} from "../../store/reducers/rootReducer";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 
 const useStyles = makeStyles(() => ({
@@ -29,17 +28,18 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const RecentDiagrams: React.FC = observer(() => {
+const FavoriteDiagrams: React.FC = observer(() => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
 
-    const recentDiagrams: Array<BpmnDiagramTO> = useSelector((state: RootState) => state.recentDiagrams.recentDiagrams)
+    const favoriteDiagrams: Array<BpmnDiagramTO> = useSelector((state: RootState) => state.favoriteDiagrams.favoriteDiagrams)
     const repos: Array<BpmnRepositoryRequestTO> = useSelector((state: RootState) => state.repos.repos)
 
-    const fetchRecent = useCallback(() => {
+
+    const fetchFavorite = useCallback(() => {
         try{
-            dispatch(diagramAction.fetchRecentDiagrams())
+            dispatch(diagramAction.fetchFavoriteDiagrams())
         } catch (err) {
             console.log(err)
         }
@@ -51,14 +51,16 @@ const RecentDiagrams: React.FC = observer(() => {
     })
 
     useEffect(() => {
-        fetchRecent()
-    }, [dispatch, fetchRecent])
+        fetchFavorite();
+
+    }, [fetchFavorite])
+
 
     return <div className={classes.diagramContainer}>
-        <h1>Recently Used</h1>
+        <h1>Favorites</h1>
         <div className={classes.container}>
             <ErrorBoundary>
-            {recentDiagrams?.map(diagram => (
+            {favoriteDiagrams?.map(diagram => (
                 <a
                     className={classes.card}
                     key={diagram.bpmnDiagramId}
@@ -74,9 +76,12 @@ const RecentDiagrams: React.FC = observer(() => {
                         repositoryId={diagram.bpmnRepositoryId} />
                 </a>
             ))}
+            {favoriteDiagrams?.length === 0 && (
+                <span>You haven&apos;t added any diagrams to your favorites yet.</span>
+            )}
             </ErrorBoundary>
         </div>
     </div>
 });
 
-export default RecentDiagrams;
+export default FavoriteDiagrams;

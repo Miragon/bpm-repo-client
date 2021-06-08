@@ -146,21 +146,4 @@ const AppMenu: React.FC = () => {
     );
 };
 
-/*
- before drawercontent div:
-
-
- <Typography
- className={classes.drawerTitle}
- variant="h1">
- miragon.cloud
- </Typography>
-
- <Typography
- className={classes.drawerSubtitle}
- variant="h2">
- {user.email}
- </Typography>
- */
-
 export default AppMenu;

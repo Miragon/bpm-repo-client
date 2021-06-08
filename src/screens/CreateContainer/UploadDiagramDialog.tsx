@@ -6,12 +6,12 @@ import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import {BpmnDiagramTO, BpmnRepositoryRequestTO} from "../../api/models";
 import {useDispatch, useSelector} from "react-redux";
-import {toast, ToastContainer} from "react-toastify";
 import * as diagramAction from "../../store/actions/diagramAction";
 import * as versionAction from "../../store/actions/versionAction";
 import MenuItem from "@material-ui/core/MenuItem";
 import {RootState} from "../../store/reducers/rootReducer";
 import 'react-toastify/dist/ReactToastify.css';
+import {HANDLEDERROR, UNHANDLEDERROR} from "../../store/actions/diagramAction";
 
 const useStyles = makeStyles(() => ({
     input: {
@@ -55,7 +55,7 @@ const UploadDiagramDialog: React.FC<Props> = props => {
         try{
             dispatch(diagramAction.uploadDiagram(repository, title, description))
         } catch (err) {
-            toast.error(err);
+            dispatch({type: UNHANDLEDERROR, errorMessage: err});
         }
     }, [title, description, repository, dispatch]);
 
@@ -68,7 +68,7 @@ const UploadDiagramDialog: React.FC<Props> = props => {
             const file = files[0];
             const fileExtension = file.name.substring(file.name.lastIndexOf("."), file.name.length)
             if(fileExtension != ".bpmn"){
-                toast.error("File must be of type .bpmn")
+                dispatch({type: HANDLEDERROR, errorMessage: "File must be of type .bpmn"})
             }
             const reader = new FileReader();
             reader.addEventListener("load", (event: ProgressEvent<FileReader>) => {
@@ -130,7 +130,6 @@ const UploadDiagramDialog: React.FC<Props> = props => {
                     onChanged={setDescription} />
 
             </SettingsForm>
-            <ToastContainer/>
         </PopupDialog>
     );
 };

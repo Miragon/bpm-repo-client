@@ -4,7 +4,6 @@ import {CaseReducer} from "@reduxjs/toolkit";
 
 const initialState = {
     favoriteDiagrams: Array<BpmnDiagramTO>()
-    //favoriteDiagrams: Array<BpmnDiagramTO>()
 }
 
 

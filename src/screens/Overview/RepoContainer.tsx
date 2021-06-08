@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {fetchDiagramsFromRepo, SYNC_STATUS} from "../../store/actions/diagramAction";
 import {ACTIVE_REPO, fetchRepositories} from "../../store/actions/repositoryAction";
 import {useHistory} from "react-router-dom";
-import Repository from "../Repository";
+import Repository from "../Repository/Repository";
 
 
 const useStyles = makeStyles(() => ({
@@ -49,7 +49,7 @@ const RepoContainer: React.FC = observer(() => {
         fetchRepos();
         if(!syncStatus){
             fetchRepos()
-            dispatch({type: SYNC_STATUS, dataSynced: false})
+            dispatch({type: SYNC_STATUS, dataSynced: true})
         }
 
     }, [dispatch, fetchRepos, syncStatus])
@@ -58,7 +58,7 @@ const RepoContainer: React.FC = observer(() => {
 
     const openRepoScreen = (repo: BpmnRepositoryRequestTO) => {
         dispatch({type: ACTIVE_REPO, activeRepo: repo})
-        history.push("/repository")
+        history.push(`/repository/${repo.bpmnRepositoryId}`)
     }
 
     return (

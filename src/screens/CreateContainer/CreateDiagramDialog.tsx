@@ -9,7 +9,6 @@ import * as diagramAction from "../../store/actions/diagramAction";
 import MenuItem from "@material-ui/core/MenuItem";
 import {RootState} from "../../store/reducers/rootReducer";
 import 'react-toastify/dist/ReactToastify.css';
-import {toast, ToastContainer} from "react-toastify";
 
 interface Props {
     open: boolean;
@@ -34,9 +33,9 @@ const CreateDiagramDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         try{
             dispatch(diagramAction.createDiagram(repository, title, description, props.type))
+            onCancelled();
         } catch (err) {
             console.log("err")
-            toast.error("abcde")
         }
     }, [dispatch, repository, title, description, props.type])
 
@@ -84,7 +83,6 @@ const CreateDiagramDialog: React.FC<Props> = props => {
                     onChanged={setDescription} />
 
             </SettingsForm>
-        <ToastContainer/>
         </PopupDialog>
     );
 };

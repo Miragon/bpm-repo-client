@@ -3,7 +3,7 @@ import {BpmnDiagramTO, BpmnRepositoryRequestTO} from "../../api/models";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import {makeStyles} from "@material-ui/styles";
-import DiagramListItem from "./Holder/DiagramListItem";
+import DiagramListItem from "./DiagramListItem";
 import {fetchDiagramsFromRepo} from "../../store/actions/diagramAction";
 
 
@@ -12,6 +12,9 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap"
+    },
+    unstyledButton: {
+        all: "unset"
     }
 }));
 
@@ -31,25 +34,30 @@ const DiagramDetails: React.FC = (() => {
     }, [dispatch])
 
     useEffect(() => {
-        fetchActiveDiagrams(activeRepo.bpmnRepositoryId)
-    }, [fetchActiveDiagrams])
+        fetchActiveDiagrams(activeRepo?.bpmnRepositoryId)
+    }, [fetchActiveDiagrams, activeRepo])
+
+    const openModeler = (repoId: string, diagramId: string) => {
+        window.open(`/modeler/#/${repoId}/${diagramId}/latest/`, '_blank')?.focus();
+    }
 
     return (
         <>
       <div className={classes.container}>
           {activeDiagrams?.map(diagram => (
-              <a
+              <div
                   key={diagram.bpmnDiagramId}
-                  rel="noreferrer"
-                  target="_blank"
-                  href={`/modeler/#/${diagram.bpmnRepositoryId}/${diagram.bpmnDiagramId}/latest/`}>
+                  onClick={() => openModeler(diagram.bpmnRepositoryId, diagram.bpmnDiagramId)}>
 
               <DiagramListItem diagramTitle={diagram.bpmnDiagramName}
                                image={diagram.svgPreview}
                                updatedDate={diagram.updatedDate}
                                createdDate={diagram.createdDate}
-                               description={diagram.bpmnDiagramDescription} />
-              </a>
+                               description={diagram.bpmnDiagramDescription}
+                               repoId={diagram.bpmnRepositoryId}
+                               diagramId={diagram.bpmnDiagramId}
+                                />
+              </div>
           ))}
       </div>
         </>

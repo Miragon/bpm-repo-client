@@ -10,8 +10,10 @@ export const GET_RECENT = "GET_RECENT"
 export const DIAGRAM_UPLOAD = "DIAGRAM_UPLOAD"
 export const HANDLEDERROR = "HANDLEDERROR"
 export const UNHANDLEDERROR = "UNHANDLEDERROR"
+export const UNHANDLEDERRORRETRY = "UNHANDLEDERRORRETRY"
 export const SYNC_STATUS = "SYNC_STATUS"
 export const SUCCESS = "SUCCESS"
+export const GET_VERSIONS = "GET_VERSIONS"
 
 
 export const fetchFavoriteDiagrams = () => {
@@ -22,7 +24,7 @@ export const fetchFavoriteDiagrams = () => {
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             const response = await diagramController.getStarred(config)
             console.log("DiagramRequest")
-            if(response.status === 200) {
+            if(Math.floor(response.status/100) === 2) {
                 dispatch({type: GET_FAVORITE, favoriteDiagrams: response.data})
             }
             else {
@@ -64,7 +66,7 @@ export const fetchRecentDiagrams = () => {
         try{
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             const response = await diagramController.getRecent(config)
-            if(response.status === 200) {
+            if(Math.floor(response.status/100) === 2) {
                 dispatch({type: GET_RECENT, recentDiagrams: response.data})
             }
             else {
@@ -109,9 +111,9 @@ export const createDiagram = (bpmnRepositoryId: string, bpmnDiagramName: string,
             }
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             const response = await diagramController.createOrUpdateDiagram(bpmnDiagramUploadTO, bpmnRepositoryId, config)
-            if(response.status === 200) {
-                console.log("New Diagram created, create Toast for that when modeler is running on the same page")
-                window.location.href = (`/modeler/${response.data.bpmnRepositoryId}/${response.data.bpmnDiagramId}/latest/`)
+            if(Math.floor(response.status/100) === 2) {
+                dispatch({type: SUCCESS, successMessage: "Diagram Created"})
+                dispatch({type: SYNC_STATUS, dataSynced: false})
             }
             else {
                 dispatch({type: UNHANDLEDERROR, errorMessage: response.status + "" + JSON.stringify(response)})
@@ -151,7 +153,7 @@ export const fetchDiagramsFromRepo = (repoId: string) => {
         try{
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             const response = await diagramController.getDiagramsFromRepo(repoId, config)
-            if(response.status === 200) {
+            if(Math.floor(response.status/100) === 2) {
                 dispatch({type: ACTIVE_DIAGRAMS, activeDiagrams: response.data})
             }
             else {
@@ -196,7 +198,7 @@ export const uploadDiagram = (bpmnRepositoryId: string, bpmnDiagramName: string,
             }
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             const response = await diagramController.createOrUpdateDiagram(bpmnDiagramUploadTO, bpmnRepositoryId, config)
-            if(response.status === 200) {
+            if(Math.floor(response.status/100) === 2) {
                 dispatch({type: DIAGRAM_UPLOAD, uploadedDiagram: response.data})
             }
             else {
