@@ -64,6 +64,7 @@ const RepositoryDetails: React.FC = (() => {
                 <UserManagementDialog
                     open={userManagementOpen}
                     onCancelled={() => setUserManagementOpen(false)}
+                    repoId={activeRepo.bpmnRepositoryId}
                 />
             </>
         );
