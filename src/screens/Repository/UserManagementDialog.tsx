@@ -1,26 +1,17 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import PopupDialog from "../../components/Form/PopupDialog";
+import * as assignmentAction from "../../store/actions/assignmentAction";
 import {getAllAssignedUsers} from "../../store/actions/assignmentAction";
-import {BpmnRepositoryRequestTO, UserInfoTO} from "../../api/models";
+import {AssignmentTORoleEnumEnum, UserInfoTO} from "../../api/models";
 import {RootState} from "../../store/reducers/rootReducer";
-import {
-    List,
-    ListItem,
-    ListItemText,
-    ListItemSecondaryAction,
-    IconButton,
-    Icon,
-    Paper,
-    InputBase, TextField
-} from "@material-ui/core";
-import {Settings, Add} from "@material-ui/icons";
+import {IconButton, List, ListItem, ListItemSecondaryAction, Paper} from "@material-ui/core";
+import {Add} from "@material-ui/icons";
 import {AssignmentTO} from "../../api/models/assignment-to";
 import UserListItem from "./UserListItem";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import {makeStyles} from "@material-ui/core/styles";
-import * as assignmentAction from "../../store/actions/assignmentAction";
-import {SYNC_STATUS} from "../../store/actions/diagramAction";
+import {HANDLEDERROR} from "../../store/actions/diagramAction";
 
 interface Props {
     open: boolean;
@@ -49,9 +40,11 @@ const UserManagementDialog: React.FC<Props> = props => {
 
     const assignmentTOs: Array<AssignmentTO> = useSelector((state: RootState) => state.assignedUsers.assignedUsers)
     const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.dataSynced)
+    const currentUser: UserInfoTO = useSelector((state: RootState) => state.currentUserInfo.currentUserInfo)
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [user, setUser] = useState<string>("");
+    const [hasAdminPermissions, setHasAdminPermissions] = useState<boolean>(false);
 
 
     const fetchAssignedUsers = useCallback((repoId: string) => {
@@ -64,6 +57,7 @@ const UserManagementDialog: React.FC<Props> = props => {
 
     useEffect(() => {
         fetchAssignedUsers(props.repoId)
+        checkForAdminPermissions()
         if(!syncStatus){
             fetchAssignedUsers(props.repoId)
         }
@@ -79,6 +73,24 @@ const UserManagementDialog: React.FC<Props> = props => {
 
     }, [dispatch, user])
 
+    //in useMemo umschreiben
+    const checkForAdminPermissions = (() => {
+            const currentUserAssignment = assignmentTOs.find(assignmentTO => assignmentTO.userName === currentUser.userName)
+            try{
+                if(currentUserAssignment?.roleEnum === AssignmentTORoleEnumEnum.ADMIN || currentUserAssignment?.roleEnum === AssignmentTORoleEnumEnum.OWNER){
+                    setHasAdminPermissions(true)
+
+                    console.log("Set to true")
+                } else {
+                    setHasAdminPermissions(false)
+                    console.log("set to false", currentUserAssignment?.roleEnum)
+                }
+            } catch (err){
+                dispatch({type: HANDLEDERROR, message: "Error while checking permissions for this repository"})
+            }
+        }
+    )
+
 
 //#TODO: Autosuggestions? Load all usernames on Input? Load Users after  x letters entered? ...
     //#TODO: Style the Input field
@@ -91,6 +103,7 @@ const UserManagementDialog: React.FC<Props> = props => {
             secondTitle="close"
             onSecond={onCancelled} >
             <List dense={false}>
+                {hasAdminPermissions && (
                 <ListItem>
                     <SettingsTextField label="Add user"
                                        value={user}
@@ -104,10 +117,12 @@ const UserManagementDialog: React.FC<Props> = props => {
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
+                )}
                 <Paper>
 
                 {assignmentTOs?.map(assignmentTO => (
-                    <UserListItem assignmentTO={assignmentTO} key={assignmentTO.userId} />
+                    <UserListItem assignmentTO={assignmentTO} hasAdminPermissions={hasAdminPermissions} key={assignmentTO.userId} />
+
                 ))}
                 </Paper>
 

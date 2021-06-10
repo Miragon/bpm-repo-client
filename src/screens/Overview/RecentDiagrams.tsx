@@ -77,6 +77,9 @@ const RecentDiagrams: React.FC = observer(() => {
                         repositoryId={diagram.bpmnRepositoryId} />
                 </a>
             ))}
+                {recentDiagrams?.length === 0 && (
+                    <span>You haven&apos;t added any diagrams yet</span>
+                )}
             </ErrorBoundary>
         </div>
     </div>

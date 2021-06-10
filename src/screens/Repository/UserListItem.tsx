@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from "react";
 import {
-    ClickAwayListener,
+    ClickAwayListener, Divider,
     Grow,
     IconButton,
     ListItem,
@@ -24,6 +24,7 @@ import {deleteAssignment} from "../../store/actions/assignmentAction";
 
 interface Props {
     assignmentTO: AssignmentTO;
+    hasAdminPermissions: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -149,12 +150,15 @@ const UserListItem: React.FC<Props> = props => {
             <ListItemText
                 primary={props.assignmentTO.userName}
                 secondary={props.assignmentTO.roleEnum} />
+            {props.hasAdminPermissions && (
             <ListItemSecondaryAction>
                 <IconButton ref={ref} edge="end" onClick={() => setOpen(true)}>
                     <Settings/>
                 </IconButton>
             </ListItemSecondaryAction>
+            )}
         </ListItem>
+            <Divider/>
     <Popper
         open={open}
         anchorEl={ref.current}

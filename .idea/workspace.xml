@@ -4,14 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="UserManagement">
+    <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="API Dateien">
+      <change afterPath="$PROJECT_DIR$/src/store/reducers/currentUserReducer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Overview/Overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview/Overview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Overview/RecentDiagrams.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview/RecentDiagrams.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/Overview/RepoContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview/RepoContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/RegisterNewUserScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/RegisterNewUserScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Repository/DiagramListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Repository/DiagramListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Repository/RepositoryDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Repository/RepositoryDetails.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/Repository/UserListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Repository/UserListItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/Repository/UserManagementDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Repository/UserManagementDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/actions/assignmentAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/actions/assignmentAction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Repository/VersionListItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/actions/diagramAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/actions/diagramAction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/reducers/rootReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/rootReducer.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +109,7 @@
       <workItem from="1622549338798" duration="4918000" />
       <workItem from="1623132446429" duration="11364000" />
       <workItem from="1623219313654" duration="15836000" />
-      <workItem from="1623306621226" duration="4758000" />
+      <workItem from="1623306621226" duration="12171000" />
     </task>
     <task id="LOCAL-00001" summary="Update Modeler URLs">
       <created>1620297569688</created>
@@ -147,7 +153,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623246203380</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="API Dateien">
+      <created>1623314679815</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1623314679816</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -171,6 +184,7 @@
     <MESSAGE value="Exception Handling, Reposcreen started" />
     <MESSAGE value="Repository-View: Displaying versions, userManagement started" />
     <MESSAGE value="UserManagement" />
-    <option name="LAST_COMMIT_MESSAGE" value="UserManagement" />
+    <MESSAGE value="API Dateien" />
+    <option name="LAST_COMMIT_MESSAGE" value="API Dateien" />
   </component>
 </project>

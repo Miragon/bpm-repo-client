@@ -10,7 +10,7 @@ import {toast, ToastContainer} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import RepoCard from "../../screens/Overview/Holder/RepoCard";
-import {HANDLEDERROR, SUCCESS} from "../../store/actions/diagramAction";
+import {CURRENT_USER_INFO, HANDLEDERROR, SUCCESS} from "../../store/actions/diagramAction";
 
 const useStyles = makeStyles(() => ({
     contentWrapper: {
@@ -94,7 +94,16 @@ const Layout = (): any => {
         if (isAuthenticated && initialized) {
             const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
             userController.getUserInfo(config)
-                .then(() => setUserDoesExist(true))
+                .then((response) => {
+                    if(response.data) {
+                        setUserDoesExist(true)
+                        console.log(response.data)
+                        dispatch({type: CURRENT_USER_INFO, currentUserInfo: response.data})
+                    } else {
+                        setUserDoesExist(false);
+                    }
+
+                })
                 .catch(() => setUserDoesExist(false));
         }
 

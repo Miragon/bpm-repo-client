@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import {People, Description}  from '@material-ui/icons/';
 import UserManagementDialog from "./UserManagementDialog";
+import {Icon, IconButton} from "@material-ui/core";
 
 
 const useStyles = makeStyles(() => ({
@@ -52,10 +53,15 @@ const RepositoryDetails: React.FC = (() => {
                         {activeRepo.bpmnRepositoryName}
                     </div>
                     <div className={classes.repoInfo} >
-                        <Description className={classes.icon}/>
-                        {activeRepo.existingDiagrams}
-                        <People className={classes.icon} onClick={() => setUserManagementOpen(true)}/>
-                        {activeRepo.assignedUsers}
+                        <IconButton>
+                            <Description/>
+                            {activeRepo.existingDiagrams}
+                        </IconButton>
+                        <IconButton onClick={() => setUserManagementOpen(true)}>
+                            <People/>
+                            {activeRepo.assignedUsers}
+                        </IconButton>
+
                     </div>
                 </div>
                 <div className={classes.description}>

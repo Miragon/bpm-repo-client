@@ -15,6 +15,7 @@ export const SYNC_STATUS = "SYNC_STATUS"
 export const SUCCESS = "SUCCESS"
 export const GET_VERSIONS = "GET_VERSIONS"
 export const ASSIGNED_USERS = "ASSIGNED_USERS"
+export const CURRENT_USER_INFO = "CURRENT_USER_INFO"
 
 export const fetchFavoriteDiagrams = () => {
     return async (dispatch: Dispatch) => {

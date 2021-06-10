@@ -10,6 +10,7 @@ import activeDiagramsReducer from "./activeDiagramsReducer";
 import versionsReducer from "./versionsReducer";
 import apiResponseWithRetryReducer from "./apiResponseWithRetryReducer";
 import assignedUsersReducer from "./assignedUsersReducer";
+import currentUserReducer from "./currentUserReducer";
 
 export const rootReducer = combineReducers({
     recentDiagrams: diagramReducer,
@@ -22,7 +23,8 @@ export const rootReducer = combineReducers({
     activeRepo: activeRepoReducer,
     activeDiagrams: activeDiagramsReducer,
     versions: versionsReducer,
-    assignedUsers: assignedUsersReducer
+    assignedUsers: assignedUsersReducer,
+    currentUserInfo: currentUserReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>

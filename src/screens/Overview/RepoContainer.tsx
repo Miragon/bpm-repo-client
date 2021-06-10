@@ -79,6 +79,9 @@ const RepoContainer: React.FC = observer(() => {
                         assignedUsers={repo.assignedUsers}
                         onClick={() => openRepoScreen(repo)}/>
                 ))}
+                    {allRepos?.length === 0 && (
+                        <span>You haven&apos;t added any Repositories yet.</span>
+                    )}
                 </ErrorBoundary>
             </div>
         </>

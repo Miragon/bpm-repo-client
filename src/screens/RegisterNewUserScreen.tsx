@@ -9,10 +9,13 @@ import LockIcon from "@material-ui/icons/Lock";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from "react-router-dom";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import {UserControllerApi} from "../api/api";
 import {UserTO} from "../api/models";
 import helpers from "../constants/Functions";
+import {HANDLEDERROR, SUCCESS} from "../store/actions/diagramAction";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../store/reducers/rootReducer";
 
 function Copyright() {
     return (
@@ -76,13 +79,31 @@ const useStyles = makeStyles(theme => ({
 const RegisterNewUserScreen: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
+    const dispatch = useDispatch()
+
 
     const [userController] = useState<UserControllerApi>(new UserControllerApi());
     const [newUsername, setNewUsername] = useState<string>("Username");
     const [flowSquadEmail, setFlowSquadEmail] = useState<string>("");
     const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
 
+
+    const apiErrorState: string = useSelector((state: RootState) => state.api.errorMessage)
+    const apiSuccessState: string = useSelector((state: RootState) => state.api.successMessage)
+
+
     useEffect(() => {
+        if(apiErrorState){
+            //toast can contain any component, the Retry Button (and the message: apiErrorState) has to be passed here
+            //toast.error(<RepoCard repoTitle={"abc"} description={"def"} existingDiagrams={3} assignedUsers={2}></RepoCard>, {autoClose: 8000, pauseOnHover: true, role: "alert"})
+            toast.error(apiErrorState, {autoClose: 8000, pauseOnHover: true})
+            dispatch({type: HANDLEDERROR, errorMessage: ""})
+        }
+        if(apiSuccessState){
+            toast.success(apiSuccessState, {autoClose: 4000, pauseOnHover: true})
+            dispatch({type: SUCCESS, successMessage: ""})
+        }
+
         (async () => {
             try {
                 const config = helpers.getClientConfig(localStorage.getItem("oauth_token"))
@@ -94,7 +115,7 @@ const RegisterNewUserScreen: React.FC = () => {
                     + "Please check your network-connection or try to reload the page");
             }
         })();
-    }, [userController, setFlowSquadEmail]);
+    }, [userController, setFlowSquadEmail, dispatch, apiErrorState, apiSuccessState]);
 
     /**
      * Persist a new User-profile in the FlowRepo-backend
@@ -129,8 +150,8 @@ const RegisterNewUserScreen: React.FC = () => {
                 <p className={classes.infoText}>
                     This is the first time you are trying to access Miragon Cloud Services.
                     <br />
-                    To use the service you need an API-Key.
-                    To create it accept the Terms and Conditions and confirm the dialog.
+                    To use this service you need an account.
+                    To create a new account, choose a name and accept the Terms and Conditions.
                 </p>
 
                 <form className={classes.form} noValidate>
@@ -171,6 +192,7 @@ const RegisterNewUserScreen: React.FC = () => {
                 </form>
                 <Copyright />
             </div>
+            <ToastContainer />
         </div>
     );
 };

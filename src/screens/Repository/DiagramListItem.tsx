@@ -6,7 +6,6 @@ import {Delete, MoreVert, KeyboardArrowDown, KeyboardArrowUp} from '@material-ui
 import DropdownButton, {DropdownButtonItem} from "../../components/Form/DropdownButton";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllVersions} from "../../store/actions/versionAction";
-import VersionListItem from "./VersionListItem";
 import {BpmnDiagramVersionTO} from "../../api/models";
 import {RootState} from "../../store/reducers/rootReducer";
 import {formatDate} from "@angular/common";
@@ -142,10 +141,13 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
+    const versions: Array<BpmnDiagramVersionTO> = useSelector((state: RootState) => state.versions.versions)
+
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
 
-    const versions: Array<BpmnDiagramVersionTO> = useSelector((state: RootState) => state.versions.versions)
     const [open, setOpen] = useState(false);
+
+
 
     const fetchVersions = useCallback(() => {
         try {
@@ -155,7 +157,6 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
         }
     }, [dispatch])
 
-
     const reformatDate = (date: string | undefined) => {
         if(date){
             return date.split('T')[0]
@@ -164,12 +165,10 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
             return "01.01.2000"
         }
     }
-
     const deleteDiagram = (event: any) => {
         event.stopPropagation()
         console.log("Clicked Delete")
     }
-
     const openVersions = (event: any): void => {
         event.stopPropagation();
         console.log("querying versions");
@@ -182,7 +181,6 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
         fetchVersions();
         setOpen(false);
     }
-
     const openModeler = (repoId: string, diagramId: string, versionId: string) => {
         window.open(`/modeler/#/${repoId}/${diagramId}/${versionId}/`, '_blank')?.focus();
     }
