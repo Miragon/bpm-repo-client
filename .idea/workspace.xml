@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="729ff4ed-bfcf-4736-b82f-531f358411b5" name="Default Changelist" comment="UserManagement">
-      <change afterPath="$PROJECT_DIR$/src/api/models/assignment-to.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/Repository/UserListItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Overview/Overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview/Overview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Overview/RepoContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Overview/RepoContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Repository/UserListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Repository/UserListItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/Repository/UserManagementDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Repository/UserManagementDialog.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/actions/assignmentAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/actions/assignmentAction.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/reducers/assignedUsersReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/assignedUsersReducer.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +102,8 @@
       <workItem from="1622443450804" duration="14141000" />
       <workItem from="1622549338798" duration="4918000" />
       <workItem from="1623132446429" duration="11364000" />
-      <workItem from="1623219313654" duration="15651000" />
+      <workItem from="1623219313654" duration="15836000" />
+      <workItem from="1623306621226" duration="4758000" />
     </task>
     <task id="LOCAL-00001" summary="Update Modeler URLs">
       <created>1620297569688</created>
@@ -138,7 +140,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623228404987</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="UserManagement">
+      <created>1623246203380</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1623246203380</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

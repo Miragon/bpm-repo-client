@@ -1,20 +1,26 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import {
     ClickAwayListener,
     Grow,
     IconButton,
     ListItem,
     ListItemSecondaryAction,
-    ListItemText, MenuItem, MenuList,
+    ListItemText,
+    MenuItem,
+    MenuList,
     Paper,
     Popper
 } from "@material-ui/core";
-import {AssignmentTO} from "../../api/models";
+import {AssignmentTO, AssignmentWithUserNameTORoleEnumEnum} from "../../api/models";
 import {Settings} from "@material-ui/icons";
 import clsx from "clsx";
 import {makeStyles} from "@material-ui/styles";
 import {Theme} from "@material-ui/core/styles";
 import {DropdownButtonItem} from "../../components/Form/DropdownButton";
+import {useDispatch} from "react-redux";
+import * as assignmentAction from "../../store/actions/assignmentAction";
+import {deleteAssignment} from "../../store/actions/assignmentAction";
+
 
 interface Props {
     assignmentTO: AssignmentTO;
@@ -65,9 +71,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 const UserListItem: React.FC<Props> = props => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const [open, setOpen] = useState<boolean>(false);
     const ref = useRef<HTMLButtonElement>(null);
+
+
+    const changeRole = useCallback((role: AssignmentWithUserNameTORoleEnumEnum) => {
+        try{
+            dispatch(assignmentAction.createOrUpdateUserAssignment(props.assignmentTO.bpmnRepositoryId, props.assignmentTO.userName, role))
+        } catch (err) {
+            console.log(err)
+        }
+    }, [dispatch])
+
+    const removeUser = useCallback(() => {
+        try{
+            dispatch(assignmentAction.deleteAssignment(props.assignmentTO.bpmnRepositoryId, props.assignmentTO.userName))
+        } catch (err) {
+            console.log(err)
+        }
+    }, [dispatch])
 
 
     const options: DropdownButtonItem[] = [
@@ -76,7 +100,7 @@ const UserListItem: React.FC<Props> = props => {
             label: "Owner",
             type: "button",
             onClick: () => {
-                console.log("Owner");
+                changeRole(AssignmentWithUserNameTORoleEnumEnum.OWNER)
             }
         },
         {
@@ -84,7 +108,7 @@ const UserListItem: React.FC<Props> = props => {
             label: "Admin",
             type: "button",
             onClick: () => {
-                console.log("Admin");
+                changeRole(AssignmentWithUserNameTORoleEnumEnum.ADMIN)
             }
         },
         {
@@ -92,7 +116,7 @@ const UserListItem: React.FC<Props> = props => {
             label: "Member",
             type: "button",
             onClick: () => {
-                console.log("Member");
+                changeRole(AssignmentWithUserNameTORoleEnumEnum.MEMBER)
             }
         },
         {
@@ -100,7 +124,7 @@ const UserListItem: React.FC<Props> = props => {
             label: "Viewer",
             type: "button",
             onClick: () => {
-                console.log("Viewer");
+                changeRole(AssignmentWithUserNameTORoleEnumEnum.VIEWER)
             }
         },
         {
@@ -114,7 +138,7 @@ const UserListItem: React.FC<Props> = props => {
             label: "Remove from Repo",
             type: "button",
             onClick: () => {
-                console.log("Remove")
+                removeUser()
             }
         }
     ];

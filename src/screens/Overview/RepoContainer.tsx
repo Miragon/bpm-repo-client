@@ -49,7 +49,6 @@ const RepoContainer: React.FC = observer(() => {
         fetchRepos();
         if(!syncStatus){
             fetchRepos()
-            dispatch({type: SYNC_STATUS, dataSynced: true})
         }
 
     }, [dispatch, fetchRepos, syncStatus])

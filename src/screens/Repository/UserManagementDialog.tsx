@@ -20,6 +20,7 @@ import UserListItem from "./UserListItem";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import {makeStyles} from "@material-ui/core/styles";
 import * as assignmentAction from "../../store/actions/assignmentAction";
+import {SYNC_STATUS} from "../../store/actions/diagramAction";
 
 interface Props {
     open: boolean;
@@ -47,10 +48,12 @@ const UserManagementDialog: React.FC<Props> = props => {
     const { open, onCancelled } = props;
 
     const assignmentTOs: Array<AssignmentTO> = useSelector((state: RootState) => state.assignedUsers.assignedUsers)
-    const activeRepo: BpmnRepositoryRequestTO = useSelector((state: RootState) => state.activeRepo.activeRepo)
+    const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.dataSynced)
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [user, setUser] = useState<string>("");
+
+
     const fetchAssignedUsers = useCallback((repoId: string) => {
         try {
             dispatch(getAllAssignedUsers(repoId))
@@ -61,22 +64,24 @@ const UserManagementDialog: React.FC<Props> = props => {
 
     useEffect(() => {
         fetchAssignedUsers(props.repoId)
-    }, [fetchAssignedUsers])
+        if(!syncStatus){
+            fetchAssignedUsers(props.repoId)
+        }
+    }, [fetchAssignedUsers, syncStatus])
 
     const addUser = useCallback(() => {
         try {
             console.log("Added user")
-            dispatch(assignmentAction.createOrUpdateUserAssignment(activeRepo.bpmnRepositoryId, user))
+            dispatch(assignmentAction.createOrUpdateUserAssignment(props.repoId, user))
         } catch (err) {
             console.log(err)
         }
 
-    }, [dispatch, user, activeRepo])
+    }, [dispatch, user])
 
 
-//#TODO: Update the List when a user has been added/ the role has been changed
+//#TODO: Autosuggestions? Load all usernames on Input? Load Users after  x letters entered? ...
     //#TODO: Style the Input field
-    //#TODO: Call the CreateOrUpdateAssignment Method when clicking on Member/Admin/...
     return (
         <PopupDialog
             open={open}
@@ -99,12 +104,14 @@ const UserManagementDialog: React.FC<Props> = props => {
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
+                <Paper>
+
                 {assignmentTOs?.map(assignmentTO => (
                     <UserListItem assignmentTO={assignmentTO} key={assignmentTO.userId} />
                 ))}
+                </Paper>
 
             </List>
-
         </PopupDialog>
     );
 };

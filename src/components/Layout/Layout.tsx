@@ -6,6 +6,11 @@ import Router from "./Router";
 import {UserControllerApi} from "../../api/api";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
 import helpers from "../../constants/Functions";
+import {toast, ToastContainer} from "react-toastify";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/reducers/rootReducer";
+import RepoCard from "../../screens/Overview/Holder/RepoCard";
+import {HANDLEDERROR, SUCCESS} from "../../store/actions/diagramAction";
 
 const useStyles = makeStyles(() => ({
     contentWrapper: {
@@ -37,7 +42,7 @@ const useStyles = makeStyles(() => ({
 
 /**
  * Diese Komponente erzeugt das Layout auf oberster Ebene der Anwendung.
- * Es enthält sowohl das Menü als auch sämtlichen Inhalt der Anwendung.
+ * Es enthält sowohl das Menü als auch sämtlichen Inhalt der Anwendung. + Toasts für Fehlgeschlagene bzw. erfolgreiche API calls
  * Die primäre Aufgabe des Layouts ist die einheitliche Darstellung des
  * globalen Menüs sowie das Routing.
  *
@@ -46,6 +51,27 @@ const useStyles = makeStyles(() => ({
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Layout = (): any => {
+
+
+
+    const dispatch = useDispatch()
+    const apiErrorState: string = useSelector((state: RootState) => state.api.errorMessage)
+    const apiSuccessState: string = useSelector((state: RootState) => state.api.successMessage)
+
+
+    //#TODO: Add a retry Button to the toast
+    useEffect(() => {
+        if(apiErrorState){
+            //toast can contain any component, the Retry Button (and the message: apiErrorState) has to be passed here
+            //toast.error(<RepoCard repoTitle={"abc"} description={"def"} existingDiagrams={3} assignedUsers={2}></RepoCard>, {autoClose: 8000, pauseOnHover: true, role: "alert"})
+            toast.error(apiErrorState, {autoClose: 8000, pauseOnHover: true})
+            dispatch({type: HANDLEDERROR, errorMessage: ""})
+        }
+        if(apiSuccessState){
+            toast.success(apiSuccessState, {autoClose: 4000, pauseOnHover: true})
+            dispatch({type: SUCCESS, successMessage: ""})
+        }
+    }, [apiErrorState, apiSuccessState, dispatch])
 
     const classes = useStyles();
     const [userController] = useState<UserControllerApi>(new UserControllerApi());
@@ -119,6 +145,7 @@ const Layout = (): any => {
             <div className={classes.contentWrapper}>
                 <div className={classes.content}>
                     <Router />
+                    <ToastContainer />
                 </div>
             </div>
         </>
