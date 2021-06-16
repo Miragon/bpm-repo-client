@@ -16,8 +16,7 @@ import { Configuration } from "./configuration";
 // @ts-ignore
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-//#TODO: Why does port 8081 AND 8080 work for everything except DELETE method?
-export const BASE_PATH = "http://localhost:8080".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost:8081".replace(/\/+$/, "");
 
 /**
  *
