@@ -5,13 +5,15 @@ import {useTranslation} from "react-i18next";
 import {RootState} from "../../../store/reducers/rootReducer";
 import * as diagramAction from "../../../store/actions/diagramAction";
 import * as versionAction from "../../../store/actions/versionAction";
-import {DEFAULT_DMN_FILE, DEFAULT_XML_FILE} from "../../../store/constants";
+import {CREATE_VERSION_WITH_FILE, DEFAULT_DMN_FILE, DEFAULT_XML_FILE} from "../../../store/constants";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import SettingsForm from "../../../components/Form/SettingsForm";
 import SettingsSelect from "../../../components/Form/SettingsSelect";
 import MenuItem from "@material-ui/core/MenuItem";
 import SettingsTextField from "../../../components/Form/SettingsTextField";
 import {createDiagram} from "../../../store/actions/diagramAction";
+import {DiagramVersionTO} from "../../../models";
+import {createOrUpdateVersion} from "../../../store/actions/versionAction";
 
 interface Props {
     open: boolean;
@@ -20,6 +22,7 @@ interface Props {
     repoId: string;
     versionNo: string;
     file: string;
+    diagramId: string;
 }
 
 const SaveAsNewDiagramDialog: React.FC<Props> = props => {
@@ -30,31 +33,25 @@ const SaveAsNewDiagramDialog: React.FC<Props> = props => {
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-
-
-    const createdDiagram: DiagramTO = useSelector(
-        (state: RootState) => state.diagrams.createdDiagram
-    );
-
-
-    const createVersion = useCallback(() => {
-        if(createdDiagram){
-            console.log(props.file)
-            console.log("Creating Version")
-            dispatch(versionAction.createOrUpdateVersion(createdDiagram.id, props.file, DiagramVersionUploadTOSaveTypeEnum.MILESTONE));
-        }
-    }, [dispatch, props, createdDiagram])
-
+    const [toBeCreatedState, setToBeCreatedState] = useState("");
+    const versionToBeCreated: DiagramVersionTO = useSelector((state: RootState) => state.versions.versionProps)
 
     const onCreate = useCallback(async () => {
         try {
-            await dispatch(diagramAction.createDiagram(props.repoId, title, description, props.type));
-            createVersion();
+            dispatch(diagramAction.createNewDiagramWithVersionFile(props.repoId, title, description, props.file, props.type));
             props.onCancelled();
         } catch (err) {
             console.log(err);
         }
-    }, [createVersion, dispatch, title, description, props]);
+    }, [dispatch, title, description, props]);
+
+    useEffect(() => {
+        //#TODO: Wird wiederholt aufgerufen
+        if(versionToBeCreated && versionToBeCreated?.repositoryId !== toBeCreatedState){
+            dispatch(createOrUpdateVersion(versionToBeCreated.diagramId, versionToBeCreated.xml, DiagramVersionUploadTOSaveTypeEnum.MILESTONE))
+            setToBeCreatedState(versionToBeCreated.repositoryId)
+        }
+    }, [dispatch, versionToBeCreated, toBeCreatedState])
 
 
     return (

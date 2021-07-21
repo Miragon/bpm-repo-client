@@ -278,6 +278,7 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
             <SaveAsNewDiagramDialog
                 open={saveDialogOpen}
                 repoId={props.repoId}
+                diagramId={props.diagramVersion.diagramId}
                 onCancelled={() => setSaveDialogOpen(false)}
                 type={props.fileType === "bpmn" ? props.fileType : "dmn"}
                 versionNo={props.diagramVersion.milestone}

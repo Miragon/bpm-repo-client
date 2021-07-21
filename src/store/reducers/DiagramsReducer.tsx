@@ -2,7 +2,6 @@ import {CaseReducer} from "@reduxjs/toolkit";
 import {DiagramTO} from "../../api/models";
 import {
     ACTIVE_DIAGRAMS,
-    CREATED_DIAGRAM,
     DIAGRAM_UPLOAD,
     GET_FAVORITE,
     GET_RECENT,
@@ -26,11 +25,6 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 diagrams: action.diagrams
             };
-        case CREATED_DIAGRAM:
-            return {
-                ...state,
-                createdDiagram: action.createdDiagram
-            }
         case DIAGRAM_UPLOAD:
             return {
                 ...state,

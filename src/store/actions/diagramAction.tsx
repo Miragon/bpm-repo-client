@@ -4,8 +4,8 @@ import {DiagramUpdateTO, DiagramVersionUploadTOSaveTypeEnum, NewDiagramTO} from 
 import helpers from "../../constants/Functions";
 import {
     ACTIVE_DIAGRAMS,
-    CREATED_DIAGRAM,
-    DEFAULT_BPMN_SVG,
+    CREATE_DEFAULT_VERSION, CREATE_VERSION_WITH_FILE,
+    DEFAULT_BPMN_SVG, DEFAULT_DMN_FILE,
     DEFAULT_DMN_SVG,
     DEFAULT_XML_FILE,
     DIAGRAM_UPLOAD,
@@ -22,7 +22,7 @@ import {
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
 import * as versionAction from "./versionAction";
-import {createOrUpdateVersion} from "./versionAction";
+import {DiagramVersionTO, DiagramVersionTOSaveTypeEnum} from "../../models";
 
 export const fetchFavoriteDiagrams = () => {
     return async (dispatch: Dispatch): Promise<void> => {
@@ -77,7 +77,6 @@ export const createDiagram = (
             };
             const response = await diagramController.createDiagram(newDiagramTO, repoId, config);
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: CREATED_DIAGRAM, createdDiagram: response.data });
                 dispatch({ type: SYNC_STATUS_DIAGRAM, dataSynced: false });
                 dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
             } else {
@@ -103,10 +102,17 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
                 fileType: fileType || "BPMN",
                 svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
             };
+
             const response = await diagramController.createDiagram(newDiagramTO, repoId, config);
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: CREATED_DIAGRAM, createdDiagram: response.data });
-                versionAction.createOrUpdateVersion(response.data.id, DEFAULT_XML_FILE, DiagramVersionUploadTOSaveTypeEnum.MILESTONE)
+                const newDiagramVersionTO: DiagramVersionTO = {
+                    diagramId: response.data.id,
+                    repositoryId: repoId,
+                    saveType: DiagramVersionTOSaveTypeEnum.MILESTONE,
+                    updatedDate: undefined,
+                    xml: (fileType === "dmn") ? DEFAULT_DMN_FILE : DEFAULT_XML_FILE
+                }
+                dispatch({type: CREATE_DEFAULT_VERSION, defaultVersionProps: newDiagramVersionTO})
                 dispatch({ type: SYNC_STATUS_DIAGRAM, dataSynced: false });
                 dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
             } else {
@@ -120,7 +126,7 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
     };
 };
 
-export const createDiagramWithVersionFile = (repoId: string, name: string, description: string, file: string, fileType: string) => {
+export const createNewDiagramWithVersionFile = (repoId: string, name: string, description: string, file: string, fileType: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
         try {
@@ -131,10 +137,17 @@ export const createDiagramWithVersionFile = (repoId: string, name: string, descr
                 fileType: fileType || "BPMN",
                 svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
             };
+
             const response = await diagramController.createDiagram(newDiagramTO, repoId, config);
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: CREATED_DIAGRAM, createdDiagram: response.data });
-                versionAction.createOrUpdateVersion(response.data.id, DEFAULT_XML_FILE, DiagramVersionUploadTOSaveTypeEnum.MILESTONE)
+                const newDiagramVersionTO: DiagramVersionTO = {
+                    diagramId: response.data.id,
+                    repositoryId: repoId,
+                    saveType: DiagramVersionTOSaveTypeEnum.MILESTONE,
+                    updatedDate: undefined,
+                    xml: file
+                }
+                dispatch({type: CREATE_VERSION_WITH_FILE, versionProps: newDiagramVersionTO})
                 dispatch({ type: SYNC_STATUS_DIAGRAM, dataSynced: false });
                 dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
             } else {

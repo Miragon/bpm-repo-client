@@ -3,7 +3,7 @@ import * as api from "../../api/api";
 import {DiagramVersionUploadTO, DiagramVersionUploadTOSaveTypeEnum} from "../../api/models";
 import helpers from "../../constants/Functions";
 import {
-    CREATED_DIAGRAM,
+    CREATE_DEFAULT_VERSION, CREATE_VERSION_WITH_FILE,
     GET_VERSIONS,
     LATEST_VERSION,
     SUCCESS,
@@ -20,7 +20,6 @@ export const createOrUpdateVersion = (
     comment?: string
 ) => {
     return async (dispatch: Dispatch): Promise<void> => {
-        console.log(file)
         const versionController = new api.VersionApi();
         try {
             const diagramVersionUploadTO: DiagramVersionUploadTO = {
@@ -33,8 +32,10 @@ export const createOrUpdateVersion = (
                 diagramVersionUploadTO, bpmnDiagramId, config
             );
             if (Math.floor(response.status / 100) === 2) {
+                dispatch({type: CREATE_VERSION_WITH_FILE, versionProps: null})
+                dispatch({type: CREATE_DEFAULT_VERSION, defaultVersionProps: null})
+
                 dispatch({ type: SUCCESS, successMessage: "Version Created" });
-                dispatch({ type: CREATED_DIAGRAM, createdDiagram: null });
                 dispatch({ type: SYNC_STATUS_VERSION, dataSynced: false });
             } else {
                 dispatch({ type: UNHANDLEDERROR, errorMessage: "Could not process request" });
