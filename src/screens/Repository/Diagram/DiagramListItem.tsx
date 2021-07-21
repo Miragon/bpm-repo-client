@@ -5,17 +5,17 @@ import {ClickAwayListener, Collapse, Grow, IconButton, MenuItem, MenuList, Paper
 import {KeyboardArrowDown, MoreVert} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import clsx from "clsx";
-import theme from "../../theme";
-import {DropdownButtonItem} from "../../components/Form/DropdownButton";
-import {getAllVersions, getLatestVersion} from "../../store/actions/versionAction";
-import {DiagramVersionTO} from "../../api/models";
-import {RootState} from "../../store/reducers/rootReducer";
-import {deleteDiagram} from "../../store/actions";
-import {LATEST_VERSION} from "../../store/constants";
+import theme from "../../../theme";
+import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
+import {getAllVersions, getLatestVersion} from "../../../store/actions/versionAction";
+import {DiagramVersionTO} from "../../../api/models";
+import {RootState} from "../../../store/reducers/rootReducer";
+import {deleteDiagram} from "../../../store/actions";
+import {LATEST_VERSION} from "../../../store/constants";
 import CreateVersionDialog from "./CreateVersionDialog";
 import EditDiagramDialog from "./EditDiagramDialog";
 import TableChartIcon from "@material-ui/icons/TableChart";
-import {ReactComponent as BpmnIcon} from "../../img/bpmnIcon_gears.svg";
+import {ReactComponent as BpmnIcon} from "../../../img/bpmnIcon_gears.svg";
 import VersionDetails from "./VersionDetails";
 import {useTranslation} from "react-i18next";
 
@@ -390,6 +390,8 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
                 <Collapse in={open} timeout="auto">
                     <VersionDetails
                         diagramId={props.diagramId}
+                        repoId={props.repoId}
+                        fileType={props.fileType}
                         diagramVersionTOs={diagramVersionTOs}
                         diagramTitle={props.diagramTitle}
                         loading={loading}/>

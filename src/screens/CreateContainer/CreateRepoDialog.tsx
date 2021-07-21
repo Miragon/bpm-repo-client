@@ -47,7 +47,8 @@ const CreateRepoDialog: React.FC<Props> = props => {
             onFirst={() => {
                 onCreate();
                 onCreated();
-            }}>
+            }}
+            firstDisabled={title === ""} >
 
             <SettingsForm large>
 

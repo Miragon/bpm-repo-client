@@ -1,14 +1,14 @@
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/styles";
-import PopupDialog from "../../components/Form/PopupDialog";
-import SettingsForm from "../../components/Form/SettingsForm";
-import SettingsTextField from "../../components/Form/SettingsTextField";
-import * as versionAction from "../../store/actions/versionAction";
-import {DiagramVersionTO, DiagramVersionUploadTOSaveTypeEnum} from "../../api/models";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
+import * as versionAction from "../../../store/actions/versionAction";
+import {DiagramVersionTO, DiagramVersionUploadTOSaveTypeEnum} from "../../../api/models";
 import {useTranslation} from "react-i18next";
-import {RootState} from "../../store/reducers/rootReducer";
-import {UNHANDLEDERROR} from "../../store/constants";
+import {RootState} from "../../../store/reducers/rootReducer";
+import {UNHANDLEDERROR} from "../../../store/constants";
 
 const useStyles = makeStyles(() => ({
     container: {}
@@ -22,7 +22,6 @@ interface Props {
     diagramTitle: string;
 }
 
-// #TODO: Get the latest version in order to create a new Release etc.
 
 const CreateVersionDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
@@ -41,7 +40,6 @@ const CreateVersionDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         try {
-            // #TODO: Use the XML String from the last version
             if(latestVersion){
                 await dispatch(versionAction.createOrUpdateVersion(diagramId, latestVersion?.xml, DiagramVersionUploadTOSaveTypeEnum.MILESTONE, comment));
                 dispatch(versionAction.getAllVersions(diagramId));

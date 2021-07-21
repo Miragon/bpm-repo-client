@@ -7,7 +7,7 @@ export const handleError = (error: any, retryMethod: ActionType, retryPayload: A
     // eslint-disable-next-line no-console
     console.log(error);
     try {
-        switch (error.response.data.status?.toString()) {
+        switch (error.response.status?.toString()) {
             case "400":
                 return {
                     type: UNHANDLEDERROR,
@@ -39,7 +39,7 @@ export const handleError = (error: any, retryMethod: ActionType, retryPayload: A
             case "409":
                 return {
                     type: UNHANDLEDERROR,
-                    errorMessage: error.response.data.message,
+                    errorMessage: error.response.data,
                     retryMethod: retryMethod,
                     retryPayload: retryPayload
                 };

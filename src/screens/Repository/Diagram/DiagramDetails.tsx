@@ -1,9 +1,9 @@
 import {makeStyles} from "@material-ui/styles";
 import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {DiagramTO} from "../../api/models";
-import {fetchDiagramsFromRepo} from "../../store/actions";
-import {RootState} from "../../store/reducers/rootReducer";
+import {DiagramTO} from "../../../api/models";
+import {fetchDiagramsFromRepo} from "../../../store/actions";
+import {RootState} from "../../../store/reducers/rootReducer";
 import DiagramListItem from "./DiagramListItem";
 import {useParams} from "react-router";
 

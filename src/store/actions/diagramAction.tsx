@@ -1,12 +1,13 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
-import {DiagramUpdateTO, NewDiagramTO} from "../../api/models";
+import {DiagramUpdateTO, DiagramVersionUploadTOSaveTypeEnum, NewDiagramTO} from "../../api/models";
 import helpers from "../../constants/Functions";
 import {
     ACTIVE_DIAGRAMS,
     CREATED_DIAGRAM,
     DEFAULT_BPMN_SVG,
     DEFAULT_DMN_SVG,
+    DEFAULT_XML_FILE,
     DIAGRAM_UPLOAD,
     DIAGRAMQUERY_EXECUTED,
     GET_FAVORITE,
@@ -20,6 +21,8 @@ import {
 } from "../constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
+import * as versionAction from "./versionAction";
+import {createOrUpdateVersion} from "./versionAction";
 
 export const fetchFavoriteDiagrams = () => {
     return async (dispatch: Dispatch): Promise<void> => {
@@ -88,6 +91,64 @@ export const createDiagram = (
     };
 };
 
+
+export const createDiagramWithDefaultVersion = (repoId: string, name: string, description: string, fileType?: string) => {
+    return async (dispatch: Dispatch): Promise<void> => {
+        const diagramController = new api.DiagramApi();
+        try {
+            const config = helpers.getClientConfig();
+            const newDiagramTO: NewDiagramTO = {
+                name: name,
+                description: description,
+                fileType: fileType || "BPMN",
+                svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
+            };
+            const response = await diagramController.createDiagram(newDiagramTO, repoId, config);
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: CREATED_DIAGRAM, createdDiagram: response.data });
+                versionAction.createOrUpdateVersion(response.data.id, DEFAULT_XML_FILE, DiagramVersionUploadTOSaveTypeEnum.MILESTONE)
+                dispatch({ type: SYNC_STATUS_DIAGRAM, dataSynced: false });
+                dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+            } else {
+                dispatch({ type: UNHANDLEDERROR, errorMessage: "Could not process request" });
+            }
+        } catch (error) {
+            dispatch(handleError(error, ActionType.CREATE_DIAGRAM, [
+                repoId, name, description, fileType
+            ]));
+        }
+    };
+};
+
+export const createDiagramWithVersionFile = (repoId: string, name: string, description: string, file: string, fileType: string) => {
+    return async (dispatch: Dispatch): Promise<void> => {
+        const diagramController = new api.DiagramApi();
+        try {
+            const config = helpers.getClientConfig();
+            const newDiagramTO: NewDiagramTO = {
+                name: name,
+                description: description,
+                fileType: fileType || "BPMN",
+                svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
+            };
+            const response = await diagramController.createDiagram(newDiagramTO, repoId, config);
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: CREATED_DIAGRAM, createdDiagram: response.data });
+                versionAction.createOrUpdateVersion(response.data.id, DEFAULT_XML_FILE, DiagramVersionUploadTOSaveTypeEnum.MILESTONE)
+                dispatch({ type: SYNC_STATUS_DIAGRAM, dataSynced: false });
+                dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+            } else {
+                dispatch({ type: UNHANDLEDERROR, errorMessage: "Could not process request" });
+            }
+        } catch (error) {
+            dispatch(handleError(error, ActionType.CREATE_DIAGRAM, [
+                repoId, name, description, fileType
+            ]));
+        }
+    };
+};
+
+
 export const updateDiagram = (name: string, description: string | undefined, diagramId: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
@@ -129,14 +190,14 @@ export const fetchDiagramsFromRepo = (repoId: string) => {
     };
 };
 
-export const uploadDiagram = (repoId: string, name: string, description: string) => {
+export const uploadDiagram = (repoId: string, name: string, description: string, fileType?: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
         try {
             const newDiagram: NewDiagramTO = {
                 name: name,
                 description: description,
-                fileType: "bpmn"
+                fileType: fileType ? fileType : "bpmn"
             };
             const config = helpers.getClientConfig();
             const response = await diagramController.createDiagram(newDiagram, repoId, config);

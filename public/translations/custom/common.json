@@ -30,7 +30,9 @@
     "delete": "Version löschen",
     "version": "Version",
     "MILESTONE": "Meilenstein",
-    "deploymentHistory": "Veröffentlichungen"
+    "deploymentHistory": "Veröffentlichungen",
+    "saveAsNewDiagram": "Als neues Diagramm speichern",
+    "saveVersionXAsNewDiagram": "Version {{milestone}} als neues Diagramm speichern"
   },
   "deployment": {
     "deployment": "Veröffentlichung",

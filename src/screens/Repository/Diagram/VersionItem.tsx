@@ -13,15 +13,17 @@ import {
 } from "@material-ui/core";
 import {MoreVert} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import {DiagramVersionTO} from "../../api/models";
+import {DiagramVersionTO} from "../../../api/models";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import theme from "../../theme";
-import {DropdownButtonItem} from "../../components/Form/DropdownButton";
+import theme from "../../../theme";
+import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import DeployVersionDialog from "./DeployVersionDialog";
 import DeploymentHistory from "./DeploymentHistory";
-import {fetchTargets} from "../../store/actions/deploymentAction";
+import {fetchTargets} from "../../../store/actions/deploymentAction";
 import clsx from "clsx";
+import CreateDiagramDialog from "../../CreateContainer/CreateDiagramDialog";
+import SaveAsNewDiagramDialog from "./SaveAsNewDiagramDialog";
 
 const useStyles = makeStyles(() => ({
     splitCell: {
@@ -70,6 +72,8 @@ const useStyles = makeStyles(() => ({
 interface Props {
     diagramVersion: DiagramVersionTO;
     diagramTitle: string;
+    fileType: string;
+    repoId: string;
 }
 
 
@@ -81,6 +85,7 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [historyOpen, setHistoryOpen] = useState<boolean>(false);
     const [deployVersionOpen, setDeployVersionOpen] = useState<boolean>(false);
+    const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
     const ref = useRef<HTMLButtonElement>(null);
 
     const openModeler = (diagramId: string, versionId?: string) => {
@@ -124,9 +129,8 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
         setHistoryOpen(true);
     }
 
-    //#todo: find out why clicks go through all the top elements
-    const options: DropdownButtonItem[] = [
 
+    const options: DropdownButtonItem[] = [
         {
             id: "DeployVersion",
             label: "version.deploy",
@@ -152,6 +156,15 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
             type: "button",
             onClick: () => {
                 setHistoryOpen(true);
+            }
+
+        },
+        {
+            id: "SaveAsNewDiagram",
+            label: "version.saveAsNewDiagram",
+            type: "button",
+            onClick: () => {
+                setSaveDialogOpen(true);
             }
 
         },
@@ -261,6 +274,14 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
                 open={historyOpen}
                 onCancelled={() => setHistoryOpen(false)}
                 deployments={props.diagramVersion.deployments} />
+
+            <SaveAsNewDiagramDialog
+                open={saveDialogOpen}
+                repoId={props.repoId}
+                onCancelled={() => setSaveDialogOpen(false)}
+                type={props.fileType === "bpmn" ? props.fileType : "dmn"}
+                versionNo={props.diagramVersion.milestone}
+                file={props.diagramVersion.xml}/>
 
         </>
     )

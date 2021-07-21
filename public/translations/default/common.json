@@ -31,7 +31,9 @@
     "version": "Version",
     "RELEASE": "Release",
     "MILESTONE": "Milestone",
-    "deploymentHistory": "Deployments"
+    "deploymentHistory": "Deployments",
+    "saveAsNewDiagram": "Save as new Diagram",
+    "saveVersionXAsNewDiagram": "Save Version {{milestone}} as new Diagram"
   },
   "deployment": {
     "deployment": "Deployment",

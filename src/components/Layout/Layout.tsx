@@ -72,6 +72,7 @@ const Layout = (): any => {
             // toast can contain any component, the Retry Method (and the message: apiErrorState)
             // has to be passed here
             toast(<Toast
+                isError={true}
                 errorMessage={i18n.exists(apiErrorState) ? t(apiErrorState) : apiErrorState}
                 retryMethod={apiErrorRetryMethod}
                 retryPayload={apiErrorRetryPayload}/>, {
@@ -90,7 +91,20 @@ const Layout = (): any => {
             dispatch({type: UNHANDLEDERROR, errorMessage: ""});
         }
         if (apiSuccessState) {
-            toast.success(apiSuccessState, {autoClose: 4000, pauseOnHover: true});
+            toast(<Toast
+                errorMessage={i18n.exists(apiSuccessState) ? t(apiSuccessState) : apiSuccessState}
+                isError={false} />, {
+                autoClose: 4000,
+                pauseOnHover: true,
+                progressStyle: {
+                    background: theme.palette.primary.main,
+                },
+                style: {
+                    backgroundColor: theme.palette.secondary.main,
+                    color: theme.palette.secondary.contrastText,
+
+                }
+            })
             dispatch({type: SUCCESS, successMessage: ""});
         }
     }, [apiErrorState, apiSuccessState, apiErrorRetryMethod, apiErrorRetryPayload, dispatch, t, i18n]);

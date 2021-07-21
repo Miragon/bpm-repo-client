@@ -6,15 +6,29 @@ import {useDispatch, useSelector} from "react-redux";
 import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import * as userAction from "../../store/actions/userAction";
-import {UserInfoTO} from "../../api/models";
-import {RootState} from "../../store/reducers/rootReducer";
-import * as assignmentAction from "../../store/actions/assignmentAction";
+import * as userAction from "../../../store/actions/userAction";
+import {UserInfoTO} from "../../../api/models";
+import {RootState} from "../../../store/reducers/rootReducer";
+import * as assignmentAction from "../../../store/actions/assignmentAction";
+import theme from "../../../theme";
 
 const useStyles = makeStyles(() => ({
     listItem: {
         paddingLeft: "0px",
+        display: "flex",
         paddingRight: "60px"
+    },
+    addButton: {
+        backgroundColor: theme.palette.secondary.main,
+        color: theme.palette.secondary.contrastText,
+        borderRadius: "5px",
+        height: "52px",
+        width: "52px",
+        transition: "background-color .3s, color .3s",
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.contrastText,
+            color: theme.palette.secondary.main
+        }
     }
 }));
 
@@ -137,7 +151,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
                         }} />
                 )} />
             <ListItemSecondaryAction>
-                <IconButton edge="end" onClick={() => addUser()}>
+                <IconButton className={classes.addButton} edge="end" onClick={() => addUser()}>
                     <Add />
                 </IconButton>
             </ListItemSecondaryAction>

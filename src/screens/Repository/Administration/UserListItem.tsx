@@ -17,9 +17,9 @@ import clsx from "clsx";
 import {makeStyles} from "@material-ui/styles";
 import {Theme} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
-import {DropdownButtonItem} from "../../components/Form/DropdownButton";
-import {AssignmentTO, AssignmentUpdateTORoleEnumEnum} from "../../api/models";
-import * as assignmentAction from "../../store/actions/assignmentAction";
+import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
+import {AssignmentTO, AssignmentUpdateTORoleEnumEnum} from "../../../api/models";
+import * as assignmentAction from "../../../store/actions/assignmentAction";
 import {useTranslation} from "react-i18next";
 
 interface Props {

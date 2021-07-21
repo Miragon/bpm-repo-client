@@ -37,22 +37,26 @@ const CreateDiagramDialog: React.FC<Props> = props => {
         (state: RootState) => state.diagrams.createdDiagram
     );
 
+
+    const createVersion = useCallback(() => {
+        if(createdDiagram){
+            dispatch(versionAction.createOrUpdateVersion(createdDiagram.id, (props.type === "bpmn" ? DEFAULT_XML_FILE : DEFAULT_DMN_FILE), DiagramVersionUploadTOSaveTypeEnum.MILESTONE));
+        }
+    }, [props, dispatch, createdDiagram])
+
+
     const onCreate = useCallback(async () => {
         setRepository(props.repo?.id)
         try {
-            dispatch(diagramAction.createDiagram(props.repo?.id ? props.repo.id : repository, title, description, props.type));
+            await dispatch(diagramAction.createDiagram(props.repo?.id ? props.repo.id : repository, title, description, props.type));
+            createVersion();
             props.onCancelled();
         } catch (err) {
             // eslint-disable-next-line no-console
             console.log(err);
         }
-    }, [dispatch, repository, title, description, props]);
+    }, [createVersion, dispatch, repository, title, description, props]);
 
-    useEffect(() => {
-        if (createdDiagram) {
-            dispatch(versionAction.createOrUpdateVersion(createdDiagram.id, (props.type === "bpmn" ? DEFAULT_XML_FILE : DEFAULT_DMN_FILE), DiagramVersionUploadTOSaveTypeEnum.MILESTONE));
-        }
-    }, [createdDiagram, dispatch, props.type]);
 
     return (
         <PopupDialog
@@ -63,7 +67,8 @@ const CreateDiagramDialog: React.FC<Props> = props => {
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}
-            onFirst={onCreate}>
+            onFirst={onCreate}
+            firstDisabled={title === "" || repository === ""} >
 
             <SettingsForm large>
 

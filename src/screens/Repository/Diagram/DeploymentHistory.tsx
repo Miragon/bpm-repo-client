@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import PopupDialog from "../../components/Form/PopupDialog";
+import PopupDialog from "../../../components/Form/PopupDialog";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {Deployment} from "../../api/models";
+import {Deployment} from "../../../api/models";
 import {makeStyles} from "@material-ui/core/styles";
 
 
@@ -89,7 +89,8 @@ const DeploymentHistory: React.FC<Props> = props => {
                 <TableBody>
                     {props.deployments?.map(deployment => (
                         <TableRow
-                            key={deployment.id} >
+                            key={deployment.id}
+                            hover >
                             <TableCell
                                 component="th"
                                 scope="row" >

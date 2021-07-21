@@ -53,7 +53,9 @@ const PathStructure: React.FC<Props> = props => {
         <>
             <div className={classes.container} >
                 {props.structure.map((element, index) => (
-                    <div className={classes.element}>
+                    <div
+                        className={classes.element}
+                        key={element.name}>
                         <div onClick={() => openLink(element.link)}>
                             {element?.name}
                         </div>

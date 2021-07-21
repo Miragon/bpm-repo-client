@@ -3,9 +3,9 @@ import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/cor
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {KeyboardArrowUp} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import {DiagramVersionTO} from "../../api/models";
+import {DiagramVersionTO} from "../../../api/models";
 import {useDispatch} from "react-redux";
-import {GET_VERSIONS} from "../../store/constants";
+import {GET_VERSIONS} from "../../../store/constants";
 import {useTranslation} from "react-i18next";
 import VersionItem from "./VersionItem";
 
@@ -27,7 +27,9 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
     diagramId: string;
+    repoId: string;
     loading: boolean;
+    fileType: string;
     diagramTitle: string;
     diagramVersionTOs: DiagramVersionTO[];
 }
@@ -91,6 +93,8 @@ const VersionDetails: React.FC<Props> = ((props: Props) => {
                         <VersionItem
                             key={singleVersion.id}
                             diagramVersion={singleVersion}
+                            repoId={props.repoId}
+                            fileType={props.fileType}
                             diagramTitle={props.diagramTitle} />
                     ))}
                 </TableBody>

@@ -2,11 +2,11 @@ import {observer} from "mobx-react";
 import React, {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
-import DropdownButton, {DropdownButtonItem} from "../../components/Form/DropdownButton";
-import CreateDiagramDialog from "../CreateContainer/CreateDiagramDialog";
-import UploadDiagramDialog from "../CreateContainer/UploadDiagramDialog";
-import {RepositoryTO} from "../../api/models";
-import {RootState} from "../../store/reducers/rootReducer";
+import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
+import CreateDiagramDialog from "../../CreateContainer/CreateDiagramDialog";
+import UploadDiagramDialog from "../../CreateContainer/UploadDiagramDialog";
+import {RepositoryTO} from "../../../api/models";
+import {RootState} from "../../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles(() => ({

@@ -20,6 +20,7 @@ export const createOrUpdateVersion = (
     comment?: string
 ) => {
     return async (dispatch: Dispatch): Promise<void> => {
+        console.log(file)
         const versionController = new api.VersionApi();
         try {
             const diagramVersionUploadTO: DiagramVersionUploadTO = {
