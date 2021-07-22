@@ -62,7 +62,8 @@ const UploadDiagramDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         try {
-            dispatch(diagramAction.uploadDiagram(repository, title, description));
+            //#TODO: write some code to get the file extension from the filename and pass it here
+            dispatch(diagramAction.uploadDiagram(repository, title, description, "BPMN"));
             props.onCancelled();
         } catch (err) {
             dispatch({ type: UNHANDLEDERROR, errorMessage: err });

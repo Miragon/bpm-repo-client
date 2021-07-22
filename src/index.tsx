@@ -72,6 +72,7 @@ const initI18 = (defaultPackage: JSON, customPackage: JSON) => {
 
 
 
+
 ReactDOM.render((
     <Provider store={store}>
         <HashRouter>

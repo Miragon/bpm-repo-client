@@ -13,6 +13,7 @@ export const SYNC_STATUS_ASSIGNMENT = "SYNC_STATUS_ASSIGNMENT";
 export const SYNC_STATUS_MENU = "SYNC_STATUS_MENU";
 export const SYNC_STATUS_RECENT = "SYNC_STATUS_RECENT";
 export const SYNC_STATUS_ACTIVE_REPOSITORY = "SYNC_STATUS_ACTIVE_REPOSITORY";
+export const FILETYPES = "FILETYPES";
 export const SUCCESS = "SUCCESS";
 export const GET_VERSIONS = "GET_VERSIONS";
 export const ASSIGNED_USERS = "ASSIGNED_USERS";
@@ -22,6 +23,13 @@ export const USERQUERY_EXECUTED = "USERQUERY_EXECUTED";
 export const SEARCH_DIAGRAMS = "SEARCH_DIAGRAMS";
 export const MENU_ITEMS = "MENU_ITEMS";
 export const TARGETS = "TARGETS";
+
+export const LATEST_VERSION = "LATEST_VERSION";
+export const DIAGRAMQUERY_EXECUTED = "DIAGRAMQUERY_EXECUTED";
+
+
+
+//#TODO: Delete, this will be provided by the FileTypesPlugin
 export const DEFAULT_BPMN_SVG = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
     "<!-- created with bpmn-js / http://bpmn.io -->\n" +
     "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n" +
@@ -88,5 +96,3 @@ export const DEFAULT_DMN_FILE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
     + "    </dmndi:DMNDiagram>\n"
     + "  </dmndi:DMNDI>\n"
     + "</definitions>\n";
-export const LATEST_VERSION = "LATEST_VERSION";
-export const DIAGRAMQUERY_EXECUTED = "DIAGRAMQUERY_EXECUTED";

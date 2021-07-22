@@ -123,5 +123,11 @@
   "error": {
     "couldNotProcess": "Request could not be processed",
     "unknown": "Unknown Error - Please refresh the page"
+  },
+  "artifact": {
+    "createBPMN": "Create BPMN Diagram",
+    "createDMN": "Create DMN Diagram",
+    "createFORM": "Create Form",
+    "createCONFIGURATION": "Create Configuration"
   }
 }

@@ -50,7 +50,7 @@ export enum ActionType {
 export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
     switch (actionType) {
         case ActionType.CREATE_DIAGRAM:
-            return diagramAction.createDiagram(payload[0], payload[1], payload[2], payload[3]);
+            return diagramAction.createDiagram(payload[0], payload[1], payload[2], payload[3], payload[4]);
 
         case ActionType.FETCH_FAVORITE_DIAGRAMS:
             return fetchFavoriteDiagrams();
@@ -62,7 +62,7 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
             return fetchDiagramsFromRepo(payload[0]);
 
         case ActionType.UPLOAD_DIAGRAM:
-            return uploadDiagram(payload[0], payload[1], payload[2]);
+            return uploadDiagram(payload[0], payload[1], payload[2], payload[3]);
 
         case ActionType.DELETE_DIAGRAM:
             return deleteDiagram(payload[0]);

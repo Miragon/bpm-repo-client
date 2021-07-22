@@ -1,6 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
-import {DiagramTO} from "../../api/models";
-import {ACTIVE_DIAGRAMS, DIAGRAM_UPLOAD, GET_FAVORITE, GET_RECENT, SEARCH_DIAGRAMS} from "../constants";
+import {DiagramTO, FileTypesTO} from "../../api/models";
+import {ACTIVE_DIAGRAMS, DIAGRAM_UPLOAD, FILETYPES, GET_FAVORITE, GET_RECENT, SEARCH_DIAGRAMS} from "../constants";
 
 const initialState = {
     diagrams: Array<DiagramTO>(),
@@ -9,6 +9,7 @@ const initialState = {
     recentDiagrams: Array<DiagramTO>(),
     favoriteDiagrams: Array<DiagramTO>(),
     searchedDiagrams: Array<DiagramTO>(),
+    fileTypes: Array<FileTypesTO>(),
 
 };
 
@@ -39,6 +40,11 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 searchedDiagrams: action.searchedDiagrams
             };
+        case FILETYPES:
+            return {
+                ...state,
+                fileTypes: action.fileTypes
+            }
     }
     return state;
 };

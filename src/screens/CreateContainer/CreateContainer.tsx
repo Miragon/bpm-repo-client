@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {observer} from "mobx-react";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DropdownButton, {DropdownButtonItem} from "../../components/Form/DropdownButton";
 import SimpleButton from "../../components/Form/SimpleButton";
 import DiagramSearchBar from "../Overview/DiagramSearchBar";
@@ -8,6 +8,9 @@ import CreateDiagramDialog from "./CreateDiagramDialog";
 import CreateRepoDialog from "./CreateRepoDialog";
 import UploadDiagramDialog from "./UploadDiagramDialog";
 import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/reducers/rootReducer";
+import {FileTypesTO} from "../../api/models";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -30,48 +33,46 @@ const RepoContainer: React.FC = observer(() => {
     const [createRepoOpen, setCreateRepoOpen] = useState(false);
     const [uploadDiagramOpen, setUploadDiagramOpen] = useState(false);
     const [createDiagramOpen, setCreateDiagramOpen] = useState(false);
-    const [createDiagramType, setCreateDiagramType] = useState<"bpmn" | "dmn">("bpmn");
+    const [createDiagramType, setCreateDiagramType] = useState<string>("BPMN");
+    const [diagramOptions, setDiagramOptions] = useState<Array<DropdownButtonItem>>([])
 
-    const diagramOptions: DropdownButtonItem[] = [
-        {
-            id: "bpmn",
-            label: "diagram.createBpmn",
-            type: "button",
-            onClick: () => {
-                setCreateDiagramOpen(true);
-                setCreateDiagramType("bpmn");
-            }
-        },
-        {
-            id: "dmn",
-            label: "diagram.createDmn",
-            type: "button",
-            onClick: () => {
-                setCreateDiagramOpen(true);
-                setCreateDiagramType("dmn");
-            }
-        },
-        {
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes);
+
+
+    useEffect(() => {
+        const opts: Array<DropdownButtonItem> = []
+        fileTypes?.forEach(fileType => {
+            opts.push({id: fileType.name,
+                label: `artifact.create${fileType.name}`,
+                type: "button",
+                onClick: () => {
+                    setCreateDiagramOpen(true);
+                    setCreateDiagramType(fileType.name)
+                }});
+        })
+
+        opts.push({
             id: "divider1",
             type: "divider",
             label: "",
             onClick: () => { /* Do nothing */
             }
-        },
-        {
+        })
+        opts.push({
             id: "upload",
             label: "diagram.upload",
             type: "button",
             onClick: () => setUploadDiagramOpen(true)
-        },
-        {
-            id: "import",
-            label: "diagram.import",
-            type: "button",
-            // eslint-disable-next-line no-console
-            onClick: () => console.log("Import")
-        }
-    ];
+        })
+        setOpts(opts)
+
+    }, [fileTypes])
+
+
+    const setOpts = (opts: Array<DropdownButtonItem>) => {
+        setDiagramOptions(opts)
+    }
+
 
     return (
         <>

@@ -1,20 +1,29 @@
 /* eslint-disable max-len */
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {makeStyles} from "@material-ui/styles";
-import {ClickAwayListener, Collapse, Grow, IconButton, MenuItem, MenuList, Paper, Popper} from "@material-ui/core";
+import {
+    ClickAwayListener,
+    Collapse,
+    Grow,
+    IconButton,
+    MenuItem,
+    MenuList,
+    Paper,
+    Popper,
+    SvgIcon
+} from "@material-ui/core";
 import {KeyboardArrowDown, MoreVert} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import clsx from "clsx";
 import theme from "../../../theme";
 import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {getAllVersions, getLatestVersion} from "../../../store/actions/versionAction";
-import {DiagramVersionTO} from "../../../api/models";
+import {DiagramVersionTO, FileTypesTO} from "../../../api/models";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {deleteDiagram} from "../../../store/actions";
 import {LATEST_VERSION} from "../../../store/constants";
 import CreateVersionDialog from "./CreateVersionDialog";
 import EditDiagramDialog from "./EditDiagramDialog";
-import TableChartIcon from "@material-ui/icons/TableChart";
 import {ReactComponent as BpmnIcon} from "../../../img/bpmnIcon_gears.svg";
 import VersionDetails from "./VersionDetails";
 import {useTranslation} from "react-i18next";
@@ -173,6 +182,7 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
     const diagramVersionTOs: Array<DiagramVersionTO> = useSelector((state: RootState) => state.versions.versions);
     const latestVersion: DiagramVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
     const versionSynced: boolean = useSelector((state: RootState) => state.dataSynced.versionSynced)
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes);
 
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
 
@@ -183,6 +193,8 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);
     const [editDiagramOpen, setEditDiagramOpen] = useState<boolean>(false);
     const [downloadReady, setDownloadReady] = useState<boolean>(false);
+    const [svg, setSvg] = useState<string>("");
+
 
     const ref = useRef<HTMLButtonElement>(null);
 
@@ -213,7 +225,11 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
         checkIfVersionsAreOpen();
     }, [diagramVersionTOs, currentId, checkIfVersionsAreOpen]);
 
-
+    useEffect(() => {
+        if(fileTypes && props.fileType){
+            setSvg(fileTypes.find(fileType => fileType.name === props.fileType)?.svgIcon)
+        }
+    }, [fileTypes, props.fileType])
 
     const downloadFile = (filePath: string) => {
         const link=document.createElement("a");
@@ -357,10 +373,13 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
 
                         <div className={classes.header}>
                             <div className={classes.fileType}>
-                                {(props.fileType === "dmn") ?
-                                    <TableChartIcon/>
+                                {svg === "BpmnIcon" ?
+                                    <BpmnIcon />
                                     :
-                                    <BpmnIcon/>
+                                    <SvgIcon htmlColor={theme.palette.primary.contrastText}>
+                                        <path d={svg} />
+                                    </SvgIcon>
+
                                 }
                             </div>
                             <div className={classes.title}>

@@ -1,8 +1,12 @@
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
-import React from "react";
-import TableChartIcon from "@material-ui/icons/TableChart";
+import React, {useEffect, useState} from "react";
 import {ReactComponent as BpmnIcon} from "../../../img/bpmnIcon_gears.svg";
+import {FileTypesTO} from "../../../api/models";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/reducers/rootReducer";
+import {SvgIcon} from "@material-ui/core";
+import theme from "../../../theme";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -77,6 +81,22 @@ const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
     const classes = useStyles();
 
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes);
+    const [svg, setSvg] = useState<string>("");
+
+    useEffect(() => {
+        if(fileTypes && props.fileType){
+            setSvg(fileTypes.find(fileType => fileType.name === props.fileType)?.svgIcon)
+        }
+    }, [fileTypes, props.fileType])
+
+    /*
+                        {(props.fileType === "dmn") ?
+                        <TableChartIcon/>
+                        <Icon>{props.fileType}</Icon>
+                        :
+                        <BpmnIcon/>
+     */
 
     return (
         <div className={clsx(classes.container, props.className)}>
@@ -91,12 +111,16 @@ const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
                 </div>
                     
                 <div className={classes.fileType} >
-                    {(props.fileType === "dmn") ?
-                        <TableChartIcon/>
+                    {svg === "BpmnIcon" ?
+                        <BpmnIcon />
                         :
-                        <BpmnIcon/>
+                        <SvgIcon htmlColor={theme.palette.primary.contrastText}>
+                            <path d={svg} />
+                        </SvgIcon>
 
                     }
+
+
                 </div>
 
             </div>

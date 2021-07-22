@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -9,11 +9,8 @@ import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
-import {useDispatch, useSelector} from "react-redux";
 import {UserApi} from "../api/api";
 import helpers from "../constants/Functions";
-import {SUCCESS, UNHANDLEDERROR} from "../store/constants";
-import {RootState} from "../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 
 function Copyright() {

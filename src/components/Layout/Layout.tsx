@@ -4,10 +4,10 @@ import clsx from "clsx";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {toast, ToastContainer} from "react-toastify";
-import {UserApi} from "../../api";
+import {DiagramApi, UserApi} from "../../api";
 import helpers from "../../constants/Functions";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
-import {CURRENT_USER_INFO, SUCCESS, UNHANDLEDERROR} from "../../store/constants";
+import {CURRENT_USER_INFO, FILETYPES, SUCCESS, UNHANDLEDERROR} from "../../store/constants";
 import {RootState} from "../../store/reducers/rootReducer";
 import Menu from "./Menu";
 import Router from "./Router";
@@ -15,7 +15,6 @@ import Toast from "./Toast";
 import {useTranslation} from "react-i18next";
 import theme from "../../theme";
 import {ActionType} from "../../store/actions/actions";
-import i18next from "i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
@@ -165,6 +164,7 @@ const Layout = (): any => {
     const [userController] = useState<UserApi>(new UserApi());
 
     const [userDoesExist, setUserDoesExist] = useState<boolean | undefined>(undefined);
+    const [fileConfigFetched, setFileConfigFetched] = useState<boolean>(false);
 
     useEffect(() => {
         const config = helpers.getClientConfig();
@@ -173,12 +173,37 @@ const Layout = (): any => {
                 if (response.data) {
                     setUserDoesExist(true);
                     dispatch({type: CURRENT_USER_INFO, currentUserInfo: response.data});
+
+
                 } else {
                     setUserDoesExist(false);
                 }
             })
             .catch(() => setUserDoesExist(false));
     }, [userController, dispatch]);
+
+
+    const [diagramController] = useState<DiagramApi>(new DiagramApi());
+
+    useEffect(() => {
+        if(!fileConfigFetched){
+            const config = helpers.getClientConfig();
+            diagramController.getAllFileTypes(config).then(response2 => {
+                if(response2.data){
+                    dispatch({type: FILETYPES, fileTypes: response2.data});
+                    setFileConfigFetched(true);
+                }
+            })
+
+        }
+    }, [diagramController, dispatch, fileConfigFetched])
+
+
+
+
+    
+ 
+
 
     if (userDoesExist === undefined) {
         return null;

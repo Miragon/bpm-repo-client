@@ -2,7 +2,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {RepositoryTO} from "../../api/models";
+import {FileTypesTO, RepositoryTO} from "../../api/models";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
@@ -14,7 +14,7 @@ import {useTranslation} from "react-i18next";
 interface Props {
     open: boolean;
     onCancelled: () => void;
-    type: "bpmn" | "dmn";
+    type: string;
     repo?: RepositoryTO;
 }
 
@@ -24,10 +24,11 @@ const CreateDiagramDialog: React.FC<Props> = props => {
 
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
     const [repository, setRepository] = useState<string>(props.repo ? props.repo.id : "");
 
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes)
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
@@ -36,12 +37,19 @@ const CreateDiagramDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         setRepository(props.repo?.id)
         try {
-            dispatch(diagramAction.createDiagramWithDefaultVersion(props.repo?.id ? props.repo.id : repository, title, description,props.type));
-            props.onCancelled();
+            const defaultFileProps = fileTypes.find(fileType => fileType.name === props.type)
+            if(defaultFileProps){
+                dispatch(diagramAction.createDiagramWithDefaultVersion(props.repo?.id ? props.repo.id : repository, title, description, defaultFileProps.defaultFile, defaultFileProps.name, defaultFileProps.defaultPreviewSVG));
+                setTitle("")
+                setDescription("")
+                setRepository("")
+                props.onCancelled();
+            }
+
         } catch (err) {
             console.log(err);
         }
-    }, [dispatch, repository, title, description, props]);
+    }, [dispatch, repository, title, description, props, fileTypes]);
 
 
     return (
@@ -49,7 +57,7 @@ const CreateDiagramDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={props.type === "bpmn" ? t("diagram.createBpmn") : t("diagram.createDmn")}
+            title={t(`artifact.create${props.type}`)}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}
@@ -60,7 +68,7 @@ const CreateDiagramDialog: React.FC<Props> = props => {
 
                 <SettingsSelect
                     disabled={false}
-                    value={props.repo ? props.repo.id : repository}
+                    value={repository}
                     label={t("repository.target")}
                     onChanged={setRepository}>
                     {props.repo

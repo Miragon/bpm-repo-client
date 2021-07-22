@@ -9,10 +9,6 @@ import {
 import helpers from "../../constants/Functions";
 import {
     ACTIVE_DIAGRAMS,
-    DEFAULT_BPMN_SVG,
-    DEFAULT_DMN_FILE,
-    DEFAULT_DMN_SVG,
-    DEFAULT_XML_FILE,
     DIAGRAM_UPLOAD,
     DIAGRAMQUERY_EXECUTED,
     GET_FAVORITE,
@@ -53,6 +49,8 @@ export const fetchRecentDiagrams = () => {
             const response = await diagramController.getRecent(config);
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: GET_RECENT, recentDiagrams: response.data });
+                dispatch({type: SYNC_STATUS_RECENT, dataSynced: true})
+
             } else {
                 dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
@@ -66,7 +64,8 @@ export const createDiagram = (
     repoId: string,
     name: string,
     description: string,
-    fileType?: string
+    fileType: string,
+    svgPreview: string
 ) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
@@ -76,7 +75,7 @@ export const createDiagram = (
                 name: name,
                 description: description,
                 fileType: fileType || "BPMN",
-                svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
+                svgPreview: svgPreview
             };
             const response = await diagramController.createDiagram(newDiagramTO, repoId, config);
             if (Math.floor(response.status / 100) === 2) {
@@ -87,14 +86,14 @@ export const createDiagram = (
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.CREATE_DIAGRAM, [
-                repoId, name, description, fileType
+                repoId, name, description, fileType, svgPreview
             ]));
         }
     };
 };
 
 
-export const createDiagramWithDefaultVersion = (repoId: string, name: string, description: string, fileType?: string) => {
+export const createDiagramWithDefaultVersion = (repoId: string, name: string, description: string, file: string, fileType: string, svgPreview: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
         try {
@@ -102,8 +101,9 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
             const newDiagramTO: NewDiagramTO = {
                 name: name,
                 description: description,
+                //#TODO remove "BPMN"
                 fileType: fileType || "BPMN",
-                svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
+                svgPreview: svgPreview
             };
 
             await diagramController.createDiagram(newDiagramTO, repoId, config)
@@ -111,7 +111,7 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
                     if (Math.floor(response.status / 100) === 2) {
                         const diagramVersionUploadTO: DiagramVersionUploadTO = {
                             saveType: DiagramVersionUploadTOSaveTypeEnum.MILESTONE,
-                            xml: fileType === "bpmn" ? DEFAULT_XML_FILE : DEFAULT_DMN_FILE
+                            xml: file
                         }
                         const versionController = new api.VersionApi();
                         try {
@@ -120,6 +120,9 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
                                 .then(response2 => {
                                     if (Math.floor(response2.status / 100) === 2) {
                                         dispatch({type: SUCCESS, successMessage: "diagram.createdDefault"});
+                                        dispatch({type: SYNC_STATUS_DIAGRAM, dataSynced: false });
+                                        dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
+                                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
                                         dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
                                     } else {
                                         dispatch({type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
@@ -127,10 +130,9 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
                                 }
                                 );
                         } catch (error) {
-                            dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_VERSION, [response.data.id, diagramVersionUploadTO.xml, DiagramVersionUploadTOSaveTypeEnum.MILESTONE]));
+                            dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_VERSION, [response.data.id, file, DiagramVersionUploadTOSaveTypeEnum.MILESTONE]));
                         }
-                        dispatch({type: SYNC_STATUS_DIAGRAM, dataSynced: false });
-                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+
                     } else {
                         dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
                     }
@@ -140,7 +142,7 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
 
         } catch (error) {
             dispatch(handleError(error, ActionType.CREATE_DIAGRAM, [
-                repoId, name, description, fileType
+                repoId, name, description, fileType, svgPreview
             ]));
         }
     };
@@ -149,7 +151,7 @@ export const createDiagramWithDefaultVersion = (repoId: string, name: string, de
 
 
 
-export const createNewDiagramWithVersionFile = (repoId: string, name: string, description: string, file: string, fileType: string) => {
+export const createNewDiagramWithVersionFile = (repoId: string, name: string, description: string, file: string, fileType: string, svgPreview: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
         try {
@@ -158,7 +160,7 @@ export const createNewDiagramWithVersionFile = (repoId: string, name: string, de
                 name: name,
                 description: description,
                 fileType: fileType || "BPMN",
-                svgPreview: fileType === "dmn" ? DEFAULT_DMN_SVG : DEFAULT_BPMN_SVG
+                svgPreview: svgPreview
             };
             await diagramController.createDiagram(newDiagramTO, repoId, config)
                 .then(response => {
@@ -174,6 +176,9 @@ export const createNewDiagramWithVersionFile = (repoId: string, name: string, de
                                 .then(response2 => {
                                     if (Math.floor(response2.status / 100) === 2) {
                                         dispatch({type: SUCCESS, successMessage: "diagram.createdFromExisting"});
+                                        dispatch({type: SYNC_STATUS_DIAGRAM, dataSynced: false });
+                                        dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
+                                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
                                         dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
                                     } else {
                                         dispatch({type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
@@ -183,8 +188,6 @@ export const createNewDiagramWithVersionFile = (repoId: string, name: string, de
                         } catch (error) {
                             dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_VERSION, [response.data.id, file, DiagramVersionUploadTOSaveTypeEnum.MILESTONE]));
                         }
-                        dispatch({type: SYNC_STATUS_DIAGRAM, dataSynced: false });
-                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
                     } else {
                         dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
                     }
@@ -193,7 +196,7 @@ export const createNewDiagramWithVersionFile = (repoId: string, name: string, de
 
         } catch (error) {
             dispatch(handleError(error, ActionType.CREATE_DIAGRAM, [
-                repoId, name, description, fileType
+                repoId, name, description, fileType, svgPreview
             ]));
         }
     };
@@ -241,15 +244,11 @@ export const fetchDiagramsFromRepo = (repoId: string) => {
     };
 };
 
-export const uploadDiagram = (repoId: string, name: string, description: string, fileType?: string) => {
+export const uploadDiagram = (repoId: string, name: string, description: string, fileType: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const diagramController = new api.DiagramApi();
         try {
-            const newDiagram: NewDiagramTO = {
-                name: name,
-                description: description,
-                fileType: fileType ? fileType : "bpmn"
-            };
+            const newDiagram: NewDiagramTO = {name, description, fileType};
             const config = helpers.getClientConfig();
             const response = await diagramController.createDiagram(newDiagram, repoId, config);
             if (Math.floor(response.status / 100) === 2) {
@@ -260,7 +259,7 @@ export const uploadDiagram = (repoId: string, name: string, description: string,
                 dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
-            dispatch(handleError(error, ActionType.UPLOAD_DIAGRAM, [repoId, name, description]));
+            dispatch(handleError(error, ActionType.UPLOAD_DIAGRAM, [repoId, name, description, fileType]));
         }
     };
 };

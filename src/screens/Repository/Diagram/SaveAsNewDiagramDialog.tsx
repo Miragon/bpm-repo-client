@@ -1,10 +1,12 @@
 import React, {useCallback, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import * as diagramAction from "../../../store/actions/diagramAction";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import SettingsForm from "../../../components/Form/SettingsForm";
 import SettingsTextField from "../../../components/Form/SettingsTextField";
+import {FileTypesTO} from "../../../api/models";
+import {RootState} from "../../../store/reducers/rootReducer";
 
 interface Props {
     open: boolean;
@@ -26,15 +28,21 @@ const SaveAsNewDiagramDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState("");
 
 
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes)
 
     const onCreate = useCallback(async () => {
         try {
-            dispatch(diagramAction.createNewDiagramWithVersionFile(props.repoId, title, description, props.file, props.type));
-            props.onCancelled();
+            const defaultFileProps = fileTypes.find(fileType => fileType.name === props.type)
+            if(defaultFileProps){
+                //#TODO: The default Preview SVG will always be passed here => passt aber auch, für einzelne Versionen gibt es keine SVG Previews (immer nur für die aktuellste, gespeichert in DiagramEntity/ ArtifactEntity)
+                dispatch(diagramAction.createNewDiagramWithVersionFile(props.repoId, title, description, props.file, defaultFileProps.name, defaultFileProps.defaultPreviewSVG));
+                props.onCancelled();
+            }
+
         } catch (err) {
             console.log(err);
         }
-    }, [dispatch, title, description, props]);
+    }, [dispatch, title, description, props, fileTypes]);
 
 
     return (

@@ -120,5 +120,11 @@
   "error": {
     "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
     "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
+  },
+  "artifact": {
+    "createBPMN": "BPMN Diagramm erstellen",
+    "createDMN": "DMN Diagramm erstellen",
+    "createFORM": "Formular erstellen",
+    "createCONFIGURATION": "Konfiguration erstellen"
   }
 }
