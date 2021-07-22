@@ -2,15 +2,15 @@ import {makeStyles} from "@material-ui/styles";
 import {observer} from "mobx-react";
 import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {DiagramTO, RepositoryTO} from "../../api/models";
+import {ArtifactTO, RepositoryTO} from "../../api/models";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import * as diagramAction from "../../store/actions/diagramAction";
+import * as artifactAction from "../../store/actions/artifactAction";
 import {RootState} from "../../store/reducers/rootReducer";
-import DiagramCard from "./Holder/DiagramCard";
+import ArtifactCard from "./Holder/ArtifactCard";
 import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles(() => ({
-    diagramContainer: {
+    artifactContainer: {
         marginTop: "2rem",
         "&>h1": {
             color: "black",
@@ -30,20 +30,20 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const FavoriteDiagrams: React.FC = observer(() => {
+const FavoriteArtifacts: React.FC = observer(() => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
 
-    const favoriteDiagrams: Array<DiagramTO> = useSelector(
-        (state: RootState) => state.diagrams.favoriteDiagrams
+    const favoriteArtifacts: Array<ArtifactTO> = useSelector(
+        (state: RootState) => state.artifacts.favoriteArtifacts
     );
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
 
     const fetchFavorite = useCallback(() => {
         try {
-            dispatch(diagramAction.fetchFavoriteDiagrams());
+            dispatch(artifactAction.fetchFavoriteArtifacts());
         } catch (err) {
             // eslint-disable-next-line no-console
             console.log(err);
@@ -60,25 +60,25 @@ const FavoriteDiagrams: React.FC = observer(() => {
     }, [fetchFavorite]);
 
     return (
-        <div className={classes.diagramContainer}>
+        <div className={classes.artifactContainer}>
             <h1>{t("category.favorite")}</h1>
             <div className={classes.container}>
                 <ErrorBoundary>
-                    {favoriteDiagrams?.map(diagram => (
+                    {favoriteArtifacts?.map(artifact => (
                         <a
                             className={classes.card}
-                            key={diagram.id}
+                            key={artifact.id}
                             rel="noreferrer"
                             target="_blank"
-                            href={`/modeler/#/${diagram.repositoryId}/${diagram.id}/latest/`}>
-                            <DiagramCard
-                                diagramRepo={getRepoName(diagram.repositoryId)}
-                                diagramTitle={diagram.name}
-                                image={diagram.svgPreview}
-                                fileType={diagram.fileType} />
+                            href={`/modeler/#/${artifact.repositoryId}/${artifact.id}/latest/`}>
+                            <ArtifactCard
+                                artifactRepo={getRepoName(artifact.repositoryId)}
+                                artifactTitle={artifact.name}
+                                image={artifact.svgPreview}
+                                fileType={artifact.fileType} />
                         </a>
                     ))}
-                    {favoriteDiagrams?.length === 0 && (
+                    {favoriteArtifacts?.length === 0 && (
                         <span>{t("category.noFavoritesAvailable")}</span>
                     )}
                 </ErrorBoundary>
@@ -87,4 +87,4 @@ const FavoriteDiagrams: React.FC = observer(() => {
     );
 });
 
-export default FavoriteDiagrams;
+export default FavoriteArtifacts;

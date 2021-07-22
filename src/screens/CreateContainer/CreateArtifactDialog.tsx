@@ -7,7 +7,7 @@ import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import * as diagramAction from "../../store/actions/diagramAction";
+import * as artifactAction from "../../store/actions/artifactAction";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 
@@ -18,7 +18,7 @@ interface Props {
     repo?: RepositoryTO;
 }
 
-const CreateDiagramDialog: React.FC<Props> = props => {
+const CreateArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
@@ -28,7 +28,7 @@ const CreateDiagramDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState<string>("");
     const [repository, setRepository] = useState<string>(props.repo ? props.repo.id : "");
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes)
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
@@ -39,7 +39,7 @@ const CreateDiagramDialog: React.FC<Props> = props => {
         try {
             const defaultFileProps = fileTypes.find(fileType => fileType.name === props.type)
             if(defaultFileProps){
-                dispatch(diagramAction.createDiagramWithDefaultVersion(props.repo?.id ? props.repo.id : repository, title, description, defaultFileProps.defaultFile, defaultFileProps.name, defaultFileProps.defaultPreviewSVG));
+                dispatch(artifactAction.createArtifactWithDefaultVersion(props.repo?.id ? props.repo.id : repository, title, description, defaultFileProps.defaultFile, defaultFileProps.name, defaultFileProps.defaultPreviewSVG));
                 setTitle("")
                 setDescription("")
                 setRepository("")
@@ -105,4 +105,4 @@ const CreateDiagramDialog: React.FC<Props> = props => {
         </PopupDialog>
     );
 };
-export default CreateDiagramDialog;
+export default CreateArtifactDialog;

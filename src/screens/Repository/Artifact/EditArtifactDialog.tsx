@@ -2,7 +2,7 @@ import React, {useCallback, useState} from "react";
 import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {Input, InputLabel} from "@material-ui/core";
-import * as diagramAction from "../../../store/actions/diagramAction";
+import * as artifactAction from "../../../store/actions/artifactAction";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import {useTranslation} from "react-i18next";
 
@@ -24,24 +24,24 @@ interface Props {
     open: boolean;
     onCancelled: () => void;
     repoId: string;
-    diagramId: string;
-    diagramName: string;
-    diagramDescription: string;
+    artifactId: string;
+    artifactName: string;
+    artifactDescription: string;
 }
 
-const EditDiagramDialog: React.FC<Props> = props => {
+const EditArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const {t} = useTranslation("common");
 
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [title, setTitle] = useState<string>(props.diagramName);
-    const [description, setDescription] = useState<string>(props.diagramDescription);
+    const [title, setTitle] = useState<string>(props.artifactName);
+    const [description, setDescription] = useState<string>(props.artifactDescription);
 
     const applyChanges = useCallback(async () => {
         try {
-            dispatch(diagramAction.updateDiagram(title, description, props.diagramId));
+            dispatch(artifactAction.updateArtifact(title, description, props.artifactId));
             props.onCancelled();
         } catch (err) {
             // eslint-disable-next-line no-console
@@ -52,7 +52,7 @@ const EditDiagramDialog: React.FC<Props> = props => {
     return (
         <PopupDialog
             open={props.open}
-            title={props.diagramName}
+            title={props.artifactName}
             error={error}
             onCloseError={() => setError(undefined)}
             firstTitle={t("dialog.applyChanges")}
@@ -77,4 +77,4 @@ const EditDiagramDialog: React.FC<Props> = props => {
     );
 };
 
-export default EditDiagramDialog;
+export default EditArtifactDialog;

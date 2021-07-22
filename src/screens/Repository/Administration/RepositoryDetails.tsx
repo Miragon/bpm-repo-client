@@ -60,7 +60,7 @@ const RepositoryDetails: React.FC = (() => {
                             <Description
                                 className={classes.icon}
                                 fontSize="small" />
-                            {activeRepo.existingDiagrams}
+                            {activeRepo.existingArtifacts}
                         </IconButton>
                         <IconButton
                             size="small"

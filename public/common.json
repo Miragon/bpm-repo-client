@@ -8,24 +8,24 @@
     "notAvailable": "You haven't added any Repositories yet.",
     "target": "Target Repository"
   },
-  "diagram": {
-    "confirmDelete": "Are you sure want to delete {{diagramName}}?",
-    "create": "Create Diagram",
-    "createBpmn": "Create BPMN Diagram",
-    "createDmn": "Create DMN Diagram",
-    "delete": "Delete Diagram",
-    "download": "Download Diagram",
-    "edit": "Edit Diagram",
+  "artifact": {
+    "confirmDelete": "Are you sure want to delete {{artifactName}}?",
+    "create": "Create Artifact",
+    "createBpmn": "Create BPMN Artifact",
+    "createDmn": "Create DMN Artifact",
+    "delete": "Delete Artifact",
+    "download": "Download Artifact",
+    "edit": "Edit Artifact",
     "modifiedOn": "Modified on",
-    "upload": "Upload Diagram",
+    "upload": "Upload Artifact",
     "import": "Import from Cawemo",
-    "notAvailable": "You haven't added any diagrams yet"
+    "notAvailable": "You haven't added any artifacts yet"
   },
   "version": {
     "create": "Create new Version",
     "edit": "Edit version",
     "deploy": "Deploy version",
-    "dialogHeader": "Create new Version of {{diagramName}}",
+    "dialogHeader": "Create new Version of {{artifactName}}",
     "download": "Download version",
     "delete": "Delete version",
     "version": "Version",
@@ -52,7 +52,7 @@
     "favorite": "Favorites",
     "recent": "Recently used",
 
-    "noFavoritesAvailable": "You haven't added any diagrams to your favorites yet."
+    "noFavoritesAvailable": "You haven't added any artifacts to your favorites yet."
 
   },
   "search": {

@@ -70,7 +70,7 @@ const RepoContainer: React.FC = observer(() => {
                             key={repo.id}
                             repoTitle={repo.name}
                             description={repo.description}
-                            existingDiagrams={repo.existingDiagrams}
+                            existingArtifacts={repo.existingArtifacts}
                             assignedUsers={repo.assignedUsers}
                             onClick={() => openRepoScreen(repo)} />
                     ))}

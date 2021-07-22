@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
 interface Props {
     versionId: string;
     milestone: number;
-    diagramTitle: string;
+    artifactTitle: string;
     versionComment: string;
     open: boolean;
     onCancelled: () => void;
@@ -66,7 +66,7 @@ const DeploymentHistory: React.FC<Props> = props => {
             firstTitle={t("dialog.close")}
             onFirst={props.onCancelled}>
             <p>
-                {t("properties.title")}: <b> {props.diagramTitle} </b>
+                {t("properties.title")}: <b> {props.artifactTitle} </b>
             </p>
             <p>
                 {t("properties.comment")}: <b> {props.versionComment} </b>

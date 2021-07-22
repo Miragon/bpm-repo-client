@@ -18,12 +18,12 @@ import clsx from "clsx";
 import theme from "../../../theme";
 import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {getAllVersions, getLatestVersion} from "../../../store/actions/versionAction";
-import {DiagramVersionTO, FileTypesTO} from "../../../api/models";
+import {ArtifactVersionTO, FileTypesTO} from "../../../api/models";
 import {RootState} from "../../../store/reducers/rootReducer";
-import {deleteDiagram} from "../../../store/actions";
+import {deleteArtifact} from "../../../store/actions";
 import {LATEST_VERSION} from "../../../store/constants";
 import CreateVersionDialog from "./CreateVersionDialog";
-import EditDiagramDialog from "./EditDiagramDialog";
+import EditArtifactDialog from "./EditArtifactDialog";
 import {ReactComponent as BpmnIcon} from "../../../img/bpmnIcon_gears.svg";
 import VersionDetails from "./VersionDetails";
 import {useTranslation} from "react-i18next";
@@ -165,24 +165,24 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    diagramTitle: string;
+    artifactTitle: string;
     image: string | undefined;
     createdDate: string | undefined;
     updatedDate: string | undefined;
     description: string;
     repoId: string;
-    diagramId: string;
+    artifactId: string;
     fileType: string;
 }
 
-const DiagramListItem: React.FC<Props> = ((props: Props) => {
+const ArtifactListItem: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
-    const diagramVersionTOs: Array<DiagramVersionTO> = useSelector((state: RootState) => state.versions.versions);
-    const latestVersion: DiagramVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
+    const artifactVersionTOs: Array<ArtifactVersionTO> = useSelector((state: RootState) => state.versions.versions);
+    const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
     const versionSynced: boolean = useSelector((state: RootState) => state.dataSynced.versionSynced)
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes);
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
 
@@ -191,7 +191,7 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
     const [currentId, setCurrentId] = useState<string>("");
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);
-    const [editDiagramOpen, setEditDiagramOpen] = useState<boolean>(false);
+    const [editArtifactOpen, setEditArtifactOpen] = useState<boolean>(false);
     const [downloadReady, setDownloadReady] = useState<boolean>(false);
     const [svg, setSvg] = useState<string>("");
 
@@ -199,31 +199,31 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
     const ref = useRef<HTMLButtonElement>(null);
 
     const checkIfVersionsAreOpen = useCallback(() => {
-        if (diagramVersionTOs) {
-            const openedDiagram = diagramVersionTOs[0];
-            if (openedDiagram?.diagramId === props.diagramId) {
+        if (artifactVersionTOs) {
+            const openedArtifact = artifactVersionTOs[0];
+            if (openedArtifact?.artifactId === props.artifactId) {
                 setOpen(true);
             } else {
                 setOpen(false);
             }
         }
-    }, [diagramVersionTOs, props]);
+    }, [artifactVersionTOs, props]);
 
     useEffect(() => {
-        // This block checks if th versions of another diagram are being fetched at the moment and if the loading animation has to be displayed
-        if (diagramVersionTOs) {
-            setCurrentId(diagramVersionTOs[0] ? diagramVersionTOs[0].diagramId : "");
-            if (currentId === diagramVersionTOs[0]?.diagramId) {
+        // This block checks if th versions of another artifact are being fetched at the moment and if the loading animation has to be displayed
+        if (artifactVersionTOs) {
+            setCurrentId(artifactVersionTOs[0] ? artifactVersionTOs[0].artifactId : "");
+            if (currentId === artifactVersionTOs[0]?.artifactId) {
                 setLoading(false);
             }
         }
-        /* Runs a check for every DiagramListItem, as soon as the state changes.
-        If the DiagramId of the version that is currently saved in the state matches the DiagramId of this DiagramListItem,
+        /* Runs a check for every ArtifactListItem, as soon as the state changes.
+        If the ArtifactId of the version that is currently saved in the state matches the ArtifactId of this ArtifactListItem,
         The Item is expanded and available versions are displayed.
         If the IDs don't match, the list is collapsed
         */
         checkIfVersionsAreOpen();
-    }, [diagramVersionTOs, currentId, checkIfVersionsAreOpen]);
+    }, [artifactVersionTOs, currentId, checkIfVersionsAreOpen]);
 
     useEffect(() => {
         if(fileTypes && props.fileType){
@@ -243,20 +243,20 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
 
         if(downloadReady && latestVersion !== null){
             console.log("file Ready - starting download...")
-            const path = `/api/version/${props.diagramId}/${latestVersion?.id}/download`
+            const path = `/api/version/${props.artifactId}/${latestVersion?.id}/download`
             downloadFile(path)
             dispatch({type: LATEST_VERSION, latestVersion: null})
             setDownloadReady(false)
         }
 
-    }, [downloadReady, latestVersion, props.diagramId, dispatch])
+    }, [downloadReady, latestVersion, props.artifactId, dispatch])
 
 
 
 
     const fetchVersions = useCallback(() => {
         try {
-            dispatch(getAllVersions(props.diagramId));
+            dispatch(getAllVersions(props.artifactId));
         } catch (err) {
             console.log(err);
         }
@@ -279,8 +279,8 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
         return "01.01.2000";
     };
 
-    const removeDiagram = () => {
-        dispatch(deleteDiagram(props.diagramId));
+    const removeArtifact = () => {
+        dispatch(deleteArtifact(props.artifactId));
     };
     const openSettings = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
@@ -295,19 +295,19 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
     };
 
     const fetchLatestVersion = useCallback(() => {
-        dispatch(getLatestVersion(props.diagramId))
+        dispatch(getLatestVersion(props.artifactId))
         setDownloadReady(true)
-    }, [dispatch, props.diagramId])
+    }, [dispatch, props.artifactId])
 
     const initDownload = () => {
         fetchLatestVersion()
     }
 
-    const openModeler = (repoId: string, diagramId: string, versionId?: string) => {
+    const openModeler = (repoId: string, artifactId: string, versionId?: string) => {
         if (versionId) {
-            window.open(`/modeler/#/${repoId}/${diagramId}/${versionId}/`, "_blank");
+            window.open(`/modeler/#/${repoId}/${artifactId}/${versionId}/`, "_blank");
         } else {
-            window.open(`/modeler/#/${repoId}/${diagramId}/latest`, "_blank");
+            window.open(`/modeler/#/${repoId}/${artifactId}/latest`, "_blank");
         }
     };
 
@@ -318,22 +318,22 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
             label: "version.create",
             type: "button",
             onClick: () => {
-                dispatch(getLatestVersion(props.diagramId))
+                dispatch(getLatestVersion(props.artifactId))
                 setCreateVersionOpen(true);
             }
         },
         {
-            id: "EditDiagram",
-            label: "diagram.edit",
+            id: "EditArtifact",
+            label: "artifact.edit",
             type: "button",
             onClick: () => {
-                setEditDiagramOpen(true);
+                setEditArtifactOpen(true);
             }
 
         },
         {
-            id: "DownloadDiagram",
-            label: "diagram.download",
+            id: "DownloadArtifact",
+            label: "artifact.download",
             type: "button",
             onClick: () => {
                 initDownload();
@@ -348,13 +348,13 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
             }
         },
         {
-            id: "DeleteDiagram",
-            label: "diagram.delete",
+            id: "DeleteArtifact",
+            label: "artifact.delete",
             type: "button",
             onClick: () => {
                 // eslint-disable-next-line no-restricted-globals
-                if (confirm(t("diagram.confirmDelete", {diagramName: props.diagramTitle}))) {
-                    removeDiagram();
+                if (confirm(t("artifact.confirmDelete", {artifactName: props.artifactTitle}))) {
+                    removeArtifact();
                 }
             }
         }
@@ -364,7 +364,7 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
         <>
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
             <div className={classes.listItemWithVersions}>
-                <div className={classes.listItem} onClick={() => openModeler(props.repoId, props.diagramId)}>
+                <div className={classes.listItem} onClick={() => openModeler(props.repoId, props.artifactId)}>
                     <img
                         alt="Preview"
                         className={classes.image}
@@ -383,11 +383,11 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
                                 }
                             </div>
                             <div className={classes.title}>
-                                {props.diagramTitle}
+                                {props.artifactTitle}
                             </div>
 
                             <div className={classes.updatedDate}>
-                                {`${t("diagram.modifiedOn")} ${reformatDate(props.updatedDate)}`}
+                                {`${t("artifact.modifiedOn")} ${reformatDate(props.updatedDate)}`}
                             </div>
                             <IconButton ref={ref} className={classes.more} onClick={event => openSettings(event)}>
                                 <MoreVert />
@@ -408,11 +408,11 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
 
                 <Collapse in={open} timeout="auto">
                     <VersionDetails
-                        diagramId={props.diagramId}
+                        artifactId={props.artifactId}
                         repoId={props.repoId}
                         fileType={props.fileType}
-                        diagramVersionTOs={diagramVersionTOs}
-                        diagramTitle={props.diagramTitle}
+                        artifactVersionTOs={artifactVersionTOs}
+                        artifactTitle={props.artifactTitle}
                         loading={loading}/>
                 </Collapse>
 
@@ -462,17 +462,17 @@ const DiagramListItem: React.FC<Props> = ((props: Props) => {
                 open={createVersionOpen}
                 onCancelled={() => setCreateVersionOpen(false)}
                 onCreated={() => setCreateVersionOpen(false)}
-                diagramId={props.diagramId}
-                diagramTitle={props.diagramTitle} />
+                artifactId={props.artifactId}
+                artifactTitle={props.artifactTitle} />
 
-            <EditDiagramDialog
-                open={editDiagramOpen}
-                onCancelled={() => setEditDiagramOpen(false)}
+            <EditArtifactDialog
+                open={editArtifactOpen}
+                onCancelled={() => setEditArtifactOpen(false)}
                 repoId={props.repoId}
-                diagramId={props.diagramId}
-                diagramName={props.diagramTitle}
-                diagramDescription={props.description} />
+                artifactId={props.artifactId}
+                artifactName={props.artifactTitle}
+                artifactDescription={props.description} />
         </>
     );
 });
-export default DiagramListItem;
+export default ArtifactListItem;

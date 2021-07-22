@@ -9,7 +9,7 @@ import {RootState} from "../../../store/reducers/rootReducer";
 
 
 interface Props {
-    diagramId: string;
+    artifactId: string;
     versionId: string;
     open: boolean;
     versionNumber: number;
@@ -33,7 +33,7 @@ const DeployVersionDialog: React.FC<Props> = props => {
 
     const applyChanges = useCallback(async () => {
         try {
-            dispatch(deployVersion(target, props.diagramId, props.versionId));
+            dispatch(deployVersion(target, props.artifactId, props.versionId));
             props.onCancelled();
         } catch (err) {
             // eslint-disable-next-line no-console

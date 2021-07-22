@@ -1,44 +1,44 @@
 import {CaseReducer} from "@reduxjs/toolkit";
-import {DiagramTO, FileTypesTO} from "../../api/models";
-import {ACTIVE_DIAGRAMS, DIAGRAM_UPLOAD, FILETYPES, GET_FAVORITE, GET_RECENT, SEARCH_DIAGRAMS} from "../constants";
+import {ArtifactTO, FileTypesTO} from "../../api/models";
+import {ACTIVE_ARTIFACTS, DIAGRAM_UPLOAD, FILETYPES, GET_FAVORITE, GET_RECENT, SEARCH_ARTIFACT} from "../constants";
 
 const initialState = {
-    diagrams: Array<DiagramTO>(),
-    createdDiagram: null,
-    uploadedDiagram: null,
-    recentDiagrams: Array<DiagramTO>(),
-    favoriteDiagrams: Array<DiagramTO>(),
-    searchedDiagrams: Array<DiagramTO>(),
+    artifacts: Array<ArtifactTO>(),
+    createdArtifact: null,
+    uploadedArtifact: null,
+    recentArtifacts: Array<ArtifactTO>(),
+    favoriteArtifacts: Array<ArtifactTO>(),
+    searchedArtifacts: Array<ArtifactTO>(),
     fileTypes: Array<FileTypesTO>(),
 
 };
 
 const reducer: CaseReducer = (state = initialState, action) => {
     switch (action.type) {
-        case ACTIVE_DIAGRAMS:
+        case ACTIVE_ARTIFACTS:
             return {
                 ...state,
-                diagrams: action.diagrams
+                artifacts: action.artifacts
             };
         case DIAGRAM_UPLOAD:
             return {
                 ...state,
-                uploadedDiagram: action.uploadedDiagram
+                uploadedArtifact: action.uploadedArtifact
             };
         case GET_RECENT:
             return {
                 ...state,
-                recentDiagrams: action.recentDiagrams
+                recentArtifacts: action.recentArtifacts
             };
         case GET_FAVORITE:
             return {
                 ...state,
-                favoriteDiagrams: action.favoriteDiagrams
+                favoriteArtifacts: action.favoriteArtifacts
             };
-        case SEARCH_DIAGRAMS:
+        case SEARCH_ARTIFACT:
             return {
                 ...state,
-                searchedDiagrams: action.searchedDiagrams
+                searchedArtifacts: action.searchedArtifacts
             };
         case FILETYPES:
             return {

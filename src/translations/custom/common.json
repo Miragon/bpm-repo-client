@@ -8,23 +8,23 @@
     "notAvailable": "Sie haben noch keine Projekte erstellt",
     "target": "Projekt"
   },
-  "diagram": {
-    "confirmDelete": "Wollen Sie {{diagramName}} wirklich löschen?",
-    "create": "Diagramm erstellen",
-    "createBpmn": "BPMN Diagramm erstellen",
-    "createDmn": "DMN Diagramm erstellen",
-    "delete": "Diagramm löschen",
-    "download": "Diagramm herunterladen",
-    "edit": "Diagramm bearbeiten",
+  "artifact": {
+    "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
+    "create": "Artifactm erstellen",
+    "createBpmn": "BPMN Artifactm erstellen",
+    "createDmn": "DMN Artifactm erstellen",
+    "delete": "Artifactm löschen",
+    "download": "Artifactm herunterladen",
+    "edit": "Artifactm bearbeiten",
     "modifiedOn": "Bearbeitet am",
-    "upload": "Diagramm hochladen",
+    "upload": "Artifactm hochladen",
     "import": "Aus Cawemo importieren",
-    "notAvailable": "Sie haben noch keine Diagramme erstellt"
+    "notAvailable": "Sie haben noch keine Artifactme erstellt"
   },
   "version": {
     "create": "Version erstellen",
     "deploy": "Version veröffentlichen",
-    "dialogHeader": "Neue Version von {{diagramName}} erstellen",
+    "dialogHeader": "Neue Version von {{artifactName}} erstellen",
     "edit": "Version bearbeiten",
     "download": "Version herunterladen",
     "delete": "Version löschen",
@@ -50,7 +50,7 @@
   "category": {
     "favorite": "Favoriten",
     "recent": "Vor Kurzem bearbeitet",
-    "noFavoritesAvailable": "Sie haben noch keine Diagramme zu Ihren Favoriten hinzugefügt."
+    "noFavoritesAvailable": "Sie haben noch keine Artifactme zu Ihren Favoriten hinzugefügt."
   },
   "search": {
     "search": "Suchen...",

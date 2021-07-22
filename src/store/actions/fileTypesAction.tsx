@@ -7,7 +7,7 @@ import {ActionType} from "./actions";
 
 export const fetchFileTypes = () => {
     return async (dispatch: Dispatch): Promise<void> => {
-        const menuController = new api.DiagramApi();
+        const menuController = new api.ArtifactApi();
         try {
             const config = helpers.getClientConfig();
             const response = await menuController.getAllFileTypes(config);

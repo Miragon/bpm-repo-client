@@ -7,7 +7,7 @@ import {handleError} from "./errorAction";
 import {ActionType} from "./actions";
 
 
-export const deployVersion = (target: string, diagramId: string, versionId: string) => {
+export const deployVersion = (target: string, artifactId: string, versionId: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const deploymentController = new api.DeploymentApi();
         try {
@@ -15,7 +15,7 @@ export const deployVersion = (target: string, diagramId: string, versionId: stri
                 target
             };
             const config = helpers.getClientConfig();
-            const response = await deploymentController.deployVersion(deploymentTO, diagramId, versionId, config);
+            const response = await deploymentController.deployVersion(deploymentTO, artifactId, versionId, config);
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: SUCCESS, successMessage: "version.deployed" });
                 dispatch({type: SYNC_STATUS_VERSION, dataSynced: false})
@@ -24,7 +24,7 @@ export const deployVersion = (target: string, diagramId: string, versionId: stri
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.DEPLOY_VERSION, [
-                target, diagramId, versionId
+                target, artifactId, versionId
             ]));
         }
     };

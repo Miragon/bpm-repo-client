@@ -1,7 +1,7 @@
 import {combineReducers} from "@reduxjs/toolkit";
 import resultsCountReducer from "./queryResultsReducer";
 import usersReducer from "./usersReducer";
-import diagramsReducer from "./DiagramsReducer";
+import artifactReducer from "./artifactReducer";
 import apiResponseReducer from "./apiResponseReducer";
 import dataSyncedReducer from "./dataSyncedReducer";
 import repoReducer from "./repositoriesReducer";
@@ -14,7 +14,7 @@ export const rootReducer = combineReducers({
     repos: repoReducer,
     api: apiResponseReducer,
     dataSynced: dataSyncedReducer,
-    diagrams: diagramsReducer,
+    artifacts: artifactReducer,
     versions: versionsReducer,
     user: usersReducer,
     resultsCount: resultsCountReducer,

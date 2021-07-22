@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     body: {
         background: "#fff",
     },
-    DiagramContainer: {
+    ArtifactContainer: {
         height: "400px",
         width: "93%",
         top: "75px",
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
         }
     },
 
-    ScrollBarDiagram: {
+    ScrollBarArtifact: {
         height: "340px",
         top: "50px",
         overflowX: "auto",
@@ -35,15 +35,15 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const DiagramContainer: React.FC<ContainerProps> = (props: ContainerProps) => {
+const ArtifactContainer: React.FC<ContainerProps> = (props: ContainerProps) => {
     const classes = useStyles();
 
     return (
-        <div className={classes.DiagramContainer}>
+        <div className={classes.ArtifactContainer}>
             <h1>{props.category}</h1>
-            <div className={classes.ScrollBarDiagram} />
+            <div className={classes.ScrollBarArtifact} />
         </div>
     );
 };
 
-export default DiagramContainer;
+export default ArtifactContainer;

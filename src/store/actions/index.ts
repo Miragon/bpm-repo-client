@@ -1,5 +1,5 @@
 export * from "./userAction";
-export * from "./diagramAction";
+export * from "./artifactAction";
 export * from "./versionAction";
 export * from "./assignmentAction";
 export * from "./repositoryAction";

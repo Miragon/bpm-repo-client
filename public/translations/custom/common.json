@@ -11,21 +11,21 @@
     "notAvailable": "Sie haben noch keine Projekte erstellt",
     "target": "Projekt"
   },
-  "diagram": {
-    "confirmDelete": "Wollen Sie {{diagramName}} wirklich löschen?",
-    "create": "Diagramm erstellen",
-    "createdFromExisting": "Diagramm aus existierender Version erstellt",
-    "createdDefault": "Diagramm erstellt",
-    "createBpmn": "BPMN Diagramm erstellen",
-    "createDmn": "DMN Diagramm erstellen",
-    "delete": "Diagramm löschen",
-    "download": "Diagramm herunterladen",
-    "edit": "Diagramm bearbeiten",
+  "artifact": {
+    "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
+    "create": "Artifactm erstellen",
+    "createdFromExisting": "Artifactm aus existierender Version erstellt",
+    "createdDefault": "Artifactm erstellt",
+    "createBpmn": "BPMN Artifactm erstellen",
+    "createDmn": "DMN Artifactm erstellen",
+    "delete": "Artifactm löschen",
+    "download": "Artifactm herunterladen",
+    "edit": "Artifactm bearbeiten",
     "modifiedOn": "Bearbeitet am",
-    "upload": "Diagramm hochladen",
-    "updated": "Diagramm aktualisiert",
+    "upload": "Artifactm hochladen",
+    "updated": "Artifactm aktualisiert",
     "import": "Aus Cawemo importieren",
-    "notAvailable": "Sie haben noch keine Diagramme erstellt"
+    "notAvailable": "Sie haben noch keine Artifactme erstellt"
   },
   "version": {
     "create": "Version erstellen",
@@ -33,15 +33,15 @@
     "deploy": "Version veröffentlichen",
     "downloading": "Version wird heruntergeladen",
     "deployed": "Version veröffentlicht",
-    "dialogHeader": "Neue Version von {{diagramName}} erstellen",
+    "dialogHeader": "Neue Version von {{artifactName}} erstellen",
     "edit": "Version bearbeiten",
     "download": "Version herunterladen",
     "delete": "Version löschen",
     "version": "Version",
     "MILESTONE": "Meilenstein",
     "deploymentHistory": "Veröffentlichungen",
-    "saveAsNewDiagram": "Als neues Diagramm speichern",
-    "saveVersionXAsNewDiagram": "Version {{milestone}} als neues Diagramm speichern"
+    "saveAsNewArtifact": "Als neues Artifactm speichern",
+    "saveVersionXAsNewArtifact": "Version {{milestone}} als neues Artifactm speichern"
   },
   "form": {
     "create": "Formular erstellen"
@@ -72,7 +72,7 @@
   "category": {
     "favorite": "Favoriten",
     "recent": "Vor Kurzem bearbeitet",
-    "noFavoritesAvailable": "Sie haben noch keine Diagramme zu Ihren Favoriten hinzugefügt."
+    "noFavoritesAvailable": "Sie haben noch keine Artifactme zu Ihren Favoriten hinzugefügt."
   },
   "search": {
     "search": "Suchen...",
@@ -125,6 +125,11 @@
     "createBPMN": "BPMN Diagramm erstellen",
     "createDMN": "DMN Diagramm erstellen",
     "createFORM": "Formular erstellen",
-    "createCONFIGURATION": "Konfiguration erstellen"
+    "createCONFIGURATION": "Konfiguration erstellen",
+    "createdDefault": "Datei erstellt",
+    "create": "Datei erstellen",
+    "modifiedOn": "Bearbeitet am",
+    "upload": "Datei hochladen"
+
   }
 }

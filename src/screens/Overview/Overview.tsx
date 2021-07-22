@@ -3,8 +3,8 @@ import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import CreateContainer from "../CreateContainer/CreateContainer";
-import FavoriteDiagrams from "./FavoriteDiagrams";
-import RecentDiagrams from "./RecentDiagrams";
+import FavoriteArtifacts from "./FavoriteArtifacts";
+import RecentArtifacts from "./RecentArtifacts";
 import RepoContainer from "./RepoContainer";
 import PathStructure from "../../components/Layout/PathStructure";
 
@@ -27,10 +27,10 @@ const Overview: React.FC = observer(() => {
                 <RepoContainer />
             </ErrorBoundary>
             <ErrorBoundary>
-                <RecentDiagrams />
+                <RecentArtifacts />
             </ErrorBoundary>
             <ErrorBoundary>
-                <FavoriteDiagrams />
+                <FavoriteArtifacts />
             </ErrorBoundary>
         </>
     );

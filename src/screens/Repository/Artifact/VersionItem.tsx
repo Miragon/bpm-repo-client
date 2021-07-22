@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import {MoreVert} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import {DiagramVersionTO} from "../../../api/models";
+import {ArtifactVersionTO} from "../../../api/models";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import theme from "../../../theme";
@@ -22,7 +22,7 @@ import DeployVersionDialog from "./DeployVersionDialog";
 import DeploymentHistory from "./DeploymentHistory";
 import {fetchTargets} from "../../../store/actions/deploymentAction";
 import clsx from "clsx";
-import SaveAsNewDiagramDialog from "./SaveAsNewDiagramDialog";
+import SaveAsNewArtifactDialog from "./SaveAsNewArtifactDialog";
 
 const useStyles = makeStyles(() => ({
     splitCell: {
@@ -69,8 +69,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    diagramVersion: DiagramVersionTO;
-    diagramTitle: string;
+    artifactVersion: ArtifactVersionTO;
+    artifactTitle: string;
     fileType: string;
     repoId: string;
 }
@@ -87,11 +87,11 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
     const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
     const ref = useRef<HTMLButtonElement>(null);
 
-    const openModeler = (diagramId: string, versionId?: string) => {
+    const openModeler = (artifactId: string, versionId?: string) => {
         if (versionId) {
-            window.open(`/modeler/#/${diagramId}/${versionId}/`, "_blank");
+            window.open(`/modeler/#/${artifactId}/${versionId}/`, "_blank");
         } else {
-            window.open(`/modeler/#/${diagramId}/latest`, "_blank");
+            window.open(`/modeler/#/${artifactId}/latest`, "_blank");
         }
     };
 
@@ -110,9 +110,9 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
         setSettingsOpen(true);
     };
 
-    const download = (diagramId: string, versionId: string) => {
+    const download = (artifactId: string, versionId: string) => {
         console.log("file Ready - starting download...")
-        const path = `/api/version/${diagramId}/${versionId}/download`
+        const path = `/api/version/${artifactId}/${versionId}/download`
         downloadFile(path)
     };
 
@@ -145,7 +145,7 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
             label: "version.download",
             type: "button",
             onClick: () => {
-                download(props.diagramVersion.diagramId, props.diagramVersion.id);
+                download(props.artifactVersion.artifactId, props.artifactVersion.id);
             }
 
         },
@@ -159,8 +159,8 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
 
         },
         {
-            id: "SaveAsNewDiagram",
-            label: "version.saveAsNewDiagram",
+            id: "SaveAsNewArtifact",
+            label: "version.saveAsNewArtifact",
             type: "button",
             onClick: () => {
                 setSaveDialogOpen(true);
@@ -172,17 +172,17 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
         <>
 
             <TableRow
-                key={props.diagramVersion.id}
+                key={props.artifactVersion.id}
                 hover
-                onClick={() => openModeler(props.diagramVersion.diagramId, props.diagramVersion.id)}>
+                onClick={() => openModeler(props.artifactVersion.artifactId, props.artifactVersion.id)}>
                 <TableCell
                     component="th"
                     scope="row">
                     <div className={classes.splitCell}>
                         <div>
-                            {props.diagramVersion.milestone}
+                            {props.artifactVersion.milestone}
                         </div>
-                        {props.diagramVersion.deployments.length > 0 ?
+                        {props.artifactVersion.deployments.length > 0 ?
                             <div>
                                 <Button
                                     ref={ref}
@@ -191,10 +191,10 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
                                     onClick={event => openDeploymentHistory(event)}
                                     variant="contained"
                                     size={"small"}>
-                                    {props.diagramVersion.deployments.length > 1 ?
-                                        `${props.diagramVersion.deployments.length} ${t("deployment.deployments")}`
+                                    {props.artifactVersion.deployments.length > 1 ?
+                                        `${props.artifactVersion.deployments.length} ${t("deployment.deployments")}`
                                         :
-                                        `${props.diagramVersion.deployments[0].target}`
+                                        `${props.artifactVersion.deployments[0].target}`
                                     }
                                 </Button>
                             </div>
@@ -206,12 +206,12 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
 
                     </div>
                 </TableCell>
-                <TableCell>{props.diagramVersion.comment}</TableCell>
+                <TableCell>{props.artifactVersion.comment}</TableCell>
                 <TableCell>
                     <div className={classes.splitCell}>
 
                         <div>
-                            {reformatDate(props.diagramVersion.updatedDate)}
+                            {reformatDate(props.artifactVersion.updatedDate)}
                         </div>
                         <IconButton ref={ref} size="small" className={classes.more} onClick={event => openSettings(event)}>
                             <MoreVert/>
@@ -261,27 +261,27 @@ const VersionItem: React.FC<Props> = ((props: Props) => {
             <DeployVersionDialog
                 open={deployVersionOpen}
                 onCancelled={() => setDeployVersionOpen(false)}
-                diagramId={props.diagramVersion.diagramId}
-                versionId={props.diagramVersion.id}
-                versionNumber={props.diagramVersion.milestone} />
+                artifactId={props.artifactVersion.artifactId}
+                versionId={props.artifactVersion.id}
+                versionNumber={props.artifactVersion.milestone} />
 
             <DeploymentHistory
-                versionId={props.diagramVersion.id}
-                diagramTitle={props.diagramTitle}
-                versionComment={props.diagramVersion.comment}
-                milestone={props.diagramVersion.milestone}
+                versionId={props.artifactVersion.id}
+                artifactTitle={props.artifactTitle}
+                versionComment={props.artifactVersion.comment}
+                milestone={props.artifactVersion.milestone}
                 open={historyOpen}
                 onCancelled={() => setHistoryOpen(false)}
-                deployments={props.diagramVersion.deployments} />
+                deployments={props.artifactVersion.deployments} />
 
-            <SaveAsNewDiagramDialog
+            <SaveAsNewArtifactDialog
                 open={saveDialogOpen}
                 repoId={props.repoId}
-                diagramId={props.diagramVersion.diagramId}
+                artifactId={props.artifactVersion.artifactId}
                 onCancelled={() => setSaveDialogOpen(false)}
                 type={props.fileType === "bpmn" ? props.fileType : "dmn"}
-                versionNo={props.diagramVersion.milestone}
-                file={props.diagramVersion.xml}/>
+                versionNo={props.artifactVersion.milestone}
+                file={props.artifactVersion.xml}/>
 
         </>
     )

@@ -11,21 +11,21 @@
     "notAvailable": "You haven't added any Repositories yet.",
     "target": "Target Repository"
   },
-  "diagram": {
-    "confirmDelete": "Are you sure want to delete {{diagramName}}?",
-    "create": "Create Diagram",
-    "createdFromExisting": "Created Diagram os existing Version",
-    "createdDefault": "Created Diagram",
-    "createBpmn": "Create BPMN Diagram",
-    "createDmn": "Create DMN Diagram",
-    "delete": "Delete Diagram",
-    "download": "Download Diagram",
-    "edit": "Edit Diagram",
+  "artifact": {
+    "confirmDelete": "Are you sure want to delete {{artifactName}}?",
+    "create": "Create Artifact",
+    "createdFromExisting": "Created Artifact os existing Version",
+    "createdDefault": "Created Artifact",
+    "createBpmn": "Create BPMN Artifact",
+    "createDmn": "Create DMN Artifact",
+    "delete": "Delete Artifact",
+    "download": "Download Artifact",
+    "edit": "Edit Artifact",
     "modifiedOn": "Modified on",
-    "upload": "Upload Diagram",
-    "updated": "Diagram updated",
+    "upload": "Upload Artifact",
+    "updated": "Artifact updated",
     "import": "Import from Cawemo",
-    "notAvailable": "You haven't added any diagrams yet"
+    "notAvailable": "You haven't added any artifacts yet"
   },
   "version": {
     "create": "Create new Version",
@@ -34,15 +34,15 @@
     "deploy": "Deploy version",
     "deployed": "Version deployed",
     "downloading": "Downloading Version",
-    "dialogHeader": "Create new Version of {{diagramName}}",
+    "dialogHeader": "Create new Version of {{artifactName}}",
     "download": "Download version",
     "delete": "Delete version",
     "version": "Version",
     "RELEASE": "Release",
     "MILESTONE": "Milestone",
     "deploymentHistory": "Deployments",
-    "saveAsNewDiagram": "Save as new Diagram",
-    "saveVersionXAsNewDiagram": "Save Version {{milestone}} as new Diagram"
+    "saveAsNewArtifact": "Save as new Artifact",
+    "saveVersionXAsNewArtifact": "Save Version {{milestone}} as new Artifact"
   },
   "assignment": {
     "changedAssignment": "Changed role of {{username}} to {{roleEnum}}",
@@ -74,7 +74,7 @@
     "favorite": "Favorites",
     "recent": "Recently used",
 
-    "noFavoritesAvailable": "You haven't added any diagrams to your favorites yet."
+    "noFavoritesAvailable": "You haven't added any artifacts to your favorites yet."
 
   },
   "search": {
@@ -125,9 +125,13 @@
     "unknown": "Unknown Error - Please refresh the page"
   },
   "artifact": {
-    "createBPMN": "Create BPMN Diagram",
-    "createDMN": "Create DMN Diagram",
+    "createBPMN": "Create BPMN Artifact",
+    "createDMN": "Create DMN Artifact",
     "createFORM": "Create Form",
-    "createCONFIGURATION": "Create Configuration"
+    "createCONFIGURATION": "Create Configuration",
+    "createdDefault": "File created",
+    "create": "Create File",
+    "modifiedOn": "Modified on",
+    "upload": "Upload File"
   }
 }

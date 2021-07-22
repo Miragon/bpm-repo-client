@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 interface RepoProps {
     repoTitle: string;
     description: string;
-    existingDiagrams: number;
+    existingArtifacts: number;
     assignedUsers: number;
     onClick?: () => void;
 }
@@ -71,7 +71,7 @@ const RepoCard: React.FC<RepoProps> = props => {
 
             <div className={classes.repoInfo}>
                 <DescriptionIcon className={classes.icon} />
-                {props.existingDiagrams || 0}
+                {props.existingArtifacts || 0}
                 <PeopleIcon className={classes.icon} />
                 {props.assignedUsers || 1}
             </div>

@@ -3,12 +3,12 @@ import {makeStyles} from "@material-ui/core/styles";
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {DiagramVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../api/models";
+import {ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../api/models";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import * as diagramAction from "../../store/actions/diagramAction";
+import * as artifactAction from "../../store/actions/artifactAction";
 import * as versionAction from "../../store/actions/versionAction";
 import {UNHANDLEDERROR} from "../../store/constants";
 import {RootState} from "../../store/reducers/rootReducer";
@@ -29,7 +29,7 @@ interface Props {
     repo?: RepositoryTO;
 }
 
-const UploadDiagramDialog: React.FC<Props> = props => {
+const UploadArtifactDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
@@ -44,17 +44,17 @@ const UploadDiagramDialog: React.FC<Props> = props => {
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
-    const uploadedDiagram = useSelector(
-        (state: RootState) => state.diagrams.uploadedDiagram
+    const uploadedArtifact = useSelector(
+        (state: RootState) => state.artifacts.uploadedArtifact
     );
 
     useEffect(() => {
-        if (uploadedDiagram) {
+        if (uploadedArtifact) {
             dispatch(versionAction.createOrUpdateVersion(
-                uploadedDiagram.id, file, DiagramVersionUploadTOSaveTypeEnum.MILESTONE
+                uploadedArtifact.id, file, ArtifactVersionUploadTOSaveTypeEnum.MILESTONE
             ));
         }
-    }, [dispatch, uploadedDiagram, file]);
+    }, [dispatch, uploadedArtifact, file]);
 
     useEffect(() => {
         setRepository(props.repo?.id);
@@ -63,7 +63,7 @@ const UploadDiagramDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         try {
             //#TODO: write some code to get the file extension from the filename and pass it here
-            dispatch(diagramAction.uploadDiagram(repository, title, description, "BPMN"));
+            dispatch(artifactAction.uploadArtifact(repository, title, description, "BPMN"));
             props.onCancelled();
         } catch (err) {
             dispatch({ type: UNHANDLEDERROR, errorMessage: err });
@@ -94,7 +94,7 @@ const UploadDiagramDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("diagram.upload")}
+            title={t("artifact.upload")}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}
@@ -150,4 +150,4 @@ const UploadDiagramDialog: React.FC<Props> = props => {
     );
 };
 
-export default UploadDiagramDialog;
+export default UploadArtifactDialog;

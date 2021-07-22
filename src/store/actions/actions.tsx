@@ -1,14 +1,14 @@
 import {createOrUpdateUserAssignment, deleteAssignment, getAllAssignedUsers} from "./assignmentAction";
-import * as diagramAction from "./diagramAction";
+import * as artifactAction from "./artifactAction";
 import {
-    deleteDiagram,
-    fetchDiagramsFromRepo,
-    fetchFavoriteDiagrams,
-    fetchRecentDiagrams,
-    searchDiagram,
-    updateDiagram,
-    uploadDiagram
-} from "./diagramAction";
+    deleteArtifact,
+    fetchArtifactsFromRepo,
+    fetchFavoriteArtifacts,
+    fetchRecentArtifacts,
+    searchArtifact,
+    updateArtifact,
+    uploadArtifact
+} from "./artifactAction";
 import {
     createRepository,
     deleteRepository,
@@ -21,12 +21,12 @@ import {createOrUpdateVersion, getAllVersions, getLatestVersion} from "./version
 import {deployVersion, fetchTargets} from "./deploymentAction";
 
 export enum ActionType {
-    FETCH_FAVORITE_DIAGRAMS,
-    FETCH_RECENT_DIAGRAMS,
-    CREATE_DIAGRAM,
-    FETCH_DIAGRAMS_FROM_REPO,
+    FETCH_FAVORITE_ARTIFACTS,
+    FETCH_RECENT_ARTIFACTS,
+    CREATE_ARTIFACT,
+    FETCH_ARTIFACTS_FROM_REPO,
     UPLOAD_DIAGRAM,
-    DELETE_DIAGRAM,
+    DELETE_ARTIFACTS,
     FETCH_REPOSITORIES,
     GET_SINGLE_REPOSITORY,
     CREATE_REPOSITORY,
@@ -38,8 +38,8 @@ export enum ActionType {
     DELETE_ASSIGNMENT,
     UPDATE_REPOSITORY,
     DELETE_REPOSITORY,
-    SEARCH_DIAGRAM,
-    UPDATE_DIAGRAM,
+    SEARCH_ARTIFACT,
+    UPDATE_ARTIFACT,
     LATEST_VERSION,
     DEPLOY_VERSION,
     FETCH_MENU_ITEMS,
@@ -49,23 +49,23 @@ export enum ActionType {
 // eslint-disable-next-line
 export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
     switch (actionType) {
-        case ActionType.CREATE_DIAGRAM:
-            return diagramAction.createDiagram(payload[0], payload[1], payload[2], payload[3], payload[4]);
+        case ActionType.CREATE_ARTIFACT:
+            return artifactAction.createArtifact(payload[0], payload[1], payload[2], payload[3], payload[4]);
 
-        case ActionType.FETCH_FAVORITE_DIAGRAMS:
-            return fetchFavoriteDiagrams();
+        case ActionType.FETCH_FAVORITE_ARTIFACTS:
+            return fetchFavoriteArtifacts();
 
-        case ActionType.FETCH_RECENT_DIAGRAMS:
-            return fetchRecentDiagrams();
+        case ActionType.FETCH_RECENT_ARTIFACTS:
+            return fetchRecentArtifacts();
 
-        case ActionType.FETCH_DIAGRAMS_FROM_REPO:
-            return fetchDiagramsFromRepo(payload[0]);
+        case ActionType.FETCH_ARTIFACTS_FROM_REPO:
+            return fetchArtifactsFromRepo(payload[0]);
 
         case ActionType.UPLOAD_DIAGRAM:
-            return uploadDiagram(payload[0], payload[1], payload[2], payload[3]);
+            return uploadArtifact(payload[0], payload[1], payload[2], payload[3]);
 
-        case ActionType.DELETE_DIAGRAM:
-            return deleteDiagram(payload[0]);
+        case ActionType.DELETE_ARTIFACTS:
+            return deleteArtifact(payload[0]);
 
         case ActionType.FETCH_REPOSITORIES:
             return fetchRepositories();
@@ -100,11 +100,11 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
         case ActionType.DELETE_REPOSITORY:
             return deleteRepository(payload[0]);
 
-        case ActionType.SEARCH_DIAGRAM:
-            return searchDiagram(payload[0]);
+        case ActionType.SEARCH_ARTIFACT:
+            return searchArtifact(payload[0]);
 
-        case ActionType.UPDATE_DIAGRAM:
-            return updateDiagram(payload[0], payload[1], payload[2]);
+        case ActionType.UPDATE_ARTIFACT:
+            return updateArtifact(payload[0], payload[1], payload[2]);
 
         case ActionType.LATEST_VERSION:
             return getLatestVersion(payload[0]);

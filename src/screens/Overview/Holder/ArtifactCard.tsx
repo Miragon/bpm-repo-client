@@ -69,19 +69,19 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-interface DiagramProps {
-    diagramTitle: string;
+interface ArtifactProps {
+    artifactTitle: string;
     image: string | undefined;
-    diagramRepo: string;
+    artifactRepo: string;
     fileType: string;
     className?: string;
 }
 
-const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
+const ArtifactCard: React.FC<ArtifactProps> = (props: ArtifactProps) => {
     const classes = useStyles();
 
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes);
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const [svg, setSvg] = useState<string>("");
 
     useEffect(() => {
@@ -103,10 +103,10 @@ const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
             <div className={classes.header}>
                 <div className={classes.text}>
                     <span className={classes.repository}>
-                        {props.diagramRepo}
+                        {props.artifactRepo}
                     </span>
                     <span className={classes.title}>
-                        {props.diagramTitle}
+                        {props.artifactTitle}
                     </span>
                 </div>
                     
@@ -134,4 +134,4 @@ const DiagramCard: React.FC<DiagramProps> = (props: DiagramProps) => {
     );
 };
 
-export default DiagramCard;
+export default ArtifactCard;

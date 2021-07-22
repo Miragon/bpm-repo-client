@@ -2,7 +2,7 @@ import {CaseReducer} from "@reduxjs/toolkit";
 import {
     SYNC_STATUS_ACTIVE_REPOSITORY,
     SYNC_STATUS_ASSIGNMENT,
-    SYNC_STATUS_DIAGRAM,
+    SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_MENU,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
@@ -13,7 +13,7 @@ const initialState = {
     repoSynced: false,
     activeRepoSynced: false,
     recentSynced: false,
-    diagramSynced: false,
+    artifactSynced: false,
     versionSynced: undefined,
     assignmentSynced: false,
     menuSynced: false
@@ -39,10 +39,10 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 recentSynced: action.dataSynced
             }
 
-        case SYNC_STATUS_DIAGRAM:
+        case SYNC_STATUS_ARTIFACT:
             return {
                 ...state,
-                diagramSynced: action.dataSynced
+                artifactSynced: action.dataSynced
             };
 
         case SYNC_STATUS_VERSION:

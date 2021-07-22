@@ -2,15 +2,15 @@ import {makeStyles} from "@material-ui/styles";
 import {observer} from "mobx-react";
 import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {DiagramTO, RepositoryTO} from "../../api/models";
+import {ArtifactTO, RepositoryTO} from "../../api/models";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import * as diagramAction from "../../store/actions/diagramAction";
+import * as artifactAction from "../../store/actions/artifactAction";
 import {RootState} from "../../store/reducers/rootReducer";
-import DiagramCard from "./Holder/DiagramCard";
+import ArtifactCard from "./Holder/ArtifactCard";
 import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles(() => ({
-    diagramContainer: {
+    artifactContainer: {
         marginTop: "1rem",
         "&>h1": {
             color: "black",
@@ -30,21 +30,21 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const RecentDiagrams: React.FC = observer(() => {
+const RecentArtifacts: React.FC = observer(() => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
 
-    const recentDiagrams: Array<DiagramTO> = useSelector(
-        (state: RootState) => state.diagrams.recentDiagrams
+    const recentArtifacts: Array<ArtifactTO> = useSelector(
+        (state: RootState) => state.artifacts.recentArtifacts
     );
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
     const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.recentSynced);
 
     const fetchRecent = useCallback(() => {
         try {
-            dispatch(diagramAction.fetchRecentDiagrams());
+            dispatch(artifactAction.fetchRecentArtifacts());
         } catch (err) {
             console.log(err);
         }
@@ -62,25 +62,25 @@ const RecentDiagrams: React.FC = observer(() => {
     }, [dispatch, fetchRecent, syncStatus]);
 
     return (
-        <div className={classes.diagramContainer}>
+        <div className={classes.artifactContainer}>
             <h1>{t("category.recent")}</h1>
             <div className={classes.container}>
                 <ErrorBoundary>
-                    {recentDiagrams?.map(diagram => (
+                    {recentArtifacts?.map(artifact => (
                         <a
                             className={classes.card}
-                            key={diagram.id}
+                            key={artifact.id}
                             rel="noreferrer"
                             target="_blank"
-                            href={`/modeler/#/${diagram.repositoryId}/${diagram.id}/latest/`}>
-                            <DiagramCard
-                                diagramRepo={getRepoName(diagram.repositoryId)}
-                                diagramTitle={diagram.name}
-                                image={diagram.svgPreview}
-                                fileType={diagram.fileType}/>
+                            href={`/modeler/#/${artifact.repositoryId}/${artifact.id}/latest/`}>
+                            <ArtifactCard
+                                artifactRepo={getRepoName(artifact.repositoryId)}
+                                artifactTitle={artifact.name}
+                                image={artifact.svgPreview}
+                                fileType={artifact.fileType}/>
                         </a>
                     ))}
-                    {recentDiagrams?.length === 0 && (
+                    {recentArtifacts?.length === 0 && (
                         <span>{t("category.recent")}</span>
                     )}
                 </ErrorBoundary>
@@ -89,4 +89,4 @@ const RecentDiagrams: React.FC = observer(() => {
     );
 });
 
-export default RecentDiagrams;
+export default RecentArtifacts;

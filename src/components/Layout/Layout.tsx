@@ -4,7 +4,7 @@ import clsx from "clsx";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {toast, ToastContainer} from "react-toastify";
-import {DiagramApi, UserApi} from "../../api";
+import {ArtifactApi, UserApi} from "../../api";
 import helpers from "../../constants/Functions";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
 import {CURRENT_USER_INFO, FILETYPES, SUCCESS, UNHANDLEDERROR} from "../../store/constants";
@@ -183,12 +183,12 @@ const Layout = (): any => {
     }, [userController, dispatch]);
 
 
-    const [diagramController] = useState<DiagramApi>(new DiagramApi());
+    const [artifactController] = useState<ArtifactApi>(new ArtifactApi());
 
     useEffect(() => {
         if(!fileConfigFetched){
             const config = helpers.getClientConfig();
-            diagramController.getAllFileTypes(config).then(response2 => {
+            artifactController.getAllFileTypes(config).then(response2 => {
                 if(response2.data){
                     dispatch({type: FILETYPES, fileTypes: response2.data});
                     setFileConfigFetched(true);
@@ -196,7 +196,7 @@ const Layout = (): any => {
             })
 
         }
-    }, [diagramController, dispatch, fileConfigFetched])
+    }, [artifactController, dispatch, fileConfigFetched])
 
 
 

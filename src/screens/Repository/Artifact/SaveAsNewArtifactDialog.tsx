@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import * as diagramAction from "../../../store/actions/diagramAction";
+import * as artifactAction from "../../../store/actions/artifactAction";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import SettingsForm from "../../../components/Form/SettingsForm";
 import SettingsTextField from "../../../components/Form/SettingsTextField";
@@ -15,10 +15,10 @@ interface Props {
     repoId: string;
     versionNo: string;
     file: string;
-    diagramId: string;
+    artifactId: string;
 }
 
-const SaveAsNewDiagramDialog: React.FC<Props> = props => {
+const SaveAsNewArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
@@ -28,14 +28,14 @@ const SaveAsNewDiagramDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState("");
 
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.diagrams.fileTypes)
+    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
 
     const onCreate = useCallback(async () => {
         try {
             const defaultFileProps = fileTypes.find(fileType => fileType.name === props.type)
             if(defaultFileProps){
-                //#TODO: The default Preview SVG will always be passed here => passt aber auch, für einzelne Versionen gibt es keine SVG Previews (immer nur für die aktuellste, gespeichert in DiagramEntity/ ArtifactEntity)
-                dispatch(diagramAction.createNewDiagramWithVersionFile(props.repoId, title, description, props.file, defaultFileProps.name, defaultFileProps.defaultPreviewSVG));
+                //#TODO: The default Preview SVG will always be passed here => passt aber auch, für einzelne Versionen gibt es keine SVG Previews (immer nur für die aktuellste, gespeichert in ArtifactEntity/ ArtifactEntity)
+                dispatch(artifactAction.createNewArtifactWithVersionFile(props.repoId, title, description, props.file, defaultFileProps.name, defaultFileProps.defaultPreviewSVG));
                 props.onCancelled();
             }
 
@@ -50,7 +50,7 @@ const SaveAsNewDiagramDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("version.saveVersionXAsNewDiagram", {milestone: props.versionNo})}
+            title={t("version.saveVersionXAsNewArtifact", {milestone: props.versionNo})}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}
@@ -76,4 +76,4 @@ const SaveAsNewDiagramDialog: React.FC<Props> = props => {
         </PopupDialog>
     );
 };
-export default SaveAsNewDiagramDialog;
+export default SaveAsNewArtifactDialog;

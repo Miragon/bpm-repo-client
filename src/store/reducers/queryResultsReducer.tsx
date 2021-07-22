@@ -1,9 +1,9 @@
 import {CaseReducer} from "@reduxjs/toolkit";
-import {DIAGRAMQUERY_EXECUTED, USERQUERY_EXECUTED} from "../constants";
+import {ARTIFACTQUERY_EXECUTED, USERQUERY_EXECUTED} from "../constants";
 
 const initialState = {
     userResultsCount: 0,
-    diagramResultsCount: 0
+    artifactResultsCount: 0
 };
 
 const reducer: CaseReducer = (state = initialState, action) => {
@@ -13,10 +13,10 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 userResultsCount: action.userResultsCount
             };
-        case DIAGRAMQUERY_EXECUTED:
+        case ARTIFACTQUERY_EXECUTED:
             return {
                 ...state,
-                diagramResultsCount: action.diagramResultsCount
+                artifactResultsCount: action.artifactResultsCount
 
             }
     }

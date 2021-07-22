@@ -3,7 +3,7 @@ import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/cor
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {KeyboardArrowUp} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import {DiagramVersionTO} from "../../../api/models";
+import {ArtifactVersionTO} from "../../../api/models";
 import {useDispatch} from "react-redux";
 import {GET_VERSIONS} from "../../../store/constants";
 import {useTranslation} from "react-i18next";
@@ -26,12 +26,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    diagramId: string;
+    artifactId: string;
     repoId: string;
     loading: boolean;
     fileType: string;
-    diagramTitle: string;
-    diagramVersionTOs: DiagramVersionTO[];
+    artifactTitle: string;
+    artifactVersionTOs: ArtifactVersionTO[];
 }
 
 const VersionDetails: React.FC<Props> = ((props: Props) => {
@@ -40,12 +40,12 @@ const VersionDetails: React.FC<Props> = ((props: Props) => {
     const {t} = useTranslation("common");
 
     useEffect(() => {
-        if (props.diagramVersionTOs) {
-            props.diagramVersionTOs.sort(compare);
+        if (props.artifactVersionTOs) {
+            props.artifactVersionTOs.sort(compare);
         }
-    }, [props.diagramVersionTOs]);
+    }, [props.artifactVersionTOs]);
 
-    const compare = (a: DiagramVersionTO, b: DiagramVersionTO) => {
+    const compare = (a: ArtifactVersionTO, b: ArtifactVersionTO) => {
         if (a.milestone < b.milestone) {
             return -1;
         }
@@ -89,13 +89,13 @@ const VersionDetails: React.FC<Props> = ((props: Props) => {
                             </TableCell>
                         </TableRow>
                     )}
-                    {props.diagramVersionTOs?.map(singleVersion => (
+                    {props.artifactVersionTOs?.map(singleVersion => (
                         <VersionItem
                             key={singleVersion.id}
-                            diagramVersion={singleVersion}
+                            artifactVersion={singleVersion}
                             repoId={props.repoId}
                             fileType={props.fileType}
-                            diagramTitle={props.diagramTitle} />
+                            artifactTitle={props.artifactTitle} />
                     ))}
                 </TableBody>
             </Table>
