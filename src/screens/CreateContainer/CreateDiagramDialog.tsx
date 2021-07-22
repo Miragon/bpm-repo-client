@@ -1,18 +1,15 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {DiagramVersionTO, DiagramVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../api/models";
+import {RepositoryTO} from "../../api/models";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import * as diagramAction from "../../store/actions/diagramAction";
-import {createOrUpdateVersion} from "../../store/actions/versionAction";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {DiagramVersionUploadTO} from "../../models";
-import {CREATE_DEFAULT_VERSION} from "../../store/constants";
 
 interface Props {
     open: boolean;
@@ -34,15 +31,6 @@ const CreateDiagramDialog: React.FC<Props> = props => {
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
-
-    const defaultVersionToBeCreated: DiagramVersionTO = useSelector((state: RootState) => state.versions.defaultVersionProps)
-
-    useEffect(() => {
-        if(defaultVersionToBeCreated){
-            dispatch(createOrUpdateVersion(defaultVersionToBeCreated.diagramId, defaultVersionToBeCreated.xml, DiagramVersionUploadTOSaveTypeEnum.MILESTONE))
-            dispatch({type: CREATE_DEFAULT_VERSION, defaultVersionProps: null})
-        }
-    }, [dispatch, defaultVersionToBeCreated])
 
 
     const onCreate = useCallback(async () => {

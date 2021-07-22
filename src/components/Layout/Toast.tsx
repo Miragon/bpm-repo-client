@@ -1,6 +1,6 @@
 import React, {useCallback} from "react";
 import {Icon, IconButton, makeStyles} from "@material-ui/core";
-import {Replay, Error, CheckCircle} from "@material-ui/icons";
+import {CheckCircle, Error, Replay} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
 import * as actions from "../../store/actions/actions";
 import {ActionType} from "../../store/actions/actions";

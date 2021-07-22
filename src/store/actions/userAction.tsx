@@ -15,7 +15,7 @@ export const searchUsers = (typedName: string) => {
                 dispatch({ type: SEARCH_USERS, searchedUsers: response.data });
                 dispatch({ type: USERQUERY_EXECUTED, userResultsCount: response.data.length });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "Could not process request" });
+                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.SEARCH_USERS, [typedName]));

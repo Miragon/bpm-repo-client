@@ -22,7 +22,6 @@ import DeployVersionDialog from "./DeployVersionDialog";
 import DeploymentHistory from "./DeploymentHistory";
 import {fetchTargets} from "../../../store/actions/deploymentAction";
 import clsx from "clsx";
-import CreateDiagramDialog from "../../CreateContainer/CreateDiagramDialog";
 import SaveAsNewDiagramDialog from "./SaveAsNewDiagramDialog";
 
 const useStyles = makeStyles(() => ({

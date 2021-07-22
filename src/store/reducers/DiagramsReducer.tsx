@@ -1,12 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {DiagramTO} from "../../api/models";
-import {
-    ACTIVE_DIAGRAMS,
-    DIAGRAM_UPLOAD,
-    GET_FAVORITE,
-    GET_RECENT,
-    SEARCH_DIAGRAMS
-} from "../constants";
+import {ACTIVE_DIAGRAMS, DIAGRAM_UPLOAD, GET_FAVORITE, GET_RECENT, SEARCH_DIAGRAMS} from "../constants";
 
 const initialState = {
     diagrams: Array<DiagramTO>(),

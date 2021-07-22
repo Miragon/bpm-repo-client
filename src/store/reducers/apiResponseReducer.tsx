@@ -4,10 +4,11 @@ import {SUCCESS, UNHANDLEDERROR} from "../constants";
 
 const initialState = {
     errorMessage: "",
+    errorMessageWithVariables: {},
     successMessage: "",
+    successMessageWithVariables: {},
     retryMethod: ActionType,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    retryPayload: Array<any>(),
+    retryPayload: [],
 };
 
 const reducer: CaseReducer = (state = initialState, action) => {
@@ -16,13 +17,15 @@ const reducer: CaseReducer = (state = initialState, action) => {
             return {
                 ...state,
                 errorMessage: action.errorMessage,
+                errorMessageWithVariables: action.errorMessageWithVariables,
                 retryMethod: action.retryMethod,
                 retryPayload: action.retryPayload
             };
         case SUCCESS:
             return {
                 ...state,
-                successMessage: action.successMessage
+                successMessage: action.successMessage,
+                successMessageWithVariables: action.successMessageWithVariables
             };
     }
     return state;

@@ -3,14 +3,19 @@
     "confirmDelete": "Are you sure you want to delete {{repoName}}?",
     "repository": "Repository",
     "create": "Create Repository",
+    "created": "Repository created",
     "delete": "Delete Repository",
+    "deleted": "Repository deleted",
     "edit": "Edit Repository",
+    "updated": "Repository updated",
     "notAvailable": "You haven't added any Repositories yet.",
     "target": "Target Repository"
   },
   "diagram": {
     "confirmDelete": "Are you sure want to delete {{diagramName}}?",
     "create": "Create Diagram",
+    "createdFromExisting": "Created Diagram os existing Version",
+    "createdDefault": "Created Diagram",
     "createBpmn": "Create BPMN Diagram",
     "createDmn": "Create DMN Diagram",
     "delete": "Delete Diagram",
@@ -18,13 +23,17 @@
     "edit": "Edit Diagram",
     "modifiedOn": "Modified on",
     "upload": "Upload Diagram",
+    "updated": "Diagram updated",
     "import": "Import from Cawemo",
     "notAvailable": "You haven't added any diagrams yet"
   },
   "version": {
     "create": "Create new Version",
+    "created": "Version created",
     "edit": "Edit version",
     "deploy": "Deploy version",
+    "deployed": "Version deployed",
+    "downloading": "Downloading Version",
     "dialogHeader": "Create new Version of {{diagramName}}",
     "download": "Download version",
     "delete": "Delete version",
@@ -34,6 +43,11 @@
     "deploymentHistory": "Deployments",
     "saveAsNewDiagram": "Save as new Diagram",
     "saveVersionXAsNewDiagram": "Save Version {{milestone}} as new Diagram"
+  },
+  "assignment": {
+    "changedAssignment": "Changed role of {{username}} to {{roleEnum}}",
+    "added": "Added User to Repository",
+    "removed": "Removed {{username}} from Repository"
   },
   "deployment": {
     "deployment": "Deployment",
@@ -99,5 +113,9 @@
     "403": "Your Session has expired - Please refresh",
     "404": "Not found",
     "409": "Conflict"
+  },
+  "error": {
+    "couldNotProcess": "Request could not be processed",
+    "unknown": "Unknown Error - Please refresh the page"
   }
 }

@@ -78,26 +78,12 @@ const useStyles = makeStyles(theme => ({
 const RegisterNewUserScreen: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
 
     const [userController] = useState<UserApi>(new UserApi());
     const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
 
-    const apiErrorState: string = useSelector((state: RootState) => state.api.errorMessage);
-    const apiSuccessState: string = useSelector((state: RootState) => state.api.successMessage);
-
-    useEffect(() => {
-        if (apiErrorState) {
-            toast.error(apiErrorState, { autoClose: 8000, pauseOnHover: true });
-            dispatch({ type: UNHANDLEDERROR, errorMessage: "" });
-        }
-        if (apiSuccessState) {
-            toast.success(apiSuccessState, { autoClose: 4000, pauseOnHover: true });
-            dispatch({ type: SUCCESS, successMessage: "" });
-        }
-    }, [userController, dispatch, apiErrorState, apiSuccessState]);
 
     /**
      * Persist a new User-profile in the FlowRepo-backend

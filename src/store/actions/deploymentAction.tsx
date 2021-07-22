@@ -17,10 +17,10 @@ export const deployVersion = (target: string, diagramId: string, versionId: stri
             const config = helpers.getClientConfig();
             const response = await deploymentController.deployVersion(deploymentTO, diagramId, versionId, config);
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SUCCESS, successMessage: "Deployed Version" });
+                dispatch({ type: SUCCESS, successMessage: "version.deployed" });
                 dispatch({type: SYNC_STATUS_VERSION, dataSynced: false})
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "Could not process request" });
+                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.DEPLOY_VERSION, [
@@ -40,7 +40,7 @@ export const fetchTargets = () => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({type: TARGETS, targets: response.data})
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "Could not process request" });
+                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.FETCH_TARGETS, []));

@@ -16,7 +16,7 @@ export const fetchMenuItems = () => {
                 dispatch({type: MENU_ITEMS, menuItems: response.data})
                 dispatch({type: SYNC_STATUS_MENU, dataSynced: true})
             } else{
-                dispatch({type: UNHANDLEDERROR, errorMessage: "could not process request"});
+                dispatch({type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
             }
         }
         catch (error) {

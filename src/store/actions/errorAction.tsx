@@ -54,6 +54,6 @@ export const handleError = (error: any, retryMethod: ActionType, retryPayload: A
     } catch (err) {
         // eslint-disable-next-line no-console
         console.log(err);
-        return { type: UNHANDLEDERROR, errorMessage: "Unknown Error - Please refresh the page" };
+        return { type: UNHANDLEDERROR, errorMessage: "error.unknown" };
     }
 };

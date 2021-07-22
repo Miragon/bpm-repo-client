@@ -3,14 +3,19 @@
     "confirmDelete": "Wollen Sie {{repoName}} wirklich löschen?",
     "repository": "Projekt",
     "create": "Projekt erstellen",
+    "created": "Projekt erstellt",
     "delete": "Projekt löschen",
+    "deleted": "Projekt gelöscht",
     "edit": "Projekt bearbeiten",
+    "updated": "Projekt aktualisiert",
     "notAvailable": "Sie haben noch keine Projekte erstellt",
     "target": "Projekt"
   },
   "diagram": {
     "confirmDelete": "Wollen Sie {{diagramName}} wirklich löschen?",
     "create": "Diagramm erstellen",
+    "createdFromExisting": "Diagramm aus existierender Version erstellt",
+    "createdDefault": "Diagramm erstellt",
     "createBpmn": "BPMN Diagramm erstellen",
     "createDmn": "DMN Diagramm erstellen",
     "delete": "Diagramm löschen",
@@ -18,12 +23,16 @@
     "edit": "Diagramm bearbeiten",
     "modifiedOn": "Bearbeitet am",
     "upload": "Diagramm hochladen",
+    "updated": "Diagramm aktualisiert",
     "import": "Aus Cawemo importieren",
     "notAvailable": "Sie haben noch keine Diagramme erstellt"
   },
   "version": {
     "create": "Version erstellen",
+    "created": "Version erstellt",
     "deploy": "Version veröffentlichen",
+    "downloading": "Version wird heruntergeladen",
+    "deployed": "Version veröffentlicht",
     "dialogHeader": "Neue Version von {{diagramName}} erstellen",
     "edit": "Version bearbeiten",
     "download": "Version herunterladen",
@@ -33,6 +42,11 @@
     "deploymentHistory": "Veröffentlichungen",
     "saveAsNewDiagram": "Als neues Diagramm speichern",
     "saveVersionXAsNewDiagram": "Version {{milestone}} als neues Diagramm speichern"
+  },
+  "assignment": {
+    "changedAssignment": "Zugriffsrechte von {{username}} zu {{roleEnum}} geändert",
+    "added": "Benutzer zum Projekt hinzugefügt",
+    "removed": "{{username}} vom Projekt entfernt"
   },
   "deployment": {
     "deployment": "Veröffentlichung",
@@ -88,5 +102,17 @@
     "german": "Deutsch",
     "english": "Englisch",
     "select": "Sprache auswählen"
+  },
+  "defaultErrors": {
+    "error": "Fehler",
+    "400": "Fehlerhafte Anfrage - bitte alle Daten beifügen",
+    "401": "Nicht Authorisiert",
+    "403": "Session abgelaufen - Bitte Seite neu laden",
+    "404": "Nicht gefunden",
+    "409": "Konflikt"
+  },
+  "error": {
+    "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
+    "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
   }
 }
