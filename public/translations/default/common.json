@@ -49,6 +49,12 @@
     "added": "Added User to Repository",
     "removed": "Removed {{username}} from Repository"
   },
+  "form": {
+    "create": "Create Form"
+  },
+  "config": {
+    "create": "Create Configuration"
+  },
   "deployment": {
     "deployment": "Deployment",
     "deployments": "Deployments",

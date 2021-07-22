@@ -43,6 +43,12 @@
     "saveAsNewDiagram": "Als neues Diagramm speichern",
     "saveVersionXAsNewDiagram": "Version {{milestone}} als neues Diagramm speichern"
   },
+  "form": {
+    "create": "Formular erstellen"
+  },
+  "config": {
+    "create": "Konfiguration erstellen"
+  },
   "assignment": {
     "changedAssignment": "Zugriffsrechte von {{username}} zu {{roleEnum}} geändert",
     "added": "Benutzer zum Projekt hinzugefügt",

@@ -26,7 +26,9 @@ const CreateDiagramContainer: React.FC = observer(() => {
 
     const [uploadDiagramOpen, setUploadDiagramOpen] = useState(false);
     const [createDiagramOpen, setCreateDiagramOpen] = useState(false);
-    const [createDiagramType, setCreateDiagramType] = useState<"bpmn" | "dmn">("bpmn");
+    const [createFormOpen, setCreateFormOpen] = useState(false);
+    const [createConfigOpen, setCreateConfigOpen] = useState(false);
+    const [createDiagramType, setCreateDiagramType] = useState<"bpmn" | "dmn" >("bpmn");
     const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
 
     const diagramOptions: DropdownButtonItem[] = [
@@ -49,6 +51,22 @@ const CreateDiagramContainer: React.FC = observer(() => {
             }
         },
         {
+            id: "form",
+            label: "form.create",
+            type: "button",
+            onClick: () => {
+                setCreateFormOpen(true);
+            }
+        },
+        {
+            id: "config",
+            label: "config.create",
+            type: "button",
+            onClick: () => {
+                setCreateConfigOpen(true);
+            }
+        },
+        {
             id: "divider1",
             type: "divider",
             label: "",
@@ -60,13 +78,6 @@ const CreateDiagramContainer: React.FC = observer(() => {
             label: "diagram.upload",
             type: "button",
             onClick: () => setUploadDiagramOpen(true)
-        },
-        {
-            id: "import",
-            label: "diagram.import",
-            type: "button",
-            // eslint-disable-next-line no-console
-            onClick: () => console.log("Import")
         }
     ];
 
@@ -84,6 +95,7 @@ const CreateDiagramContainer: React.FC = observer(() => {
                 type={createDiagramType}
                 onCancelled={() => setCreateDiagramOpen(false)}
                 repo={activeRepo} />
+
 
             <UploadDiagramDialog
                 open={uploadDiagramOpen}

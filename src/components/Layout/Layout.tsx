@@ -91,9 +91,6 @@ const Layout = (): any => {
             });
             dispatch({type: UNHANDLEDERROR, errorMessage: "", retryMethod: ActionType, retryPayload: []});
         }
-
-
-
     }, [apiErrorState, apiErrorRetryMethod, apiErrorRetryPayload, dispatch, t, i18n]);
 
 
