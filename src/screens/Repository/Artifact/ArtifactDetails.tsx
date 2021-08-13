@@ -1,7 +1,7 @@
 import {makeStyles} from "@material-ui/styles";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, FileTypesTO} from "../../../api";
+import {ArtifactTO, ArtifactTypeTO} from "../../../api";
 import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {useParams} from "react-router";
@@ -48,7 +48,7 @@ const ArtifactDetails: React.FC = (() => {
     );
     const synced = useSelector((state: RootState) => state.dataSynced.artifactSynced);
     const favoriteSynced = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
 
 

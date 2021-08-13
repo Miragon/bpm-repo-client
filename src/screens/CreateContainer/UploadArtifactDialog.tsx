@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {ArtifactVersionUploadTOSaveTypeEnum, FileTypesTO, RepositoryTO} from "../../api";
+import {ArtifactVersionUploadTOSaveTypeEnum, ArtifactTypeTO, RepositoryTO} from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
@@ -46,7 +46,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
     const uploadedArtifact = useSelector(
         (state: RootState) => state.artifacts.uploadedArtifact
     );

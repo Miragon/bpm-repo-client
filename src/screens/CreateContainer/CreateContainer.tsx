@@ -10,7 +10,7 @@ import UploadArtifactDialog from "./UploadArtifactDialog";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
-import {FileTypesTO} from "../../api";
+import {ArtifactTypeTO} from "../../api";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -37,7 +37,7 @@ const RepoContainer: React.FC = observer(() => {
     const [createArtifactType, setCreateArtifactType] = useState<string>("BPMN");
     const [artifactOptions, setArtifactOptions] = useState<Array<DropdownButtonItem>>([])
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
 
     useEffect(() => {

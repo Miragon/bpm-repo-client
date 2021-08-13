@@ -76,6 +76,7 @@
   "category": {
     "favorite": "Favorites",
     "recent": "Recently used",
+    "shared": "Shared",
     "noFavoritesAvailable": "You haven't added any files to your favorites yet."
 
   },
@@ -108,7 +109,7 @@
   "registration": {
     "signup": "Sign up for Miragon Cloud Services",
     "firstTime": "This is the first time you are trying to access Miragon Cloud Services.",
-    "accountRequired": "To use this service you need an account.\n To create a new account, choose a name and accept the Terms and Conditions.",
+    "accountRequired": "To use this service you need an account.\n To create a new account, click the button below and accept the terms and conditions.",
     "agree": "I agree to the terms of service",
     "create": "Create a new User Profile"
   },

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO, FileTypesTO} from "../../../api";
+import {ArtifactVersionTO, ArtifactTypeTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {ListItem} from "@material-ui/core";
 import {MoreVert, Star, StarOutline} from "@material-ui/icons";
@@ -134,7 +134,7 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
     const {t} = useTranslation("common");
 
     const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);

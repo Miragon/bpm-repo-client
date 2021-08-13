@@ -1,4 +1,4 @@
-import {DeploymentTO, FileTypesTO} from "../../../api";
+import {DeploymentTO, ArtifactTypeTO} from "../../../api";
 import {Button, Chip, ListItem, Tooltip} from "@material-ui/core";
 import helpers from "../../../constants/Functions";
 import IconButton from "@material-ui/core/IconButton";
@@ -113,7 +113,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
     const [deployVersionOpen, setDeployVersionOpen] = useState<boolean>(false);
     const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     const openDeploymentHistory = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();

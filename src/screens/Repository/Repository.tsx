@@ -8,6 +8,7 @@ import {RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import PathStructure from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
+import SharedArtifacts from "./Artifact/SharedArtifacts";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
@@ -55,6 +56,8 @@ const Repository: React.FC = (() => {
                     <ErrorBoundary>
                         <ArtifactDetails/>
                     </ErrorBoundary>
+                    <SharedArtifacts/>
+
                 </div>
             }
         </>

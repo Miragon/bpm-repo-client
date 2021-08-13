@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO, FileTypesTO} from "../../../api";
+import {ArtifactVersionTO, ArtifactTypeTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {CircularProgress, Collapse, ListItem, Tooltip} from "@material-ui/core";
 import {ExpandLess, ExpandMore, MoreVert, Star, StarOutline} from "@material-ui/icons";
@@ -13,7 +13,7 @@ import {
     deleteArtifact,
     fetchRepositories,
     getAllVersions,
-    getLatestVersion
+    getLatestVersion, shareWithRepo
 } from "../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import CreateVersionDialog from "./CreateVersionDialog";
@@ -144,7 +144,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
     const activeArtifactVersionTOs: Array<ArtifactVersionTO> = useSelector((state: RootState) => state.versions.activeVersions);
     const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
     const versionSynced: boolean = useSelector((state: RootState) => state.dataSynced.versionSynced)
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -251,6 +251,14 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             type: "button",
             onClick: () => {
                 setEditArtifactOpen(true);
+            }
+        },
+        {
+            id: "ShareWithRepository",
+            label: t("artifact.share"),
+            type: "button",
+            onClick: () => {
+                dispatch(shareWithRepo(props.artifactId, ["56e540db-5d5e-4d63-902e-140c9a276d50"]))
             }
         },
         {

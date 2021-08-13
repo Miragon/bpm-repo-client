@@ -4,8 +4,8 @@ import {
     deleteArtifact,
     fetchArtifactsFromRepo,
     fetchFavoriteArtifacts,
-    fetchRecentArtifacts,
-    searchArtifact,
+    fetchRecentArtifacts, getAllSharedArtifacts,
+    searchArtifact, shareWithRepo,
     updateArtifact,
     uploadArtifact
 } from "./artifactAction";
@@ -45,7 +45,9 @@ export enum ActionType {
     FETCH_MENU_ITEMS,
     FETCH_TARGETS,
     SET_STARRED,
-    COPY_TO_REPO
+    COPY_TO_REPO,
+    SHARE_WITH_REPO,
+    GET_SHARED_ARTIFACTS
 }
 
 // eslint-disable-next-line
@@ -74,6 +76,9 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
 
         case ActionType.FETCH_REPOSITORIES:
             return fetchRepositories();
+
+        case ActionType.GET_SHARED_ARTIFACTS:
+            return getAllSharedArtifacts();
 
         case ActionType.GET_SINGLE_REPOSITORY:
             return getSingleRepository(payload[0]);
@@ -104,6 +109,9 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
 
         case ActionType.DELETE_REPOSITORY:
             return deleteRepository(payload[0]);
+
+        case ActionType.SHARE_WITH_REPO:
+            return shareWithRepo(payload[0], payload[1]);
 
         case ActionType.SEARCH_ARTIFACT:
             return searchArtifact(payload[0]);

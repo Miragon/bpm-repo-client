@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import CreateArtifactDialog from "../../CreateContainer/CreateArtifactDialog";
 import UploadArtifactDialog from "../../CreateContainer/UploadArtifactDialog";
-import {FileTypesTO, RepositoryTO} from "../../../api";
+import {ArtifactTypeTO, RepositoryTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 
@@ -30,7 +30,7 @@ const ArtifactManagementContainer: React.FC = observer(() => {
 
     const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
 
     useEffect(() => {

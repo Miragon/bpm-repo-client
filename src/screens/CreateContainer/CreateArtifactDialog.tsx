@@ -2,7 +2,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {FileTypesTO, RepositoryTO} from "../../api";
+import {ArtifactTypeTO, RepositoryTO} from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
@@ -28,7 +28,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState<string>("");
     const [repository, setRepository] = useState<string>(props.repo ? props.repo.id : "");
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );

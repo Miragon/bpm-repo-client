@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import SettingsForm from "../../../components/Form/SettingsForm";
 import SettingsTextField from "../../../components/Form/SettingsTextField";
-import {FileTypesTO} from "../../../api";
+import {ArtifactTypeTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {createNewArtifactWithVersionFile} from "../../../store/actions";
 
@@ -28,7 +28,7 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState("");
 
 
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
 
     const onCreate = useCallback(async () => {
         try {
