@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllSharedArtifacts, getSharedArtifacts} from "../../../store/actions";
+import {getSharedArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import helpers from "../../../constants/Functions";
 import {ArtifactTO} from "../../../api";
