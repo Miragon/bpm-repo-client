@@ -161,5 +161,8 @@
     "lastEdited": "Last Edited",
     "created": "Creation Date",
     "name": "Name"
+  },
+  "share": {
+    "successful": "Artifact Shared"
   }
 }

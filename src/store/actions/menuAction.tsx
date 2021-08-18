@@ -1,7 +1,7 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
 import helpers from "../../constants/Functions";
-import {MENU_ITEMS, SYNC_STATUS_MENU, UNHANDLEDERROR} from "../constants";
+import {MENU_ITEMS, SYNC_STATUS_MENU, HANDLEDERROR} from "../../constants/Constants";
 import {handleError} from "./errorAction";
 import {ActionType} from "./actions";
 
@@ -16,7 +16,7 @@ export const fetchMenuItems = () => {
                 dispatch({type: MENU_ITEMS, menuItems: response.data})
                 dispatch({type: SYNC_STATUS_MENU, dataSynced: true})
             } else{
-                dispatch({type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
+                dispatch({type: HANDLEDERROR, errorMessage: "error.couldNotProcess"});
             }
         }
         catch (error) {

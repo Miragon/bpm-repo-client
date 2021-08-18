@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import PopupDialog from "../../../components/Form/PopupDialog";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DeploymentTO} from "../../../api";
 import {makeStyles} from "@material-ui/core/styles";
-import helpers from "../../../constants/Functions";
+import {DeploymentTO} from "../../../../api";
+import PopupDialog from "../../../../components/Form/PopupDialog";
+import helpers from "../../../../constants/Functions";
 
 
 const useStyles = makeStyles(() => ({

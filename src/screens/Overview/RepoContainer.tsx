@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     },
     headerText: {
         color: "black",
-        fontSize: "20px"
+        fontSize: "1.3rem"
     },
     container: {
         display: "flex",

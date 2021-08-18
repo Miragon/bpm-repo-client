@@ -3,12 +3,12 @@ import {makeStyles} from "@material-ui/core/styles";
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {ArtifactVersionUploadTOSaveTypeEnum, ArtifactTypeTO, RepositoryTO} from "../../api";
+import {ArtifactTypeTO, ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import {UNHANDLEDERROR} from "../../store/constants";
+import {HANDLEDERROR} from "../../constants/Constants";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 import {createOrUpdateVersion, uploadArtifact} from "../../store/actions";
@@ -73,7 +73,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
             dispatch(uploadArtifact(repository, title, description, uploadedFileType));
             props.onCancelled();
         } catch (err) {
-            dispatch({ type: UNHANDLEDERROR, errorMessage: err });
+            dispatch({ type: HANDLEDERROR, errorMessage: err });
         }
     }, [title, description, repository, props, dispatch, uploadedFileType]);
 
@@ -84,7 +84,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
             const f = files[0];
             const fileExtension = f.name.substring(f.name.lastIndexOf(".") + 1, f.name.length);
             if (!fileTypeList.includes(fileExtension)) {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "File type not supported" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "File type not supported" });
             }
             setUploadedFileType(fileExtension);
             const reader = new FileReader();

@@ -1,12 +1,12 @@
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import PopupDialog from "../../../components/Form/PopupDialog";
-import SettingsForm from "../../../components/Form/SettingsForm";
-import SettingsTextField from "../../../components/Form/SettingsTextField";
-import {ArtifactTypeTO} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {createNewArtifactWithVersionFile} from "../../../store/actions";
+import {ArtifactTypeTO} from "../../../../api";
+import {RootState} from "../../../../store/reducers/rootReducer";
+import {createNewArtifactWithVersionFile} from "../../../../store/actions";
+import PopupDialog from "../../../../components/Form/PopupDialog";
+import SettingsForm from "../../../../components/Form/SettingsForm";
+import SettingsTextField from "../../../../components/Form/SettingsTextField";
 
 interface Props {
     open: boolean;

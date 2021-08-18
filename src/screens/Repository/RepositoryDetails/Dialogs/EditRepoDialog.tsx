@@ -4,10 +4,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import {IconButton, Typography} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {useHistory} from "react-router-dom";
-import PopupDialog from "../../../components/Form/PopupDialog";
-import SettingsTextField from "../../../components/Form/SettingsTextField";
 import {useTranslation} from "react-i18next";
-import {deleteRepository, updateRepository} from "../../../store/actions";
+import SettingsTextField from "../../../../components/Form/SettingsTextField";
+import PopupDialog from "../../../../components/Form/PopupDialog";
+import {deleteRepository, updateRepository} from "../../../../store/actions";
 
 const useStyles = makeStyles(() => ({
     line: {

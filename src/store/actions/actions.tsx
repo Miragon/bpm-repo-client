@@ -4,7 +4,7 @@ import {
     deleteArtifact,
     fetchArtifactsFromRepo,
     fetchFavoriteArtifacts,
-    fetchRecentArtifacts, getAllSharedArtifacts,
+    fetchRecentArtifacts, getAllSharedArtifacts, getSharedArtifacts,
     searchArtifact, shareWithRepo,
     updateArtifact,
     uploadArtifact
@@ -47,6 +47,7 @@ export enum ActionType {
     SET_STARRED,
     COPY_TO_REPO,
     SHARE_WITH_REPO,
+    GET_ALL_SHARED_ARTIFACTS,
     GET_SHARED_ARTIFACTS
 }
 
@@ -78,6 +79,9 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
             return fetchRepositories();
 
         case ActionType.GET_SHARED_ARTIFACTS:
+            return getSharedArtifacts(payload[0]);
+
+        case ActionType.GET_ALL_SHARED_ARTIFACTS:
             return getAllSharedArtifacts();
 
         case ActionType.GET_SINGLE_REPOSITORY:

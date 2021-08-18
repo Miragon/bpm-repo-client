@@ -3,12 +3,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
 import {getSingleRepository} from "../../store/actions";
 import ArtifactDetails from "./Artifact/ArtifactDetails";
-import RepositoryDetails from "./Administration/RepositoryDetails";
 import {RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import PathStructure from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import SharedArtifacts from "./Artifact/SharedArtifacts";
+import RepositoryDetails from "./RepositoryDetails/RepositoryDetails";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
@@ -23,14 +23,11 @@ const Repository: React.FC = (() => {
 
 
     useEffect(() => {
-        dispatch(getSingleRepository(repoId));
-    }, [dispatch, getRepo, repoId])
-
-    useEffect(() => {
         if(!dataSynced){
             getRepo(repoId);
         }
     }, [dataSynced, getRepo, repoId])
+
 
     const element = {
         name: "path.overview",
@@ -56,7 +53,9 @@ const Repository: React.FC = (() => {
                     <ErrorBoundary>
                         <ArtifactDetails/>
                     </ErrorBoundary>
-                    <SharedArtifacts/>
+                    <ErrorBoundary>
+                        <SharedArtifacts/>
+                    </ErrorBoundary>
 
                 </div>
             }

@@ -1,14 +1,14 @@
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/styles";
-import PopupDialog from "../../../components/Form/PopupDialog";
-import SettingsForm from "../../../components/Form/SettingsForm";
-import SettingsTextField from "../../../components/Form/SettingsTextField";
 import {useTranslation} from "react-i18next";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {UNHANDLEDERROR} from "../../../store/constants";
-import {createOrUpdateVersion, getAllVersions} from "../../../store/actions";
-import {ArtifactVersionTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../../api";
+import {ArtifactVersionTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../../../api";
+import {RootState} from "../../../../store/reducers/rootReducer";
+import {createOrUpdateVersion, getAllVersions} from "../../../../store/actions";
+import PopupDialog from "../../../../components/Form/PopupDialog";
+import {HANDLEDERROR} from "../../../../constants/Constants";
+import SettingsForm from "../../../../components/Form/SettingsForm";
+import SettingsTextField from "../../../../components/Form/SettingsTextField";
 
 const useStyles = makeStyles(() => ({
     container: {}
@@ -46,7 +46,7 @@ const CreateVersionDialog: React.FC<Props> = props => {
                 dispatch(getAllVersions(artifactId));
                 onCancelled();
             } else {
-                dispatch({type: UNHANDLEDERROR, errorMessage: "Can't load XML of the latest version"})
+                dispatch({type: HANDLEDERROR, errorMessage: "Can't load XML of the latest version"})
             }
         } catch (err) {
             // eslint-disable-next-line no-console

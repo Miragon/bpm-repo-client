@@ -1,6 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {RepositoryTO} from "../../api";
-import {ACTIVE_REPO, GET_REPOS} from "../constants";
+import {ACTIVE_REPO, REPOSITORIES} from "../../constants/Constants";
 
 const initialState = {
     repos: Array<RepositoryTO>(),
@@ -10,7 +10,7 @@ const initialState = {
 
 const reducer: CaseReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GET_REPOS:
+        case REPOSITORIES:
             return {
                 ...state,
                 repos: action.repos

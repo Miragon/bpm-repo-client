@@ -1,5 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
-import {ARTIFACTQUERY_EXECUTED, USERQUERY_EXECUTED} from "../constants";
+import {ARTIFACTQUERY_EXECUTED, USERQUERY_EXECUTED} from "../../constants/Constants";
+
 
 const initialState = {
     userResultsCount: 0,

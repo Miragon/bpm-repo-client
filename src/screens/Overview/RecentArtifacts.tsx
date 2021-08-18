@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
         marginTop: "1rem",
         "&>h1": {
             color: "black",
-            fontSize: "20px",
+            fontSize: "1.3rem",
             fontWeight: "normal"
         }
     },

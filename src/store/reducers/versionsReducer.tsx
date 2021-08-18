@@ -1,6 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {ArtifactVersionTO} from "../../api";
-import {ACTIVE_VERSIONS, LATEST_VERSION} from "../constants";
+import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../constants/Constants";
 
 const initialState = {
     activeVersions: Array<ArtifactVersionTO>(),

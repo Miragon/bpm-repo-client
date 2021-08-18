@@ -19,12 +19,20 @@ const useStyles = makeStyles(() => ({
         justifyContent: "space-between",
         whiteSpace: "nowrap"
     },
+    buttons: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        minWidth: "360px",
+        flexGrow: 1
+    },
     artifactButton: {
-        minWidth: "180px"
+        minWidth: "180px",
+        marginLeft: "1rem"
     },
     repositoryButton: {
         minWidth: "180px",
-        marginRight: "1rem"
+        marginLeft: "1rem"
     }
 }));
 

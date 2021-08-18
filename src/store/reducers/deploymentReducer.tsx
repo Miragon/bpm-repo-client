@@ -1,5 +1,5 @@
 import {CaseReducer} from "@reduxjs/toolkit";
-import {TARGETS} from "../constants";
+import {TARGETS} from "../../constants/Constants";
 
 const initialState = {
     targets: Array<string>(),

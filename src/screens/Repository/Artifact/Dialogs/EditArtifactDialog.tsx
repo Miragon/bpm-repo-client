@@ -2,9 +2,9 @@ import React, {useCallback, useState} from "react";
 import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {Input, InputLabel} from "@material-ui/core";
-import PopupDialog from "../../../components/Form/PopupDialog";
 import {useTranslation} from "react-i18next";
-import {updateArtifact} from "../../../store/actions";
+import {updateArtifact} from "../../../../store/actions";
+import PopupDialog from "../../../../components/Form/PopupDialog";
 
 const useStyles = makeStyles(() => ({
     line: {

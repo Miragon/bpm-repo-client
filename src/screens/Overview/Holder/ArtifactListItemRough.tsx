@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO, ArtifactTypeTO} from "../../../api";
+import {ArtifactTypeTO, ArtifactVersionTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {ListItem} from "@material-ui/core";
 import {MoreVert, Star, StarOutline} from "@material-ui/icons";
@@ -10,13 +10,13 @@ import PopupSettings from "../../../components/Form/PopupSettings";
 import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
-import CreateVersionDialog from "../../Repository/Artifact/CreateVersionDialog";
-import EditArtifactDialog from "../../Repository/Artifact/EditArtifactDialog";
-import {LATEST_VERSION} from "../../../store/constants";
 import Icon from "@material-ui/core/Icon";
 import helpers from "../../../constants/Functions";
 import {useHistory} from "react-router-dom";
 import {openFileInTool} from "../../../components/Redirect/Redirections";
+import CreateVersionDialog from "../../Repository/Artifact/Dialogs/CreateVersionDialog";
+import EditArtifactDialog from "../../Repository/Artifact/Dialogs/EditArtifactDialog";
+import {LATEST_VERSION} from "../../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -59,7 +59,7 @@ const useStyles = makeStyles(() => ({
         alignSelf: "center"
     },
     rightPanel: {
-        marginLeft: "15px",
+        marginLeft: "16px",
         whiteSpace: "nowrap",
         display: "flex",
         flexDirection: "row",
@@ -74,7 +74,7 @@ const useStyles = makeStyles(() => ({
     },
     repository: {
         overflow: "hidden",
-        fontSize: ".9rem",
+        fontSize: "0.9rem",
         textOverflow: "ellipsis",
         maxBlockSize: "1.2rem",
         fontStyle: "italic",

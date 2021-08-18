@@ -5,14 +5,13 @@ import {ArtifactTO, ArtifactTypeTO} from "../../../api";
 import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {useParams} from "react-router";
-import ArtifactManagementContainer from "../Administration/ArtifactManagementContainer";
 import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {useTranslation} from "react-i18next";
-import {SYNC_STATUS_FAVORITE} from "../../../store/constants";
-import ArtifactListItem from "./ArtifactListItem";
 import {List} from "@material-ui/core";
 import helpers from "../../../constants/Functions";
-
+import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
+import ArtifactListItem from "./Holder/ArtifactListItem";
+import {SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
 
 
 const useStyles = makeStyles(() => ({
@@ -51,22 +50,16 @@ const ArtifactDetails: React.FC = (() => {
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
 
-
     const [displayedFileTypes, setDisplayedFileTypes] = useState<Array<string>>(fileTypes.map(type => type.name));
     const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(activeArtifacts);
     const [sortValue, setSortValue] = useState<string>("lastEdited");
 
-    useEffect(() => {
-        dispatch(fetchArtifactsFromRepo(repoId));
-    }, [dispatch, repoId]);
 
     useEffect(() => {
         if (!synced) {
             dispatch(fetchArtifactsFromRepo(repoId));
         }
     }, [dispatch, synced, repoId]);
-
-
 
     useEffect(() => {
         setFilteredArtifacts(activeArtifacts)
@@ -78,7 +71,6 @@ const ArtifactDetails: React.FC = (() => {
             dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
         }
     }, [favoriteSynced, dispatch, ]);
-
 
 
     const changeFileTypeFilter = (selectedValue: string) => {

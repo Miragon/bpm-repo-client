@@ -1,6 +1,6 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import helpers from "../../constants/Functions";
-import {FILETYPES, UNHANDLEDERROR} from "../constants";
+import {FILETYPES, HANDLEDERROR} from "../../constants/Constants";
 import {handleError} from "./errorAction";
 import {ActionType} from "./actions";
 import {ArtifactApi} from "../../api";
@@ -14,7 +14,7 @@ export const fetchFileTypes = () => {
             if(Math.floor(response.status / 100) === 2) {
                 dispatch({type: FILETYPES, fileTypes: response.data})
             } else{
-                dispatch({type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
+                dispatch({type: HANDLEDERROR, errorMessage: "error.couldNotProcess"});
             }
         }
         catch (error) {

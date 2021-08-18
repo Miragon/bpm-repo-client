@@ -1,20 +1,20 @@
-import {DeploymentTO, ArtifactTypeTO} from "../../../api";
 import {Button, Chip, ListItem, Tooltip} from "@material-ui/core";
-import helpers from "../../../constants/Functions";
 import IconButton from "@material-ui/core/IconButton";
 import {MoreVert} from "@material-ui/icons";
 import React, {useRef, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import PopupSettings from "../../../components/Form/PopupSettings";
-import DeployVersionDialog from "./DeployVersionDialog";
-import DeploymentHistory from "./DeploymentHistory";
-import SaveAsNewArtifactDialog from "./SaveAsNewArtifactDialog";
-import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
-import {fetchTargets} from "../../../store/actions/deploymentAction";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {openFileInTool} from "../../../components/Redirect/Redirections";
-import {RootState} from "../../../store/reducers/rootReducer";
+import {ArtifactTypeTO, DeploymentTO} from "../../../../api";
+import {RootState} from "../../../../store/reducers/rootReducer";
+import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
+import {fetchTargets} from "../../../../store/actions";
+import {openFileInTool} from "../../../../components/Redirect/Redirections";
+import helpers from "../../../../constants/Functions";
+import PopupSettings from "../../../../components/Form/PopupSettings";
+import DeployVersionDialog from "../../Artifact/Dialogs/DeployVersionDialog";
+import SaveAsNewArtifactDialog from "../../Artifact/Dialogs/SaveAsNewArtifactDialog";
+import DeploymentHistory from "../../Artifact/Dialogs/DeploymentHistory";
 
 const useStyles = makeStyles(() => ({
 

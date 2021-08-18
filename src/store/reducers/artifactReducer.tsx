@@ -1,14 +1,14 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {ArtifactTO, ArtifactTypeTO} from "../../api";
 import {
-    ACTIVE_ARTIFACTS, ARTIFACTS_REPO_AND_TYPE,
-    DIAGRAM_UPLOAD,
+    ACTIVE_ARTIFACTS, ARTIFACTS_BY_REPO_AND_TYPE,
+    ARTIFACT_UPLOAD,
     FILETYPES,
-    GET_FAVORITE,
-    GET_RECENT,
-    SEARCH_ARTIFACT,
+    FAVORITE_ARTIFACTS,
+    RECENT_ARTIFACTS,
+    SEARCHED_ARTIFACTS,
     SHARED_ARTIFACTS
-} from "../constants";
+} from "../../constants/Constants";
 
 const initialState = {
     artifacts: Array<ArtifactTO>(),
@@ -29,22 +29,22 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 artifacts: action.artifacts
             };
-        case DIAGRAM_UPLOAD:
+        case ARTIFACT_UPLOAD:
             return {
                 ...state,
                 uploadedArtifact: action.uploadedArtifact
             };
-        case GET_RECENT:
+        case RECENT_ARTIFACTS:
             return {
                 ...state,
                 recentArtifacts: action.recentArtifacts
             };
-        case GET_FAVORITE:
+        case FAVORITE_ARTIFACTS:
             return {
                 ...state,
                 favoriteArtifacts: action.favoriteArtifacts
             };
-        case SEARCH_ARTIFACT:
+        case SEARCHED_ARTIFACTS:
             return {
                 ...state,
                 searchedArtifacts: action.searchedArtifacts
@@ -61,7 +61,7 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 sharedArtifacts: action.sharedArtifacts
             }
 
-        case ARTIFACTS_REPO_AND_TYPE:
+        case ARTIFACTS_BY_REPO_AND_TYPE:
             return {
                 ...state,
                 artifactsByRepoAndType: action.artifactsByRepoAndType

@@ -159,5 +159,8 @@
     "lastEdited": "Zuletzt bearbeitet",
     "created": "Erstellungsdatum",
     "name": "Name"
+  },
+  "share": {
+    "successful": "Datei geteilt"
   }
 }

@@ -115,6 +115,10 @@ interface ArtifactProps {
 }
 
 const ArtifactCard: React.FC<ArtifactProps> = (props: ArtifactProps) => {
+
+    //TODO Delete class
+
+
     const classes = useStyles();
     const dispatch = useDispatch();
 

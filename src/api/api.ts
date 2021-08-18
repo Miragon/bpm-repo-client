@@ -876,6 +876,39 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
+         * Get Artifacts shared with Repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifacts: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('getSharedArtifacts', 'repositoryId', repositoryId)
+            const localVarPath = `/api/artifact/shared/{repositoryId}`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1170,7 +1203,7 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async copyToRepository(repositoryId: string, artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async copyToRepository(repositoryId: string, artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.copyToRepository(repositoryId, artifactId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1255,6 +1288,16 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Get Artifacts shared with Repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSharedArtifacts(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifacts(repositoryId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1269,7 +1312,7 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async lockArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async lockArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.lockArtifact(artifactId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1310,7 +1353,7 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async unlockArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async unlockArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.unlockArtifact(artifactId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1332,7 +1375,7 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePreviewSVG(artifactId, artifactSVGUploadTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1353,7 +1396,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        copyToRepository(repositoryId: string, artifactId: string, options?: any): AxiosPromise<void> {
+        copyToRepository(repositoryId: string, artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
             return localVarFp.copyToRepository(repositoryId, artifactId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1429,6 +1472,15 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.getRecent(options).then((request) => request(axios, basePath));
         },
         /**
+         * Get Artifacts shared with Repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifacts(repositoryId: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
+            return localVarFp.getSharedArtifacts(repositoryId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1442,7 +1494,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        lockArtifact(artifactId: string, options?: any): AxiosPromise<void> {
+        lockArtifact(artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
             return localVarFp.lockArtifact(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1479,7 +1531,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        unlockArtifact(artifactId: string, options?: any): AxiosPromise<void> {
+        unlockArtifact(artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
             return localVarFp.unlockArtifact(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1499,7 +1551,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any): AxiosPromise<void> {
+        updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any): AxiosPromise<ArtifactTO> {
             return localVarFp.updatePreviewSVG(artifactId, artifactSVGUploadTO, options).then((request) => request(axios, basePath));
         },
     };
@@ -1610,6 +1662,17 @@ export class ArtifactApi extends BaseAPI {
      */
     public getRecent(options?: any) {
         return ArtifactApiFp(this.configuration).getRecent(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get Artifacts shared with Repository
+     * @param {string} repositoryId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArtifactApi
+     */
+    public getSharedArtifacts(repositoryId: string, options?: any) {
+        return ArtifactApiFp(this.configuration).getSharedArtifacts(repositoryId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2235,7 +2298,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         createRepository: async (newRepositoryTO: NewRepositoryTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'newRepositoryTO' is not null or undefined
             assertParamExists('createRepository', 'newRepositoryTO', newRepositoryTO)
-            const localVarPath = `/api/bpmnrepo`;
+            const localVarPath = `/api/repo`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2271,7 +2334,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         deleteRepository: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
             assertParamExists('deleteRepository', 'repositoryId', repositoryId)
-            const localVarPath = `/api/bpmnrepo/{repositoryId}`
+            const localVarPath = `/api/repo/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2302,7 +2365,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          * @throws {RequiredError}
          */
         getAllRepositories: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/bpmnrepo`;
+            const localVarPath = `/api/repo`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2335,7 +2398,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         getSingleRepository: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
             assertParamExists('getSingleRepository', 'repositoryId', repositoryId)
-            const localVarPath = `/api/bpmnrepo/{repositoryId}`
+            const localVarPath = `/api/repo/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2372,7 +2435,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
             assertParamExists('updateRepository', 'repositoryId', repositoryId)
             // verify required parameter 'repositoryUpdateTO' is not null or undefined
             assertParamExists('updateRepository', 'repositoryUpdateTO', repositoryUpdateTO)
-            const localVarPath = `/api/bpmnrepo/{repositoryId}`
+            const localVarPath = `/api/repo/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2416,7 +2479,7 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createRepository(newRepositoryTO: NewRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async createRepository(newRepositoryTO: NewRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepositoryTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createRepository(newRepositoryTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2460,7 +2523,7 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepositoryTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateRepository(repositoryId, repositoryUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2481,7 +2544,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRepository(newRepositoryTO: NewRepositoryTO, options?: any): AxiosPromise<void> {
+        createRepository(newRepositoryTO: NewRepositoryTO, options?: any): AxiosPromise<RepositoryTO> {
             return localVarFp.createRepository(newRepositoryTO, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2521,7 +2584,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): AxiosPromise<void> {
+        updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): AxiosPromise<RepositoryTO> {
             return localVarFp.updateRepository(repositoryId, repositoryUpdateTO, options).then((request) => request(axios, basePath));
         },
     };

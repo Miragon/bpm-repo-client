@@ -5,12 +5,12 @@ import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import {RepositoryTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
-import EditRepoDialog from "./EditRepoDialog";
+import UserManagementDialog from "./Dialogs/UserManagementDialog";
+import EditRepoDialog from "./Dialogs/EditRepoDialog";
 
-import UserManagementDialog from "./UserManagementDialog";
 
 const useStyles = makeStyles(() => ({
-    root: {
+    container: {
         marginBottom: "1rem"
     },
     header: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     },
     headerText: {
         color: "black",
-        fontSize: "20px",
+        fontSize: "1.3rem",
     },
     repoInfo: {
         minWidth: "150px",
@@ -29,11 +29,10 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         justifyContent: "space-between",
         color: "black",
-        fontSize: "15px"
+        fontSize: "0.8rem"
     },
     description: {
         color: "black",
-        fontSize: "14px",
         fontWeight: "lighter",
         fontStyle: "italic"
     }
@@ -50,7 +49,7 @@ const RepositoryDetails: React.FC = (() => {
 
     if (activeRepo) {
         return (
-            <div className={classes.root}>
+            <div className={classes.container}>
                 <div className={classes.header}>
                     <div className={classes.headerText}>
                         {activeRepo.name}

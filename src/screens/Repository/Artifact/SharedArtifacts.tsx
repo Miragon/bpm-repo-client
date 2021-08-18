@@ -1,19 +1,18 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllSharedArtifacts, getByRepositoryIdAndType} from "../../../store/actions";
+import {getAllSharedArtifacts, getSharedArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
-import ArtifactListItem from "./ArtifactListItem";
 import helpers from "../../../constants/Functions";
 import {ArtifactTO} from "../../../api";
 import {useParams} from "react-router";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
+import ArtifactListItem from "./Holder/ArtifactListItem";
 
 
 const useStyles = makeStyles(() => ({
     headerText: {
-        color: "black",
-        fontSize: "20px"
+        fontSize: "1.3rem"
     },
 }))
 
@@ -30,13 +29,13 @@ const SharedArtifacts: React.FC = (() => {
 
 
     useEffect(() => {
-        dispatch(getAllSharedArtifacts())
+        dispatch(getSharedArtifacts(repoId))
     }, [dispatch, repoId])
 
     return (
         <>
             <div className={classes.headerText}>
-                {t("shared")}
+                {t("category.shared")}
             </div>
             {sharedArtifacts.map(artifact => (
                 <ArtifactListItem

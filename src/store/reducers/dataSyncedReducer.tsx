@@ -8,7 +8,7 @@ import {
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
     SYNC_STATUS_VERSION
-} from "../constants";
+} from "../../constants/Constants";
 
 const initialState = {
     repoSynced: false,

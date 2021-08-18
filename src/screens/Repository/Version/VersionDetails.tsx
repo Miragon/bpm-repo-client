@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {ArtifactVersionTO} from "../../../api";
 import {CircularProgress, List, ListItem} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import VersionListItem from "./VersionListItem";
+import VersionListItem from "./Holder/VersionListItem";
 
 const useStyles = makeStyles(() => ({
 

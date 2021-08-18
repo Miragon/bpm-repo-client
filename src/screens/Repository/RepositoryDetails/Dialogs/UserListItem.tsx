@@ -2,11 +2,11 @@ import React, {useCallback, useRef, useState} from "react";
 import {Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
 import {Settings} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
-import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
-import {AssignmentTO, AssignmentUpdateTORoleEnumEnum} from "../../../api";
 import {useTranslation} from "react-i18next";
-import PopupSettings from "../../../components/Form/PopupSettings";
-import {createOrUpdateUserAssignment, deleteAssignment} from "../../../store/actions";
+import {AssignmentTO, AssignmentUpdateTORoleEnumEnum} from "../../../../api";
+import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
+import PopupSettings from "../../../../components/Form/PopupSettings";
+import {createOrUpdateUserAssignment, deleteAssignment} from "../../../../store/actions";
 
 interface Props {
     assignmentTO: AssignmentTO;

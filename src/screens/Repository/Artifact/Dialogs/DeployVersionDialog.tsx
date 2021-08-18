@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import PopupDialog from "../../../components/Form/PopupDialog";
-import {deployVersion} from "../../../store/actions/deploymentAction";
-import SettingsSelect from "../../../components/Form/SettingsSelect";
 import MenuItem from "@material-ui/core/MenuItem";
-import {RootState} from "../../../store/reducers/rootReducer";
+import {RootState} from "../../../../store/reducers/rootReducer";
+import {deployVersion} from "../../../../store/actions";
+import PopupDialog from "../../../../components/Form/PopupDialog";
+import SettingsSelect from "../../../../components/Form/SettingsSelect";
 
 
 interface Props {

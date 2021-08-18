@@ -6,7 +6,7 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {SYNC_STATUS_FAVORITE} from "../../store/constants";
+import {SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
 import helpers from "../../constants/Functions";
 import {fetchFavoriteArtifacts} from "../../store/actions";
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
         marginTop: "2rem",
         "&>h1": {
             color: "black",
-            fontSize: "20px",
+            fontSize: "1.3rem",
             fontWeight: "normal"
         }
     },

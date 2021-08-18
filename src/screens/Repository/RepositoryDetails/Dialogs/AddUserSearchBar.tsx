@@ -6,10 +6,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import {UserInfoTO} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
-import theme from "../../../theme";
-import {createOrUpdateUserAssignment, searchUsers} from "../../../store/actions";
+import {UserInfoTO} from "../../../../api";
+import {RootState} from "../../../../store/reducers/rootReducer";
+import {createOrUpdateUserAssignment, searchUsers} from "../../../../store/actions";
+import theme from "../../../../theme";
 
 const useStyles = makeStyles(() => ({
     listItem: {

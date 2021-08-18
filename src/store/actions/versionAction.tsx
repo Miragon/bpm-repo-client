@@ -2,7 +2,7 @@ import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
 import {ArtifactVersionUploadTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../api";
 import helpers from "../../constants/Functions";
-import {ACTIVE_VERSIONS, LATEST_VERSION, SUCCESS, SYNC_STATUS_VERSION, UNHANDLEDERROR} from "../constants";
+import {ACTIVE_VERSIONS, LATEST_VERSION, SUCCESS, SYNC_STATUS_VERSION, HANDLEDERROR} from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
 
@@ -28,7 +28,7 @@ export const createOrUpdateVersion = (
                 dispatch({ type: SUCCESS, successMessage: "version.created" });
                 dispatch({ type: SYNC_STATUS_VERSION, dataSynced: false });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_VERSION, [
@@ -48,7 +48,7 @@ export const getAllVersions = (bpmnArtifactId: string) => {
                 dispatch({ type: ACTIVE_VERSIONS, activeVersions: response.data });
                 dispatch({type: SYNC_STATUS_VERSION, dataSynced: true});
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.GET_ALL_VERSIONS, [bpmnArtifactId]));
@@ -65,7 +65,7 @@ export const getLatestVersion = (bpmnArtifactId: string) => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: LATEST_VERSION, latestVersion: response.data });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.LATEST_VERSION, [bpmnArtifactId]));
@@ -82,7 +82,7 @@ export const downloadVersion = (bpmnArtifactId: string, bpmnArtifactVersionId: s
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: SUCCESS, successMessage: "version.downloading" });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.LATEST_VERSION, [bpmnArtifactId]));

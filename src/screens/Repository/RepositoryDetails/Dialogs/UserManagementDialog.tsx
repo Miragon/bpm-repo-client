@@ -1,14 +1,14 @@
 import {List, Paper} from "@material-ui/core";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {AssignmentTO, AssignmentTORoleEnumEnum} from "../../../api";
-import PopupDialog from "../../../components/Form/PopupDialog";
-import {getAllAssignedUsers} from "../../../store/actions/assignmentAction";
-import {SEARCH_USERS, UNHANDLEDERROR} from "../../../store/constants";
-import {RootState} from "../../../store/reducers/rootReducer";
 import AddUserSearchBar from "./AddUserSearchBar";
 import UserListItem from "./UserListItem";
 import {useTranslation} from "react-i18next";
+import {RootState} from "../../../../store/reducers/rootReducer";
+import {AssignmentTO, AssignmentTORoleEnumEnum} from "../../../../api";
+import {getAllAssignedUsers} from "../../../../store/actions";
+import {HANDLEDERROR, SEARCHED_USERS} from "../../../../constants/Constants";
+import PopupDialog from "../../../../components/Form/PopupDialog";
 
 interface Props {
     open: boolean;
@@ -59,7 +59,7 @@ const UserManagementDialog: React.FC<Props> = props => {
             return false;
         } catch (err) {
             dispatch({
-                type: UNHANDLEDERROR,
+                type: HANDLEDERROR,
                 message: "Error while checking permissions for this repository"
             });
             return false;
@@ -67,7 +67,7 @@ const UserManagementDialog: React.FC<Props> = props => {
     }, [assignmentTOs, currentUser, dispatch]);
 
     const onCancel = (() => {
-        dispatch({ type: SEARCH_USERS, searchedUsers: [] });
+        dispatch({ type: SEARCHED_USERS, searchedUsers: [] });
         onCancelled();
     });
 

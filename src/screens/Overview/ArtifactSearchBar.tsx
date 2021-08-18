@@ -18,25 +18,16 @@ const useStyles = makeStyles(() => ({
         fontSize: "20px"
     },
     container: {
-        width: "800px"
+        minWidth: "400px",
+        maxWidth: "1000px",
+        flexGrow: 2
     },
     resultsContainer: {
         marginTop: "15px",
         display: "flex",
+        flexDirection: "column",
         flexWrap: "wrap"
     },
-    listItem: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    artifactName: {
-        color: "black",
-        flexGrow: 3
-    },
-    repoName: {
-        color: "lightgrey",
-    }
 }));
 
 let timeout: NodeJS.Timeout | undefined;
@@ -124,9 +115,9 @@ const ArtifactSearchBar: React.FC = () => {
                         id="ArtifactSearchBar"
                         freeSolo
                         style={{ width: "100%" }}
-                        open={open}
+                        open={false}
                         onOpen={() => {
-                            setOpen(true);
+                            setOpen(false);
                         }}
                         onClose={() => {
                             setOpen(false);

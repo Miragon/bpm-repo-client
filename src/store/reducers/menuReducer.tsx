@@ -1,6 +1,6 @@
 import {MenuItemTO} from "../../api";
 import {CaseReducer} from "@reduxjs/toolkit";
-import {MENU_ITEMS} from "../constants";
+import {MENU_ITEMS} from "../../constants/Constants";
 
 const initalState = {
     menuItems: Array<MenuItemTO>()

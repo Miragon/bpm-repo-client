@@ -1,29 +1,30 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO, ArtifactTypeTO} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
+import {ArtifactTypeTO, ArtifactVersionTO} from "../../../../api";
+import {RootState} from "../../../../store/reducers/rootReducer";
 import {CircularProgress, Collapse, ListItem, Tooltip} from "@material-ui/core";
 import {ExpandLess, ExpandMore, MoreVert, Star, StarOutline} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
-import PopupSettings from "../../../components/Form/PopupSettings";
-import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
+import PopupSettings from "../../../../components/Form/PopupSettings";
+import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
 import {
     addToFavorites,
     deleteArtifact,
     fetchRepositories,
     getAllVersions,
-    getLatestVersion, shareWithRepo
-} from "../../../store/actions";
+    getLatestVersion,
+    shareWithRepo
+} from "../../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
-import CreateVersionDialog from "./CreateVersionDialog";
-import EditArtifactDialog from "./EditArtifactDialog";
-import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../../store/constants";
 import Icon from "@material-ui/core/Icon";
-import helpers from "../../../constants/Functions";
-import VersionDetails from "./VersionDetails";
-import {openFileInTool} from "../../../components/Redirect/Redirections";
-import CopyToRepoDialog from "../../CreateContainer/CopyToRepoDialog";
+import helpers from "../../../../constants/Functions";
+import {openFileInTool} from "../../../../components/Redirect/Redirections";
+import CopyToRepoDialog from "../../../Dialogs/CopyToRepoDialog";
+import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../../../constants/Constants";
+import VersionDetails from "../../Version/VersionDetails";
+import CreateVersionDialog from "../Dialogs/CreateVersionDialog";
+import EditArtifactDialog from "../Dialogs/EditArtifactDialog";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -258,7 +259,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             label: t("artifact.share"),
             type: "button",
             onClick: () => {
-                dispatch(shareWithRepo(props.artifactId, ["56e540db-5d5e-4d63-902e-140c9a276d50"]))
+                dispatch(shareWithRepo(props.artifactId, ["760f9b08-f4fd-4533-9d82-ef175f639bf3"]))
             }
         },
         {

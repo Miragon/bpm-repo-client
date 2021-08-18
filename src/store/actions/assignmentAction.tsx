@@ -1,7 +1,7 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import {AssignmentApi, AssignmentUpdateTO, AssignmentUpdateTORoleEnumEnum} from "../../api";
 import helpers from "../../constants/Functions";
-import {ASSIGNED_USERS, SUCCESS, SYNC_STATUS_ASSIGNMENT, UNHANDLEDERROR} from "../constants";
+import {ASSIGNED_USERS, SUCCESS, SYNC_STATUS_ASSIGNMENT, HANDLEDERROR} from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
 
@@ -16,7 +16,7 @@ export const getAllAssignedUsers = (repoId: string) => {
                 dispatch({ type: ASSIGNED_USERS, assignedUsers: response.data });
                 dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: true });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.GET_ALL_ASSIGNED_USERS, [repoId]));
@@ -53,7 +53,7 @@ export const createOrUpdateUserAssignment = (
                 (typeof message === "string") ? dispatch({ type: SUCCESS, successMessage: message}) : dispatch({ type: SUCCESS, successMessageWithVariables: message});
                 dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess"});
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_USER_ASSIGNMENT, [
@@ -75,7 +75,7 @@ export const deleteAssignment = (repoId: string, username: string) => {
                 dispatch({ type: SUCCESS, successMessageWithVariables: {content: "assignment.removed", variables: {username: username}} });
                 dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.DELETE_ASSIGNMENT, [repoId, username]));

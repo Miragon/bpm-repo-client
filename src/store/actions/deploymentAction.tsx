@@ -1,7 +1,7 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import {DeploymentApi, NewDeploymentTO} from "../../api";
 import helpers from "../../constants/Functions";
-import {SUCCESS, SYNC_STATUS_VERSION, TARGETS, UNHANDLEDERROR} from "../constants";
+import {SUCCESS, SYNC_STATUS_VERSION, TARGETS, HANDLEDERROR} from "../../constants/Constants";
 import {handleError} from "./errorAction";
 import {ActionType} from "./actions";
 
@@ -19,7 +19,7 @@ export const deployVersion = (target: string, artifactId: string, versionId: str
                 dispatch({ type: SUCCESS, successMessage: "version.deployed" });
                 dispatch({type: SYNC_STATUS_VERSION, dataSynced: false})
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.DEPLOY_VERSION, [
@@ -39,7 +39,7 @@ export const fetchTargets = () => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({type: TARGETS, targets: response.data})
             } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.FETCH_TARGETS, []));

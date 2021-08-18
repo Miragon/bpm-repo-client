@@ -3,7 +3,7 @@ import {Icon, IconButton, makeStyles} from "@material-ui/core";
 import {CheckCircle, Error, Replay} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
 import {actionMapper, ActionType} from "../../store/actions/actions";
-import {UNHANDLEDERROR} from "../../store/constants";
+import {HANDLEDERROR} from "../../constants/Constants";
 import theme from "../../theme";
 
 
@@ -46,7 +46,7 @@ const Toast: React.FC<Props> = props => {
 
     const retry = useCallback(() => {
         if(props.isError && props.retryMethod && props.retryPayload){
-            dispatch({type: UNHANDLEDERROR, errorMessage: ""});
+            dispatch({type: HANDLEDERROR, errorMessage: ""});
             dispatch(actionMapper(props.retryMethod, props.retryPayload));
         }
     }, [dispatch, props]);
