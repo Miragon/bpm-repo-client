@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../../api";
@@ -6,7 +6,8 @@ import {RootState} from "../../../../store/reducers/rootReducer";
 
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import MultipleSelectionList, {MultipleSelectionListItem} from "./MultipleSelectionList";
-import {getSharedRepos, shareWithRepo, unshareArtifact} from "../../../../store/actions/ShareAction";
+import {getSharedRepos, shareWithRepo, unshareWithRepo} from "../../../../store/actions/ShareAction";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 interface Props {
     open: boolean;
@@ -17,7 +18,7 @@ interface Props {
 }
 
 
-const ShareWithRepoDialog: React.FC<Props> = props => {
+const SharingManagementDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
@@ -35,9 +36,11 @@ const ShareWithRepoDialog: React.FC<Props> = props => {
         }
     }, [dispatch, props.artifactId, sharedSynced])
 
+    //TODO: ShareRepos-state does not update (should happen in the getSharedRepos action)
+    //TODO: Dateien sollten auch mit Repositories geteilt werden können, die dem nutzer nicht direkt zugewiesen sind
     const isArtifactSharedWithRepo = useCallback((repo: RepositoryTO): boolean => {
-        return repo.sharedArtifacts?.map(artifact => artifact.id).includes(props.artifactId) ? true : false;
-    }, [props.artifactId])
+        return sharedRepos.find(sharedRepo => sharedRepo.id === repo.id) ? true : false;
+    }, [sharedRepos])
 
     const isRepoManageable = useCallback((repo: RepositoryTO): boolean => {
         return manageableRepos.includes(repo)
@@ -47,7 +50,7 @@ const ShareWithRepoDialog: React.FC<Props> = props => {
         setOptions(opts)
     }
 
-    useEffect(() => {
+    useEffect(()=> {
         const opts: MultipleSelectionListItem[] = [];
         manageableRepos.forEach(repo => {
             (repo.id !== props.repoId) && opts.push(
@@ -55,11 +58,12 @@ const ShareWithRepoDialog: React.FC<Props> = props => {
                     name: repo.name,
                     selected: isArtifactSharedWithRepo(repo),
                     editable: isRepoManageable(repo),
-                    onAdd: () => {
-                        dispatch(shareWithRepo(props.artifactId, repo.id, ShareWithRepositoryTORoleEnum.Viewer))
-                    },
-                    onRemove: () => {
-                        dispatch(unshareArtifact(props.artifactId, repo.id))
+                    onClick: () => {
+                        if(!isArtifactSharedWithRepo(repo)){
+                            dispatch(shareWithRepo(props.artifactId, repo.id, ShareWithRepositoryTORoleEnum.Viewer))
+                        } else{
+                            dispatch(unshareWithRepo(props.artifactId, repo.id))
+                        }
                     }
                 }
             )
@@ -70,11 +74,12 @@ const ShareWithRepoDialog: React.FC<Props> = props => {
                     name: repo.name,
                     selected: isArtifactSharedWithRepo(repo),
                     editable: isRepoManageable(repo),
-                    onAdd: () => {
-                        dispatch(shareWithRepo(props.artifactId, repo.id, ShareWithRepositoryTORoleEnum.Viewer))
-                    },
-                    onRemove: () => {
-                        dispatch(unshareArtifact(props.artifactId, repo.id))
+                    onClick: () => {
+                        if(!isArtifactSharedWithRepo(repo)){
+                            dispatch(shareWithRepo(props.artifactId, repo.id, ShareWithRepositoryTORoleEnum.Viewer))
+                        } else{
+                            dispatch(unshareWithRepo(props.artifactId, repo.id))
+                        }
                     }
                 }
             )
@@ -82,12 +87,7 @@ const ShareWithRepoDialog: React.FC<Props> = props => {
 
         setOpts(opts)
 
-    }, [dispatch, isArtifactSharedWithRepo, isRepoManageable, props.artifactId, sharedRepos, manageableRepos, props.repoId])
-
-
-
-
-
+    }, [dispatch, isArtifactSharedWithRepo, isRepoManageable, manageableRepos, props.artifactId, props.repoId, sharedRepos])
 
     return (
         <PopupDialog
@@ -109,4 +109,4 @@ const ShareWithRepoDialog: React.FC<Props> = props => {
         </PopupDialog>
     );
 };
-export default ShareWithRepoDialog;
+export default SharingManagementDialog;

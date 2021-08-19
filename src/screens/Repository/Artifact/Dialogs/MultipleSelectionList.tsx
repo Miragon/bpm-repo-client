@@ -1,6 +1,7 @@
-import {Icon, IconButton, List, ListItem} from "@material-ui/core";
+import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import UserListItem from "../../RepositoryDetails/Dialogs/UserListItem";
 
 const useStyles = makeStyles(() => ({
 
@@ -23,8 +24,7 @@ const useStyles = makeStyles(() => ({
 export interface MultipleSelectionListItem {
     name: string;
     selected: boolean;
-    onAdd: () => void;
-    onRemove: () => void;
+    onClick: () => void;
     editable: boolean;
 }
 
@@ -42,27 +42,27 @@ const MultipleSelectionList: React.FC<Props> = props => {
 
     return (
         <List>
-            {props.options.map(option => (
-                <ListItem className={classes.listItem} button>
-                    <div className={classes.leftPanel}>
-                        <IconButton>
-                            <Icon color={option.selected ? "secondary" : "disabled"} onClick={() => option.onAdd()}>
-                                {props.selectIcon}
-                            </Icon>
-                        </IconButton>
-                    </div>
-                    <div className={classes.middlePanel}>
-                        {option.name}
-                    </div>
-                    <div className={classes.rightPanel}>
-                        <IconButton className={classes.removeIcon} onClick={() => option.onRemove()}>
-                            <Icon>
-                                {props.removeIcon}
-                            </Icon>
-                        </IconButton>
-                    </div>
-                </ListItem>
-            ))}
+            <Paper>
+                
+            
+                {props.options.map(option => (
+                    <ListItem className={classes.listItem} button key={option.name}>
+                        <div className={classes.leftPanel}>
+                            <IconButton onClick={() => option.onClick()}>
+                                <Icon color={option.selected ? "secondary" : "disabled"}>
+                                    {props.selectIcon}
+                                </Icon>
+                            </IconButton>
+                        </div>
+                        <div className={classes.middlePanel}>
+                            {option.name}
+                        </div>
+                        <div>
+                            {option.selected && "SHARED"}
+                        </div>
+                    </ListItem>
+                ))}
+            </Paper>
         </List>
     );
 };

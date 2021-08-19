@@ -40,7 +40,7 @@ export const getAllSharedArtifacts = () => {
     };
 };
 
-export const unshareArtifact = (artifactId: string, repositoryId: string) => {
+export const unshareWithRepo = (artifactId: string, repositoryId: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const shareController = new ShareApi();
         try {
@@ -48,6 +48,8 @@ export const unshareArtifact = (artifactId: string, repositoryId: string) => {
             const response = await shareController.unshareArtifactWithRepository(artifactId, repositoryId, config);
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: SUCCESS, successMessage: "share.removed" });
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
+
             } else {
                 dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
             }
@@ -88,7 +90,7 @@ export const getSharedRepos = (artifactId: string) => {
             const response = await shareController.getSharedRepositories(artifactId, config);
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({type: SHARED_REPOS, sharedRepos: response.data});
-                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: true})
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: true});
 
             } else {
                 dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });

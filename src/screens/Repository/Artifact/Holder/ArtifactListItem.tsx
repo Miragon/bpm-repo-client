@@ -25,7 +25,7 @@ import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../../../constants/Constants";
 import VersionDetails from "../../Version/VersionDetails";
 import CreateVersionDialog from "../Dialogs/CreateVersionDialog";
 import EditArtifactDialog from "../Dialogs/EditArtifactDialog";
-import ShareWithRepoDialog from "../Dialogs/ShareWithRepoDialog";
+import SharingManagementDialog from "../Dialogs/SharingManagementDialog";
 import {getSharedRepos} from "../../../../store/actions/ShareAction";
 
 const useStyles = makeStyles(() => ({
@@ -398,7 +398,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
                 name={props.artifactTitle}
                 artifactId={props.artifactId} />
 
-            <ShareWithRepoDialog
+            <SharingManagementDialog
                 open={shareWithRepoOpen}
                 repoId={props.repoId}
                 onCancelled={() => setShareWithRepoOpen(false)}
