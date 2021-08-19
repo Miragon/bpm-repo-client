@@ -3,13 +3,14 @@ import {NewRepositoryTO, RepositoryApi, RepositoryUpdateTO} from "../../api";
 import helpers from "../../constants/Functions";
 import {
     ACTIVE_REPO,
+    HANDLEDERROR,
+    MANAGEABLE_REPOS,
     REPOSITORIES,
     SUCCESS,
     SYNC_STATUS_ACTIVE_REPOSITORY,
     SYNC_STATUS_FAVORITE,
     SYNC_STATUS_RECENT,
-    SYNC_STATUS_REPOSITORY,
-    HANDLEDERROR
+    SYNC_STATUS_REPOSITORY
 } from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
@@ -100,7 +101,6 @@ export const updateRepository = (id: string, name: string, description: string) 
 
 export const deleteRepository = (id: string) => {
     return async (dispatch: Dispatch): Promise<void> => {
-        // config was passed before
         const repositoryController = new RepositoryApi();
         try {
             const config = helpers.getClientConfig();
@@ -117,6 +117,24 @@ export const deleteRepository = (id: string) => {
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.DELETE_REPOSITORY, [id]));
+        }
+    };
+};
+
+
+export const getManageableRepos = () => {
+    return async (dispatch: Dispatch): Promise<void> => {
+        const repositoryController = new RepositoryApi();
+        try {
+            const config = helpers.getClientConfig();
+            const response = await repositoryController.getManageableRepositories(config);
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({type: MANAGEABLE_REPOS, manageableRepos: response.data});
+            } else {
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
+            }
+        } catch (error) {
+            dispatch(handleError(error, ActionType.GET_MANAGEABLE_REPOS, []));
         }
     };
 };

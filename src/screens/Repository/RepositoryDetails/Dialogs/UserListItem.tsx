@@ -3,10 +3,10 @@ import {Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText} fr
 import {Settings} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {AssignmentTO, AssignmentUpdateTORoleEnumEnum} from "../../../../api";
+import {AssignmentTO, AssignmentUpdateTORoleEnum} from "../../../../api";
 import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
 import PopupSettings from "../../../../components/Form/PopupSettings";
-import {createOrUpdateUserAssignment, deleteAssignment} from "../../../../store/actions";
+import {deleteAssignment, updateUserAssignment} from "../../../../store/actions";
 
 interface Props {
     assignmentTO: AssignmentTO;
@@ -22,9 +22,9 @@ const UserListItem: React.FC<Props> = props => {
     const [open, setOpen] = useState<boolean>(false);
     const ref = useRef<HTMLButtonElement>(null);
 
-    const changeRole = useCallback((role: AssignmentUpdateTORoleEnumEnum) => {
+    const changeRole = useCallback((role: AssignmentUpdateTORoleEnum) => {
         try {
-            dispatch(createOrUpdateUserAssignment(
+            dispatch(updateUserAssignment(
                 props.assignmentTO.repositoryId,
                 props.assignmentTO.userId,
                 props.assignmentTO.username,
@@ -54,7 +54,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.OWNER"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentUpdateTORoleEnumEnum.Owner);
+                changeRole(AssignmentUpdateTORoleEnum.Owner);
             }
         },
         {
@@ -62,7 +62,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.ADMIN"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentUpdateTORoleEnumEnum.Admin);
+                changeRole(AssignmentUpdateTORoleEnum.Admin);
             }
         },
         {
@@ -70,7 +70,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.MEMBER"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentUpdateTORoleEnumEnum.Member);
+                changeRole(AssignmentUpdateTORoleEnum.Member);
             }
         },
         {
@@ -78,7 +78,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.VIEWER"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentUpdateTORoleEnumEnum.Viewer);
+                changeRole(AssignmentUpdateTORoleEnum.Viewer);
             }
         },
         {
@@ -103,7 +103,7 @@ const UserListItem: React.FC<Props> = props => {
             <ListItem>
                 <ListItemText
                     primary={props.assignmentTO.username}
-                    secondary={t(`user.${props.assignmentTO.roleEnum}`)} />
+                    secondary={t(`user.${props.assignmentTO.role}`)} />
                 {props.hasAdminPermissions && (
                     <ListItemSecondaryAction>
                         <IconButton ref={ref} edge="end" onClick={() => setOpen(true)}>

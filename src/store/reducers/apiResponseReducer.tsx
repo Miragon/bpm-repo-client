@@ -1,6 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {ActionType} from "../actions/actions";
-import {SUCCESS, HANDLEDERROR} from "../../constants/Constants";
+import {HANDLEDERROR, SUCCESS} from "../../constants/Constants";
 
 const initialState = {
     errorMessage: "",

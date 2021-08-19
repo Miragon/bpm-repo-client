@@ -8,7 +8,7 @@ import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 import {UserInfoTO} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
-import {createOrUpdateUserAssignment, searchUsers} from "../../../../store/actions";
+import {createUserAssignment, searchUsers} from "../../../../store/actions";
 import theme from "../../../../theme";
 
 const useStyles = makeStyles(() => ({
@@ -101,7 +101,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
             const user = getUserByName(userName);
             const userId = user ? user.id : "";
             if (user) {
-                dispatch(createOrUpdateUserAssignment(props.repoId, userId, user?.username));
+                dispatch(createUserAssignment(props.repoId, userId, user?.username));
                 setUserName("");
             }
         } catch (err) {

@@ -25,6 +25,7 @@
     "edit": "Edit Artifact",
     "modifiedOn": "Modified on",
     "upload": "Upload Artifact",
+    "share": "Share Artifact",
     "updated": "Artifact updated",
     "import": "Import from Cawemo",
     "notAvailable": "You haven't added any artifacts yet"
@@ -48,7 +49,7 @@
     "saveVersionXAsNewArtifact": "Save Version {{milestone}} as new Artifact"
   },
   "assignment": {
-    "changedAssignment": "Changed role of {{username}} to {{roleEnum}}",
+    "changedAssignment": "Changed role of {{username}} to {{role}}",
     "added": "Added User to Repository",
     "removed": "Removed {{username}} from Repository"
   },
@@ -89,7 +90,8 @@
     "cancel": "Cancel",
     "close": "Close",
     "create": "Create",
-    "copy": "Copy"
+    "copy": "Copy",
+    "share": "Share {{artifactName}}"
   },
   "properties": {
     "title": "Title",
@@ -163,6 +165,9 @@
     "name": "Name"
   },
   "share": {
-    "successful": "Artifact Shared"
+    "successful": "Artifact shared",
+    "removed": "Artifact is no longer shared",
+    "na": "No shared Artifacts available"
   }
+
 }

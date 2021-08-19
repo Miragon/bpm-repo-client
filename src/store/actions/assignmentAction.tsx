@@ -1,7 +1,7 @@
 import {Dispatch} from "@reduxjs/toolkit";
-import {AssignmentApi, AssignmentUpdateTO, AssignmentUpdateTORoleEnumEnum} from "../../api";
+import {AssignmentApi, AssignmentUpdateTO, AssignmentUpdateTORoleEnum} from "../../api";
 import helpers from "../../constants/Functions";
-import {ASSIGNED_USERS, SUCCESS, SYNC_STATUS_ASSIGNMENT, HANDLEDERROR} from "../../constants/Constants";
+import {ASSIGNED_USERS, HANDLEDERROR, SUCCESS, SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
 
@@ -24,31 +24,46 @@ export const getAllAssignedUsers = (repoId: string) => {
     };
 };
 
-export const createOrUpdateUserAssignment = (
-    repoId: string,
-    userId: string,
-    username: string,
-    roleEnum?: AssignmentUpdateTORoleEnumEnum
-) => {
+export const createUserAssignment = (repoId: string, userId: string, username: string, role?: AssignmentUpdateTORoleEnum) => {
     return async (dispatch: Dispatch): Promise<void> => {
         const assignmentController = new AssignmentApi();
-        let message;
         try {
-            if (!roleEnum) {
-                message = "assignment.added";
-            } else {
-                message = {content: "assignment.changedAssignment", variables: {username: username, roleEnum: roleEnum ? roleEnum : AssignmentUpdateTORoleEnumEnum.Member}};
-            }
-
             const assignmentUpdateTO: AssignmentUpdateTO = {
                 repositoryId: repoId,
                 userId: userId,
                 username: username,
-                roleEnum: (roleEnum) || AssignmentUpdateTORoleEnumEnum.Member
+                role: (role) || AssignmentUpdateTORoleEnum.Member
             };
             const config = helpers.getClientConfig();
-            const response = await assignmentController
-                .createOrUpdateUserAssignment(assignmentUpdateTO, config);
+            const response = await assignmentController.createUserAssignment(assignmentUpdateTO, config);
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: ASSIGNED_USERS, assignedUsers: response.data });
+                dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: true });
+            } else {
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
+            }
+        } catch (error) {
+            dispatch(handleError(error, ActionType.CREATE_USER_ASSIGNMENT, [repoId, userId, username, role]));
+        }
+    };
+};
+
+
+
+export const updateUserAssignment = (repoId: string, userId: string, username: string, role: AssignmentUpdateTORoleEnum) => {
+    return async (dispatch: Dispatch): Promise<void> => {
+        const assignmentController = new AssignmentApi();
+        let message;
+        try {
+            message = {content: "assignment.changedAssignment", variables: {username, role}};
+            const assignmentUpdateTO: AssignmentUpdateTO = {
+                repositoryId: repoId,
+                userId: userId,
+                username: username,
+                role: (role) || AssignmentUpdateTORoleEnum.Member
+            };
+            const config = helpers.getClientConfig();
+            const response = await assignmentController.updateUserAssignment(assignmentUpdateTO, config);
             if (Math.floor(response.status / 100) === 2) {
                 (typeof message === "string") ? dispatch({ type: SUCCESS, successMessage: message}) : dispatch({ type: SUCCESS, successMessageWithVariables: message});
                 dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
@@ -56,9 +71,7 @@ export const createOrUpdateUserAssignment = (
                 dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess"});
             }
         } catch (error) {
-            dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_USER_ASSIGNMENT, [
-                repoId, userId, username, roleEnum
-            ]));
+            dispatch(handleError(error, ActionType.UPDATE_USER_ASSIGNMENT, [repoId, userId, username, role]));
         }
     };
 };

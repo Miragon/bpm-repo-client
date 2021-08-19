@@ -4,7 +4,7 @@ import {makeStyles} from "@material-ui/styles";
 import {useTranslation} from "react-i18next";
 import {ArtifactVersionTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
-import {createOrUpdateVersion, getAllVersions} from "../../../../store/actions";
+import {createVersion, getAllVersions} from "../../../../store/actions";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import {HANDLEDERROR} from "../../../../constants/Constants";
 import SettingsForm from "../../../../components/Form/SettingsForm";
@@ -42,7 +42,7 @@ const CreateVersionDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         try {
             if(latestVersion){
-                await dispatch(createOrUpdateVersion(artifactId, latestVersion?.xml, ArtifactVersionUploadTOSaveTypeEnum.Milestone, comment));
+                await dispatch(createVersion(artifactId, latestVersion?.xml, ArtifactVersionUploadTOSaveTypeEnum.Milestone, comment));
                 dispatch(getAllVersions(artifactId));
                 onCancelled();
             } else {

@@ -14,7 +14,7 @@ import {
     fetchRepositories,
     getAllVersions,
     getLatestVersion,
-    shareWithRepo
+    getManageableRepos
 } from "../../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
@@ -25,6 +25,8 @@ import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../../../constants/Constants";
 import VersionDetails from "../../Version/VersionDetails";
 import CreateVersionDialog from "../Dialogs/CreateVersionDialog";
 import EditArtifactDialog from "../Dialogs/EditArtifactDialog";
+import ShareWithRepoDialog from "../Dialogs/ShareWithRepoDialog";
+import {getSharedRepos} from "../../../../store/actions/ShareAction";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -154,6 +156,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);
     const [editArtifactOpen, setEditArtifactOpen] = useState<boolean>(false);
+    const [shareWithRepoOpen, setShareWithRepoOpen] = useState<boolean>(false);
     const [downloadReady, setDownloadReady] = useState<boolean>(false);
     const [svgKey, setSvgKey] = useState<string>("");
 
@@ -259,7 +262,9 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             label: t("artifact.share"),
             type: "button",
             onClick: () => {
-                dispatch(shareWithRepo(props.artifactId, ["760f9b08-f4fd-4533-9d82-ef175f639bf3"]))
+                dispatch(getManageableRepos())
+                dispatch(getSharedRepos(props.artifactId))
+                setShareWithRepoOpen(true);
             }
         },
         {
@@ -390,6 +395,13 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             <CopyToRepoDialog
                 open={copyToRepoOpen}
                 onCancelled={() => setCopyToRepoOpen(false)}
+                name={props.artifactTitle}
+                artifactId={props.artifactId} />
+
+            <ShareWithRepoDialog
+                open={shareWithRepoOpen}
+                repoId={props.repoId}
+                onCancelled={() => setShareWithRepoOpen(false)}
                 name={props.artifactTitle}
                 artifactId={props.artifactId} />
         </>

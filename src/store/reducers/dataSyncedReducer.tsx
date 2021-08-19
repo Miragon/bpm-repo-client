@@ -7,6 +7,7 @@ import {
     SYNC_STATUS_MENU,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
+    SYNC_STATUS_SHARED,
     SYNC_STATUS_VERSION
 } from "../../constants/Constants";
 
@@ -17,7 +18,8 @@ const initialState = {
     artifactSynced: false,
     versionSynced: undefined,
     assignmentSynced: false,
-    menuSynced: false
+    menuSynced: false,
+    sharedSynced: false
 };
 
 const reducer: CaseReducer = (state = initialState, action) => {
@@ -69,6 +71,12 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 menuSynced: action.dataSynced
             };
+
+        case SYNC_STATUS_SHARED:
+            return {
+                ...state,
+                sharedSynced: action.sharedSynced
+            }
     }
     return state;
 };

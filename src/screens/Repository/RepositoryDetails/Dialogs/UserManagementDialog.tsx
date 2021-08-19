@@ -5,7 +5,7 @@ import AddUserSearchBar from "./AddUserSearchBar";
 import UserListItem from "./UserListItem";
 import {useTranslation} from "react-i18next";
 import {RootState} from "../../../../store/reducers/rootReducer";
-import {AssignmentTO, AssignmentTORoleEnumEnum} from "../../../../api";
+import {AssignmentTO, AssignmentTORoleEnum} from "../../../../api";
 import {getAllAssignedUsers} from "../../../../store/actions";
 import {HANDLEDERROR, SEARCHED_USERS} from "../../../../constants/Constants";
 import PopupDialog from "../../../../components/Form/PopupDialog";
@@ -50,8 +50,8 @@ const UserManagementDialog: React.FC<Props> = props => {
         const currentUserAssignment = assignmentTOs
             .find(assignmentTO => assignmentTO.username === currentUser.username);
         try {
-            if (currentUserAssignment?.roleEnum === AssignmentTORoleEnumEnum.Admin
-                || currentUserAssignment?.roleEnum === AssignmentTORoleEnumEnum.Owner) {
+            if (currentUserAssignment?.role === AssignmentTORoleEnum.Admin
+                || currentUserAssignment?.role === AssignmentTORoleEnum.Owner) {
                 setHasAdminPermissions(true);
                 return true;
             }

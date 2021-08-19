@@ -1,11 +1,13 @@
-import {createOrUpdateUserAssignment, deleteAssignment, getAllAssignedUsers} from "./assignmentAction";
+import {createUserAssignment, deleteAssignment, getAllAssignedUsers, updateUserAssignment} from "./assignmentAction";
 import {
-    addToFavorites, copyToRepo, createArtifact,
+    addToFavorites,
+    copyToRepo,
+    createArtifact,
     deleteArtifact,
     fetchArtifactsFromRepo,
     fetchFavoriteArtifacts,
-    fetchRecentArtifacts, getAllSharedArtifacts, getSharedArtifacts,
-    searchArtifact, shareWithRepo,
+    fetchRecentArtifacts,
+    searchArtifact,
     updateArtifact,
     uploadArtifact
 } from "./artifactAction";
@@ -13,12 +15,14 @@ import {
     createRepository,
     deleteRepository,
     fetchRepositories,
+    getManageableRepos,
     getSingleRepository,
     updateRepository
 } from "./repositoryAction";
 import {searchUsers} from "./userAction";
-import {createOrUpdateVersion, getAllVersions, getLatestVersion} from "./versionAction";
+import {createVersion, getAllVersions, getLatestVersion} from "./versionAction";
 import {deployVersion, fetchTargets} from "./deploymentAction";
+import {getAllSharedArtifacts, getSharedArtifacts, getSharedRepos, shareWithRepo} from "./ShareAction";
 
 export enum ActionType {
     FETCH_FAVORITE_ARTIFACTS,
@@ -34,7 +38,8 @@ export enum ActionType {
     CREATE_OR_UPDATE_VERSION,
     GET_ALL_VERSIONS,
     GET_ALL_ASSIGNED_USERS,
-    CREATE_OR_UPDATE_USER_ASSIGNMENT,
+    CREATE_USER_ASSIGNMENT,
+    UPDATE_USER_ASSIGNMENT,
     DELETE_ASSIGNMENT,
     UPDATE_REPOSITORY,
     DELETE_REPOSITORY,
@@ -46,9 +51,12 @@ export enum ActionType {
     FETCH_TARGETS,
     SET_STARRED,
     COPY_TO_REPO,
+    SHARE_WITH_REPOS,
     SHARE_WITH_REPO,
     GET_ALL_SHARED_ARTIFACTS,
-    GET_SHARED_ARTIFACTS
+    GET_SHARED_ARTIFACTS,
+    GET_MANAGEABLE_REPOS,
+    GET_SHARED_REPOS
 }
 
 // eslint-disable-next-line
@@ -81,8 +89,14 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
         case ActionType.GET_SHARED_ARTIFACTS:
             return getSharedArtifacts(payload[0]);
 
+        case ActionType.GET_SHARED_REPOS:
+            return getSharedRepos(payload[0]);
+
         case ActionType.GET_ALL_SHARED_ARTIFACTS:
             return getAllSharedArtifacts();
+
+        case ActionType.GET_MANAGEABLE_REPOS:
+            return getManageableRepos();
 
         case ActionType.GET_SINGLE_REPOSITORY:
             return getSingleRepository(payload[0]);
@@ -97,7 +111,7 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
             return searchUsers(payload[0]);
 
         case ActionType.CREATE_OR_UPDATE_VERSION:
-            return createOrUpdateVersion(payload[0], payload[1], payload[2], payload[3] ? payload[3] : "");
+            return createVersion(payload[0], payload[1], payload[2], payload[3] ? payload[3] : "");
 
         case ActionType.GET_ALL_VERSIONS:
             return getAllVersions(payload[0]);
@@ -105,8 +119,11 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
         case ActionType.GET_ALL_ASSIGNED_USERS:
             return getAllAssignedUsers(payload[0]);
 
-        case ActionType.CREATE_OR_UPDATE_USER_ASSIGNMENT:
-            return createOrUpdateUserAssignment(payload[0], payload[1], payload[2]);
+        case ActionType.CREATE_USER_ASSIGNMENT:
+            return createUserAssignment(payload[0], payload[1], payload[2], payload[3]);
+
+        case ActionType.UPDATE_USER_ASSIGNMENT:
+            return updateUserAssignment(payload[0], payload[1], payload[2], payload[3]);
 
         case ActionType.DELETE_ASSIGNMENT:
             return deleteAssignment(payload[0], payload[1]);
@@ -115,7 +132,7 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
             return deleteRepository(payload[0]);
 
         case ActionType.SHARE_WITH_REPO:
-            return shareWithRepo(payload[0], payload[1]);
+            return shareWithRepo(payload[0], payload[1], payload[2]);
 
         case ActionType.SEARCH_ARTIFACT:
             return searchArtifact(payload[0]);

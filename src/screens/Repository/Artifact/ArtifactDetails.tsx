@@ -62,6 +62,7 @@ const ArtifactDetails: React.FC = (() => {
     }, [dispatch, synced, repoId]);
 
     useEffect(() => {
+        console.log(activeArtifacts)
         setFilteredArtifacts(activeArtifacts)
     }, [activeArtifacts, fileTypes])
 

@@ -11,7 +11,7 @@ import SettingsTextField from "../../components/Form/SettingsTextField";
 import {HANDLEDERROR} from "../../constants/Constants";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {createOrUpdateVersion, uploadArtifact} from "../../store/actions";
+import {createVersion, uploadArtifact} from "../../store/actions";
 
 const useStyles = makeStyles(() => ({
     input: {
@@ -57,7 +57,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
 
     useEffect(() => {
         if (uploadedArtifact) {
-            dispatch(createOrUpdateVersion(
+            dispatch(createVersion(
                 uploadedArtifact.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone
             ));
         }

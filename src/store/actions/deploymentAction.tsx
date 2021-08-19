@@ -1,7 +1,7 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import {DeploymentApi, NewDeploymentTO} from "../../api";
 import helpers from "../../constants/Functions";
-import {SUCCESS, SYNC_STATUS_VERSION, TARGETS, HANDLEDERROR} from "../../constants/Constants";
+import {HANDLEDERROR, SUCCESS, SYNC_STATUS_VERSION, TARGETS} from "../../constants/Constants";
 import {handleError} from "./errorAction";
 import {ActionType} from "./actions";
 

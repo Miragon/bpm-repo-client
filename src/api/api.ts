@@ -13,13 +13,24 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import {Configuration} from './configuration';
+import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import {
+    assertParamExists,
+    createRequestFunction,
+    DUMMY_BASE_URL,
+    serializeDataIfNeeded,
+    setApiKeyToObject,
+    setBasicAuthToObject,
+    setBearerAuthToObject,
+    setOAuthToObject,
+    setSearchParams,
+    toPathString
+} from './common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
 
 /**
  * 
@@ -225,6 +236,47 @@ export enum ArtifactVersionTOSaveTypeEnum {
 /**
  * 
  * @export
+ * @interface ArtifactVersionUpdateTO
+ */
+export interface ArtifactVersionUpdateTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactVersionUpdateTO
+     */
+    versionId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactVersionUpdateTO
+     */
+    xml?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactVersionUpdateTO
+     */
+    versionComment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactVersionUpdateTO
+     */
+    saveType?: ArtifactVersionUpdateTOSaveTypeEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ArtifactVersionUpdateTOSaveTypeEnum {
+    Milestone = 'MILESTONE',
+    Autosave = 'AUTOSAVE'
+}
+
+/**
+ * 
+ * @export
  * @interface ArtifactVersionUploadTO
  */
 export interface ArtifactVersionUploadTO {
@@ -286,14 +338,14 @@ export interface AssignmentTO {
      * @type {string}
      * @memberof AssignmentTO
      */
-    roleEnum: AssignmentTORoleEnumEnum;
+    role: AssignmentTORoleEnum;
 }
 
 /**
     * @export
     * @enum {string}
     */
-export enum AssignmentTORoleEnumEnum {
+export enum AssignmentTORoleEnum {
     Owner = 'OWNER',
     Admin = 'ADMIN',
     Member = 'MEMBER',
@@ -329,14 +381,14 @@ export interface AssignmentUpdateTO {
      * @type {string}
      * @memberof AssignmentUpdateTO
      */
-    roleEnum: AssignmentUpdateTORoleEnumEnum;
+    role: AssignmentUpdateTORoleEnum;
 }
 
 /**
     * @export
     * @enum {string}
     */
-export enum AssignmentUpdateTORoleEnumEnum {
+export enum AssignmentUpdateTORoleEnum {
     Owner = 'OWNER',
     Admin = 'ADMIN',
     Member = 'MEMBER',
@@ -533,6 +585,80 @@ export interface RepositoryUpdateTO {
 /**
  * 
  * @export
+ * @interface ShareWithRepositoryTO
+ */
+export interface ShareWithRepositoryTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithRepositoryTO
+     */
+    artifactId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithRepositoryTO
+     */
+    repositoryId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithRepositoryTO
+     */
+    role: ShareWithRepositoryTORoleEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ShareWithRepositoryTORoleEnum {
+    Owner = 'OWNER',
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Viewer = 'VIEWER'
+}
+
+/**
+ * 
+ * @export
+ * @interface ShareWithTeamTO
+ */
+export interface ShareWithTeamTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithTeamTO
+     */
+    artifactId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithTeamTO
+     */
+    teamId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithTeamTO
+     */
+    role: ShareWithTeamTORoleEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ShareWithTeamTORoleEnum {
+    Owner = 'OWNER',
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Viewer = 'VIEWER'
+}
+
+/**
+ * 
+ * @export
  * @interface UserInfoTO
  */
 export interface UserInfoTO {
@@ -715,35 +841,6 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * Get all shared Artifacts
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllSharedArtifacts: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/artifact/shared`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * 
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -811,6 +908,7 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
+         * @summary Get artifacts by providing repositoryId and fileType
          * @param {string} repositoryId 
          * @param {string} type 
          * @param {*} [options] Override http request option.
@@ -853,39 +951,6 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         getRecent: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/artifact/recent`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get Artifacts shared with Repository
-         * @param {string} repositoryId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSharedArtifacts: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getSharedArtifacts', 'repositoryId', repositoryId)
-            const localVarPath = `/api/artifact/shared/{repositoryId}`
-                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1030,45 +1095,6 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Share an Artifact with all members of another Repository
-         * @param {string} artifactId 
-         * @param {Array<string>} requestBody 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        shareWithRepository: async (artifactId: string, requestBody: Array<string>, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('shareWithRepository', 'artifactId', artifactId)
-            // verify required parameter 'requestBody' is not null or undefined
-            assertParamExists('shareWithRepository', 'requestBody', requestBody)
-            const localVarPath = `/api/artifact/share/{artifactId}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1239,15 +1265,6 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Get all shared Artifacts
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAllSharedArtifacts(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllSharedArtifacts(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
          * 
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -1269,6 +1286,7 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get artifacts by providing repositoryId and fileType
          * @param {string} repositoryId 
          * @param {string} type 
          * @param {*} [options] Override http request option.
@@ -1285,16 +1303,6 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          */
         async getRecent(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getRecent(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Get Artifacts shared with Repository
-         * @param {string} repositoryId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSharedArtifacts(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifacts(repositoryId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1334,17 +1342,6 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          */
         async setStarred(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.setStarred(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Share an Artifact with all members of another Repository
-         * @param {string} artifactId 
-         * @param {Array<string>} requestBody 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async shareWithRepository(artifactId: string, requestBody: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.shareWithRepository(artifactId, requestBody, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1428,14 +1425,6 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.getAllFileTypes(options).then((request) => request(axios, basePath));
         },
         /**
-         * Get all shared Artifacts
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllSharedArtifacts(options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getAllSharedArtifacts(options).then((request) => request(axios, basePath));
-        },
-        /**
          * 
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -1455,6 +1444,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
+         * @summary Get artifacts by providing repositoryId and fileType
          * @param {string} repositoryId 
          * @param {string} type 
          * @param {*} [options] Override http request option.
@@ -1470,15 +1460,6 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          */
         getRecent(options?: any): AxiosPromise<Array<ArtifactTO>> {
             return localVarFp.getRecent(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Get Artifacts shared with Repository
-         * @param {string} repositoryId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSharedArtifacts(repositoryId: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getSharedArtifacts(repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1514,16 +1495,6 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          */
         setStarred(artifactId: string, options?: any): AxiosPromise<void> {
             return localVarFp.setStarred(artifactId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Share an Artifact with all members of another Repository
-         * @param {string} artifactId 
-         * @param {Array<string>} requestBody 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        shareWithRepository(artifactId: string, requestBody: Array<string>, options?: any): AxiosPromise<void> {
-            return localVarFp.shareWithRepository(artifactId, requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1611,16 +1582,6 @@ export class ArtifactApi extends BaseAPI {
     }
 
     /**
-     * Get all shared Artifacts
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ArtifactApi
-     */
-    public getAllSharedArtifacts(options?: any) {
-        return ArtifactApiFp(this.configuration).getAllSharedArtifacts(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * 
      * @param {string} artifactId 
      * @param {*} [options] Override http request option.
@@ -1644,6 +1605,7 @@ export class ArtifactApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get artifacts by providing repositoryId and fileType
      * @param {string} repositoryId 
      * @param {string} type 
      * @param {*} [options] Override http request option.
@@ -1662,17 +1624,6 @@ export class ArtifactApi extends BaseAPI {
      */
     public getRecent(options?: any) {
         return ArtifactApiFp(this.configuration).getRecent(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Get Artifacts shared with Repository
-     * @param {string} repositoryId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ArtifactApi
-     */
-    public getSharedArtifacts(repositoryId: string, options?: any) {
-        return ArtifactApiFp(this.configuration).getSharedArtifacts(repositoryId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1716,18 +1667,6 @@ export class ArtifactApi extends BaseAPI {
      */
     public setStarred(artifactId: string, options?: any) {
         return ArtifactApiFp(this.configuration).setStarred(artifactId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Share an Artifact with all members of another Repository
-     * @param {string} artifactId 
-     * @param {Array<string>} requestBody 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ArtifactApi
-     */
-    public shareWithRepository(artifactId: string, requestBody: Array<string>, options?: any) {
-        return ArtifactApiFp(this.configuration).shareWithRepository(artifactId, requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1775,14 +1714,14 @@ export const AssignmentApiAxiosParamCreator = function (configuration?: Configur
     return {
         /**
          * 
-         * @summary Create / update user assignment
+         * @summary Create user assignment
          * @param {AssignmentUpdateTO} assignmentUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrUpdateUserAssignment: async (assignmentUpdateTO: AssignmentUpdateTO, options: any = {}): Promise<RequestArgs> => {
+        createUserAssignment: async (assignmentUpdateTO: AssignmentUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'assignmentUpdateTO' is not null or undefined
-            assertParamExists('createOrUpdateUserAssignment', 'assignmentUpdateTO', assignmentUpdateTO)
+            assertParamExists('createUserAssignment', 'assignmentUpdateTO', assignmentUpdateTO)
             const localVarPath = `/api/assignment`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1881,6 +1820,42 @@ export const AssignmentApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Update user assignment
+         * @param {AssignmentUpdateTO} assignmentUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserAssignment: async (assignmentUpdateTO: AssignmentUpdateTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'assignmentUpdateTO' is not null or undefined
+            assertParamExists('updateUserAssignment', 'assignmentUpdateTO', assignmentUpdateTO)
+            const localVarPath = `/api/assignment`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(assignmentUpdateTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1893,13 +1868,13 @@ export const AssignmentApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Create / update user assignment
+         * @summary Create user assignment
          * @param {AssignmentUpdateTO} assignmentUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createOrUpdateUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createOrUpdateUserAssignment(assignmentUpdateTO, options);
+        async createUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserAssignment(assignmentUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1925,6 +1900,17 @@ export const AssignmentApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllAssignedUsers(repositoryId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary Update user assignment
+         * @param {AssignmentUpdateTO} assignmentUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserAssignment(assignmentUpdateTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -1937,13 +1923,13 @@ export const AssignmentApiFactory = function (configuration?: Configuration, bas
     return {
         /**
          * 
-         * @summary Create / update user assignment
+         * @summary Create user assignment
          * @param {AssignmentUpdateTO} assignmentUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrUpdateUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any): AxiosPromise<void> {
-            return localVarFp.createOrUpdateUserAssignment(assignmentUpdateTO, options).then((request) => request(axios, basePath));
+        createUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any): AxiosPromise<AssignmentTO> {
+            return localVarFp.createUserAssignment(assignmentUpdateTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1966,6 +1952,16 @@ export const AssignmentApiFactory = function (configuration?: Configuration, bas
         getAllAssignedUsers(repositoryId: string, options?: any): AxiosPromise<Array<AssignmentTO>> {
             return localVarFp.getAllAssignedUsers(repositoryId, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Update user assignment
+         * @param {AssignmentUpdateTO} assignmentUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any): AxiosPromise<AssignmentTO> {
+            return localVarFp.updateUserAssignment(assignmentUpdateTO, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -1978,14 +1974,14 @@ export const AssignmentApiFactory = function (configuration?: Configuration, bas
 export class AssignmentApi extends BaseAPI {
     /**
      * 
-     * @summary Create / update user assignment
+     * @summary Create user assignment
      * @param {AssignmentUpdateTO} assignmentUpdateTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AssignmentApi
      */
-    public createOrUpdateUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any) {
-        return AssignmentApiFp(this.configuration).createOrUpdateUserAssignment(assignmentUpdateTO, options).then((request) => request(this.axios, this.basePath));
+    public createUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any) {
+        return AssignmentApiFp(this.configuration).createUserAssignment(assignmentUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2011,6 +2007,18 @@ export class AssignmentApi extends BaseAPI {
      */
     public getAllAssignedUsers(repositoryId: string, options?: any) {
         return AssignmentApiFp(this.configuration).getAllAssignedUsers(repositoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update user assignment
+     * @param {AssignmentUpdateTO} assignmentUpdateTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AssignmentApi
+     */
+    public updateUserAssignment(assignmentUpdateTO: AssignmentUpdateTO, options?: any) {
+        return AssignmentApiFp(this.configuration).updateUserAssignment(assignmentUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2390,6 +2398,36 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @summary Get all repositories that can be managed
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getManageableRepositories: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/repo/administration`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get a single Repository by providing its ID
          * @param {string} repositoryId 
          * @param {*} [options] Override http request option.
@@ -2506,6 +2544,16 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get all repositories that can be managed
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getManageableRepositories(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getManageableRepositories(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get a single Repository by providing its ID
          * @param {string} repositoryId 
          * @param {*} [options] Override http request option.
@@ -2565,6 +2613,15 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          */
         getAllRepositories(options?: any): AxiosPromise<Array<RepositoryTO>> {
             return localVarFp.getAllRepositories(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all repositories that can be managed
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getManageableRepositories(options?: any): AxiosPromise<Array<RepositoryTO>> {
+            return localVarFp.getManageableRepositories(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2634,6 +2691,17 @@ export class RepositoryApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get all repositories that can be managed
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepositoryApi
+     */
+    public getManageableRepositories(options?: any) {
+        return RepositoryApiFp(this.configuration).getManageableRepositories(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Get a single Repository by providing its ID
      * @param {string} repositoryId 
      * @param {*} [options] Override http request option.
@@ -2655,6 +2723,662 @@ export class RepositoryApi extends BaseAPI {
      */
     public updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any) {
         return RepositoryApiFp(this.configuration).updateRepository(repositoryId, repositoryUpdateTO, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * ShareApi - axios parameter creator
+ * @export
+ */
+export const ShareApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get all shared Artifacts
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllSharedArtifacts: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/share/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get Artifacts shared with Repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifacts: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('getSharedArtifacts', 'repositoryId', repositoryId)
+            const localVarPath = `/api/share/{repositoryId}`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all repositories that can access a specific artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedRepositories: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('getSharedRepositories', 'artifactId', artifactId)
+            const localVarPath = `/api/share/repository/{artifactId}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Share an artifact with all members of another repository
+         * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shareWithRepository: async (shareWithRepositoryTO: ShareWithRepositoryTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shareWithRepositoryTO' is not null or undefined
+            assertParamExists('shareWithRepository', 'shareWithRepositoryTO', shareWithRepositoryTO)
+            const localVarPath = `/api/share/repository`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shareWithRepositoryTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Share an artifact with all members of another team
+         * @param {ShareWithTeamTO} shareWithTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shareWithTeam: async (shareWithTeamTO: ShareWithTeamTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shareWithTeamTO' is not null or undefined
+            assertParamExists('shareWithTeam', 'shareWithTeamTO', shareWithTeamTO)
+            const localVarPath = `/api/share/team`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shareWithTeamTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete the sharing-relation to a specific repository
+         * @param {string} artifactId 
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unshareArtifactWithRepository: async (artifactId: string, repositoryId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('unshareArtifactWithRepository', 'artifactId', artifactId)
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('unshareArtifactWithRepository', 'repositoryId', repositoryId)
+            const localVarPath = `/api/share/repository/unshare/{artifactId}/{repositoryId}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete the sharing-relation to a specific repository
+         * @param {string} artifactId 
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unshareArtifactWithTeam: async (artifactId: string, teamId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('unshareArtifactWithTeam', 'artifactId', artifactId)
+            // verify required parameter 'teamId' is not null or undefined
+            assertParamExists('unshareArtifactWithTeam', 'teamId', teamId)
+            const localVarPath = `/api/share/team/unshare/{artifactId}/{teamId}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
+                .replace(`{${"teamId"}}`, encodeURIComponent(String(teamId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update the share-role of a relation with a repository
+         * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateShareWithRepository: async (shareWithRepositoryTO: ShareWithRepositoryTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shareWithRepositoryTO' is not null or undefined
+            assertParamExists('updateShareWithRepository', 'shareWithRepositoryTO', shareWithRepositoryTO)
+            const localVarPath = `/api/share/repository`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shareWithRepositoryTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update the share-role of a relation with a team
+         * @param {ShareWithTeamTO} shareWithTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateShareWithTeam: async (shareWithTeamTO: ShareWithTeamTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shareWithTeamTO' is not null or undefined
+            assertParamExists('updateShareWithTeam', 'shareWithTeamTO', shareWithTeamTO)
+            const localVarPath = `/api/share/team`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shareWithTeamTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ShareApi - functional programming interface
+ * @export
+ */
+export const ShareApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ShareApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Get all shared Artifacts
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllSharedArtifacts(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllSharedArtifacts(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get Artifacts shared with Repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSharedArtifacts(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifacts(repositoryId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get all repositories that can access a specific artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSharedRepositories(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedRepositories(artifactId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Share an artifact with all members of another repository
+         * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async shareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithRepositoryTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.shareWithRepository(shareWithRepositoryTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Share an artifact with all members of another team
+         * @param {ShareWithTeamTO} shareWithTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async shareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithTeamTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.shareWithTeam(shareWithTeamTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Delete the sharing-relation to a specific repository
+         * @param {string} artifactId 
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async unshareArtifactWithRepository(artifactId: string, repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.unshareArtifactWithRepository(artifactId, repositoryId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Delete the sharing-relation to a specific repository
+         * @param {string} artifactId 
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async unshareArtifactWithTeam(artifactId: string, teamId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.unshareArtifactWithTeam(artifactId, teamId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update the share-role of a relation with a repository
+         * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateShareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithRepositoryTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateShareWithRepository(shareWithRepositoryTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update the share-role of a relation with a team
+         * @param {ShareWithTeamTO} shareWithTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithTeamTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateShareWithTeam(shareWithTeamTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * ShareApi - factory interface
+ * @export
+ */
+export const ShareApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ShareApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Get all shared Artifacts
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllSharedArtifacts(options?: any): AxiosPromise<Array<ArtifactTO>> {
+            return localVarFp.getAllSharedArtifacts(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get Artifacts shared with Repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifacts(repositoryId: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
+            return localVarFp.getSharedArtifacts(repositoryId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all repositories that can access a specific artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedRepositories(artifactId: string, options?: any): AxiosPromise<Array<RepositoryTO>> {
+            return localVarFp.getSharedRepositories(artifactId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Share an artifact with all members of another repository
+         * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): AxiosPromise<ShareWithRepositoryTO> {
+            return localVarFp.shareWithRepository(shareWithRepositoryTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Share an artifact with all members of another team
+         * @param {ShareWithTeamTO} shareWithTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): AxiosPromise<ShareWithTeamTO> {
+            return localVarFp.shareWithTeam(shareWithTeamTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete the sharing-relation to a specific repository
+         * @param {string} artifactId 
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unshareArtifactWithRepository(artifactId: string, repositoryId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.unshareArtifactWithRepository(artifactId, repositoryId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete the sharing-relation to a specific repository
+         * @param {string} artifactId 
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unshareArtifactWithTeam(artifactId: string, teamId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.unshareArtifactWithTeam(artifactId, teamId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update the share-role of a relation with a repository
+         * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateShareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): AxiosPromise<ShareWithRepositoryTO> {
+            return localVarFp.updateShareWithRepository(shareWithRepositoryTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update the share-role of a relation with a team
+         * @param {ShareWithTeamTO} shareWithTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): AxiosPromise<ShareWithTeamTO> {
+            return localVarFp.updateShareWithTeam(shareWithTeamTO, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ShareApi - object-oriented interface
+ * @export
+ * @class ShareApi
+ * @extends {BaseAPI}
+ */
+export class ShareApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get all shared Artifacts
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public getAllSharedArtifacts(options?: any) {
+        return ShareApiFp(this.configuration).getAllSharedArtifacts(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Artifacts shared with Repository
+     * @param {string} repositoryId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public getSharedArtifacts(repositoryId: string, options?: any) {
+        return ShareApiFp(this.configuration).getSharedArtifacts(repositoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all repositories that can access a specific artifact
+     * @param {string} artifactId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public getSharedRepositories(artifactId: string, options?: any) {
+        return ShareApiFp(this.configuration).getSharedRepositories(artifactId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Share an artifact with all members of another repository
+     * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public shareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any) {
+        return ShareApiFp(this.configuration).shareWithRepository(shareWithRepositoryTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Share an artifact with all members of another team
+     * @param {ShareWithTeamTO} shareWithTeamTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public shareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any) {
+        return ShareApiFp(this.configuration).shareWithTeam(shareWithTeamTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete the sharing-relation to a specific repository
+     * @param {string} artifactId 
+     * @param {string} repositoryId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public unshareArtifactWithRepository(artifactId: string, repositoryId: string, options?: any) {
+        return ShareApiFp(this.configuration).unshareArtifactWithRepository(artifactId, repositoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete the sharing-relation to a specific repository
+     * @param {string} artifactId 
+     * @param {string} teamId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public unshareArtifactWithTeam(artifactId: string, teamId: string, options?: any) {
+        return ShareApiFp(this.configuration).unshareArtifactWithTeam(artifactId, teamId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update the share-role of a relation with a repository
+     * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public updateShareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any) {
+        return ShareApiFp(this.configuration).updateShareWithRepository(shareWithRepositoryTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update the share-role of a relation with a team
+     * @param {ShareWithTeamTO} shareWithTeamTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any) {
+        return ShareApiFp(this.configuration).updateShareWithTeam(shareWithTeamTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3006,11 +3730,11 @@ export const VersionApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrUpdateVersion: async (artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options: any = {}): Promise<RequestArgs> => {
+        createVersion: async (artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('createOrUpdateVersion', 'artifactId', artifactId)
+            assertParamExists('createVersion', 'artifactId', artifactId)
             // verify required parameter 'artifactVersionUploadTO' is not null or undefined
-            assertParamExists('createOrUpdateVersion', 'artifactVersionUploadTO', artifactVersionUploadTO)
+            assertParamExists('createVersion', 'artifactVersionUploadTO', artifactVersionUploadTO)
             const localVarPath = `/api/version/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3179,6 +3903,45 @@ export const VersionApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} artifactId 
+         * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateVersion: async (artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('updateVersion', 'artifactId', artifactId)
+            // verify required parameter 'artifactVersionUpdateTO' is not null or undefined
+            assertParamExists('updateVersion', 'artifactVersionUpdateTO', artifactVersionUpdateTO)
+            const localVarPath = `/api/version/{artifactId}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactVersionUpdateTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3196,8 +3959,8 @@ export const VersionApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createOrUpdateVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createOrUpdateVersion(artifactId, artifactVersionUploadTO, options);
+        async createVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createVersion(artifactId, artifactVersionUploadTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -3243,6 +4006,17 @@ export const VersionApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getVersion(artifactId, versionId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @param {string} artifactId 
+         * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateVersion(artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateVersion(artifactId, artifactVersionUpdateTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -3260,8 +4034,8 @@ export const VersionApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrUpdateVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any): AxiosPromise<string> {
-            return localVarFp.createOrUpdateVersion(artifactId, artifactVersionUploadTO, options).then((request) => request(axios, basePath));
+        createVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any): AxiosPromise<ArtifactVersionTO> {
+            return localVarFp.createVersion(artifactId, artifactVersionUploadTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3302,6 +4076,16 @@ export const VersionApiFactory = function (configuration?: Configuration, basePa
         getVersion(artifactId: string, versionId: string, options?: any): AxiosPromise<ArtifactVersionTO> {
             return localVarFp.getVersion(artifactId, versionId, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {string} artifactId 
+         * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateVersion(artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): AxiosPromise<ArtifactVersionTO> {
+            return localVarFp.updateVersion(artifactId, artifactVersionUpdateTO, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -3320,8 +4104,8 @@ export class VersionApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof VersionApi
      */
-    public createOrUpdateVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any) {
-        return VersionApiFp(this.configuration).createOrUpdateVersion(artifactId, artifactVersionUploadTO, options).then((request) => request(this.axios, this.basePath));
+    public createVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any) {
+        return VersionApiFp(this.configuration).createVersion(artifactId, artifactVersionUploadTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3369,6 +4153,18 @@ export class VersionApi extends BaseAPI {
      */
     public getVersion(artifactId: string, versionId: string, options?: any) {
         return VersionApiFp(this.configuration).getVersion(artifactId, versionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} artifactId 
+     * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VersionApi
+     */
+    public updateVersion(artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any) {
+        return VersionApiFp(this.configuration).updateVersion(artifactId, artifactVersionUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

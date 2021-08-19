@@ -13,19 +13,20 @@
   },
   "artifact": {
     "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
-    "create": "Artifact erstellen",
+    "create": "Datei erstellen",
     "copy": "{{artifactName}} in anderes Projekt kopieren",
     "copyTo": "In Projekt kopieren",
-    "createdFromExisting": "Artifact aus existierender Version erstellt",
-    "createdDefault": "Artifact erstellt",
-    "createBpmn": "BPMN Artifact erstellen",
-    "createDmn": "DMN Artifact erstellen",
-    "delete": "Artifact löschen",
-    "download": "Artifact herunterladen",
-    "edit": "Artifact bearbeiten",
+    "createdFromExisting": "Datei aus existierender Version erstellt",
+    "createdDefault": "Datei erstellt",
+    "createBpmn": "BPMN Diagramm erstellen",
+    "createDmn": "DMN Diagramm erstellen",
+    "delete": "Datei löschen",
+    "download": "Datei herunterladen",
+    "edit": "Datei bearbeiten",
     "modifiedOn": "Bearbeitet am",
-    "upload": "Artifact hochladen",
-    "updated": "Artifact aktualisiert",
+    "share": "Datei teilen",
+    "upload": "Datei hochladen",
+    "updated": "Datei aktualisiert",
     "import": "Aus Cawemo importieren",
     "notAvailable": "Sie haben noch keine Artifact erstellt"
   },
@@ -53,7 +54,7 @@
     "create": "Konfiguration erstellen"
   },
   "assignment": {
-    "changedAssignment": "Zugriffsrechte von {{username}} zu {{roleEnum}} geändert",
+    "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
     "added": "Benutzer zum Projekt hinzugefügt",
     "removed": "{{username}} vom Projekt entfernt"
   },
@@ -87,7 +88,8 @@
     "cancel": "Abbrechen",
     "close": "Schließen",
     "create": "Erstellen",
-    "copy": "Kopieren"
+    "copy": "Kopieren",
+    "share": "{{artifactName}} Teilen"
   },
   "properties": {
     "title": "Titel",
@@ -161,6 +163,8 @@
     "name": "Name"
   },
   "share": {
-    "successful": "Datei geteilt"
+    "successful": "Datei geteilt",
+    "removed": "Datei wird nicht mehr geteilt",
+    "na": "Bisher werden keine Dateien mit diesem Projekt geteilt"
   }
 }

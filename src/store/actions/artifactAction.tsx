@@ -4,25 +4,25 @@ import {
     ArtifactUpdateTO,
     ArtifactVersionUploadTO,
     ArtifactVersionUploadTOSaveTypeEnum,
-    NewArtifactTO, VersionApi
+    NewArtifactTO,
+    VersionApi
 } from "../../api";
 import helpers from "../../constants/Functions";
 import {
     ACTIVE_ARTIFACTS,
+    ARTIFACT_UPLOAD,
     ARTIFACTQUERY_EXECUTED,
     ARTIFACTS_BY_REPO_AND_TYPE,
-    ARTIFACT_UPLOAD,
     FAVORITE_ARTIFACTS,
+    HANDLEDERROR,
     RECENT_ARTIFACTS,
     SEARCHED_ARTIFACTS,
-    SHARED_ARTIFACTS,
     SUCCESS,
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_FAVORITE,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
-    SYNC_STATUS_VERSION,
-    HANDLEDERROR
+    SYNC_STATUS_VERSION
 } from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";
@@ -119,7 +119,7 @@ export const createArtifactWithDefaultVersion = (repoId: string, name: string, d
                         const versionController = new VersionApi();
                         try {
                             const config = helpers.getClientConfig();
-                            versionController.createOrUpdateVersion(response.data.id, artifactVersionUploadTO, config)
+                            versionController.createVersion(response.data.id, artifactVersionUploadTO, config)
                                 .then(response2 => {
                                     if (Math.floor(response2.status / 100) === 2) {
                                         dispatch({type: SUCCESS, successMessage: "artifact.createdDefault"});
@@ -175,7 +175,7 @@ export const createNewArtifactWithVersionFile = (repoId: string, name: string, d
                         const versionController = new VersionApi();
                         try {
                             const config = helpers.getClientConfig();
-                            versionController.createOrUpdateVersion(response.data.id, artifactVersionUploadTO, config)
+                            versionController.createVersion(response.data.id, artifactVersionUploadTO, config)
                                 .then(response2 => {
                                     if (Math.floor(response2.status / 100) === 2) {
                                         dispatch({type: SUCCESS, successMessage: "artifact.createdFromExisting"});
@@ -338,63 +338,6 @@ export const deleteArtifact = (artifactId: string) => {
         }
     };
 };
-
-
-export const shareWithRepo = (artifactId: string, repositoryIds: Array<string>) => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const artifactController = new ArtifactApi();
-        try {
-            const config = helpers.getClientConfig();
-            console.log(artifactId)
-            console.log(repositoryIds)
-            const response = await artifactController.shareWithRepository(artifactId, repositoryIds, config);
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SUCCESS, successMessage: "share.successful" });
-            } else {
-                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.SHARE_WITH_REPO, [artifactId, repositoryIds]));
-        }
-    };
-};
-
-
-export const getAllSharedArtifacts = () => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const artifactController = new ArtifactApi();
-        try {
-            const config = helpers.getClientConfig();
-            const response = await artifactController.getAllSharedArtifacts(config);
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: SHARED_ARTIFACTS, sharedArtifacts: response.data})
-            } else {
-                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.GET_ALL_SHARED_ARTIFACTS, []));
-        }
-    };
-};
-
-
-export const getSharedArtifacts = (repositoryId: string) => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const artifactController = new ArtifactApi();
-        try {
-            const config = helpers.getClientConfig();
-            const response = await artifactController.getSharedArtifacts(repositoryId, config);
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: SHARED_ARTIFACTS, sharedArtifacts: response.data})
-            } else {
-                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.GET_SHARED_ARTIFACTS, [repositoryId]));
-        }
-    };
-};
-
 
 
 export const getByRepositoryIdAndType = (repositoryId: string, type: string) => {

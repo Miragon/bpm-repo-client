@@ -7,7 +7,7 @@ import {toast, ToastContainer} from "react-toastify";
 import {ArtifactApi, UserApi} from "../../api";
 import helpers from "../../constants/Functions";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
-import {CURRENT_USER_INFO, FILETYPES, SUCCESS, HANDLEDERROR} from "../../constants/Constants";
+import {CURRENT_USER_INFO, FILETYPES, HANDLEDERROR, SUCCESS} from "../../constants/Constants";
 import {RootState} from "../../store/reducers/rootReducer";
 import Menu from "./Menu";
 import Router from "./Router";
