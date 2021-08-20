@@ -1,7 +1,7 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
 import {ArtifactVersionUploadTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {ACTIVE_VERSIONS, HANDLEDERROR, LATEST_VERSION, SUCCESS, SYNC_STATUS_VERSION} from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";

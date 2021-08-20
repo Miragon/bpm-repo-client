@@ -7,7 +7,7 @@ import {
     NewArtifactTO,
     VersionApi
 } from "../../api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {
     ACTIVE_ARTIFACTS,
     ARTIFACT_UPLOAD,

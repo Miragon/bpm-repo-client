@@ -1,4 +1,4 @@
-import {ArtifactTypeTO} from "../../api";
+import {ArtifactTypeTO} from "../api";
 
 export const openFileInTool = (fileTypes: Array<ArtifactTypeTO>, fileType: string, repositoryId: string, artifactId: string, errorMessage: string, versionId?: string): void => {
     const urlNamespace = fileTypes.find((types: ArtifactTypeTO) => types.name.toLowerCase() === fileType.toLowerCase())?.url;
@@ -11,6 +11,6 @@ export const openFileInTool = (fileTypes: Array<ArtifactTypeTO>, fileType: strin
         }
     }
     else {
-        alert(errorMessage);
+        alert("");
     }
 }

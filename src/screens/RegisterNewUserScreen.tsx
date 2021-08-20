@@ -7,7 +7,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 import {UserApi} from "../api/api";
-import helpers from "../constants/Functions";
+import helpers from "../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 /*
 function Copyright() {

@@ -8,7 +8,7 @@ import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 import {SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {fetchFavoriteArtifacts} from "../../store/actions";
 
 const useStyles = makeStyles(() => ({

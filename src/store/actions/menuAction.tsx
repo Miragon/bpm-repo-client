@@ -1,6 +1,6 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {HANDLEDERROR, MENU_ITEMS, SYNC_STATUS_MENU} from "../../constants/Constants";
 import {handleError} from "./errorAction";
 import {ActionType} from "./actions";

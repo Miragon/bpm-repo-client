@@ -1,4 +1,6 @@
-import {RepositoryTO} from "../api";
+import {ArtifactTO, ArtifactVersionTO, RepositoryTO} from "../api";
+import {Dispatch, useCallback} from "react";
+import {LATEST_VERSION} from "../constants/Constants";
 
 const helpers = {
     isNumber: (value: string): boolean => {
@@ -50,8 +52,48 @@ const helpers = {
     getRepoName: (repoId: string, repos: Array<RepositoryTO>): string => {
         const assignedRepo = repos.find(repo => repo.id === repoId);
         return assignedRepo ? assignedRepo.name : "";
-    }
+    },
 
+    download: ((latestVersion: ArtifactVersionTO, dispatch: Dispatch<any>) => {
+        const filePath = `/api/version/${latestVersion.artifactId}/${latestVersion.id}/download`
+        const link = document.createElement("a");
+        link.href = filePath;
+        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
+        link.click();
+        dispatch({type: LATEST_VERSION, latestVersion: null})
+    }),
+
+    compareCreated: (a: ArtifactTO, b: ArtifactTO) => {
+        const c = new Date(a.createdDate)
+        const d = new Date(b.createdDate)
+        if(c < d) {
+            return 1;
+        }
+        if(c > d) {
+            return -1;
+        }
+        return 0;
+    },
+    compareEdited: (a: ArtifactTO, b: ArtifactTO) => {
+        const c = new Date(a.updatedDate)
+        const d = new Date(b.updatedDate)
+        if(c < d) {
+            return 1;
+        }
+        if(c > d) {
+            return -1;
+        }
+        return 0;
+    },
+    compareName: (a: ArtifactTO, b: ArtifactTO) => {
+        if(a.name.toLowerCase() < b.name.toLowerCase()) {
+            return -1;
+        }
+        if(a.name.toLowerCase() > b.name.toLowerCase()) {
+            return 1;
+        }
+        return 0;
+    }
 };
 
 export default helpers;

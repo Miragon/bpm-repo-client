@@ -1,5 +1,5 @@
 import {Dispatch} from "@reduxjs/toolkit";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {HANDLEDERROR, SHARED_ARTIFACTS, SHARED_REPOS, SUCCESS, SYNC_STATUS_SHARED} from "../../constants/Constants";
 import {handleError} from "./errorAction";
 import {ActionType} from "./actions";

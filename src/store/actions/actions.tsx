@@ -16,7 +16,7 @@ import {
     deleteRepository,
     fetchRepositories,
     getManageableRepos,
-    getSingleRepository,
+    getSingleRepository, searchRepos,
     updateRepository
 } from "./repositoryAction";
 import {searchUsers} from "./userAction";
@@ -56,7 +56,8 @@ export enum ActionType {
     GET_ALL_SHARED_ARTIFACTS,
     GET_SHARED_ARTIFACTS,
     GET_MANAGEABLE_REPOS,
-    GET_SHARED_REPOS
+    GET_SHARED_REPOS,
+    GET_SEARCHED_REPOS
 }
 
 // eslint-disable-next-line
@@ -118,6 +119,9 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
 
         case ActionType.GET_ALL_ASSIGNED_USERS:
             return getAllAssignedUsers(payload[0]);
+
+        case ActionType.GET_SEARCHED_REPOS:
+            return searchRepos(payload[0]);
 
         case ActionType.CREATE_USER_ASSIGNMENT:
             return createUserAssignment(payload[0], payload[1], payload[2], payload[3]);

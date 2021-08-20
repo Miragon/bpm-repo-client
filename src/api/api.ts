@@ -13,24 +13,13 @@
  */
 
 
-import {Configuration} from './configuration';
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-    assertParamExists,
-    createRequestFunction,
-    DUMMY_BASE_URL,
-    serializeDataIfNeeded,
-    setApiKeyToObject,
-    setBasicAuthToObject,
-    setBearerAuthToObject,
-    setOAuthToObject,
-    setSearchParams,
-    toPathString
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * 
@@ -659,6 +648,25 @@ export enum ShareWithTeamTORoleEnum {
 /**
  * 
  * @export
+ * @interface User
+ */
+export interface User {
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    username?: string;
+}
+/**
+ * 
+ * @export
  * @interface UserInfoTO
  */
 export interface UserInfoTO {
@@ -674,6 +682,19 @@ export interface UserInfoTO {
      * @memberof UserInfoTO
      */
     id: string;
+}
+/**
+ * 
+ * @export
+ * @interface UserTO
+ */
+export interface UserTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserTO
+     */
+    userName: string;
 }
 /**
  * 
@@ -2462,6 +2483,40 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @summary Search for repositories by name
+         * @param {string} typedName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchRepositories: async (typedName: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'typedName' is not null or undefined
+            assertParamExists('searchRepositories', 'typedName', typedName)
+            const localVarPath = `/api/repo/search/{typedName}`
+                .replace(`{${"typedName"}}`, encodeURIComponent(String(typedName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Update a Repository
          * @param {string} repositoryId 
          * @param {RepositoryUpdateTO} repositoryUpdateTO 
@@ -2565,6 +2620,17 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Search for repositories by name
+         * @param {string} typedName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async searchRepositories(typedName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchRepositories(typedName, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Update a Repository
          * @param {string} repositoryId 
          * @param {RepositoryUpdateTO} repositoryUpdateTO 
@@ -2632,6 +2698,16 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          */
         getSingleRepository(repositoryId: string, options?: any): AxiosPromise<RepositoryTO> {
             return localVarFp.getSingleRepository(repositoryId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Search for repositories by name
+         * @param {string} typedName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchRepositories(typedName: string, options?: any): AxiosPromise<Array<RepositoryTO>> {
+            return localVarFp.searchRepositories(typedName, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2710,6 +2786,18 @@ export class RepositoryApi extends BaseAPI {
      */
     public getSingleRepository(repositoryId: string, options?: any) {
         return RepositoryApiFp(this.configuration).getSingleRepository(repositoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Search for repositories by name
+     * @param {string} typedName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepositoryApi
+     */
+    public searchRepositories(typedName: string, options?: any) {
+        return RepositoryApiFp(this.configuration).searchRepositories(typedName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3485,7 +3573,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         searchUsers: async (typedName: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'typedName' is not null or undefined
             assertParamExists('searchUsers', 'typedName', typedName)
-            const localVarPath = `/api/user/searchUsers/{typedName}`
+            const localVarPath = `/api/user/search/{typedName}`
                 .replace(`{${"typedName"}}`, encodeURIComponent(String(typedName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3559,7 +3647,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async createUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -3597,7 +3685,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUser(userUpdateTO: UserUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async updateUser(userUpdateTO: UserUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(userUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -3616,7 +3704,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUser(options?: any): AxiosPromise<void> {
+        createUser(options?: any): AxiosPromise<UserTO> {
             return localVarFp.createUser(options).then((request) => request(axios, basePath));
         },
         /**
@@ -3650,7 +3738,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUser(userUpdateTO: UserUpdateTO, options?: any): AxiosPromise<void> {
+        updateUser(userUpdateTO: UserUpdateTO, options?: any): AxiosPromise<User> {
             return localVarFp.updateUser(userUpdateTO, options).then((request) => request(axios, basePath));
         },
     };

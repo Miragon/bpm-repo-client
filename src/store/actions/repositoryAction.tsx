@@ -1,11 +1,11 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import {NewRepositoryTO, RepositoryApi, RepositoryUpdateTO} from "../../api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {
     ACTIVE_REPO,
     HANDLEDERROR,
     MANAGEABLE_REPOS,
-    REPOSITORIES,
+    REPOSITORIES, SEARCHED_REPOS,
     SUCCESS,
     SYNC_STATUS_ACTIVE_REPOSITORY,
     SYNC_STATUS_FAVORITE,
@@ -135,6 +135,25 @@ export const getManageableRepos = () => {
             }
         } catch (error) {
             dispatch(handleError(error, ActionType.GET_MANAGEABLE_REPOS, []));
+        }
+    };
+};
+
+
+
+export const searchRepos = (typedName: string) => {
+    return async (dispatch: Dispatch): Promise<void> => {
+        const repositoryController = new RepositoryApi();
+        try {
+            const config = helpers.getClientConfig();
+            const response = await repositoryController.searchRepositories(typedName, config);
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({type: SEARCHED_REPOS, searchedRepos: response.data});
+            } else {
+                dispatch({ type: HANDLEDERROR, errorMessage: "error.couldNotProcess" });
+            }
+        } catch (error) {
+            dispatch(handleError(error, ActionType.GET_SEARCHED_REPOS, [typedName]));
         }
     };
 };

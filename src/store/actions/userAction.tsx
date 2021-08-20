@@ -1,6 +1,6 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import * as api from "../../api/api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {HANDLEDERROR, SEARCHED_USERS, USERQUERY_EXECUTED} from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";

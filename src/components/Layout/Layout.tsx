@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {toast, ToastContainer} from "react-toastify";
 import {ArtifactApi, UserApi} from "../../api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
 import {CURRENT_USER_INFO, FILETYPES, HANDLEDERROR, SUCCESS} from "../../constants/Constants";
 import {RootState} from "../../store/reducers/rootReducer";

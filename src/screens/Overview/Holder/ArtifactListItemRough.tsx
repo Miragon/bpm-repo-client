@@ -11,9 +11,9 @@ import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-import helpers from "../../../constants/Functions";
+import helpers from "../../../util/helperFunctions";
 import {useHistory} from "react-router-dom";
-import {openFileInTool} from "../../../components/Redirect/Redirections";
+import {openFileInTool} from "../../../util/Redirections";
 import CreateVersionDialog from "../../Repository/Artifact/Dialogs/CreateVersionDialog";
 import EditArtifactDialog from "../../Repository/Artifact/Dialogs/EditArtifactDialog";
 import {LATEST_VERSION} from "../../../constants/Constants";
@@ -146,7 +146,7 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
     useEffect(() => {
         if(fileTypes && props.fileType){
             const svgIcon = fileTypes.find(fileType => fileType.name === props.fileType)?.svgIcon;
-            setSvgKey(svgIcon ? svgIcon: "");
+            setSvgKey(svgIcon || "");
         }
     }, [fileTypes, props.fileType])
 
@@ -156,24 +156,13 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
         setSettingsOpen(true);
     }
 
-    const download = (useCallback((latestVersion: ArtifactVersionTO) => {
-        if(downloadReady) {
-            console.log("file Ready - starting download...")
-            const filePath = `/api/version/${latestVersion.artifactId}/${latestVersion.id}/download`
-            const link = document.createElement("a");
-            link.href = filePath;
-            link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-            link.click();
-            dispatch({type: LATEST_VERSION, latestVersion: null})
-            setDownloadReady(false)
-        }
-    }, [downloadReady, dispatch]))
 
     useEffect(() => {
-        if(latestVersion){
-            download(latestVersion);
+        if(latestVersion && downloadReady){
+            helpers.download(latestVersion, dispatch)
+            setDownloadReady(false)
         }
-    }, [download, latestVersion])
+    }, [dispatch, downloadReady, latestVersion])
 
     const setStarred = (event: React.MouseEvent<SVGSVGElement>) => {
         event.stopPropagation();

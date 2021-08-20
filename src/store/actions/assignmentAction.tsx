@@ -1,6 +1,6 @@
 import {Dispatch} from "@reduxjs/toolkit";
 import {AssignmentApi, AssignmentUpdateTO, AssignmentUpdateTORoleEnum} from "../../api";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {ASSIGNED_USERS, HANDLEDERROR, SUCCESS, SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 import {ActionType} from "./actions";
 import {handleError} from "./errorAction";

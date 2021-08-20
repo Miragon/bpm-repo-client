@@ -6,7 +6,7 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
 import {fetchRecentArtifacts} from "../../store/actions";
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/reducers/rootReducer";
-import helpers from "../../../constants/Functions";
+import helpers from "../../../util/helperFunctions";
 import {ArtifactTO} from "../../../api";
 import {useParams} from "react-router";
 import {makeStyles} from "@material-ui/core/styles";

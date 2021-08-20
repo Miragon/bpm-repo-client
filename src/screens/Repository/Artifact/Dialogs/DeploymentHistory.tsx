@@ -4,7 +4,7 @@ import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/cor
 import {makeStyles} from "@material-ui/core/styles";
 import {DeploymentTO} from "../../../../api";
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import helpers from "../../../../constants/Functions";
+import helpers from "../../../../util/helperFunctions";
 
 
 const useStyles = makeStyles(() => ({

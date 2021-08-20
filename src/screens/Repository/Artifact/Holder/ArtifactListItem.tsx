@@ -18,8 +18,8 @@ import {
 } from "../../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-import helpers from "../../../../constants/Functions";
-import {openFileInTool} from "../../../../components/Redirect/Redirections";
+import helpers from "../../../../util/helperFunctions";
+import {openFileInTool} from "../../../../util/Redirections";
 import CopyToRepoDialog from "../../../Dialogs/CopyToRepoDialog";
 import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../../../constants/Constants";
 import VersionDetails from "../../Version/VersionDetails";
@@ -189,7 +189,8 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
         }
     }, [versionSynced, open, dispatch, props.artifactId])
 
-    const handleOpenVersions = () => {
+    const handleOpenVersions = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
         if(!open){
             setOpen(!open);
             console.log("Displaying Loading")
@@ -206,24 +207,12 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
         setSettingsOpen(true);
     }
 
-    const download = (useCallback((latestVersion: ArtifactVersionTO) => {
-        if(downloadReady) {
-            console.log("file Ready - starting download...")
-            const filePath = `/api/version/${latestVersion.artifactId}/${latestVersion.id}/download`
-            const link = document.createElement("a");
-            link.href = filePath;
-            link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-            link.click();
-            dispatch({type: LATEST_VERSION, latestVersion: null})
+    useEffect(() => {
+        if(latestVersion && downloadReady){
+            helpers.download(latestVersion, dispatch)
             setDownloadReady(false)
         }
-    }, [downloadReady, dispatch]))
-
-    useEffect(() => {
-        if(latestVersion){
-            download(latestVersion);
-        }
-    }, [download, latestVersion])
+    }, [dispatch, downloadReady, latestVersion])
 
     const setStarred = (event: React.MouseEvent<SVGSVGElement>) => {
         event.stopPropagation();
@@ -307,7 +296,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
     
     return (
         <>
-            <ListItem className={classes.listItem} button onClick={() => handleOpenVersions()}>
+            <ListItem className={classes.listItem} button onClick={() => openFileInTool(fileTypes, props.fileType, props.repoId, props.artifactId, t("error.missingTool", props.fileType))}>
                 <div className={classes.leftPanel}>
                     <Icon className={classes.icons}>{svgKey}</Icon>
                 </div>
@@ -340,11 +329,11 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
                             <MoreVert className={classes.icons}/>
                         </IconButton>
                         {open ?
-                            <IconButton size={"small"}>
+                            <IconButton size={"small"} onClick={event => handleOpenVersions(event)}>
                                 <ExpandLess className={classes.icons}/>
                             </IconButton>
                             :
-                            <IconButton size={"small"}>
+                            <IconButton size={"small"} onClick={event => handleOpenVersions(event)}>
                                 <ExpandMore className={classes.icons}/>
                             </IconButton>
                         }

@@ -1,5 +1,5 @@
 import {makeStyles} from "@material-ui/styles";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, ArtifactTypeTO} from "../../../api";
 import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
@@ -8,7 +8,7 @@ import {useParams} from "react-router";
 import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {useTranslation} from "react-i18next";
 import {List} from "@material-ui/core";
-import helpers from "../../../constants/Functions";
+import helpers from "../../../util/helperFunctions";
 import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
 import ArtifactListItem from "./Holder/ArtifactListItem";
 import {SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
@@ -75,7 +75,7 @@ const ArtifactDetails: React.FC = (() => {
 
 
     const changeFileTypeFilter = (selectedValue: string) => {
-        const currentList = displayedFileTypes
+        const currentList = [...displayedFileTypes]
         if(displayedFileTypes.find(fileType => fileType === selectedValue)){
             currentList.splice(currentList.indexOf(selectedValue), 1)
         }
@@ -86,59 +86,39 @@ const ArtifactDetails: React.FC = (() => {
         applyFilters()
     }
 
+    //TODO: filteredAndSortedArtifacts ist Alex's vorschlag, um die Sortierfunktion zu vereinfachen
+    const filteredAndSortedArtifacts = useMemo(() => {
+        const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
+        switch(sortValue) {
+            case "created": return filtered.sort(helpers.compareCreated);
+            case "lastEdited": return filtered.sort(helpers.compareEdited);
+            case "name": return filtered.sort(helpers.compareName);
+        }
+    }, [activeArtifacts, displayedFileTypes, sortValue]);
+
+
     const applyFilters = () => {
         const filtered = activeArtifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
         sort(sortValue, filtered)
     }
 
 
+
     const sort = (value: string, artifacts: Array<ArtifactTO>) => {
         switch (value){
             case "created":
                 setSortValue("created")
-                setFilteredArtifacts(artifacts.sort(compareCreated));
+                setFilteredArtifacts(artifacts.sort(helpers.compareCreated));
                 return;
             case "lastEdited":
                 setSortValue("lastEdited")
-                setFilteredArtifacts(artifacts.sort(compareEdited));
+                setFilteredArtifacts(artifacts.sort(helpers.compareEdited));
                 return;
             case "name":
                 setSortValue("name")
-                setFilteredArtifacts(artifacts.sort(compareName));
+                setFilteredArtifacts(artifacts.sort(helpers.compareName));
                 return;
         }
-    }
-
-    const compareCreated = (a: ArtifactTO, b: ArtifactTO) => {
-        const c = new Date(a.createdDate)
-        const d = new Date(b.createdDate)
-        if(c < d) {
-            return 1;
-        }
-        if(c > d) {
-            return -1;
-        }
-        return 0;
-    }
-    const compareEdited = (a: ArtifactTO, b: ArtifactTO) => {
-        const c = new Date(a.updatedDate)
-        const d = new Date(b.updatedDate)
-        if(c < d) {
-            return 1;
-        }
-        if(c > d) {
-            return -1;
-        }
-        return 0;
-    }
-    const compareName = (a: ArtifactTO, b: ArtifactTO) => {
-        if(a.name.toLowerCase() < b.name.toLowerCase()) {
-            return -1;
-        }
-        if(a.name.toLowerCase() > b.name.toLowerCase()) {
-            return 1;
-        }
-        return 0;
     }
 
 

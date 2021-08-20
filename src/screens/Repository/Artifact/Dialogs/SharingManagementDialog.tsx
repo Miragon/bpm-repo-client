@@ -8,6 +8,7 @@ import PopupDialog from "../../../../components/Form/PopupDialog";
 import MultipleSelectionList, {MultipleSelectionListItem} from "./MultipleSelectionList";
 import {getSharedRepos, shareWithRepo, unshareWithRepo} from "../../../../store/actions/ShareAction";
 import {forEach} from "react-bootstrap/ElementChildren";
+import AddSharingSearchBar from "./AddSharingSearchBar";
 
 interface Props {
     open: boolean;
@@ -37,7 +38,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
     }, [dispatch, props.artifactId, sharedSynced])
 
     //TODO: ShareRepos-state does not update (should happen in the getSharedRepos action)
-    //TODO: Dateien sollten auch mit Repositories geteilt werden können, die dem nutzer nicht direkt zugewiesen sind
+    //TODO: Sollten Dateien auch mit Repositories geteilt werden können, die dem nutzer nicht direkt zugewiesen sind?
     const isArtifactSharedWithRepo = useCallback((repo: RepositoryTO): boolean => {
         return sharedRepos.find(sharedRepo => sharedRepo.id === repo.id) ? true : false;
     }, [sharedRepos])
@@ -52,7 +53,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
     useEffect(()=> {
         const opts: MultipleSelectionListItem[] = [];
-        manageableRepos.forEach(repo => {
+        sharedRepos.forEach(repo => {
             (repo.id !== props.repoId) && opts.push(
                 {
                     name: repo.name,
@@ -68,22 +69,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
                 }
             )
         })
-        sharedRepos.forEach(repo => {
-            ((repo.id !== props.repoId) && !sharedRepos.includes(repo)) && opts.push(
-                {
-                    name: repo.name,
-                    selected: isArtifactSharedWithRepo(repo),
-                    editable: isRepoManageable(repo),
-                    onClick: () => {
-                        if(!isArtifactSharedWithRepo(repo)){
-                            dispatch(shareWithRepo(props.artifactId, repo.id, ShareWithRepositoryTORoleEnum.Viewer))
-                        } else{
-                            dispatch(unshareWithRepo(props.artifactId, repo.id))
-                        }
-                    }
-                }
-            )
-        })
+
 
         setOpts(opts)
 
@@ -98,6 +84,9 @@ const SharingManagementDialog: React.FC<Props> = props => {
             firstTitle={t("dialog.close")}
             onFirst={() => props.onCancelled()} >
 
+            <AddSharingSearchBar
+                artifactId={props.artifactId}
+                currentRepoId={props.repoId} />
 
             <MultipleSelectionList
                 options={options}
