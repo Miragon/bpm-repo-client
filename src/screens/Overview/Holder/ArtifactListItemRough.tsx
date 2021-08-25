@@ -8,7 +8,7 @@ import {MoreVert, Star, StarOutline} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import PopupSettings from "../../../components/Form/PopupSettings";
 import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
-import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../store/actions";
+import {addToFavorites, deleteArtifact, getLatestVersion} from "../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import helpers from "../../../util/helperFunctions";
@@ -16,7 +16,7 @@ import {useHistory} from "react-router-dom";
 import {openFileInTool} from "../../../util/Redirections";
 import CreateVersionDialog from "../../Repository/Artifact/Dialogs/CreateVersionDialog";
 import EditArtifactDialog from "../../Repository/Artifact/Dialogs/EditArtifactDialog";
-import {LATEST_VERSION} from "../../../constants/Constants";
+import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -139,7 +139,6 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);
     const [editArtifactOpen, setEditArtifactOpen] = useState<boolean>(false);
-    const [downloadReady, setDownloadReady] = useState<boolean>(false);
     const [svgKey, setSvgKey] = useState<string>("");
 
 
@@ -156,19 +155,36 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
         setSettingsOpen(true);
     }
 
-
-    useEffect(() => {
-        if(latestVersion && downloadReady){
-            helpers.download(latestVersion, dispatch)
-            setDownloadReady(false)
-        }
-    }, [dispatch, downloadReady, latestVersion])
-
     const setStarred = (event: React.MouseEvent<SVGSVGElement>) => {
         event.stopPropagation();
-        dispatch(addToFavorites(props.artifactId));
+        addToFavorites(props.artifactId)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                    dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false})
+                } else {
+                    helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => setStarred(event))
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => setStarred(event))
+            })
     }
 
+    const download = useCallback(async () => {
+        getLatestVersion(props.artifactId)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    helpers.download(response.data)
+                    helpers.makeSuccessToast(t("download.stated"))
+                } else {
+                    helpers.makeErrorToast(t(response.data.toString()), () => download())
+                }
+
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => download())
+
+            })
+    }, [props.artifactId, t])
 
     const options: DropdownButtonItem[] = [
 
@@ -178,7 +194,6 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
             type: "button",
             onClick: () => {
                 history.push(`/repository/${props.repoId}`);
-                dispatch(getAllVersions(props.artifactId));
             }
         },
         {
@@ -194,8 +209,7 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
             label: t("artifact.download"),
             type: "button",
             onClick: () => {
-                dispatch(getLatestVersion(props.artifactId))
-                setDownloadReady(true)
+                download()
             }
         },
         {
@@ -209,10 +223,24 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
             id: "DeleteArtifact",
             label: t("artifact.delete"),
             type: "button",
-            onClick: () => {
+            onClick: async () => {
                 // eslint-disable-next-line no-restricted-globals
                 if (confirm(t("artifact.confirmDelete", {artifactName: props.artifactTitle}))) {
-                    dispatch(deleteArtifact(props.artifactId));
+                    try{
+                        const [response] = await Promise.all([dispatch(deleteArtifact(props.artifactId))]);
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        if(response?.status === 200) {
+                            helpers.makeSuccessToast(t("artifact.deleted"))
+                        }
+                        else{
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                            helpers.makeErrorToast(t(response.data), () => this())
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
                 }
             }
         }

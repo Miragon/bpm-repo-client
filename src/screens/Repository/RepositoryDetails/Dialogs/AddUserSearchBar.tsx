@@ -6,10 +6,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
-import {UserInfoTO} from "../../../../api";
+import {AssignmentTO, AssignmentUpdateTORoleEnum, UserInfoTO} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
 import {createUserAssignment, searchUsers} from "../../../../store/actions";
 import theme from "../../../../theme";
+import {SEARCHED_USERS, SYNC_STATUS_ASSIGNMENT, USERQUERY_EXECUTED} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -40,13 +43,15 @@ let timeout: NodeJS.Timeout | undefined;
 const AddUserSearchBar: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {t} = useTranslation("common");
 
-    const searchedUsers: Array<UserInfoTO> = useSelector(
-        (state: RootState) => state.user.searchedUsers
-    );
+
+    const searchedUsers: Array<UserInfoTO> = useSelector((state: RootState) => state.user.searchedUsers);
+    const assignedUsers: Array<AssignmentTO> = useSelector((state: RootState) => state.user.assignedUsers);
+
     const results: number = useSelector((state: RootState) => state.resultsCount.userResultsCount);
 
-    const [userName, setUserName] = useState("");
+    const [username, setUsername] = useState("");
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState<UserInfoTO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -70,13 +75,13 @@ const AddUserSearchBar: React.FC<Props> = props => {
     }, [searchedUsers, results]);
 
     useEffect(() => {
-        if (userName === "") {
+        if (username === "") {
             setLoading(false);
         }
-    }, [userName]);
+    }, [username]);
 
     const onChangeWithTimer = ((input: string) => {
-        setUserName(input);
+        setUsername(input);
         if (input !== "") {
             if (timeout) {
                 clearTimeout(timeout);
@@ -87,8 +92,18 @@ const AddUserSearchBar: React.FC<Props> = props => {
     });
 
     const fetchUserSuggestions = useCallback((input: string) => {
-        dispatch(searchUsers(input));
-    }, [dispatch]);
+        searchUsers(input).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                dispatch({type: SEARCHED_USERS, searchedUsers: response.data});
+                dispatch({type: USERQUERY_EXECUTED, userResultsCount: response.data.length});
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserSuggestions(input))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchUserSuggestions(input))
+
+        })
+    }, [dispatch, t]);
 
     // #TODO: Add the UserId prop to AssignmentUpdate in Backend
 
@@ -96,23 +111,34 @@ const AddUserSearchBar: React.FC<Props> = props => {
         return searchedUsers.find(user => user.username.toLowerCase() === username.toLowerCase());
     }, [searchedUsers]);
 
+    const isUserAlreadyAssigned = useCallback((username: string): boolean => {
+        return assignedUsers.find(user => user.username === username) === undefined ? false : true;
+    }, [assignedUsers])
+
     const addUser = useCallback(() => {
-        try {
-            const user = getUserByName(userName);
-            const userId = user ? user.id : "";
-            if (user) {
-                dispatch(createUserAssignment(props.repoId, userId, user?.username));
-                setUserName("");
+        const user = getUserByName(username);
+        if (user) {
+            if(isUserAlreadyAssigned(username)){
+                helpers.makeSuccessToast(t("assignment.alreadyPresent", {username}))
+                return;
             }
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
+            createUserAssignment(props.repoId, user.id, username, AssignmentUpdateTORoleEnum.Member).then(response => {
+                setUsername("");
+                if(Math.floor(response.status / 100) === 2){
+                    dispatch({type: SYNC_STATUS_ASSIGNMENT, assignmentSynced: false})
+                    helpers.makeSuccessToast(t("assignment.added", {username}))
+                } else {
+                    helpers.makeErrorToast(response.data.toString(), () => addUser())
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => addUser)
+            })
         }
-    }, [dispatch, userName, props, getUserByName]);
+    }, [getUserByName, username, isUserAlreadyAssigned, props.repoId, dispatch, t]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateState = (event: any) => {
-        setUserName(event.target.textContent);
+        setUsername(event.target.textContent);
     };
 
     return (

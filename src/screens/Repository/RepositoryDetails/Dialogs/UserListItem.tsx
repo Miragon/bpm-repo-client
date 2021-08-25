@@ -7,6 +7,8 @@ import {AssignmentTO, AssignmentUpdateTORoleEnum} from "../../../../api";
 import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
 import PopupSettings from "../../../../components/Form/PopupSettings";
 import {deleteAssignment, updateUserAssignment} from "../../../../store/actions";
+import {SYNC_STATUS_ASSIGNMENT} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
 
 interface Props {
     assignmentTO: AssignmentTO;
@@ -23,30 +25,33 @@ const UserListItem: React.FC<Props> = props => {
     const ref = useRef<HTMLButtonElement>(null);
 
     const changeRole = useCallback((role: AssignmentUpdateTORoleEnum) => {
-        try {
-            dispatch(updateUserAssignment(
-                props.assignmentTO.repositoryId,
-                props.assignmentTO.userId,
-                props.assignmentTO.username,
-                role
-            ));
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [dispatch, props]);
+        updateUserAssignment(props.assignmentTO.repositoryId, props.assignmentTO.userId, props.assignmentTO.username, role)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
+                } else{
+                    helpers.makeErrorToast(response.data.toString(), () => changeRole(role))
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => changeRole(role))
+            })
+    }, [dispatch, props.assignmentTO.repositoryId, props.assignmentTO.userId, props.assignmentTO.username, t]);
+
 
     const removeUser = useCallback(() => {
-        try {
-            dispatch(deleteAssignment(
-                props.assignmentTO.repositoryId,
-                props.assignmentTO.username
-            ));
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [dispatch, props]);
+        deleteAssignment(props.assignmentTO.repositoryId, props.assignmentTO.username)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    helpers.makeSuccessToast(t("assignment.removed", {username: props.assignmentTO.username}))
+                    dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
+                } else {
+                    helpers.makeErrorToast(t("error.unknown"), () => removeUser())
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => removeUser())
+            })
+
+    }, [dispatch, props.assignmentTO.repositoryId, props.assignmentTO.username, t]);
 
     const options: DropdownButtonItem[] = [
         {

@@ -2,14 +2,21 @@ import MenuItem from "@material-ui/core/MenuItem";
 import React, {useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {ArtifactTypeTO, RepositoryTO} from "../../api";
+import {ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {createArtifactWithDefaultVersion} from "../../store/actions";
+import {createArtifact, createVersion} from "../../store/actions";
+import {
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_RECENT,
+    SYNC_STATUS_REPOSITORY,
+    SYNC_STATUS_VERSION
+} from "../../constants/Constants";
+import helpers from "../../util/helperFunctions";
 
 interface Props {
     open: boolean;
@@ -26,29 +33,43 @@ const CreateArtifactDialog: React.FC<Props> = props => {
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [repository, setRepository] = useState<string>(props.repo ? props.repo.id : "");
+    const [repoId, setRepoId] = useState<string>(props.repo ? props.repo.id : "");
 
-    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
 
     const onCreate = useCallback(async () => {
-        setRepository(props.repo ? props.repo.id : "")
-        try {
-            const defaultFileProps = fileTypes.find(fileType => fileType.name === props.type)
-            if(defaultFileProps){
-                dispatch(createArtifactWithDefaultVersion(props.repo?.id ? props.repo.id : repository, title, description, "" , defaultFileProps.name, ""));
-                setTitle("")
-                setDescription("")
-                setRepository("")
-                props.onCancelled();
-            }
+        setRepoId(props.repo?.id || "")
+        createArtifact(repoId, title, description, props.type)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone)
+                        .then(response2 => {
+                            if (Math.floor(response2.status / 100) === 2) {
+                                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
+                                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
+                                dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+                                dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
+                                setTitle("");
+                                setDescription("");
+                                setRepoId("");
+                                helpers.makeSuccessToast(t("artifact.created"));
+                                props.onCancelled();
+                            } else {
+                                helpers.makeErrorToast(response2.data.toString(), () => createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                            }
+                        }, error => {
+                            helpers.makeErrorToast(t(error.response.data), () => createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                        })
+                } else {
+                    helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => onCreate())
 
-        } catch (err) {
-            console.log(err);
-        }
-    }, [dispatch, repository, title, description, props, fileTypes]);
+            })
+    }, [props, dispatch, repoId, title, description, t]);
 
 
     return (
@@ -66,14 +87,15 @@ const CreateArtifactDialog: React.FC<Props> = props => {
 
                 <SettingsSelect
                     disabled={false}
-                    value={repository}
+                    value={repoId}
                     label={t("repository.target")}
-                    onChanged={setRepository}>
+                    onChanged={setRepoId}>
                     {props.repo
                         ? (
                             <MenuItem
                                 key={props.repo?.id}
-                                value={props.repo?.id}>
+                                value={props.repo?.id}
+                                selected >
                                 {props.repo?.name}
                             </MenuItem>
                         )

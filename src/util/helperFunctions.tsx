@@ -1,6 +1,9 @@
 import {ArtifactTO, ArtifactVersionTO, RepositoryTO} from "../api";
-import {Dispatch, useCallback} from "react";
+import React, {Dispatch, ReactText} from "react";
 import {LATEST_VERSION} from "../constants/Constants";
+import {toast} from "react-toastify";
+import Toast from "../components/Layout/Toast";
+import theme from "../theme";
 
 const helpers = {
     isNumber: (value: string): boolean => {
@@ -54,16 +57,19 @@ const helpers = {
         return assignedRepo ? assignedRepo.name : "";
     },
 
-    download: ((latestVersion: ArtifactVersionTO, dispatch: Dispatch<any>) => {
-        const filePath = `/api/version/${latestVersion.artifactId}/${latestVersion.id}/download`
+    download: ((artifactVersion: ArtifactVersionTO, dispatch?: Dispatch<any>): void => {
+        const fileURL = window.URL.createObjectURL(new Blob([(artifactVersion.file)], { type: "application/pdf" }));
+        const filePath = `/api/version/${artifactVersion.artifactId}/${artifactVersion.id}/download`
         const link = document.createElement("a");
         link.href = filePath;
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
         link.click();
-        dispatch({type: LATEST_VERSION, latestVersion: null})
+        if(dispatch){
+            dispatch({type: LATEST_VERSION, latestVersion: null})
+        }
     }),
 
-    compareCreated: (a: ArtifactTO, b: ArtifactTO) => {
+    compareCreated: (a: ArtifactTO, b: ArtifactTO): number => {
         const c = new Date(a.createdDate)
         const d = new Date(b.createdDate)
         if(c < d) {
@@ -74,7 +80,7 @@ const helpers = {
         }
         return 0;
     },
-    compareEdited: (a: ArtifactTO, b: ArtifactTO) => {
+    compareEdited: (a: ArtifactTO, b: ArtifactTO): number => {
         const c = new Date(a.updatedDate)
         const d = new Date(b.updatedDate)
         if(c < d) {
@@ -85,7 +91,7 @@ const helpers = {
         }
         return 0;
     },
-    compareName: (a: ArtifactTO, b: ArtifactTO) => {
+    compareName: (a: ArtifactTO, b: ArtifactTO): number => {
         if(a.name.toLowerCase() < b.name.toLowerCase()) {
             return -1;
         }
@@ -93,7 +99,39 @@ const helpers = {
             return 1;
         }
         return 0;
+    },
+
+    makeSuccessToast: (message: string): ReactText => {
+        return toast(<Toast errorMessage={message} isError={false} retryMethod={() => console.log("a")}/>, {
+            autoClose: 4000,
+            pauseOnHover: true,
+            progressStyle: {
+                background: theme.palette.primary.main,
+            },
+            style: {
+                backgroundColor: theme.palette.secondary.main,
+                color: theme.palette.secondary.contrastText,
+
+            }
+        })
+    },
+
+    makeErrorToast: (message: string, retryMethod: () => void): ReactText => {
+        return toast(<Toast errorMessage={message} isError={true} retryMethod={() => retryMethod()} />, {
+            autoClose: 8000,
+            pauseOnHover: true,
+            progressStyle: {
+                background: theme.palette.primary.main,
+            },
+            style: {
+                backgroundColor: theme.palette.secondary.main,
+                color: theme.palette.secondary.contrastText,
+            }
+        })
     }
 };
+
+
+
 
 export default helpers;

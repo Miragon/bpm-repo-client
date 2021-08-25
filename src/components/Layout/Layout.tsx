@@ -2,19 +2,15 @@ import {makeStyles} from "@material-ui/core";
 import {Theme} from "@material-ui/core/styles";
 import clsx from "clsx";
 import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {toast, ToastContainer} from "react-toastify";
+import {useDispatch} from "react-redux";
+import {ToastContainer} from "react-toastify";
 import {ArtifactApi, UserApi} from "../../api";
 import helpers from "../../util/helperFunctions";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
-import {CURRENT_USER_INFO, FILETYPES, HANDLEDERROR, SUCCESS} from "../../constants/Constants";
-import {RootState} from "../../store/reducers/rootReducer";
+import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
 import Menu from "./Menu";
 import Router from "./Router";
-import Toast from "./Toast";
 import {useTranslation} from "react-i18next";
-import theme from "../../theme";
-import {ActionType} from "../../store/actions/actions";
 
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
@@ -62,7 +58,7 @@ const Layout = (): any => {
     const [t, i18n] = useTranslation("common");
     const dispatch = useDispatch();
 
-
+    /*
     const apiErrorState = useSelector((state: RootState) => state.api.errorMessage);
     const apiErrorStateWithVariables: Record<string, string> = useSelector((state: RootState) => state.api.errorMessageWithVariables)
     const apiErrorRetryMethod = useSelector((state: RootState) => state.api.retryMethod);
@@ -70,13 +66,14 @@ const Layout = (): any => {
     const apiSuccessState: string = useSelector((state: RootState) => state.api.successMessage);
     const apiSuccessStateWithVariables: Record<string, string> = useSelector((state: RootState) => state.api.successMessageWithVariables);
 
+
+    
     useEffect(() => {
         if (apiErrorState) {
             toast(<Toast
                 isError={true}
                 errorMessage={i18n.exists(apiErrorState) ? t(apiErrorState) : apiErrorState}
-                retryMethod={apiErrorRetryMethod}
-                retryPayload={apiErrorRetryPayload} />, {
+                retryMethod={apiErrorRetryMethod} />, {
                 autoClose: 8000,
                 pauseOnHover: true,
                 progressStyle: {
@@ -97,7 +94,8 @@ const Layout = (): any => {
         if (apiSuccessState) {
             toast(<Toast
                 errorMessage={t(apiSuccessState)}
-                isError={false} />, {
+                isError={false}
+                retryMethod={() => console.log("std")}/>, {
                 autoClose: 4000,
                 pauseOnHover: true,
                 progressStyle: {
@@ -120,8 +118,7 @@ const Layout = (): any => {
             toast(<Toast
                 isError={true}
                 errorMessage={t(apiErrorStateWithVariables.content, apiErrorStateWithVariables.variables)}
-                retryMethod={apiErrorRetryMethod}
-                retryPayload={apiErrorRetryPayload}/>, {
+                retryMethod={apiErrorRetryMethod}/>, {
                 autoClose: 8000,
                 pauseOnHover: true,
                 progressStyle: {
@@ -140,7 +137,8 @@ const Layout = (): any => {
         if(apiSuccessStateWithVariables && apiSuccessStateWithVariables.content){
             toast(<Toast
                 isError={false}
-                errorMessage={t(apiSuccessStateWithVariables.content, apiSuccessStateWithVariables.variables)} />, {
+                errorMessage={t(apiSuccessStateWithVariables.content, apiSuccessStateWithVariables.variables)}
+                retryMethod={() => console.log("A")}/>, {
                 autoClose: 4000,
                 pauseOnHover: true,
                 progressStyle: {
@@ -155,7 +153,7 @@ const Layout = (): any => {
         }
     }, [apiSuccessStateWithVariables, dispatch, t])
 
-
+*/
 
 
     const classes = useStyles();

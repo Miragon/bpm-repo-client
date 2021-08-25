@@ -6,6 +6,8 @@ import {RootState} from "../../../../store/reducers/rootReducer";
 import {deployVersion} from "../../../../store/actions";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import SettingsSelect from "../../../../components/Form/SettingsSelect";
+import {SYNC_STATUS_VERSION} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
 
 
 interface Props {
@@ -31,15 +33,19 @@ const DeployVersionDialog: React.FC<Props> = props => {
     }, [targets])
 
 
-    const applyChanges = useCallback(async () => {
-        try {
-            dispatch(deployVersion(target, props.artifactId, props.versionId));
-            props.onCancelled();
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [target, props, dispatch]);
+    const deploy = useCallback(async () => {
+        deployVersion(target, props.artifactId, props.versionId).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                dispatch({type: SYNC_STATUS_VERSION, dataSynced: false})
+                helpers.makeSuccessToast(t("version.deployed"))
+                props.onCancelled()
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => deploy())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => deploy())
+        })
+    }, [target, props, dispatch, t]);
 
     return (
         <PopupDialog
@@ -48,7 +54,7 @@ const DeployVersionDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             firstTitle={t("dialog.applyChanges")}
-            onFirst={applyChanges}
+            onFirst={deploy}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled} >
 

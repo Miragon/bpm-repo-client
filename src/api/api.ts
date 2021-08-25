@@ -13,13 +13,24 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import {Configuration} from './configuration';
+import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import {
+    assertParamExists,
+    createRequestFunction,
+    DUMMY_BASE_URL,
+    serializeDataIfNeeded,
+    setApiKeyToObject,
+    setBasicAuthToObject,
+    setBearerAuthToObject,
+    setOAuthToObject,
+    setSearchParams,
+    toPathString
+} from './common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
 
 /**
  * 
@@ -180,7 +191,7 @@ export interface ArtifactVersionTO {
      * @type {string}
      * @memberof ArtifactVersionTO
      */
-    xml: string;
+    file: string;
     /**
      * 
      * @type {string}
@@ -199,6 +210,12 @@ export interface ArtifactVersionTO {
      * @memberof ArtifactVersionTO
      */
     artifactId: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ArtifactVersionTO
+     */
+    latestVersion: boolean;
     /**
      * 
      * @type {string}
@@ -239,30 +256,14 @@ export interface ArtifactVersionUpdateTO {
      * @type {string}
      * @memberof ArtifactVersionUpdateTO
      */
-    xml?: string;
+    file?: string;
     /**
      * 
      * @type {string}
      * @memberof ArtifactVersionUpdateTO
      */
     versionComment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUpdateTO
-     */
-    saveType?: ArtifactVersionUpdateTOSaveTypeEnum;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ArtifactVersionUpdateTOSaveTypeEnum {
-    Milestone = 'MILESTONE',
-    Autosave = 'AUTOSAVE'
-}
-
 /**
  * 
  * @export
@@ -280,7 +281,7 @@ export interface ArtifactVersionUploadTO {
      * @type {string}
      * @memberof ArtifactVersionUploadTO
      */
-    xml?: string;
+    file?: string;
     /**
      * 
      * @type {string}
@@ -2140,7 +2141,7 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deployVersion(artifactId: string, versionId: string, newDeploymentTO: NewDeploymentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async deployVersion(artifactId: string, versionId: string, newDeploymentTO: NewDeploymentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deployVersion(artifactId, versionId, newDeploymentTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2171,7 +2172,7 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deployVersion(artifactId: string, versionId: string, newDeploymentTO: NewDeploymentTO, options?: any): AxiosPromise<void> {
+        deployVersion(artifactId: string, versionId: string, newDeploymentTO: NewDeploymentTO, options?: any): AxiosPromise<ArtifactVersionTO> {
             return localVarFp.deployVersion(artifactId, versionId, newDeploymentTO, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3993,18 +3994,14 @@ export const VersionApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} artifactId 
          * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateVersion: async (artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('updateVersion', 'artifactId', artifactId)
+        updateVersion: async (artifactVersionUpdateTO: ArtifactVersionUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactVersionUpdateTO' is not null or undefined
             assertParamExists('updateVersion', 'artifactVersionUpdateTO', artifactVersionUpdateTO)
-            const localVarPath = `/api/version/{artifactId}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
+            const localVarPath = `/api/version/update`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4096,13 +4093,12 @@ export const VersionApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} artifactId 
          * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateVersion(artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateVersion(artifactId, artifactVersionUpdateTO, options);
+        async updateVersion(artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateVersion(artifactVersionUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -4166,13 +4162,12 @@ export const VersionApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @param {string} artifactId 
          * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateVersion(artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.updateVersion(artifactId, artifactVersionUpdateTO, options).then((request) => request(axios, basePath));
+        updateVersion(artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): AxiosPromise<ArtifactVersionTO> {
+            return localVarFp.updateVersion(artifactVersionUpdateTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4245,14 +4240,13 @@ export class VersionApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} artifactId 
      * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof VersionApi
      */
-    public updateVersion(artifactId: string, artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any) {
-        return VersionApiFp(this.configuration).updateVersion(artifactId, artifactVersionUpdateTO, options).then((request) => request(this.axios, this.basePath));
+    public updateVersion(artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any) {
+        return VersionApiFp(this.configuration).updateVersion(artifactVersionUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

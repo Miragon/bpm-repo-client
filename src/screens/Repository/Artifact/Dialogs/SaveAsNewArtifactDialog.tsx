@@ -1,12 +1,18 @@
 import React, {useCallback, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactTypeTO} from "../../../../api";
-import {RootState} from "../../../../store/reducers/rootReducer";
-import {createNewArtifactWithVersionFile} from "../../../../store/actions";
+import {ArtifactVersionUploadTOSaveTypeEnum} from "../../../../api";
+import {createArtifact, createVersion} from "../../../../store/actions";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import SettingsForm from "../../../../components/Form/SettingsForm";
 import SettingsTextField from "../../../../components/Form/SettingsTextField";
+import {
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_RECENT,
+    SYNC_STATUS_REPOSITORY,
+    SYNC_STATUS_VERSION
+} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
 
 interface Props {
     open: boolean;
@@ -27,24 +33,29 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-
-    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
-
     const onCreate = useCallback(async () => {
-        try {
-
-            const defaultFileProps = fileTypes.find(fileType => fileType.name === props.type)
-
-            if(defaultFileProps){
-                //#TODO: The default Preview SVG will always be passed here => passt aber auch, für einzelne Versionen gibt es keine SVG Previews (immer nur für die aktuellste, gespeichert in ArtifactEntity/ ArtifactEntity)
-                dispatch(createNewArtifactWithVersionFile(props.repoId, title, description, props.file, defaultFileProps.name, "defaultFileProps.defaultPreviewSVG"));
-                props.onCancelled();
+        createArtifact(props.repoId, title, description, props.type).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                createVersion(response.data.id, props.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone).then(response => {
+                    if(Math.floor(response.status / 100) === 2){
+                        dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                        dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
+                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+                        dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
+                    } else {
+                        helpers.makeErrorToast(t(response.data.toString()), () => createVersion(response.data.id, props.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                    }
+                }, error => {
+                    helpers.makeErrorToast(t(error.response.data), () => createVersion(response.data.id, props.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                })
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
             }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => onCreate())
+        })
 
-        } catch (err) {
-            console.log(err);
-        }
-    }, [dispatch, title, description, props, fileTypes]);
+    }, [props.repoId, props.type, props.file, title, description, dispatch, t]);
 
 
     return (

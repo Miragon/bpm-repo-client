@@ -1,6 +1,6 @@
 import {Drawer} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import MenuSpacer from "../../Menu/MenuSpacer";
 import DrawerApp from "./AppMenu/DrawerApp";
 import {MenuItemTO} from "../../../api";
@@ -8,6 +8,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {fetchMenuItems} from "../../../store/actions/menuAction";
 import {useTranslation} from "react-i18next";
+import {MENU_ITEMS, SYNC_STATUS_MENU} from "../../../constants/Constants";
+import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -63,11 +65,25 @@ const AppMenu: React.FC<Props> = props => {
     const apps: Array<MenuItemTO> = useSelector((state: RootState) => state.menuItems.menuItems);
     const menuSynced: boolean = useSelector((state: RootState) => state.dataSynced.menuSynced);
 
+    const fetchMenuItem = useCallback(async () => {
+        fetchMenuItems().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({type: MENU_ITEMS, menuItems: response.data})
+                dispatch({type: SYNC_STATUS_MENU, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchMenuItem())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchMenuItem())
+
+        })
+    }, [dispatch, t])
+    
     useEffect(() => {
         if (!menuSynced) {
-            dispatch(fetchMenuItems());
+            fetchMenuItem()
         }
-    }, [menuSynced, dispatch])
+    }, [menuSynced, fetchMenuItem])
 
     return (
         <>

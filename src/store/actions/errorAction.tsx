@@ -1,4 +1,6 @@
+/*
 import {defaultErrors} from "../../components/Exception/defaultErrors";
+
 import {HANDLEDERROR} from "../../constants/Constants";
 import {ActionType} from "./actions";
 
@@ -55,3 +57,5 @@ export const handleError = (error: any, retryMethod: ActionType, retryPayload: A
         return { type: HANDLEDERROR, errorMessage: "error.unknown" };
     }
 };
+*/
+export {}

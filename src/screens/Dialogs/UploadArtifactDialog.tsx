@@ -8,10 +8,11 @@ import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import {HANDLEDERROR} from "../../constants/Constants";
+import {HANDLEDERROR, SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 import {createVersion, uploadArtifact} from "../../store/actions";
+import helpers from "../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     input: {
@@ -38,7 +39,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
     const [title, setTitle] = useState("");
     const [uploadedFileType, setUploadedFileType] = useState<string>("");
     const [description, setDescription] = useState("");
-    const [repository, setRepository] = useState<string>(props.repo ? props.repo.id : "");
+    const [repoId, setRepoId] = useState<string>(props.repo ? props.repo.id : "");
     const [file, setFile] = useState<string>("");
 
 
@@ -47,35 +48,38 @@ const UploadArtifactDialog: React.FC<Props> = props => {
         (state: RootState) => state.repos.repos
     );
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
-    const uploadedArtifact = useSelector(
-        (state: RootState) => state.artifacts.uploadedArtifact
-    );
 
     useEffect(() => {
         fileTypes.map(type => fileTypeList.push(type.fileExtension))
     })
 
-    useEffect(() => {
-        if (uploadedArtifact) {
-            dispatch(createVersion(
-                uploadedArtifact.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone
-            ));
-        }
-    }, [dispatch, uploadedArtifact, file]);
-
-    useEffect(() => {
-        setRepository(props.repo ? props.repo.id : "");
-    }, [props.repo, fileTypeList]);
-
 
     const onCreate = useCallback(async () => {
-        try {
-            dispatch(uploadArtifact(repository, title, description, uploadedFileType));
-            props.onCancelled();
-        } catch (err) {
-            dispatch({ type: HANDLEDERROR, errorMessage: err });
-        }
-    }, [title, description, repository, props, dispatch, uploadedFileType]);
+        //1. Create a new Artifact
+        //2. Use the returned artifactId to create a new version, which includes the uploaded file
+        uploadArtifact(repoId, title, description, uploadedFileType)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone)
+                        .then(response2 => {
+                            if(Math.floor(response2.status / 100) === 2){
+                                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
+                                dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+                                helpers.makeSuccessToast(t("artifact.created"))
+                                props.onCancelled()
+                            } else{
+                                helpers.makeErrorToast(t(response2.data.toString()), () => createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                            }
+                        }, error => {
+                            helpers.makeErrorToast(t(error.response.data), () => createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                        })
+                } else {
+                    helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => onCreate())
+            })
+    }, [repoId, title, description, uploadedFileType, file, dispatch, t, props]);
 
     const onFileChanged = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -119,9 +123,9 @@ const UploadArtifactDialog: React.FC<Props> = props => {
 
                 <SettingsSelect
                     disabled={false}
-                    value={props.repo ? props.repo.id : repository}
+                    value={repoId}
                     label={t("repository.target")}
-                    onChanged={setRepository}>
+                    onChanged={setRepoId}>
                     {props.repo
                         ? (
                             <MenuItem

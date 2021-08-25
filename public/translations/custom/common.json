@@ -6,6 +6,7 @@
     "created": "Projekt erstellt",
     "delete": "Projekt löschen",
     "deleted": "Projekt gelöscht",
+    "nameTaken": "Name wird bereits verwendet",
     "edit": "Projekt bearbeiten",
     "updated": "Projekt aktualisiert",
     "notAvailable": "Sie haben noch keine Projekte erstellt",
@@ -55,8 +56,9 @@
   },
   "assignment": {
     "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
-    "added": "Benutzer zum Projekt hinzugefügt",
-    "removed": "{{username}} vom Projekt entfernt"
+    "added": "{{username}} zum Projekt hinzugefügt",
+    "removed": "{{username}} vom Projekt entfernt",
+    "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
   },
   "deployment": {
     "deployment": "Veröffentlichung",

@@ -1,8 +1,8 @@
 import {makeStyles} from "@material-ui/styles";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, ArtifactTypeTO} from "../../../api";
-import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
+import {fetchArtifactsFromRepo} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {useParams} from "react-router";
 import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
@@ -11,7 +11,7 @@ import {List} from "@material-ui/core";
 import helpers from "../../../util/helperFunctions";
 import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
 import ArtifactListItem from "./Holder/ArtifactListItem";
-import {SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
+import {ACTIVE_ARTIFACTS, SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
 
 
 const useStyles = makeStyles(() => ({
@@ -55,27 +55,30 @@ const ArtifactDetails: React.FC = (() => {
     const [sortValue, setSortValue] = useState<string>("lastEdited");
 
 
+    const fetchFromRepo = useCallback(async () => {
+        fetchArtifactsFromRepo(repoId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: ACTIVE_ARTIFACTS, artifacts: response.data });
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
+                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchFromRepo())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchFromRepo())
+        })
+    }, [dispatch, repoId, t])
+    
     useEffect(() => {
-        if (!synced) {
-            dispatch(fetchArtifactsFromRepo(repoId));
+        if (!synced || !favoriteSynced) {
+            fetchFromRepo()
         }
-    }, [dispatch, synced, repoId]);
+    }, [synced, repoId, fetchFromRepo, favoriteSynced]);
 
-    useEffect(() => {
-        console.log(activeArtifacts)
-        setFilteredArtifacts(activeArtifacts)
-    }, [activeArtifacts, fileTypes])
-
-    useEffect(() => {
-        if(!favoriteSynced){
-            dispatch(fetchFavoriteArtifacts());
-            dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
-        }
-    }, [favoriteSynced, dispatch, ]);
 
 
     const changeFileTypeFilter = (selectedValue: string) => {
-        const currentList = [...displayedFileTypes]
+        const currentList = displayedFileTypes
         if(displayedFileTypes.find(fileType => fileType === selectedValue)){
             currentList.splice(currentList.indexOf(selectedValue), 1)
         }
@@ -97,10 +100,14 @@ const ArtifactDetails: React.FC = (() => {
     }, [activeArtifacts, displayedFileTypes, sortValue]);
 
 
-    const applyFilters = () => {
+    const applyFilters = useCallback(() => {
         const filtered = activeArtifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
         sort(sortValue, filtered)
-    }
+    }, [activeArtifacts, displayedFileTypes, sortValue])
+
+    useEffect(() => {
+        applyFilters()
+    }, [activeArtifacts, applyFilters])
 
 
 

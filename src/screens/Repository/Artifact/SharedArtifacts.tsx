@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/reducers/rootReducer";
 import helpers from "../../../util/helperFunctions";
@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
 import ArtifactListItem from "./Holder/ArtifactListItem";
 import {getSharedArtifacts} from "../../../store/actions/ShareAction";
+import {SHARED_ARTIFACTS} from "../../../constants/Constants";
 
 
 const useStyles = makeStyles(() => ({
@@ -28,9 +29,21 @@ const SharedArtifacts: React.FC = (() => {
 
 
 
+    const getShared = useCallback(async (repoId: string) => {
+        getSharedArtifacts(repoId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({type: SHARED_ARTIFACTS, sharedArtifacts: response.data})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => getShared(repoId))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getShared(repoId))
+        })
+    }, [dispatch, t])
+    
     useEffect(() => {
-        dispatch(getSharedArtifacts(repoId))
-    }, [dispatch, repoId])
+        getShared(repoId)
+    }, [getShared, repoId])
 
     return (
         <>

@@ -1,29 +1,4 @@
-import {createUserAssignment, deleteAssignment, getAllAssignedUsers, updateUserAssignment} from "./assignmentAction";
-import {
-    addToFavorites,
-    copyToRepo,
-    createArtifact,
-    deleteArtifact,
-    fetchArtifactsFromRepo,
-    fetchFavoriteArtifacts,
-    fetchRecentArtifacts,
-    searchArtifact,
-    updateArtifact,
-    uploadArtifact
-} from "./artifactAction";
-import {
-    createRepository,
-    deleteRepository,
-    fetchRepositories,
-    getManageableRepos,
-    getSingleRepository, searchRepos,
-    updateRepository
-} from "./repositoryAction";
-import {searchUsers} from "./userAction";
-import {createVersion, getAllVersions, getLatestVersion} from "./versionAction";
-import {deployVersion, fetchTargets} from "./deploymentAction";
-import {getAllSharedArtifacts, getSharedArtifacts, getSharedRepos, shareWithRepo} from "./ShareAction";
-
+/*
 export enum ActionType {
     FETCH_FAVORITE_ARTIFACTS,
     FETCH_RECENT_ARTIFACTS,
@@ -157,3 +132,5 @@ export const actionMapper = (actionType: ActionType, payload: Array<any>) => {
             return addToFavorites(payload[0]);
     }
 };
+*/
+export {}

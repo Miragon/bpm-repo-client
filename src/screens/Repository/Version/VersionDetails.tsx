@@ -60,7 +60,7 @@ const VersionDetails: React.FC<Props> = ((props: Props) => {
                         updatedDate={version.updatedDate}
                         id={version.id}
                         artifactId={version.artifactId}
-                        file={version.xml}
+                        file={version.file}
                         type={props.fileType}
                         repoId={version.repositoryId}
                         deployments={version.deployments} />

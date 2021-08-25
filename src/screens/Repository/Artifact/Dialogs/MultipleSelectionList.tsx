@@ -1,7 +1,6 @@
 import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import UserListItem from "../../RepositoryDetails/Dialogs/UserListItem";
 
 const useStyles = makeStyles(() => ({
 

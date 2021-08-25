@@ -9,17 +9,30 @@ import PathStructure from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import SharedArtifacts from "./Artifact/SharedArtifacts";
 import RepositoryDetails from "./RepositoryDetails/RepositoryDetails";
+import {ACTIVE_REPO, SYNC_STATUS_ACTIVE_REPOSITORY} from "../../constants/Constants";
+import helpers from "../../util/helperFunctions";
+import {useTranslation} from "react-i18next";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
+    const {t} = useTranslation("common");
 
     const { repoId } = useParams<{ repoId: string }>();
     const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
     const dataSynced: boolean = useSelector((state: RootState) => state.dataSynced.activeRepoSynced);
 
     const getRepo = useCallback((repositoryId: string) => {
-        dispatch(getSingleRepository(repositoryId));
-    }, [dispatch]);
+        getSingleRepository(repositoryId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: ACTIVE_REPO, activeRepo: response.data });
+                dispatch({type: SYNC_STATUS_ACTIVE_REPOSITORY, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => getRepo(repoId))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getRepo(repoId))
+        })
+    }, [dispatch, repoId, t]);
 
 
     useEffect(() => {

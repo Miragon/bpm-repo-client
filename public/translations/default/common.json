@@ -6,6 +6,7 @@
     "created": "Repository created",
     "delete": "Delete Repository",
     "deleted": "Repository deleted",
+    "nameTaken": "Name not available",
     "edit": "Edit Repository",
     "updated": "Repository updated",
     "notAvailable": "You haven't added any Repositories yet.",
@@ -50,8 +51,9 @@
   },
   "assignment": {
     "changedAssignment": "Changed role of {{username}} to {{role}}",
-    "added": "Added User to Repository",
-    "removed": "Removed {{username}} from Repository"
+    "added": "Added {{username}} to Repository",
+    "removed": "Removed {{username}} from Repository",
+    "alreadyPresent": "{{username}} is already assigned to this project"
   },
   "form": {
     "create": "Create Form"

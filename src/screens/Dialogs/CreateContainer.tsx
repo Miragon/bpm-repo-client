@@ -101,7 +101,6 @@ const RepoContainer: React.FC = observer(() => {
             </div>
             <CreateRepoDialog
                 open={createRepoOpen}
-                onCreated={() => setCreateRepoOpen(false)}
                 onCancelled={() => setCreateRepoOpen(false)} />
 
             <CreateArtifactDialog

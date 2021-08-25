@@ -1,4 +1,6 @@
+/*
 import {CaseReducer} from "@reduxjs/toolkit";
+
 import {ActionType} from "../actions/actions";
 import {HANDLEDERROR, SUCCESS} from "../../constants/Constants";
 
@@ -32,3 +34,5 @@ const reducer: CaseReducer = (state = initialState, action) => {
 };
 
 export default reducer;
+*/
+export {}

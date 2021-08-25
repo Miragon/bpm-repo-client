@@ -1,5 +1,5 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import {RepositoryTO} from "../../api";
@@ -8,7 +8,9 @@ import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {copyToRepo} from "../../store/actions";
+import {copyToRepo, fetchRepositories} from "../../store/actions";
+import helpers from "../../util/helperFunctions";
+import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 
 interface Props {
     open: boolean;
@@ -23,24 +25,45 @@ const CopyToRepoDialog: React.FC<Props> = props => {
 
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [repository, setRepository] = useState<string>("");
+    const [repoId, setRepoId] = useState<string>("");
 
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
+    const repoSynced: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced)
 
     const onCopy = useCallback(async () => {
-        try {
-            if(repository){
-                dispatch(copyToRepo(repository, props.artifactId));
-                setRepository("")
+        copyToRepo(repoId, props.artifactId).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                helpers.makeSuccessToast(t("repo.copied"))
+                setRepoId("")
                 props.onCancelled();
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => onCopy())
             }
-        } catch (err) {
-            console.log(err);
-        }
-    }, [dispatch, repository, props]);
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => onCopy())
+        })
+    }, [repoId, props, t]);
 
+    const fetchRepos = useCallback(() => {
+        fetchRepositories().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: REPOSITORIES, repos: response.data });
+                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchRepos())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchRepos())
+        })
+    }, [dispatch, t]);
+
+    useEffect(() => {
+        if(!repoSynced){
+            fetchRepos()
+        }
+    }, [fetchRepos, repoSynced])
 
     return (
         <PopupDialog
@@ -57,9 +80,9 @@ const CopyToRepoDialog: React.FC<Props> = props => {
 
                 <SettingsSelect
                     disabled={false}
-                    value={repository}
-                    label={t("repository.target")}
-                    onChanged={setRepository}>
+                    value={repoId}
+                    label={t("repoId.target")}
+                    onChanged={setRepoId}>
                     {allRepos?.map(repo => (
                         <MenuItem
                             key={repo.id}

@@ -1,9 +1,6 @@
-import React, {useCallback} from "react";
+import React from "react";
 import {Icon, IconButton, makeStyles} from "@material-ui/core";
 import {CheckCircle, Error, Replay} from "@material-ui/icons";
-import {useDispatch} from "react-redux";
-import {actionMapper, ActionType} from "../../store/actions/actions";
-import {HANDLEDERROR} from "../../constants/Constants";
 import theme from "../../theme";
 
 
@@ -35,21 +32,11 @@ const useStyles = makeStyles(() => ({
 interface Props {
     errorMessage: string;
     isError: boolean;
-    retryMethod?: ActionType;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    retryPayload?: Array<any>;
+    retryMethod?: () => unknown;
 }
 
 const Toast: React.FC<Props> = props => {
     const classes = useStyles();
-    const dispatch = useDispatch();
-
-    const retry = useCallback(() => {
-        if(props.isError && props.retryMethod && props.retryPayload){
-            dispatch({type: HANDLEDERROR, errorMessage: ""});
-            dispatch(actionMapper(props.retryMethod, props.retryPayload));
-        }
-    }, [dispatch, props]);
 
     return (
         <div className={classes.container}>
@@ -69,9 +56,7 @@ const Toast: React.FC<Props> = props => {
             {props.isError &&
                 <IconButton
                     className={classes.retryButton}
-                    onClick={() => {
-                        retry();
-                    }}>
+                    onClick={() => props.retryMethod ? props.retryMethod() : console.log("Retry not available")}>
                     <Replay/>
                 </IconButton>
             }

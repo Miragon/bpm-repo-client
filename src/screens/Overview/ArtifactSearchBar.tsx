@@ -11,6 +11,7 @@ import {useTranslation} from "react-i18next";
 import helpers from "../../util/helperFunctions";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
 import {searchArtifact} from "../../store/actions";
+import {ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS} from "../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     headerText: {
@@ -95,8 +96,18 @@ const ArtifactSearchBar: React.FC = () => {
     });
 
     const fetchArtifactSuggestion = useCallback((input: string) => {
-        dispatch(searchArtifact(input));
-    }, [dispatch]);
+        searchArtifact(input).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                dispatch({type: SEARCHED_ARTIFACTS, searchedArtifacts: response.data});
+                dispatch({type: ARTIFACTQUERY_EXECUTED, artifactResultsCount: response.data.length})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchArtifactSuggestion(input))
+
+        })
+    }, [dispatch, t]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateState = (event: any) => {

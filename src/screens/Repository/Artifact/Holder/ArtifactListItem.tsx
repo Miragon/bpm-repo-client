@@ -8,25 +8,22 @@ import {ExpandLess, ExpandMore, MoreVert, Star, StarOutline} from "@material-ui/
 import {makeStyles} from "@material-ui/core/styles";
 import PopupSettings from "../../../../components/Form/PopupSettings";
 import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
-import {
-    addToFavorites,
-    deleteArtifact,
-    fetchRepositories,
-    getAllVersions,
-    getLatestVersion,
-    getManageableRepos
-} from "../../../../store/actions";
+import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import helpers from "../../../../util/helperFunctions";
 import {openFileInTool} from "../../../../util/Redirections";
 import CopyToRepoDialog from "../../../Dialogs/CopyToRepoDialog";
-import {ACTIVE_VERSIONS, LATEST_VERSION} from "../../../../constants/Constants";
+import {
+    ACTIVE_VERSIONS,
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_FAVORITE,
+    SYNC_STATUS_VERSION
+} from "../../../../constants/Constants";
 import VersionDetails from "../../Version/VersionDetails";
 import CreateVersionDialog from "../Dialogs/CreateVersionDialog";
 import EditArtifactDialog from "../Dialogs/EditArtifactDialog";
 import SharingManagementDialog from "../Dialogs/SharingManagementDialog";
-import {getSharedRepos} from "../../../../store/actions/ShareAction";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -157,20 +154,19 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);
     const [editArtifactOpen, setEditArtifactOpen] = useState<boolean>(false);
     const [shareWithRepoOpen, setShareWithRepoOpen] = useState<boolean>(false);
-    const [downloadReady, setDownloadReady] = useState<boolean>(false);
     const [svgKey, setSvgKey] = useState<string>("");
 
 
+    //fetch the defined filetypes and map the corresponding svgs
     useEffect(() => {
         if(fileTypes && props.fileType){
             const svgIcon = fileTypes.find(fileType => fileType.name === props.fileType)?.svgIcon;
-            console.log("loaded")
-            setSvgKey(svgIcon ? svgIcon: "");
+            setSvgKey(svgIcon || "");
         }
     }, [fileTypes, props.fileType])
 
+    //Check if versions of the current artifact should be displayed
     useEffect(() => {
-
         if(activeArtifactVersionTOs){
             if(activeArtifactVersionTOs[0]?.artifactId === props.artifactId){
                 setOpen(true)
@@ -183,18 +179,34 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
 
     }, [activeArtifactVersionTOs, props.artifactId])
 
+    //to fetch all versions of a specific artifact
+    const getVersions = useCallback(async (artifactId: string) => {
+        getAllVersions(artifactId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: ACTIVE_VERSIONS, activeVersions: response.data });
+                dispatch({type: SYNC_STATUS_VERSION, dataSynced: true});
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => getVersions(artifactId))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getVersions(artifactId))
+
+        })
+    }, [dispatch, t])
+    
+    //update the versions list if any changes have been made
     useEffect(() => {
         if(!versionSynced && open){
-            dispatch(getAllVersions(props.artifactId))
+            getVersions(props.artifactId)
         }
-    }, [versionSynced, open, dispatch, props.artifactId])
+    }, [versionSynced, open, props.artifactId, getVersions])
 
+    //if user clicks on the listitem
     const handleOpenVersions = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation()
         if(!open){
             setOpen(!open);
-            console.log("Displaying Loading")
-            dispatch(getAllVersions(props.artifactId))
+            getVersions(props.artifactId)
         }
         else {
             setOpen(!open);
@@ -207,17 +219,56 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
         setSettingsOpen(true);
     }
 
-    useEffect(() => {
-        if(latestVersion && downloadReady){
-            helpers.download(latestVersion, dispatch)
-            setDownloadReady(false)
-        }
-    }, [dispatch, downloadReady, latestVersion])
+
+    const addToFavorite = useCallback(async (event: React.MouseEvent<SVGSVGElement>) => {
+        addToFavorites(props.artifactId)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                    dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false})
+                } else {
+                    helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => addToFavorite(event))
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => addToFavorite(event))
+            })
+    }, [dispatch, props.artifactId, t])
 
     const setStarred = (event: React.MouseEvent<SVGSVGElement>) => {
         event.stopPropagation();
-        dispatch(addToFavorites(props.artifactId));
+        addToFavorite(event);
     }
+
+    const download = useCallback(async () => {
+        getLatestVersion(props.artifactId)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    helpers.download(response.data)
+                    helpers.makeSuccessToast(t("download.stated"))
+                } else {
+                    helpers.makeErrorToast(t(response.data.toString()), () => download())
+                }
+
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => download())
+
+            })
+    }, [props.artifactId, t])
+
+    const deleteOneArtifact = useCallback(async () => {
+        deleteArtifact(props.artifactId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                helpers.makeSuccessToast(t("artifact.deleted"))
+            } else {
+                helpers.makeErrorToast(t("artifact.couldNotDelete"), () => deleteOneArtifact())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => deleteOneArtifact())
+        })
+    }, [dispatch, props.artifactId, t])
+
+
 
     const options: DropdownButtonItem[] = [
 
@@ -234,7 +285,6 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             label: t("version.create"),
             type: "button",
             onClick: () => {
-                dispatch(getLatestVersion(props.artifactId))
                 setCreateVersionOpen(true);
             }
         },
@@ -251,8 +301,6 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             label: t("artifact.share"),
             type: "button",
             onClick: () => {
-                dispatch(getManageableRepos())
-                dispatch(getSharedRepos(props.artifactId))
                 setShareWithRepoOpen(true);
             }
         },
@@ -261,8 +309,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             label: t("artifact.download"),
             type: "button",
             onClick: () => {
-                dispatch(getLatestVersion(props.artifactId))
-                setDownloadReady(true)
+                download()
             }
         },
         {
@@ -270,7 +317,6 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             label: t("artifact.copyTo"),
             type: "button",
             onClick: () => {
-                dispatch(fetchRepositories())
                 setCopyToRepoOpen(true)
             }
         },
@@ -288,7 +334,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
             onClick: () => {
                 // eslint-disable-next-line no-restricted-globals
                 if (confirm(t("artifact.confirmDelete", {artifactName: props.artifactTitle}))) {
-                    dispatch(deleteArtifact(props.artifactId));
+                    deleteOneArtifact();
                 }
             }
         }

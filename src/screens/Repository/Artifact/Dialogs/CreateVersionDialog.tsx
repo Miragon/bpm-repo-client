@@ -1,14 +1,19 @@
 import React, {useCallback, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/styles";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../../../api";
-import {RootState} from "../../../../store/reducers/rootReducer";
-import {createVersion, getAllVersions} from "../../../../store/actions";
+import {ArtifactVersionUploadTOSaveTypeEnum} from "../../../../api";
+import {createVersion, getLatestVersion} from "../../../../store/actions";
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import {HANDLEDERROR} from "../../../../constants/Constants";
+import {
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_RECENT,
+    SYNC_STATUS_REPOSITORY,
+    SYNC_STATUS_VERSION
+} from "../../../../constants/Constants";
 import SettingsForm from "../../../../components/Form/SettingsForm";
 import SettingsTextField from "../../../../components/Form/SettingsTextField";
+import helpers from "../../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     container: {}
@@ -27,8 +32,6 @@ const CreateVersionDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const {t} = useTranslation("common");
 
-    const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
-
     const {
         open, onCancelled, artifactId, artifactTitle
     } = props;
@@ -38,23 +41,32 @@ const CreateVersionDialog: React.FC<Props> = props => {
 
 
 
-    //#TODO: Versionen Updaten über SyncState ausführen,  nicht direkt callen
     const onCreate = useCallback(async () => {
-        try {
-            if(latestVersion){
-                await dispatch(createVersion(artifactId, latestVersion?.xml, ArtifactVersionUploadTOSaveTypeEnum.Milestone, comment));
-                dispatch(getAllVersions(artifactId));
-                onCancelled();
+        getLatestVersion(artifactId).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                createVersion(artifactId, response.data.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone, comment).then(response2 => {
+                    if (Math.floor(response2.status / 100) === 2) {
+                        dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
+                        dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
+                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+                        dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
+                        helpers.makeSuccessToast(t("version.created"));
+                        onCancelled()
+                    } else {
+                        helpers.makeErrorToast(response2.data.toString(), () => getLatestVersion(artifactId))
+                    }
+                }, error => {
+                    helpers.makeErrorToast(t(error.response.data), () => getLatestVersion(artifactId))
+
+                })
             } else {
-                dispatch({type: HANDLEDERROR, errorMessage: "Can't load XML of the latest version"})
+                helpers.makeErrorToast(response.data.toString(), () => getLatestVersion(artifactId))
             }
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [artifactId, comment, dispatch, onCancelled, latestVersion]);
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getLatestVersion(artifactId))
+        })
 
-
+    }, [artifactId, comment, dispatch, onCancelled, t])
 
     return (
         <PopupDialog

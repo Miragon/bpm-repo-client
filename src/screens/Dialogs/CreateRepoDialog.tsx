@@ -5,11 +5,12 @@ import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import {useTranslation} from "react-i18next";
 import {createRepository} from "../../store/actions";
+import helpers from "../../util/helperFunctions";
+import {SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 
 interface Props {
     open: boolean;
     onCancelled: () => void;
-    onCreated: () => void;
 }
 
 const CreateRepoDialog: React.FC<Props> = props => {
@@ -17,23 +18,27 @@ const CreateRepoDialog: React.FC<Props> = props => {
     const {t} = useTranslation("common");
 
 
-    const { open, onCancelled, onCreated } = props;
+    const { open, onCancelled } = props;
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const onCreate = useCallback(() => {
-        try {
-            dispatch(createRepository(title, description));
-            setTitle("");
-            setDescription("");
-            onCancelled();
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [dispatch, title, description, onCancelled]);
+    const onCreate = useCallback(async() => {
+        createRepository(title, description).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
+                setTitle("")
+                setDescription("")
+                onCancelled()
+            } else {
+                helpers.makeErrorToast(response.data.toString(), () => onCreate())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => onCreate())
+        })
+
+    }, [title, description, dispatch, onCancelled, t]);
 
     return (
         <PopupDialog
@@ -46,7 +51,6 @@ const CreateRepoDialog: React.FC<Props> = props => {
             firstTitle={t("dialog.create")}
             onFirst={() => {
                 onCreate();
-                onCreated();
             }} >
 
             <SettingsForm large>

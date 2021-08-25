@@ -2,7 +2,7 @@ import {makeStyles} from "@material-ui/styles";
 import theme from "../../../../theme";
 import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {RepositoryTO, ShareWithRepositoryTORoleEnum, UserInfoTO} from "../../../../api";
+import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
 import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -11,6 +11,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {Add} from "@material-ui/icons";
 import {shareWithRepo} from "../../../../store/actions/ShareAction";
 import {searchRepos} from "../../../../store/actions";
+import {SEARCHED_REPOS} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -42,6 +45,8 @@ let timeout: NodeJS.Timeout | undefined;
 const AddSharingSearchBar: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {t} = useTranslation("common");
+
 
     const searchedRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.searchedRepos
@@ -88,8 +93,16 @@ const AddSharingSearchBar: React.FC<Props> = props => {
     });
 
     const fetchRepositorySuggestion = useCallback((input: string) => {
-        dispatch(searchRepos(input));
-    }, [dispatch]);
+        searchRepos(input).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({type: SEARCHED_REPOS, searchedRepos: response.data});
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchRepositorySuggestion(input))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchRepositorySuggestion(input))
+        })
+    }, [dispatch, t]);
 
 
     const getRepoByName = useCallback((repositoryName: string) => {

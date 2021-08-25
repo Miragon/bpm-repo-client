@@ -5,6 +5,8 @@ import {Input, InputLabel} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {updateArtifact} from "../../../../store/actions";
 import PopupDialog from "../../../../components/Form/PopupDialog";
+import {SYNC_STATUS_ARTIFACT} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     line: {
@@ -40,14 +42,17 @@ const EditArtifactDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState<string>(props.artifactDescription);
 
     const applyChanges = useCallback(async () => {
-        try {
-            dispatch(updateArtifact(title, description, props.artifactId));
-            props.onCancelled();
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [title, description, props, dispatch]);
+        updateArtifact(title, description, props.artifactId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
+                helpers.makeSuccessToast(t("artifact.changed"))
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => applyChanges())
+        })
+    }, [title, description, props.artifactId, dispatch, t]);
 
     return (
         <PopupDialog

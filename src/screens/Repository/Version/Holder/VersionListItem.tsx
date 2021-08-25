@@ -1,7 +1,7 @@
 import {Button, Chip, ListItem, Tooltip} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import {MoreVert} from "@material-ui/icons";
-import React, {useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
@@ -15,6 +15,7 @@ import PopupSettings from "../../../../components/Form/PopupSettings";
 import DeployVersionDialog from "../../Artifact/Dialogs/DeployVersionDialog";
 import SaveAsNewArtifactDialog from "../../Artifact/Dialogs/SaveAsNewArtifactDialog";
 import DeploymentHistory from "../../Artifact/Dialogs/DeploymentHistory";
+import {TARGETS} from "../../../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
 
@@ -119,6 +120,18 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
         event.stopPropagation();
         setHistoryOpen(true);
     }
+    
+    const getTargets = useCallback(async () => {
+        fetchTargets().then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                dispatch({type: TARGETS, targets: response.data})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => getTargets())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getTargets())
+        })
+    }, [dispatch, t])
 
     const options: DropdownButtonItem[] = [
         {
@@ -126,7 +139,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
             label: t("version.deploy"),
             type: "button",
             onClick: () => {
-                dispatch(fetchTargets())
+                getTargets()
                 setDeployVersionOpen(true);
 
             }

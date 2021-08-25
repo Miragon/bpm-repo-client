@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../../api";
@@ -7,8 +7,10 @@ import {RootState} from "../../../../store/reducers/rootReducer";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import MultipleSelectionList, {MultipleSelectionListItem} from "./MultipleSelectionList";
 import {getSharedRepos, shareWithRepo, unshareWithRepo} from "../../../../store/actions/ShareAction";
-import {forEach} from "react-bootstrap/ElementChildren";
 import AddSharingSearchBar from "./AddSharingSearchBar";
+import {MANAGEABLE_REPOS, SHARED_REPOS, SUCCESS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
+import {getManageableRepos} from "../../../../store/actions";
 
 interface Props {
     open: boolean;
@@ -31,11 +33,37 @@ const SharingManagementDialog: React.FC<Props> = props => {
     const sharedRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.sharedRepos);
     const sharedSynced: boolean = useSelector((state: RootState) => state.dataSynced.sharedSynced);
 
+    const getShared = useCallback(async () => {
+        getSharedRepos(props.artifactId).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({type: SHARED_REPOS, sharedRepos: response.data});
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: true});
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => getShared())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getShared())
+        })
+    }, [dispatch, props.artifactId, t])
+
+    const getManageable = useCallback(async () => {
+        getManageableRepos().then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({type: MANAGEABLE_REPOS, manageableRepos: response.data});
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => getManageable())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => getManageable())
+        })
+    }, [dispatch, t])
+
     useEffect(() => {
         if(!sharedSynced){
-            dispatch(getSharedRepos(props.artifactId))
+            getShared()
+            getManageable()
         }
-    }, [dispatch, props.artifactId, sharedSynced])
+    }, [getManageable, getShared, sharedSynced])
 
     //TODO: ShareRepos-state does not update (should happen in the getSharedRepos action)
     //TODO: Sollten Dateien auch mit Repositories geteilt werden können, die dem nutzer nicht direkt zugewiesen sind?
@@ -51,6 +79,35 @@ const SharingManagementDialog: React.FC<Props> = props => {
         setOptions(opts)
     }
 
+    const share = useCallback((repoId: string) => {
+        shareWithRepo(props.artifactId, repoId, ShareWithRepositoryTORoleEnum.Viewer).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: SUCCESS, successMessage: "share.successful" });
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => share(repoId))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => share(repoId))
+
+        })
+    }, [dispatch, props.artifactId, t])
+
+    const unshare = useCallback((repoId: string) => {
+        unshareWithRepo(props.artifactId, repoId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: SUCCESS, successMessage: "share.successful" });
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
+            } else {
+                helpers.makeErrorToast(t("share.failed"), () => unshare(repoId))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => unshare(repoId))
+
+        })
+    }, [dispatch, props.artifactId, t])
+
+    
     useEffect(()=> {
         const opts: MultipleSelectionListItem[] = [];
         sharedRepos.forEach(repo => {
@@ -61,9 +118,9 @@ const SharingManagementDialog: React.FC<Props> = props => {
                     editable: isRepoManageable(repo),
                     onClick: () => {
                         if(!isArtifactSharedWithRepo(repo)){
-                            dispatch(shareWithRepo(props.artifactId, repo.id, ShareWithRepositoryTORoleEnum.Viewer))
+                            share(repo.id)
                         } else{
-                            dispatch(unshareWithRepo(props.artifactId, repo.id))
+                            unshare(repo.id)
                         }
                     }
                 }
@@ -73,7 +130,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
         setOpts(opts)
 
-    }, [dispatch, isArtifactSharedWithRepo, isRepoManageable, manageableRepos, props.artifactId, props.repoId, sharedRepos])
+    }, [isArtifactSharedWithRepo, isRepoManageable, manageableRepos, props.artifactId, props.repoId, share, sharedRepos, unshare])
 
     return (
         <PopupDialog

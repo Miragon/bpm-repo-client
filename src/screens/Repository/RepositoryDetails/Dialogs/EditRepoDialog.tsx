@@ -8,6 +8,13 @@ import {useTranslation} from "react-i18next";
 import SettingsTextField from "../../../../components/Form/SettingsTextField";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import {deleteRepository, updateRepository} from "../../../../store/actions";
+import {
+    SYNC_STATUS_ACTIVE_REPOSITORY,
+    SYNC_STATUS_FAVORITE,
+    SYNC_STATUS_RECENT,
+    SYNC_STATUS_REPOSITORY
+} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     line: {
@@ -60,27 +67,35 @@ const EditRepoDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState<string>(props.repoDescription);
 
     const applyChanges = useCallback(async () => {
-        try {
-            dispatch(updateRepository(props.repoId, title, description));
-            props.onCancelled();
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [title, description, dispatch, props]);
+        updateRepository(props.repoId, title, description).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                helpers.makeSuccessToast(t("repository.updated"))
+                dispatch({type: SYNC_STATUS_ACTIVE_REPOSITORY, dataSynced: false});
+                props.onCancelled()
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => applyChanges())
+        })
+    }, [props, title, description, t, dispatch]);
 
     const deleteRepo = useCallback(() => {
-        try {
-            // eslint-disable-next-line no-alert
-            if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
-                dispatch(deleteRepository(props.repoId));
-                history.push("/");
-            }
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
+        if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
+            deleteRepository(props.repoId).then(response => {
+                if(Math.floor(response.status / 100) === 2) {
+                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                    dispatch({type: SYNC_STATUS_RECENT, dataSynced: false});
+                    dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
+                    helpers.makeSuccessToast(t("repository.deleted"))
+                } else {
+                    helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => deleteRepo())
+            })
         }
-    }, [dispatch, history, props.repoId, title, t]);
+    }, [dispatch, props.repoId, title, t]);
 
     return (
         <PopupDialog
