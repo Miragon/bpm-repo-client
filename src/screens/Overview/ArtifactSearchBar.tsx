@@ -63,13 +63,6 @@ const ArtifactSearchBar: React.FC = () => {
     }, [open, searchedArtifacts, artifact, displayResult]);
 
     useEffect(() => {
-        if (artifact === "") {
-            setDisplayResult(false);
-            setLoading(false);
-        }
-    }, [artifact]);
-
-    useEffect(() => {
         if (searchedArtifacts.length > 0) {
             setLoading(false);
         }
@@ -77,6 +70,13 @@ const ArtifactSearchBar: React.FC = () => {
             setLoading(false);
         }
     }, [searchedArtifacts, foundDiagrams]);
+
+    useEffect(() => {
+        if (artifact === "") {
+            setDisplayResult(false);
+            setLoading(false);
+        }
+    }, [artifact]);
 
 
     const onChangeWithTimer = ((input: string) => {

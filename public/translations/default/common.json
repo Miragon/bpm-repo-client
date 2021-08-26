@@ -6,6 +6,7 @@
     "created": "Repository created",
     "delete": "Delete Repository",
     "deleted": "Repository deleted",
+    "editUsers": "Edit users",
     "nameTaken": "Name not available",
     "edit": "Edit Repository",
     "updated": "Repository updated",
@@ -64,12 +65,16 @@
   "deployment": {
     "deployment": "Deployment",
     "deployments": "Deployments",
+    "multiple": "Deploy multiple Versions",
+    "deployedMultiple": "Deployed {{deployedVersions}} Versions",
+    "adminPermissionsRequired": "You need admin permissions to deploy artifacts",
     "dialogHeader": "Deploy Version {{versionNumber}}",
     "history": "All Deployments"
   },
   "user": {
     "user": "User",
     "users": "Users",
+    "manage": "Edit users",
     "OWNER": "Owner",
     "ADMIN": "Admin",
     "MEMBER": "Member",

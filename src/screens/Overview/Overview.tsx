@@ -7,6 +7,7 @@ import FavoriteArtifacts from "./FavoriteArtifacts";
 import RecentArtifacts from "./RecentArtifacts";
 import RepoContainer from "./RepoContainer";
 import PathStructure from "../../components/Layout/PathStructure";
+import {BASE_PATH} from "../../api/base";
 
 const Overview: React.FC = observer(() => {
 
@@ -15,7 +16,7 @@ const Overview: React.FC = observer(() => {
         link: "/"
     }
     const path = [element]
-
+    const c = BASE_PATH
 
     return (
         <>

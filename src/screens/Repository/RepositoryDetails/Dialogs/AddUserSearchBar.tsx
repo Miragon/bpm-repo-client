@@ -163,6 +163,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
                     <TextField
                         {...params}
                         label="Add user"
+                        size={"medium"}
                         variant="outlined"
                         onChange={event => onChangeWithTimer(event.target.value)}
                         InputProps={{

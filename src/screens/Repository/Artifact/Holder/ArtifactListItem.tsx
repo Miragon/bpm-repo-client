@@ -8,7 +8,13 @@ import {ExpandLess, ExpandMore, MoreVert, Star, StarOutline} from "@material-ui/
 import {makeStyles} from "@material-ui/core/styles";
 import PopupSettings from "../../../../components/Form/PopupSettings";
 import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
-import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../../store/actions";
+import {
+    addToFavorites,
+    deleteArtifact,
+    fetchArtifactsFromRepo,
+    getAllVersions,
+    getLatestVersion
+} from "../../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import helpers from "../../../../util/helperFunctions";
@@ -33,9 +39,13 @@ const useStyles = makeStyles(() => ({
         paddingRight: "5px",
         borderRadius: "2px",
         border: "1px solid lightgrey",
+        borderBottom: "none",
         minHeight: "60px",
         maxHeight: "60px",
         fontSize: "1rem",
+        "&:nth-last-child(1)": {
+            borderBottom: "1px solid lightgrey"
+        }
     },
     leftPanel: {
         minWidth: "50px",
@@ -116,7 +126,7 @@ const useStyles = makeStyles(() => ({
         transition: "background-image .3s",
         zIndex: 50,
         "&:hover": {
-            backgroundImage: "radial-gradient(#F5E73D, transparent 70%)"
+            color: "#F5E73D",
         }
     },
 
@@ -143,7 +153,8 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
 
     const activeArtifactVersionTOs: Array<ArtifactVersionTO> = useSelector((state: RootState) => state.versions.activeVersions);
     const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
-    const versionSynced: boolean = useSelector((state: RootState) => state.dataSynced.versionSynced)
+    const versionSynced: boolean = useSelector((state: RootState) => state.dataSynced.versionSynced);
+    const artifactSynced: boolean = useSelector((state: RootState) => state.dataSynced.artifactSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
 
@@ -178,6 +189,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
         }
 
     }, [activeArtifactVersionTOs, props.artifactId])
+
 
     //to fetch all versions of a specific artifact
     const getVersions = useCallback(async (artifactId: string) => {

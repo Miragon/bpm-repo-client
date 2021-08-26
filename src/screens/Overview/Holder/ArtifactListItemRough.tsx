@@ -24,11 +24,14 @@ const useStyles = makeStyles(() => ({
         color: "black",
         borderRadius: "2px",
         border: "1px solid lightgrey",
+        borderBottom: "none",
         transition: "boxShadow .3s",
         minHeight: "60px",
         maxHeight: "60px",
         fontSize: "1rem",
-
+        "&:nth-last-child(1)": {
+            borderBottom: "1px solid lightgrey"
+        }
     },
     icons: {
         color: "black",
@@ -107,7 +110,7 @@ const useStyles = makeStyles(() => ({
         transition: "background-image .3s",
         zIndex: 50,
         "&:hover": {
-            backgroundImage: "radial-gradient(#F5E73D, transparent 70%)"
+            color: "#F5E73D",
         }
     },
 

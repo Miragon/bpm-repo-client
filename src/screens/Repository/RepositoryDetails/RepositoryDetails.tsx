@@ -1,12 +1,16 @@
 import {IconButton} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {Description, People, Settings} from "@material-ui/icons/";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {RepositoryTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import UserManagementDialog from "./Dialogs/UserManagementDialog";
 import EditRepoDialog from "./Dialogs/EditRepoDialog";
+import PopupSettings from "../../../components/Form/PopupSettings";
+import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
+import {useTranslation} from "react-i18next";
+import DeployMultipleDialog from "./Dialogs/DeployMultipleDialog";
 
 
 const useStyles = makeStyles(() => ({
@@ -40,11 +44,45 @@ const useStyles = makeStyles(() => ({
 }));
 const RepositoryDetails: React.FC = (() => {
     const classes = useStyles();
+    const ref = useRef<HTMLButtonElement>(null);
+    const {t} = useTranslation("common");
 
     const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
 
+    const [popupOpen, setPopupOpen]= useState<boolean>(false);
     const [userManagementOpen, setUserManagementOpen] = useState<boolean>(false);
+    const [deployMultipleOpen, setDeployMultipleOpen] = useState<boolean>(false);
     const [repoManagementOpen, setRepoManagementOpen] = useState<boolean>(false);
+
+
+    const options: DropdownButtonItem[] = [
+
+        {
+            id: "UserManagement",
+            label: t("repository.editUsers"),
+            type: "button",
+            onClick: () => {
+                setUserManagementOpen(true)
+            }
+        },
+        {
+            id: "RepoManagement",
+            label: t("repository.edit"),
+            type: "button",
+            onClick: () => {
+                setRepoManagementOpen(true)
+            }
+        },
+        {
+            id: "DeployVersions",
+            label: t("deployment.multiple"),
+            type: "button",
+            onClick: () => {
+                setDeployMultipleOpen(true)
+            }
+        }
+
+    ]
 
 
     if (activeRepo) {
@@ -67,9 +105,16 @@ const RepositoryDetails: React.FC = (() => {
                         </IconButton>
                         <IconButton
                             size="medium"
-                            onClick={() => setRepoManagementOpen(true)}>
+                            ref={ref}
+                            onClick={() => setPopupOpen(true)}>
                             <Settings />
                         </IconButton>
+
+                        <PopupSettings
+                            open={popupOpen}
+                            reference={ref.current}
+                            onCancel={() => setPopupOpen(false)}
+                            options={options}/>
 
                     </div>
                 </div>
@@ -87,6 +132,11 @@ const RepositoryDetails: React.FC = (() => {
                     repoId={activeRepo.id}
                     repoName={activeRepo.name}
                     repoDescription={activeRepo.description} />
+
+                <DeployMultipleDialog
+                    open={deployMultipleOpen}
+                    onCancelled={() => setDeployMultipleOpen(false)}
+                    repoId={activeRepo.id} />
             </div>
         );
     }

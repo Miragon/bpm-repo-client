@@ -29,9 +29,13 @@ const useStyles = makeStyles(() => ({
         minHeight: "50px",
         maxHeight: "50px",
         border: "1px solid lightgrey",
+        borderBottom: "none",
         transition: "background-color .3s ",
         "&:hover": {
             backgroundColor: "#ededed",
+        },
+        "&:nth-last-child(1)": {
+            borderBottom: "1px solid lightgrey"
         }
     },
     versionNumber: {
@@ -181,7 +185,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
         <>
             <ListItem className={classes.listItem} onClick={() => openFileInTool(fileTypes, props.type, props.repoId, props.artifactId, t("error.missingTool", props.type))}>
                 <div className={classes.leftPanel}>
-                    <Chip label={props.milestone} clickable color={"secondary"}/>
+                    <Chip label={props.milestone} color={"primary"}/>
                 </div>
                 <div className={classes.content}>
                     <div className={classes.middlePanel}>
@@ -194,7 +198,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
                             <div>
                                 <Button
                                     ref={ref}
-                                    color="secondary"
+                                    color="primary"
                                     className={classes.deployment}
                                     onClick={event => openDeploymentHistory(event)}
                                     variant="contained"

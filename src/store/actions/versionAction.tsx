@@ -6,11 +6,7 @@ import helpers from "../../util/helperFunctions";
 export const createVersion = async (artifactId: string, file: string, saveType: ArtifactVersionUploadTOSaveTypeEnum, comment?: string) => {
     const versionController = new api.VersionApi();
     const config = helpers.getClientConfig();
-    const artifactVersionUploadTO: ArtifactVersionUploadTO = {
-        file: file,
-        versionComment: comment,
-        saveType: saveType
-    };
+    const artifactVersionUploadTO: ArtifactVersionUploadTO = {file, comment, saveType};
     const response = await versionController.createVersion(artifactId, artifactVersionUploadTO, config);
     return response
 }

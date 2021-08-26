@@ -6,9 +6,18 @@ export const deployVersion = async (target: string, artifactId: string, versionI
     const deploymentController = new DeploymentApi();
     const config = helpers.getClientConfig();
     const deploymentTO: NewDeploymentTO = {
+        artifactId,
+        versionId,
         target
     };
-    const response = await deploymentController.deployVersion( artifactId, versionId, deploymentTO, config);
+    const response = await deploymentController.deployVersion(deploymentTO, config);
+    return response;
+}
+
+export const deployMultiple = async (deployments: Array<NewDeploymentTO>) => {
+    const deploymentController = new DeploymentApi();
+    const config = helpers.getClientConfig();
+    const response = await deploymentController.deployMultipleVersions(deployments, config)
     return response;
 }
 

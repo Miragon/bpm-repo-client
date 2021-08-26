@@ -2,7 +2,7 @@ import {makeStyles} from "@material-ui/styles";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, ArtifactTypeTO} from "../../../api";
-import {fetchArtifactsFromRepo} from "../../../store/actions";
+import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {useParams} from "react-router";
 import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
@@ -11,7 +11,12 @@ import {List} from "@material-ui/core";
 import helpers from "../../../util/helperFunctions";
 import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
 import ArtifactListItem from "./Holder/ArtifactListItem";
-import {ACTIVE_ARTIFACTS, SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
+import {
+    ACTIVE_ARTIFACTS,
+    FAVORITE_ARTIFACTS,
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_FAVORITE
+} from "../../../constants/Constants";
 
 
 const useStyles = makeStyles(() => ({
@@ -45,7 +50,7 @@ const ArtifactDetails: React.FC = (() => {
     const activeArtifacts: Array<ArtifactTO> = useSelector(
         (state: RootState) => state.artifacts.artifacts
     );
-    const synced = useSelector((state: RootState) => state.dataSynced.artifactSynced);
+    const artifactSynced = useSelector((state: RootState) => state.dataSynced.artifactSynced);
     const favoriteSynced = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
@@ -68,13 +73,32 @@ const ArtifactDetails: React.FC = (() => {
             helpers.makeErrorToast(t(error.response.data), () => fetchFromRepo())
         })
     }, [dispatch, repoId, t])
-    
+
+    const fetchFavorite = useCallback(() => {
+        fetchFavoriteArtifacts().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
+                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchFavorite())
+        })
+
+    }, [dispatch, t]);
+
     useEffect(() => {
-        if (!synced || !favoriteSynced) {
+        if (!artifactSynced) {
             fetchFromRepo()
         }
-    }, [synced, repoId, fetchFromRepo, favoriteSynced]);
+    }, [artifactSynced, repoId, fetchFromRepo]);
 
+    useEffect(() => {
+        if (!favoriteSynced) {
+            fetchFavorite()
+        }
+    }, [favoriteSynced, fetchFavorite]);
 
 
     const changeFileTypeFilter = (selectedValue: string) => {

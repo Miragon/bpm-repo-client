@@ -6,6 +6,7 @@
     "created": "Projekt erstellt",
     "delete": "Projekt löschen",
     "deleted": "Projekt gelöscht",
+    "editUsers": "Mitglieder verwalten",
     "nameTaken": "Name wird bereits verwendet",
     "edit": "Projekt bearbeiten",
     "updated": "Projekt aktualisiert",
@@ -63,12 +64,16 @@
   "deployment": {
     "deployment": "Veröffentlichung",
     "deployments": "Veröffentlichungen",
+    "multiple": "Dateien veröffentlichen",
+    "deployedMultiple": "{{deployedVersions} Versionen veröffentlicht}",
+    "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
     "dialogHeader": "Version {{versionNumber}} veröffentlichen",
     "history": "Alle Veröffentlichungen"
   },
   "user": {
     "user": "Benutzer",
     "users": "Benutzer",
+    "manage": "Benutzer bearbeiten",
     "OWNER": "Eigentümer",
     "ADMIN": "Administrator",
     "MEMBER": "Mitglied",

@@ -32,6 +32,7 @@ export const TARGETS = "TARGETS";
 export const ARTIFACTS_BY_REPO_AND_TYPE = "ARTIFACTS_REPO_AND_TYPE";
 
 export const LATEST_VERSION = "LATEST_VERSION";
+export const DEPLOYMENT_VERSIONS = "DEPLOYMENT_VERSIONS";
 export const ARTIFACTQUERY_EXECUTED = "ARTIFACTQUERY_EXECUTED";
 
 export const DEFAULT_XML_FILE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
