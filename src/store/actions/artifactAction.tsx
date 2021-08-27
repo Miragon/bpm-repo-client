@@ -1,7 +1,8 @@
-import {ArtifactApi, ArtifactUpdateTO, NewArtifactTO} from "../../api";
+import {ArtifactApi, ArtifactTO, ArtifactUpdateTO, NewArtifactTO} from "../../api";
 import helpers from "../../util/helperFunctions";
+import {AxiosResponse} from "axios";
 
-export const fetchFavoriteArtifacts = async () => {
+export const fetchFavoriteArtifacts = async (): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.getStarred(config);
@@ -10,7 +11,7 @@ export const fetchFavoriteArtifacts = async () => {
 
 
 
-export const fetchRecentArtifacts = async () => {
+export const fetchRecentArtifacts = async (): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.getRecent(config);
@@ -18,7 +19,7 @@ export const fetchRecentArtifacts = async () => {
 }
 
 
-export const createArtifact = async (repoId: string, name: string, description: string, fileType: string) => {
+export const createArtifact = async (repoId: string, name: string, description: string, fileType: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const newArtifactTO: NewArtifactTO = {
@@ -32,7 +33,7 @@ export const createArtifact = async (repoId: string, name: string, description: 
 }
 
 
-export const updateArtifact = async (name: string, description: string | undefined, artifactId: string) => {
+export const updateArtifact = async (name: string, description: string | undefined, artifactId: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const artifactUpdateTO: ArtifactUpdateTO = {
@@ -44,7 +45,7 @@ export const updateArtifact = async (name: string, description: string | undefin
 }
 
 
-export const fetchArtifactsFromRepo = async (repoId: string) => {
+export const fetchArtifactsFromRepo = async (repoId: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.getArtifactsFromRepo(repoId, config);
@@ -52,7 +53,7 @@ export const fetchArtifactsFromRepo = async (repoId: string) => {
 }
 
 
-export const uploadArtifact = async (repoId: string, name: string, description: string, fileType: string) => {
+export const uploadArtifact = async (repoId: string, name: string, description: string, fileType: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const newArtifact: NewArtifactTO = {name, description, fileType};
@@ -60,7 +61,7 @@ export const uploadArtifact = async (repoId: string, name: string, description: 
     return response;
 }
 
-export const searchArtifact = async (typedTitle: string) => {
+export const searchArtifact = async (typedTitle: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.searchArtifacts(typedTitle, config);
@@ -68,7 +69,7 @@ export const searchArtifact = async (typedTitle: string) => {
 }
 
 
-export const addToFavorites = async (artifactId: string) => {
+export const addToFavorites = async (artifactId: string): Promise<AxiosResponse<void>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.setStarred(artifactId, config);
@@ -76,14 +77,14 @@ export const addToFavorites = async (artifactId: string) => {
 }
 
 
-export const copyToRepo = async (repositoryId: string, artifactId: string) => {
+export const copyToRepo = async (repositoryId: string, artifactId: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.copyToRepository(repositoryId, artifactId, config);
     return response;
 }
 
-export const deleteArtifact = async (artifactId: string) => {
+export const deleteArtifact = async (artifactId: string): Promise<AxiosResponse<void>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.deleteArtifact(artifactId, config);
@@ -91,7 +92,7 @@ export const deleteArtifact = async (artifactId: string) => {
 }
 
 
-export const getByRepositoryIdAndType = async (repositoryId: string, type: string) => {
+export const getByRepositoryIdAndType = async (repositoryId: string, type: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const response = await artifactController.getByRepoIdAndType(repositoryId, type, config);

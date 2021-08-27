@@ -65,7 +65,8 @@
     "deployment": "Veröffentlichung",
     "deployments": "Veröffentlichungen",
     "multiple": "Dateien veröffentlichen",
-    "deployedMultiple": "{{deployedVersions} Versionen veröffentlicht}",
+    "target": "Ziel",
+    "deployedMultiple": "{{deployedVersions}} Versionen veröffentlicht",
     "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
     "dialogHeader": "Version {{versionNumber}} veröffentlichen",
     "history": "Alle Veröffentlichungen"

@@ -1,22 +1,17 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import {List, Paper} from "@material-ui/core";
-import AddUserSearchBar from "./AddUserSearchBar";
-import UserListItem from "./UserListItem";
+import {List, MenuItem, Paper} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactTO, ArtifactVersionTO, AssignmentTO, AssignmentTORoleEnum, NewDeploymentTO} from "../../../../api";
-import {
-    DEPLOYMENT_VERSIONS,
-    HANDLEDERROR,
-    SYNC_STATUS_ACTIVE_REPOSITORY,
-    SYNC_STATUS_VERSION
-} from "../../../../constants/Constants";
+import {ArtifactTO, NewDeploymentTO} from "../../../../api";
+import {SYNC_STATUS_TARGETS, SYNC_STATUS_VERSION, TARGETS} from "../../../../constants/Constants";
 import {RootState} from "../../../../store/reducers/rootReducer";
-import {deployMultiple, getAllVersions} from "../../../../store/actions";
+import {deployMultiple, fetchTargets} from "../../../../store/actions";
 import helpers from "../../../../util/helperFunctions";
 import AddDeploymentSearchBar from "./AddDeploymentSearchBar";
 import DeploymentListItem from "./DeploymentListItem";
+import SettingsSelect from "../../../../components/Form/SettingsSelect";
+import SettingsForm from "../../../../components/Form/SettingsForm";
 
 
 interface Props {
@@ -25,90 +20,54 @@ interface Props {
     repoId: string;
 }
 
-
+//TODO: wenn in einem listItem keine Version ausgewählt wird, kann die Liste trotzdem deployt werden (alle elemente außer das ohne Version werden dann deplyot)
 const DeployMultipleDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
-    const assignedUsers: Array<AssignmentTO> = useSelector((state: RootState) => state.user.assignedUsers);
-    const currentUser = useSelector((state: RootState) => state.user.currentUserInfo);
-    const activeArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.artifacts);
-    const deploymentVersions: Array<Array<ArtifactVersionTO>> = useSelector((state: RootState) => state.versions.deploymentVersions)
+    const targetsSynced: boolean = useSelector((state: RootState) => state.dataSynced.targetsSynced)
+    const targets: Array<string> = useSelector((state: RootState) => state.deployment.targets)
+
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [hasAdminPermissions, setHasAdminPermissions] = useState<boolean>(false);
     const [deployments, setDeployments] = useState<Array<NewDeploymentTO>>([]);
-    const [artifacts, setArtifacts] = useState<Array<ArtifactTO>>([]);
-    const [target, setTarget] = useState<string>("production");
+    const [artifacts, setArtifacts] = useState<ArtifactTO[]>([]);
+    const [target, setTarget] = useState<string>("");
 
 
-    useEffect(() => {
-        console.log("useeffect")
-        console.log(artifacts)
-    }, [artifacts])
-
-    const addArtifact = (artifact: ArtifactTO | undefined) => {
-        console.log("stg")
-        if(artifact){
-            getVersions(artifact.id)
-            console.log("adding " + artifact.id)
-            const currentArtifacts: Array<ArtifactTO> = artifacts
-            currentArtifacts.push(artifact)
-            setArtifacts(currentArtifacts)
-        }
-    }
-
-    //TODO: Maybe move to deploymentListItem
-    const getVersions = useCallback(async (artifactId: string) => {
-        getAllVersions(artifactId).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                dispatch({type: DEPLOYMENT_VERSIONS, deploymentVersions: response.data})
-                //TODO allow the user to deploy all selected versions, as soon as this request has finished
+    const getTargets = useCallback(async () => {
+        fetchTargets().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({type: TARGETS, targets: response.data})
+                dispatch({type: SYNC_STATUS_TARGETS, targetsSynced: true})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getVersions(artifactId))
+                helpers.makeErrorToast(t(response.data.toString()), () => getTargets())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getVersions(artifactId))
+            helpers.makeErrorToast(t(error.response.data), () => getTargets())
         })
     }, [dispatch, t])
 
-    /*
-    Deployment: artifactId, versionId, target
-
-    // send request that fetches all versions of all selected Artifacts
-
-//DeploymentListItem hat eine ArtifactId und in seinem eigenen State die zu veröffentlichende Version -> funktion in Props für ChangeVersion
-    const buildNewDeploymentTOs = () => {
-
-    }
-         */
-
-
-    //Läuft in die falsche Richtung, Meilenstein muss in Listitem gespeichert sein
-
-    /*
     useEffect(() => {
-        const deploymentTOs = deployments;
-        //DeploymentVersions enthält einen verschachteteln Array, der alle Versionen der zu veröffentlichen Artifacts enthält
-        //Im State musas zusätzlich gespeichert werden, welcher meilenstein der jeweiligen Artifacts veröffentlicht werden soll
-        deploymentVersions.map(versions => {
-            console.log("in use")
-            console.log(versions.filter(version => version.milestone === 1))
-            const requestedVersion = versions.filter(version => version.milestone === 1)[0];
-            const newDeploymentTO: NewDeploymentTO = {
-                artifactId: requestedVersion.artifactId,
-                versionId: requestedVersion.id,
-                target: target
-            }
-        })
-        console.log(deploymentTOs)
-    }, [deploymentVersions])
-*/
+        if(!targetsSynced){
+            getTargets()
+        }
+    }, [getTargets, targetsSynced])
 
-    const onChangeMilestone = (milestone: number, artifactId: string, versionId: string) => {
+    const addArtifact = (artifact: ArtifactTO | undefined) => {
+        if(artifact){
+            artifacts.push(artifact)
+            setArtifacts([...artifacts])
+        }
+    }
+
+    //manages an array of NewDeploymentTOs
+    // - adds one NewDeploymentTO if it is not yet part of the array
+    // - removes an NewDeploymentTO and adds another NewDeploymentTO, if user changes the version that should be deployed
+    const onChangeMilestone = (artifactId: string, versionId: string) => {
         const newDeploymentTOs = deployments
         const newDeploymentTO: NewDeploymentTO = {artifactId, versionId, target}
-        const updatedDeployment = newDeploymentTOs.filter(deploymentTOs => deploymentTOs.artifactId === artifactId)
+        const updatedDeployment = newDeploymentTOs.find(deploymentTOs => deploymentTOs.artifactId === artifactId)
         if(updatedDeployment){
             const updatedList = newDeploymentTOs.filter(deploymentTOs => deploymentTOs.artifactId !== artifactId)
             const newDeploymentTO: NewDeploymentTO = {artifactId, versionId, target}
@@ -131,31 +90,14 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             }
         }, error => {
             helpers.makeErrorToast(t(error.response.data), () => deploy())
-
         })
     }, [deployments, dispatch, props, t])
 
 
-    const checkForAdminPermissions = useMemo(() => {
-        const currentUserAssignment = assignedUsers
-            .find(assignmentTO => assignmentTO.username === currentUser.username);
-        try {
-            if (currentUserAssignment?.role === AssignmentTORoleEnum.Admin
-                || currentUserAssignment?.role === AssignmentTORoleEnum.Owner) {
-                setHasAdminPermissions(true);
-                return true;
-            }
-            setHasAdminPermissions(false);
-            return false;
-        } catch (err) {
-            dispatch({
-                type: HANDLEDERROR,
-                message: "Error while checking permissions for this repository"
-            });
-            return false;
-        }
-    }, [assignedUsers, currentUser, dispatch]);
-
+    const onCancel = () => {
+        setArtifacts([])
+        props.onCancelled()
+    }
 
     return (
         <PopupDialog
@@ -166,23 +108,28 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             firstTitle={t("dialog.deploy")}
             onFirst={deploy}
             secondTitle={t("dialog.close")}
-            onSecond={props.onCancelled}>
+            onSecond={onCancel}>
+            <SettingsForm large>
+                <SettingsSelect
+                    disabled={false}
+                    label={t("deployment.target")}
+                    value={target}
+                    onChanged={setTarget}>
+                    {targets.map(target => (
+                        <MenuItem key={target} value={target}>{target}</MenuItem>
+                    ))}
+
+                </SettingsSelect>
+            </SettingsForm>
             <List dense={false}>
-                {checkForAdminPermissions ? (
-                    <AddDeploymentSearchBar repoId={props.repoId} addArtifact={(artifact: ArtifactTO | undefined) => addArtifact(artifact)}/>
-                )
-                    :
-                    <p>
-                        {t("deployment.adminPermissionsRequired")}
-                    </p>
-                }
+                <AddDeploymentSearchBar key="AddDeploymentSearchBar" addedArtifacts={artifacts} repoId={props.repoId} addArtifact={(artifact: ArtifactTO | undefined) => addArtifact(artifact)}/>
                 <Paper>
                     {artifacts.map(artifact => (
                         <DeploymentListItem
                             key={artifact.id}
                             artifactId={artifact.id}
                             artifactName={artifact.name}
-                            onChangeMilestone={(milestone: number, artifactId: string, versionId: string) => onChangeMilestone(milestone, artifactId, versionId)} />
+                            onChangeMilestone={(artifactId: string, versionId: string) => onChangeMilestone(artifactId, versionId)} />
                     ))}
 
 

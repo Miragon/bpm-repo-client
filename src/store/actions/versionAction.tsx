@@ -1,9 +1,11 @@
 import * as api from "../../api/api";
+import {ArtifactVersionTO} from "../../api/api";
 import {ArtifactVersionUploadTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../api";
 import helpers from "../../util/helperFunctions";
+import {AxiosResponse} from "axios";
 
 
-export const createVersion = async (artifactId: string, file: string, saveType: ArtifactVersionUploadTOSaveTypeEnum, comment?: string) => {
+export const createVersion = async (artifactId: string, file: string, saveType: ArtifactVersionUploadTOSaveTypeEnum, comment?: string): Promise<AxiosResponse<ArtifactVersionTO>> => {
     const versionController = new api.VersionApi();
     const config = helpers.getClientConfig();
     const artifactVersionUploadTO: ArtifactVersionUploadTO = {file, comment, saveType};
@@ -11,7 +13,7 @@ export const createVersion = async (artifactId: string, file: string, saveType: 
     return response
 }
 
-export const getAllVersions = async (artifactId: string) => {
+export const getAllVersions = async (artifactId: string): Promise<AxiosResponse<ArtifactVersionTO[]>> => {
     const versionController = new api.VersionApi();
     const config = helpers.getClientConfig();
     const response = await versionController.getAllVersions(artifactId, config);
@@ -19,7 +21,7 @@ export const getAllVersions = async (artifactId: string) => {
 }
 
 
-export const getLatestVersion = async (artifactId: string) => {
+export const getLatestVersion = async (artifactId: string): Promise<AxiosResponse<ArtifactVersionTO>> => {
     const versionController = new api.VersionApi();
     const config = helpers.getClientConfig();
     const response = await versionController.getLatestVersion(artifactId, config);

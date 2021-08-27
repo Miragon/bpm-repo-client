@@ -1,19 +1,16 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/styles";
 import theme from "../../../../theme";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {searchArtifact} from "../../../../store/actions";
-import {ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS} from "../../../../constants/Constants";
-import helpers from "../../../../util/helperFunctions";
 import {ErrorBoundary} from "../../../../components/Exception/ErrorBoundary";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import {ArtifactTO} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
 import {Add} from "@material-ui/icons";
+import helpers from "../../../../util/helperFunctions";
 
 
 const useStyles = makeStyles(() => ({
@@ -41,16 +38,14 @@ const useStyles = makeStyles(() => ({
 interface Props {
     repoId: string;
     addArtifact: (artifact: ArtifactTO | undefined) => void;
+    addedArtifacts: ArtifactTO[];
 }
 
 
 const AddDeploymentSearchBar: React.FC<Props> = props => {
     const classes = useStyles();
-    const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
-    const searchedArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.searchedArtifacts);
-    const foundDiagrams: number = useSelector((state: RootState) => state.resultsCount.artifactResultsCount);
     const activeArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.artifacts)
 
     const [artifact, setArtifact] = useState<ArtifactTO>();
@@ -78,13 +73,25 @@ const AddDeploymentSearchBar: React.FC<Props> = props => {
         }
     }
 
+    // eslint-disable-next-line
     const updateState = (event: any, value: any) => {
-        onChange(event.target.textContent)
+        onChange(event.target.textContent || "")
         value && setArtifact(value)
-        console.log(value)
-        setSearchString(event.target.textContent);
+        setSearchString(event.target.textContent || "");
     };
-    
+
+
+    const onAdd = () => {
+        if(!artifact && !props.addedArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase())){
+            const matchingArtifact = activeArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase());
+            matchingArtifact? props.addArtifact(matchingArtifact) : helpers.makeErrorToast(t("artifact.notFound"), () => onAdd());
+            matchingArtifact && setSearchString("");
+            return;
+        }
+        props.addedArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase()) ? console.log("artifact already added to list") : props.addArtifact(artifact);
+        setArtifact(undefined)
+        setSearchString("");
+    }
     return (
         <ListItem className={classes.listItem}>
             <ErrorBoundary>
@@ -123,7 +130,7 @@ const AddDeploymentSearchBar: React.FC<Props> = props => {
                     )} />
             </ErrorBoundary>
             <ListItemSecondaryAction>
-                <IconButton className={classes.addButton} edge="end" onClick={() => props.addArtifact(artifact)}>
+                <IconButton className={classes.addButton} edge="end" onClick={() => {onAdd()}}>
                     <Add />
                 </IconButton>
             </ListItemSecondaryAction>

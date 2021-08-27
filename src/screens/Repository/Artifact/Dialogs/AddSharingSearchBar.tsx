@@ -122,12 +122,13 @@ const AddSharingSearchBar: React.FC<Props> = props => {
         }
     }, [dispatch, repositoryName, props, getRepoByName]);
 
+    // eslint-disable-next-line
     const updateState = (event: any) => {
         setRepositoryName(event.target.textContent);
     };
 
     return (
-        <ListItem className={classes.listItem}>
+        <ListItem className={classes.listItem} ContainerComponent="div">
             <Autocomplete
                 id="UserSearchBar"
                 freeSolo

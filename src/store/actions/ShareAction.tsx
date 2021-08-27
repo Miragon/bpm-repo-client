@@ -1,16 +1,15 @@
-import {Dispatch} from "@reduxjs/toolkit";
 import helpers from "../../util/helperFunctions";
-import {HANDLEDERROR, SHARED_ARTIFACTS} from "../../constants/Constants";
-import {ShareApi, ShareWithRepositoryTO, ShareWithRepositoryTORoleEnum} from "../../api";
+import {ArtifactTO, RepositoryTO, ShareApi, ShareWithRepositoryTO, ShareWithRepositoryTORoleEnum} from "../../api";
+import {AxiosResponse} from "axios";
 
-export const getSharedArtifacts = async(repositoryId: string) => {
+export const getSharedArtifacts = async(repositoryId: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const response = await shareController.getSharedArtifacts(repositoryId, config);
     return response;
 }
 
-export const getAllSharedArtifacts = async () => {
+export const getAllSharedArtifacts = async (): Promise<AxiosResponse<ArtifactTO[]>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const response = await shareController.getAllSharedArtifacts(config);
@@ -20,7 +19,7 @@ export const getAllSharedArtifacts = async () => {
 
 
 
-export const unshareWithRepo = async (artifactId: string, repositoryId: string) => {
+export const unshareWithRepo = async (artifactId: string, repositoryId: string): Promise<AxiosResponse<void>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const response = await shareController.unshareArtifactWithRepository(artifactId, repositoryId, config);
@@ -28,7 +27,7 @@ export const unshareWithRepo = async (artifactId: string, repositoryId: string) 
 }
 
 
-export const shareWithRepo = async (artifactId: string, repositoryId: string, role: ShareWithRepositoryTORoleEnum) => {
+export const shareWithRepo = async (artifactId: string, repositoryId: string, role: ShareWithRepositoryTORoleEnum): Promise<AxiosResponse<ShareWithRepositoryTO>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const shareWithRepositoryTO: ShareWithRepositoryTO = {
@@ -41,7 +40,7 @@ export const shareWithRepo = async (artifactId: string, repositoryId: string, ro
 }
 
 
-export const getSharedRepos = async (artifactId: string) => {
+export const getSharedRepos = async (artifactId: string): Promise<AxiosResponse<RepositoryTO[]>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const response = await shareController.getSharedRepositories(artifactId, config);

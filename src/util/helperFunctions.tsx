@@ -1,6 +1,5 @@
 import {ArtifactTO, ArtifactVersionTO, RepositoryTO} from "../api";
-import React, {Dispatch, ReactText} from "react";
-import {LATEST_VERSION} from "../constants/Constants";
+import React, {ReactText} from "react";
 import {toast} from "react-toastify";
 import Toast from "../components/Layout/Toast";
 import theme from "../theme";
@@ -57,16 +56,12 @@ const helpers = {
         return assignedRepo ? assignedRepo.name : "";
     },
 
-    download: ((artifactVersion: ArtifactVersionTO, dispatch?: Dispatch<any>): void => {
-        const fileURL = window.URL.createObjectURL(new Blob([(artifactVersion.file)], { type: "application/pdf" }));
+    download: ((artifactVersion: ArtifactVersionTO): void => {
         const filePath = `/api/version/${artifactVersion.artifactId}/${artifactVersion.id}/download`
         const link = document.createElement("a");
         link.href = filePath;
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
         link.click();
-        if(dispatch){
-            dispatch({type: LATEST_VERSION, latestVersion: null})
-        }
     }),
 
     compareCreated: (a: ArtifactTO, b: ArtifactTO): number => {
@@ -102,7 +97,7 @@ const helpers = {
     },
 
     makeSuccessToast: (message: string): ReactText => {
-        return toast(<Toast errorMessage={message} isError={false} retryMethod={() => console.log("a")}/>, {
+        return toast(<Toast errorMessage={message} isError={false} />, {
             autoClose: 4000,
             pauseOnHover: true,
             progressStyle: {

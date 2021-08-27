@@ -10,7 +10,6 @@ import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
 import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
 import Menu from "./Menu";
 import Router from "./Router";
-import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
@@ -45,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 /**
  * Diese Komponente erzeugt das Layout auf oberster Ebene der Anwendung.
- * Es enthält sowohl das Menü als auch sämtlichen Inhalt der Anwendung. + Toasts für
- * Fehlgeschlagene bzw. erfolgreiche API calls Die primäre Aufgabe des Layouts ist die einheitliche
+ * Es enthält sowohl das Menü als auch sämtlichen Inhalt der Anwendung.
+ * Die primäre Aufgabe des Layouts ist die einheitliche
  * Darstellung des globalen Menüs sowie das Routing.
  *
  * Die Komponente bietet keine Anpassungsmöglichkeiten und besitzt
@@ -55,105 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Layout = (): any => {
     const [open, setOpen] = useState(true);
-    const [t, i18n] = useTranslation("common");
     const dispatch = useDispatch();
-
-    /*
-    const apiErrorState = useSelector((state: RootState) => state.api.errorMessage);
-    const apiErrorStateWithVariables: Record<string, string> = useSelector((state: RootState) => state.api.errorMessageWithVariables)
-    const apiErrorRetryMethod = useSelector((state: RootState) => state.api.retryMethod);
-    const apiErrorRetryPayload = useSelector((state: RootState) => state.api.retryPayload);
-    const apiSuccessState: string = useSelector((state: RootState) => state.api.successMessage);
-    const apiSuccessStateWithVariables: Record<string, string> = useSelector((state: RootState) => state.api.successMessageWithVariables);
-
-
-    
-    useEffect(() => {
-        if (apiErrorState) {
-            toast(<Toast
-                isError={true}
-                errorMessage={i18n.exists(apiErrorState) ? t(apiErrorState) : apiErrorState}
-                retryMethod={apiErrorRetryMethod} />, {
-                autoClose: 8000,
-                pauseOnHover: true,
-                progressStyle: {
-                    background: theme.palette.primary.main,
-                },
-                style: {
-                    backgroundColor: theme.palette.secondary.main,
-                    color: theme.palette.secondary.contrastText,
-                }
-            });
-            dispatch({type: HANDLEDERROR, errorMessage: "", retryMethod: ActionType, retryPayload: []});
-        }
-    }, [apiErrorState, apiErrorRetryMethod, apiErrorRetryPayload, dispatch, t, i18n]);
-
-
-
-    useEffect(() => {
-        if (apiSuccessState) {
-            toast(<Toast
-                errorMessage={t(apiSuccessState)}
-                isError={false}
-                retryMethod={() => console.log("std")}/>, {
-                autoClose: 4000,
-                pauseOnHover: true,
-                progressStyle: {
-                    background: theme.palette.primary.main,
-                },
-                style: {
-                    backgroundColor: theme.palette.secondary.main,
-                    color: theme.palette.secondary.contrastText,
-
-                }
-            })
-            dispatch({type: SUCCESS, successMessage: ""});
-        }
-    }, [apiSuccessState, dispatch, t])
-
-
-
-    useEffect(() => {
-        if(apiErrorStateWithVariables && apiErrorStateWithVariables.content){
-            toast(<Toast
-                isError={true}
-                errorMessage={t(apiErrorStateWithVariables.content, apiErrorStateWithVariables.variables)}
-                retryMethod={apiErrorRetryMethod}/>, {
-                autoClose: 8000,
-                pauseOnHover: true,
-                progressStyle: {
-                    background: theme.palette.primary.main,
-                },
-                style: {
-                    backgroundColor: theme.palette.secondary.main,
-                    color: theme.palette.secondary.contrastText,
-                }
-            });
-            dispatch({type: HANDLEDERROR, errorMessageWithVariables: {}, retryMethod: ActionType, retryPayload: []});
-        }
-    }, [apiErrorRetryMethod, apiErrorRetryPayload, apiErrorStateWithVariables, dispatch, t])
-
-    useEffect(() => {
-        if(apiSuccessStateWithVariables && apiSuccessStateWithVariables.content){
-            toast(<Toast
-                isError={false}
-                errorMessage={t(apiSuccessStateWithVariables.content, apiSuccessStateWithVariables.variables)}
-                retryMethod={() => console.log("A")}/>, {
-                autoClose: 4000,
-                pauseOnHover: true,
-                progressStyle: {
-                    background: theme.palette.primary.main,
-                },
-                style: {
-                    backgroundColor: theme.palette.secondary.main,
-                    color: theme.palette.secondary.contrastText,
-                }
-            });
-            dispatch({type: SUCCESS, successMessageWithVariables: {}});
-        }
-    }, [apiSuccessStateWithVariables, dispatch, t])
-
-*/
 
 
     const classes = useStyles();

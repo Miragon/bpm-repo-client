@@ -1,14 +1,15 @@
-import {NewRepositoryTO, RepositoryApi, RepositoryUpdateTO} from "../../api";
+import {NewRepositoryTO, RepositoryApi, RepositoryTO, RepositoryUpdateTO} from "../../api";
 import helpers from "../../util/helperFunctions";
+import {AxiosResponse} from "axios";
 
-export const fetchRepositories = async () => {
+export const fetchRepositories = async (): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const response = await repositoryController.getAllRepositories(config);
     return response;
 }
 
-export const getSingleRepository = async (id: string) => {
+export const getSingleRepository = async (id: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const response = await repositoryController.getSingleRepository(id, config);
@@ -17,7 +18,7 @@ export const getSingleRepository = async (id: string) => {
 
 
 
-export const createRepository = async (name: string, description: string) => {
+export const createRepository = async (name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const newRepositoryTO: NewRepositoryTO = {
@@ -28,7 +29,7 @@ export const createRepository = async (name: string, description: string) => {
     return response;
 }
 
-export const updateRepository = async (id: string, name: string, description: string) => {
+export const updateRepository = async (id: string, name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const repositoryUpdateTO: RepositoryUpdateTO = {
@@ -39,7 +40,7 @@ export const updateRepository = async (id: string, name: string, description: st
     return response;
 }
 
-export const deleteRepository = async (id: string) => {
+export const deleteRepository = async (id: string): Promise<AxiosResponse<void>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const response = await repositoryController.deleteRepository(id, config);
@@ -47,7 +48,7 @@ export const deleteRepository = async (id: string) => {
 }
 
 
-export const getManageableRepos = async () => {
+export const getManageableRepos = async (): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const response = await repositoryController.getManageableRepositories(config);
@@ -55,7 +56,7 @@ export const getManageableRepos = async () => {
 }
 
 
-export const searchRepos = async (typedName: string) => {
+export const searchRepos = async (typedName: string): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const response = await repositoryController.searchRepositories(typedName, config);

@@ -3,7 +3,6 @@ import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {IconButton, Typography} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import SettingsTextField from "../../../../components/Form/SettingsTextField";
 import PopupDialog from "../../../../components/Form/PopupDialog";
@@ -59,7 +58,6 @@ interface Props {
 const EditRepoDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const history = useHistory();
     const {t} = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);

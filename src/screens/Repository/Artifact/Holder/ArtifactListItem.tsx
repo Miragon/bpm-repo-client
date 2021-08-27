@@ -8,13 +8,7 @@ import {ExpandLess, ExpandMore, MoreVert, Star, StarOutline} from "@material-ui/
 import {makeStyles} from "@material-ui/core/styles";
 import PopupSettings from "../../../../components/Form/PopupSettings";
 import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
-import {
-    addToFavorites,
-    deleteArtifact,
-    fetchArtifactsFromRepo,
-    getAllVersions,
-    getLatestVersion
-} from "../../../../store/actions";
+import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import helpers from "../../../../util/helperFunctions";
@@ -152,9 +146,7 @@ const ArtifactListItem: React.FC<Props> = ((props: Props) => {
 
 
     const activeArtifactVersionTOs: Array<ArtifactVersionTO> = useSelector((state: RootState) => state.versions.activeVersions);
-    const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
     const versionSynced: boolean = useSelector((state: RootState) => state.dataSynced.versionSynced);
-    const artifactSynced: boolean = useSelector((state: RootState) => state.dataSynced.artifactSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
 

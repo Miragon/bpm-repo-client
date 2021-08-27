@@ -1,5 +1,5 @@
 import {makeStyles} from "@material-ui/styles";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, ArtifactTypeTO} from "../../../api";
 import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
@@ -114,6 +114,7 @@ const ArtifactDetails: React.FC = (() => {
     }
 
     //TODO: filteredAndSortedArtifacts ist Alex's vorschlag, um die Sortierfunktion zu vereinfachen
+    /*
     const filteredAndSortedArtifacts = useMemo(() => {
         const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
         switch(sortValue) {
@@ -122,7 +123,7 @@ const ArtifactDetails: React.FC = (() => {
             case "name": return filtered.sort(helpers.compareName);
         }
     }, [activeArtifacts, displayedFileTypes, sortValue]);
-
+*/
 
     const applyFilters = useCallback(() => {
         const filtered = activeArtifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))

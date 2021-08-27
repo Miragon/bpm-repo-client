@@ -66,6 +66,7 @@
     "deployment": "Deployment",
     "deployments": "Deployments",
     "multiple": "Deploy multiple Versions",
+    "target": "Ziel",
     "deployedMultiple": "Deployed {{deployedVersions}} Versions",
     "adminPermissionsRequired": "You need admin permissions to deploy artifacts",
     "dialogHeader": "Deploy Version {{versionNumber}}",
