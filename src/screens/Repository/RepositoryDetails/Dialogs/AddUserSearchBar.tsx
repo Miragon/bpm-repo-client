@@ -105,7 +105,6 @@ const AddUserSearchBar: React.FC<Props> = props => {
         })
     }, [dispatch, t]);
 
-    // #TODO: Add the UserId prop to AssignmentUpdate in Backend
 
     const getUserByName = useCallback((username: string) => {
         return searchedUsers.find(user => user.username.toLowerCase() === username.toLowerCase());

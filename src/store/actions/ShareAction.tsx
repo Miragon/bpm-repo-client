@@ -15,8 +15,6 @@ export const getAllSharedArtifacts = async (): Promise<AxiosResponse<ArtifactTO[
     const response = await shareController.getAllSharedArtifacts(config);
     return response;
 }
-//TODO                   dispatch({type: SHARED_ARTIFACTS, sharedArtifacts: response.data})
-
 
 
 export const unshareWithRepo = async (artifactId: string, repositoryId: string): Promise<AxiosResponse<void>> => {
