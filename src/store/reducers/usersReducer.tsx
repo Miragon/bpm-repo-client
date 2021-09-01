@@ -1,6 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {AssignmentTO, UserInfoTO} from "../../api";
-import {ASSIGNED_USERS, CURRENT_USER_INFO, SEARCH_USERS} from "../constants";
+import {ASSIGNED_USERS, CURRENT_USER_INFO, SEARCHED_USERS} from "../../constants/Constants";
 
 const initialState = {
     currentUserInfo: null,
@@ -15,7 +15,7 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 currentUserInfo: action.currentUserInfo
             };
-        case SEARCH_USERS:
+        case SEARCHED_USERS:
             return {
                 ...state,
                 searchedUsers: action.searchedUsers

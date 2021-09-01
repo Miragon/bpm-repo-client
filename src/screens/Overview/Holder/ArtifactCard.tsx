@@ -1,7 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import React, {useEffect, useState} from "react";
-import {FileTypesTO} from "../../../api";
+import {ArtifactTypeTO} from "../../../api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/reducers/rootReducer";
 import Icon from "@material-ui/core/Icon";
@@ -115,11 +115,15 @@ interface ArtifactProps {
 }
 
 const ArtifactCard: React.FC<ArtifactProps> = (props: ArtifactProps) => {
+
+    //TODO Delete class
+
+
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const image = `data:image/svg+xml;utf-8,${encodeURIComponent(props.image || "")}`;
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const [svgKey, setSvgKey] = useState<string>("");
 
     useEffect(() => {

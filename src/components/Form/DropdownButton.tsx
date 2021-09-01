@@ -1,12 +1,14 @@
 import {
-    Button, Checkbox,
+    Button,
+    Checkbox,
     ClickAwayListener,
     FormControlLabel,
     Grow,
     MenuItem,
     MenuList,
     Paper,
-    Popper, Radio,
+    Popper,
+    Radio,
     RadioGroup
 } from "@material-ui/core";
 import {makeStyles, Theme} from "@material-ui/core/styles";

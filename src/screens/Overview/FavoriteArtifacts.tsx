@@ -6,9 +6,9 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {SYNC_STATUS_FAVORITE} from "../../store/constants";
+import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import {fetchFavoriteArtifacts} from "../../store/actions";
 
 const useStyles = makeStyles(() => ({
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
         marginTop: "2rem",
         "&>h1": {
             color: "black",
-            fontSize: "20px",
+            fontSize: "1.3rem",
             fontWeight: "normal"
         }
     },
@@ -41,25 +41,24 @@ const FavoriteArtifacts: React.FC = observer(() => {
     const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
 
     const fetchFavorite = useCallback(() => {
-        try {
-            dispatch(fetchFavoriteArtifacts());
-        } catch (err) {
-            console.log(err);
-        }
-    }, [dispatch]);
+        fetchFavoriteArtifacts().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
+                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchFavorite())
+        })
+
+    }, [dispatch, t]);
 
     useEffect(() => {
         if(!syncStatus){
             fetchFavorite();
-            dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
         }
-    }, [dispatch, syncStatus, fetchFavorite])
-
-
-    useEffect(() => {
-        fetchFavorite();
-    }, [fetchFavorite]);
-
+    }, [syncStatus, fetchFavorite])
 
 
     return (

@@ -1,18 +1,22 @@
 import {makeStyles} from "@material-ui/styles";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, FileTypesTO} from "../../../api";
+import {ArtifactTO, ArtifactTypeTO} from "../../../api";
 import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {useParams} from "react-router";
-import ArtifactManagementContainer from "../Administration/ArtifactManagementContainer";
 import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import {useTranslation} from "react-i18next";
-import {SYNC_STATUS_FAVORITE} from "../../../store/constants";
-import ArtifactListItem from "./ArtifactListItem";
 import {List} from "@material-ui/core";
-import helpers from "../../../constants/Functions";
-
+import helpers from "../../../util/helperFunctions";
+import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
+import ArtifactListItem from "./Holder/ArtifactListItem";
+import {
+    ACTIVE_ARTIFACTS,
+    FAVORITE_ARTIFACTS,
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_FAVORITE
+} from "../../../constants/Constants";
 
 
 const useStyles = makeStyles(() => ({
@@ -46,39 +50,55 @@ const ArtifactDetails: React.FC = (() => {
     const activeArtifacts: Array<ArtifactTO> = useSelector(
         (state: RootState) => state.artifacts.artifacts
     );
-    const synced = useSelector((state: RootState) => state.dataSynced.artifactSynced);
+    const artifactSynced = useSelector((state: RootState) => state.dataSynced.artifactSynced);
     const favoriteSynced = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
-
 
     const [displayedFileTypes, setDisplayedFileTypes] = useState<Array<string>>(fileTypes.map(type => type.name));
     const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(activeArtifacts);
     const [sortValue, setSortValue] = useState<string>("lastEdited");
 
-    useEffect(() => {
-        dispatch(fetchArtifactsFromRepo(repoId));
-    }, [dispatch, repoId]);
+
+    const fetchFromRepo = useCallback(async () => {
+        fetchArtifactsFromRepo(repoId).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: ACTIVE_ARTIFACTS, artifacts: response.data });
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
+                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchFromRepo())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchFromRepo())
+        })
+    }, [dispatch, repoId, t])
+
+    const fetchFavorite = useCallback(() => {
+        fetchFavoriteArtifacts().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
+                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchFavorite())
+        })
+
+    }, [dispatch, t]);
 
     useEffect(() => {
-        if (!synced) {
-            dispatch(fetchArtifactsFromRepo(repoId));
+        if (!artifactSynced) {
+            fetchFromRepo()
         }
-    }, [dispatch, synced, repoId]);
-
-
+    }, [artifactSynced, repoId, fetchFromRepo]);
 
     useEffect(() => {
-        setFilteredArtifacts(activeArtifacts)
-    }, [activeArtifacts, fileTypes])
-
-    useEffect(() => {
-        if(!favoriteSynced){
-            dispatch(fetchFavoriteArtifacts());
-            dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+        if (!favoriteSynced) {
+            fetchFavorite()
         }
-    }, [favoriteSynced, dispatch, ]);
-
+    }, [favoriteSynced, fetchFavorite]);
 
 
     const changeFileTypeFilter = (selectedValue: string) => {
@@ -93,59 +113,44 @@ const ArtifactDetails: React.FC = (() => {
         applyFilters()
     }
 
-    const applyFilters = () => {
+    //TODO: filteredAndSortedArtifacts ist Alex's vorschlag, um die Sortierfunktion zu vereinfachen
+    /*
+    const filteredAndSortedArtifacts = useMemo(() => {
+        const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
+        switch(sortValue) {
+            case "created": return filtered.sort(helpers.compareCreated);
+            case "lastEdited": return filtered.sort(helpers.compareEdited);
+            case "name": return filtered.sort(helpers.compareName);
+        }
+    }, [activeArtifacts, displayedFileTypes, sortValue]);
+*/
+
+    const applyFilters = useCallback(() => {
         const filtered = activeArtifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
         sort(sortValue, filtered)
-    }
+    }, [activeArtifacts, displayedFileTypes, sortValue])
+
+    useEffect(() => {
+        applyFilters()
+    }, [activeArtifacts, applyFilters])
+
 
 
     const sort = (value: string, artifacts: Array<ArtifactTO>) => {
         switch (value){
             case "created":
                 setSortValue("created")
-                setFilteredArtifacts(artifacts.sort(compareCreated));
+                setFilteredArtifacts(artifacts.sort(helpers.compareCreated));
                 return;
             case "lastEdited":
                 setSortValue("lastEdited")
-                setFilteredArtifacts(artifacts.sort(compareEdited));
+                setFilteredArtifacts(artifacts.sort(helpers.compareEdited));
                 return;
             case "name":
                 setSortValue("name")
-                setFilteredArtifacts(artifacts.sort(compareName));
+                setFilteredArtifacts(artifacts.sort(helpers.compareName));
                 return;
         }
-    }
-
-    const compareCreated = (a: ArtifactTO, b: ArtifactTO) => {
-        const c = new Date(a.createdDate)
-        const d = new Date(b.createdDate)
-        if(c < d) {
-            return 1;
-        }
-        if(c > d) {
-            return -1;
-        }
-        return 0;
-    }
-    const compareEdited = (a: ArtifactTO, b: ArtifactTO) => {
-        const c = new Date(a.updatedDate)
-        const d = new Date(b.updatedDate)
-        if(c < d) {
-            return 1;
-        }
-        if(c > d) {
-            return -1;
-        }
-        return 0;
-    }
-    const compareName = (a: ArtifactTO, b: ArtifactTO) => {
-        if(a.name.toLowerCase() < b.name.toLowerCase()) {
-            return -1;
-        }
-        if(a.name.toLowerCase() > b.name.toLowerCase()) {
-            return 1;
-        }
-        return 0;
     }
 
 

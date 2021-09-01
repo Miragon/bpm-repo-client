@@ -1,22 +1,22 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO, FileTypesTO} from "../../../api";
+import {ArtifactTypeTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {ListItem} from "@material-ui/core";
 import {MoreVert, Star, StarOutline} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import PopupSettings from "../../../components/Form/PopupSettings";
 import {DropdownButtonItem} from "../../../components/Form/DropdownButton";
-import {addToFavorites, deleteArtifact, getAllVersions, getLatestVersion} from "../../../store/actions";
+import {addToFavorites, deleteArtifact, getLatestVersion} from "../../../store/actions";
 import IconButton from "@material-ui/core/IconButton";
-import CreateVersionDialog from "../../Repository/Artifact/CreateVersionDialog";
-import EditArtifactDialog from "../../Repository/Artifact/EditArtifactDialog";
-import {LATEST_VERSION} from "../../../store/constants";
 import Icon from "@material-ui/core/Icon";
-import helpers from "../../../constants/Functions";
+import helpers from "../../../util/helperFunctions";
 import {useHistory} from "react-router-dom";
-import {openFileInTool} from "../../../components/Redirect/Redirections";
+import {openFileInTool} from "../../../util/Redirections";
+import CreateVersionDialog from "../../Repository/Artifact/Dialogs/CreateVersionDialog";
+import EditArtifactDialog from "../../Repository/Artifact/Dialogs/EditArtifactDialog";
+import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -24,11 +24,14 @@ const useStyles = makeStyles(() => ({
         color: "black",
         borderRadius: "2px",
         border: "1px solid lightgrey",
+        borderBottom: "none",
         transition: "boxShadow .3s",
         minHeight: "60px",
         maxHeight: "60px",
         fontSize: "1rem",
-
+        "&:nth-last-child(1)": {
+            borderBottom: "1px solid lightgrey"
+        }
     },
     icons: {
         color: "black",
@@ -59,7 +62,7 @@ const useStyles = makeStyles(() => ({
         alignSelf: "center"
     },
     rightPanel: {
-        marginLeft: "15px",
+        marginLeft: "16px",
         whiteSpace: "nowrap",
         display: "flex",
         flexDirection: "row",
@@ -74,7 +77,7 @@ const useStyles = makeStyles(() => ({
     },
     repository: {
         overflow: "hidden",
-        fontSize: ".9rem",
+        fontSize: "0.9rem",
         textOverflow: "ellipsis",
         maxBlockSize: "1.2rem",
         fontStyle: "italic",
@@ -107,7 +110,7 @@ const useStyles = makeStyles(() => ({
         transition: "background-image .3s",
         zIndex: 50,
         "&:hover": {
-            backgroundImage: "radial-gradient(#F5E73D, transparent 70%)"
+            color: "#F5E73D",
         }
     },
 
@@ -133,20 +136,18 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
     const ref = useRef<HTMLButtonElement>(null);
     const {t} = useTranslation("common");
 
-    const latestVersion: ArtifactVersionTO | null = useSelector((state: RootState) => state.versions.latestVersion);
-    const fileTypes: Array<FileTypesTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [createVersionOpen, setCreateVersionOpen] = useState<boolean>(false);
     const [editArtifactOpen, setEditArtifactOpen] = useState<boolean>(false);
-    const [downloadReady, setDownloadReady] = useState<boolean>(false);
     const [svgKey, setSvgKey] = useState<string>("");
 
 
     useEffect(() => {
         if(fileTypes && props.fileType){
             const svgIcon = fileTypes.find(fileType => fileType.name === props.fileType)?.svgIcon;
-            setSvgKey(svgIcon ? svgIcon: "");
+            setSvgKey(svgIcon || "");
         }
     }, [fileTypes, props.fileType])
 
@@ -156,30 +157,36 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
         setSettingsOpen(true);
     }
 
-    const download = (useCallback((latestVersion: ArtifactVersionTO) => {
-        if(downloadReady) {
-            console.log("file Ready - starting download...")
-            const filePath = `/api/version/${latestVersion.artifactId}/${latestVersion.id}/download`
-            const link = document.createElement("a");
-            link.href = filePath;
-            link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-            link.click();
-            dispatch({type: LATEST_VERSION, latestVersion: null})
-            setDownloadReady(false)
-        }
-    }, [downloadReady, dispatch]))
-
-    useEffect(() => {
-        if(latestVersion){
-            download(latestVersion);
-        }
-    }, [download, latestVersion])
-
     const setStarred = (event: React.MouseEvent<SVGSVGElement>) => {
         event.stopPropagation();
-        dispatch(addToFavorites(props.artifactId));
+        addToFavorites(props.artifactId)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                    dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false})
+                } else {
+                    helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => setStarred(event))
+                }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => setStarred(event))
+            })
     }
 
+    const download = useCallback(async () => {
+        getLatestVersion(props.artifactId)
+            .then(response => {
+                if(Math.floor(response.status / 100) === 2){
+                    helpers.download(response.data)
+                    helpers.makeSuccessToast(t("download.stated"))
+                } else {
+                    helpers.makeErrorToast(t(response.data.toString()), () => download())
+                }
+
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => download())
+
+            })
+    }, [props.artifactId, t])
 
     const options: DropdownButtonItem[] = [
 
@@ -189,7 +196,6 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
             type: "button",
             onClick: () => {
                 history.push(`/repository/${props.repoId}`);
-                dispatch(getAllVersions(props.artifactId));
             }
         },
         {
@@ -205,8 +211,7 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
             label: t("artifact.download"),
             type: "button",
             onClick: () => {
-                dispatch(getLatestVersion(props.artifactId))
-                setDownloadReady(true)
+                download()
             }
         },
         {
@@ -220,10 +225,24 @@ const ArtifactListItemRough: React.FC<Props> = ((props: Props) => {
             id: "DeleteArtifact",
             label: t("artifact.delete"),
             type: "button",
-            onClick: () => {
+            onClick: async () => {
                 // eslint-disable-next-line no-restricted-globals
                 if (confirm(t("artifact.confirmDelete", {artifactName: props.artifactTitle}))) {
-                    dispatch(deleteArtifact(props.artifactId));
+                    try{
+                        const [response] = await Promise.all([dispatch(deleteArtifact(props.artifactId))]);
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        if(response?.status === 200) {
+                            helpers.makeSuccessToast(t("artifact.deleted"))
+                        }
+                        else{
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                            helpers.makeErrorToast(t(response.data), () => this())
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
                 }
             }
         }

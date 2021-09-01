@@ -1,48 +1,33 @@
-import {Dispatch} from "@reduxjs/toolkit";
-import {DeploymentApi, NewDeploymentTO} from "../../api";
-import helpers from "../../constants/Functions";
-import {SUCCESS, SYNC_STATUS_VERSION, TARGETS, UNHANDLEDERROR} from "../constants";
-import {handleError} from "./errorAction";
-import {ActionType} from "./actions";
+import {ArtifactVersionTO, DeploymentApi, NewDeploymentTO} from "../../api";
+import helpers from "../../util/helperFunctions";
+import {AxiosResponse} from "axios";
 
 
-export const deployVersion = (target: string, artifactId: string, versionId: string) => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const deploymentController = new DeploymentApi();
-        try {
-            const deploymentTO: NewDeploymentTO = {
-                target
-            };
-            const config = helpers.getClientConfig();
-            const response = await deploymentController.deployVersion( artifactId, versionId, deploymentTO, config);
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SUCCESS, successMessage: "version.deployed" });
-                dispatch({type: SYNC_STATUS_VERSION, dataSynced: false})
-            } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.DEPLOY_VERSION, [
-                target, artifactId, versionId
-            ]));
-        }
+export const deployVersion = async (target: string, artifactId: string, versionId: string): Promise<AxiosResponse<ArtifactVersionTO>> => {
+    const deploymentController = new DeploymentApi();
+    const config = helpers.getClientConfig();
+    const deploymentTO: NewDeploymentTO = {
+        artifactId,
+        versionId,
+        target
     };
-};
+    const response = await deploymentController.deployVersion(deploymentTO, config);
+    return response;
+}
+
+export const deployMultiple = async (deployments: Array<NewDeploymentTO>): Promise<AxiosResponse<ArtifactVersionTO[]>> => {
+    const deploymentController = new DeploymentApi();
+    const config = helpers.getClientConfig();
+    console.log(deployments)
+    const response = await deploymentController.deployMultipleVersions(deployments, config)
+    return response;
+}
 
 
-export const fetchTargets = () => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const deploymentController = new DeploymentApi();
-        try {
-            const config = helpers.getClientConfig();
-            const response = await deploymentController.getAllDeploymentTargets(config);
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: TARGETS, targets: response.data})
-            } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.FETCH_TARGETS, []));
-        }
-    };
-};
+export const fetchTargets = async (): Promise<AxiosResponse<string[]>> => {
+    const deploymentController = new DeploymentApi();
+    const config = helpers.getClientConfig();
+    const response = await deploymentController.getAllDeploymentTargets(config);
+    return response;
+}
+

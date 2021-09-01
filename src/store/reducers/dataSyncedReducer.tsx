@@ -7,8 +7,10 @@ import {
     SYNC_STATUS_MENU,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
+    SYNC_STATUS_SHARED,
+    SYNC_STATUS_TARGETS,
     SYNC_STATUS_VERSION
-} from "../constants";
+} from "../../constants/Constants";
 
 const initialState = {
     repoSynced: false,
@@ -17,7 +19,9 @@ const initialState = {
     artifactSynced: false,
     versionSynced: undefined,
     assignmentSynced: false,
-    menuSynced: false
+    menuSynced: false,
+    sharedSynced: false,
+    targetsSynced: false
 };
 
 const reducer: CaseReducer = (state = initialState, action) => {
@@ -27,6 +31,12 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 repoSynced: action.dataSynced
             };
+
+        case SYNC_STATUS_TARGETS:
+            return {
+                ...state,
+                targetsSynced: action.targetsSynced
+            }
 
         case SYNC_STATUS_ACTIVE_REPOSITORY:
             return {
@@ -69,6 +79,12 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 menuSynced: action.dataSynced
             };
+
+        case SYNC_STATUS_SHARED:
+            return {
+                ...state,
+                sharedSynced: action.sharedSynced
+            }
     }
     return state;
 };

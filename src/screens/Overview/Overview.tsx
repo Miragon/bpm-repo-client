@@ -2,7 +2,7 @@ import {observer} from "mobx-react";
 import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import CreateContainer from "../CreateContainer/CreateContainer";
+import CreateContainer from "../Dialogs/CreateContainer";
 import FavoriteArtifacts from "./FavoriteArtifacts";
 import RecentArtifacts from "./RecentArtifacts";
 import RepoContainer from "./RepoContainer";
@@ -15,7 +15,6 @@ const Overview: React.FC = observer(() => {
         link: "/"
     }
     const path = [element]
-
 
     return (
         <>

@@ -6,9 +6,10 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
 import {fetchRecentArtifacts} from "../../store/actions";
+import {RECENT_ARTIFACTS, SYNC_STATUS_RECENT} from "../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     artifactContainer: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles(() => ({
         marginTop: "1rem",
         "&>h1": {
             color: "black",
-            fontSize: "20px",
+            fontSize: "1.3rem",
             fontWeight: "normal"
         }
     },
@@ -46,19 +47,24 @@ const RecentArtifacts: React.FC = observer(() => {
 
 
     const fetchRecent = useCallback(() => {
-        try {
-            dispatch(fetchRecentArtifacts());
-        } catch (err) {
-            console.log(err);
-        }
-    }, [dispatch]);
+        fetchRecentArtifacts().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: RECENT_ARTIFACTS, recentArtifacts: response.data });
+                dispatch({type: SYNC_STATUS_RECENT, dataSynced: true})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchRecent())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchRecent())
+        })
+    }, [dispatch, t]);
 
 
     useEffect(() => {
         if (!syncStatus) {
             fetchRecent();
         }
-    }, [dispatch, fetchRecent, syncStatus]);
+    }, [fetchRecent, syncStatus]);
 
 
     return (

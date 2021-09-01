@@ -10,6 +10,8 @@ import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import "react-toastify/dist/ReactToastify.css";
 import {fetchRepositories} from "../../store/actions/repositoryAction";
 import {useTranslation} from "react-i18next";
+import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
+import helpers from "../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     header: {
@@ -18,7 +20,7 @@ const useStyles = makeStyles(() => ({
     },
     headerText: {
         color: "black",
-        fontSize: "20px"
+        fontSize: "1.3rem"
     },
     container: {
         display: "flex",
@@ -36,20 +38,26 @@ const RepoContainer: React.FC = observer(() => {
 
     const allRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
     const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced);
+    
+    
     const fetchRepos = useCallback(() => {
-        try {
-            dispatch(fetchRepositories());
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-        }
-    }, [dispatch]);
+        fetchRepositories().then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                dispatch({ type: REPOSITORIES, repos: response.data });
+                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchRepos())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchRepos())
+        })
+    }, [dispatch, t]);
 
     useEffect(() => {
         if (!syncStatus) {
             fetchRepos();
         }
-    }, [dispatch, fetchRepos, syncStatus]);
+    }, [fetchRepos, syncStatus]);
 
     const openRepoScreen = (repo: RepositoryTO) => {
         history.push(`/repository/${repo.id}`);

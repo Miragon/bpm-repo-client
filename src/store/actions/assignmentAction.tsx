@@ -1,84 +1,47 @@
-import {Dispatch} from "@reduxjs/toolkit";
-import {AssignmentApi, AssignmentUpdateTO, AssignmentUpdateTORoleEnumEnum} from "../../api";
-import helpers from "../../constants/Functions";
-import {ASSIGNED_USERS, SUCCESS, SYNC_STATUS_ASSIGNMENT, UNHANDLEDERROR} from "../constants";
-import {ActionType} from "./actions";
-import {handleError} from "./errorAction";
+import {AssignmentApi, AssignmentTO, AssignmentUpdateTO, AssignmentUpdateTORoleEnum} from "../../api";
+import helpers from "../../util/helperFunctions";
+import {AxiosResponse} from "axios";
 
-export const getAllAssignedUsers = (repoId: string) => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const assignmentController = new AssignmentApi();
 
-        try {
-            const config = helpers.getClientConfig();
-            const response = await assignmentController.getAllAssignedUsers(repoId, config);
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: ASSIGNED_USERS, assignedUsers: response.data });
-                dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: true });
-            } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.GET_ALL_ASSIGNED_USERS, [repoId]));
-        }
+export const fetchAssignedUsers = async (repoId: string): Promise<AxiosResponse<AssignmentTO[]>> => {
+    const assignmentController = new AssignmentApi();
+    const config = helpers.getClientConfig();
+    const response = await assignmentController.getAllAssignedUsers(repoId, config);
+    return response;
+}
+
+
+export const createUserAssignment = async (repoId: string, userId: string, username: string, role?: AssignmentUpdateTORoleEnum): Promise<AxiosResponse<AssignmentTO>> => {
+    const assignmentController = new AssignmentApi();
+    const config = helpers.getClientConfig();
+    const assignmentUpdateTO: AssignmentUpdateTO = {
+        repositoryId: repoId,
+        userId: userId,
+        username: username,
+        role: (role) || AssignmentUpdateTORoleEnum.Member
+    }
+    const response = await assignmentController.createUserAssignment(assignmentUpdateTO, config);
+    return response;
+}
+
+
+export const updateUserAssignment = async (repoId: string, userId: string, username: string, role: AssignmentUpdateTORoleEnum): Promise<AxiosResponse<AssignmentTO>> => {
+    const assignmentController = new AssignmentApi();
+    const config = helpers.getClientConfig();
+    const assignmentUpdateTO: AssignmentUpdateTO = {
+        repositoryId: repoId,
+        userId: userId,
+        username: username,
+        role: (role) || AssignmentUpdateTORoleEnum.Member
     };
-};
+    const response = await assignmentController.updateUserAssignment(assignmentUpdateTO, config);
+    return response;
+}
 
-export const createOrUpdateUserAssignment = (
-    repoId: string,
-    userId: string,
-    username: string,
-    roleEnum?: AssignmentUpdateTORoleEnumEnum
-) => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const assignmentController = new AssignmentApi();
-        let message;
-        try {
-            if (!roleEnum) {
-                message = "assignment.added";
-            } else {
-                message = {content: "assignment.changedAssignment", variables: {username: username, roleEnum: roleEnum ? roleEnum : AssignmentUpdateTORoleEnumEnum.Member}};
-            }
+export const deleteAssignment = async (repoId: string, username: string): Promise<AxiosResponse<void>> => {
+    const assignmentController = new AssignmentApi();
+    const config = helpers.getClientConfig();
+    const response = await assignmentController.deleteUserAssignment(repoId, username, config);
+    return response;
+}
 
-            const assignmentUpdateTO: AssignmentUpdateTO = {
-                repositoryId: repoId,
-                userId: userId,
-                username: username,
-                roleEnum: (roleEnum) || AssignmentUpdateTORoleEnumEnum.Member
-            };
-            const config = helpers.getClientConfig();
-            const response = await assignmentController
-                .createOrUpdateUserAssignment(assignmentUpdateTO, config);
-            if (Math.floor(response.status / 100) === 2) {
-                (typeof message === "string") ? dispatch({ type: SUCCESS, successMessage: message}) : dispatch({ type: SUCCESS, successMessageWithVariables: message});
-                dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
-            } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess"});
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.CREATE_OR_UPDATE_USER_ASSIGNMENT, [
-                repoId, userId, username, roleEnum
-            ]));
-        }
-    };
-};
-
-export const deleteAssignment = (repoId: string, username: string) => {
-    return async (dispatch: Dispatch): Promise<void> => {
-        const assignmentController = new AssignmentApi();
-        try {
-            const config = helpers.getClientConfig();
-            const response = await assignmentController
-                .deleteUserAssignment(repoId, username, config);
-            if (Math.floor(response.status / 100) === 2) {
-                // eslint-disable-next-line object-shorthand
-                dispatch({ type: SUCCESS, successMessageWithVariables: {content: "assignment.removed", variables: {username: username}} });
-                dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
-            } else {
-                dispatch({ type: UNHANDLEDERROR, errorMessage: "error.couldNotProcess" });
-            }
-        } catch (error) {
-            dispatch(handleError(error, ActionType.DELETE_ASSIGNMENT, [repoId, username]));
-        }
-    };
-};

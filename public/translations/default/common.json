@@ -6,6 +6,8 @@
     "created": "Repository created",
     "delete": "Delete Repository",
     "deleted": "Repository deleted",
+    "editUsers": "Edit users",
+    "nameTaken": "Name not available",
     "edit": "Edit Repository",
     "updated": "Repository updated",
     "notAvailable": "You haven't added any Repositories yet.",
@@ -25,6 +27,7 @@
     "edit": "Edit Artifact",
     "modifiedOn": "Modified on",
     "upload": "Upload Artifact",
+    "share": "Share Artifact",
     "updated": "Artifact updated",
     "import": "Import from Cawemo",
     "notAvailable": "You haven't added any artifacts yet"
@@ -48,9 +51,10 @@
     "saveVersionXAsNewArtifact": "Save Version {{milestone}} as new Artifact"
   },
   "assignment": {
-    "changedAssignment": "Changed role of {{username}} to {{roleEnum}}",
-    "added": "Added User to Repository",
-    "removed": "Removed {{username}} from Repository"
+    "changedAssignment": "Changed role of {{username}} to {{role}}",
+    "added": "Added {{username}} to Repository",
+    "removed": "Removed {{username}} from Repository",
+    "alreadyPresent": "{{username}} is already assigned to this project"
   },
   "form": {
     "create": "Create Form"
@@ -61,12 +65,17 @@
   "deployment": {
     "deployment": "Deployment",
     "deployments": "Deployments",
+    "multiple": "Deploy multiple Versions",
+    "target": "Ziel",
+    "deployedMultiple": "Deployed {{deployedVersions}} Versions",
+    "adminPermissionsRequired": "You need admin permissions to deploy artifacts",
     "dialogHeader": "Deploy Version {{versionNumber}}",
     "history": "All Deployments"
   },
   "user": {
     "user": "User",
     "users": "Users",
+    "manage": "Edit users",
     "OWNER": "Owner",
     "ADMIN": "Admin",
     "MEMBER": "Member",
@@ -76,6 +85,7 @@
   "category": {
     "favorite": "Favorites",
     "recent": "Recently used",
+    "shared": "Shared",
     "noFavoritesAvailable": "You haven't added any files to your favorites yet."
 
   },
@@ -88,7 +98,8 @@
     "cancel": "Cancel",
     "close": "Close",
     "create": "Create",
-    "copy": "Copy"
+    "copy": "Copy",
+    "share": "Share {{artifactName}}"
   },
   "properties": {
     "title": "Title",
@@ -108,7 +119,7 @@
   "registration": {
     "signup": "Sign up for Miragon Cloud Services",
     "firstTime": "This is the first time you are trying to access Miragon Cloud Services.",
-    "accountRequired": "To use this service you need an account.\n To create a new account, choose a name and accept the Terms and Conditions.",
+    "accountRequired": "To use this service you need an account.\n To create a new account, click the button below and accept the terms and conditions.",
     "agree": "I agree to the terms of service",
     "create": "Create a new User Profile"
   },
@@ -160,5 +171,11 @@
     "lastEdited": "Last Edited",
     "created": "Creation Date",
     "name": "Name"
+  },
+  "share": {
+    "successful": "Artifact shared",
+    "removed": "Artifact is no longer shared",
+    "na": "No shared Artifacts available"
   }
+
 }

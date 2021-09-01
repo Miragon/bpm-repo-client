@@ -6,6 +6,8 @@
     "created": "Projekt erstellt",
     "delete": "Projekt löschen",
     "deleted": "Projekt gelöscht",
+    "editUsers": "Mitglieder verwalten",
+    "nameTaken": "Name wird bereits verwendet",
     "edit": "Projekt bearbeiten",
     "updated": "Projekt aktualisiert",
     "notAvailable": "Sie haben noch keine Projekte erstellt",
@@ -13,19 +15,20 @@
   },
   "artifact": {
     "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
-    "create": "Artifact erstellen",
+    "create": "Datei erstellen",
     "copy": "{{artifactName}} in anderes Projekt kopieren",
     "copyTo": "In Projekt kopieren",
-    "createdFromExisting": "Artifact aus existierender Version erstellt",
-    "createdDefault": "Artifact erstellt",
-    "createBpmn": "BPMN Artifact erstellen",
-    "createDmn": "DMN Artifact erstellen",
-    "delete": "Artifact löschen",
-    "download": "Artifact herunterladen",
-    "edit": "Artifact bearbeiten",
+    "createdFromExisting": "Datei aus existierender Version erstellt",
+    "createdDefault": "Datei erstellt",
+    "createBpmn": "BPMN Diagramm erstellen",
+    "createDmn": "DMN Diagramm erstellen",
+    "delete": "Datei löschen",
+    "download": "Datei herunterladen",
+    "edit": "Datei bearbeiten",
     "modifiedOn": "Bearbeitet am",
-    "upload": "Artifact hochladen",
-    "updated": "Artifact aktualisiert",
+    "share": "Datei teilen",
+    "upload": "Datei hochladen",
+    "updated": "Datei aktualisiert",
     "import": "Aus Cawemo importieren",
     "notAvailable": "Sie haben noch keine Artifact erstellt"
   },
@@ -53,19 +56,25 @@
     "create": "Konfiguration erstellen"
   },
   "assignment": {
-    "changedAssignment": "Zugriffsrechte von {{username}} zu {{roleEnum}} geändert",
-    "added": "Benutzer zum Projekt hinzugefügt",
-    "removed": "{{username}} vom Projekt entfernt"
+    "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
+    "added": "{{username}} zum Projekt hinzugefügt",
+    "removed": "{{username}} vom Projekt entfernt",
+    "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
   },
   "deployment": {
     "deployment": "Veröffentlichung",
     "deployments": "Veröffentlichungen",
+    "multiple": "Dateien veröffentlichen",
+    "target": "Ziel",
+    "deployedMultiple": "{{deployedVersions}} Versionen veröffentlicht",
+    "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
     "dialogHeader": "Version {{versionNumber}} veröffentlichen",
     "history": "Alle Veröffentlichungen"
   },
   "user": {
     "user": "Benutzer",
     "users": "Benutzer",
+    "manage": "Benutzer bearbeiten",
     "OWNER": "Eigentümer",
     "ADMIN": "Administrator",
     "MEMBER": "Mitglied",
@@ -75,6 +84,7 @@
   "category": {
     "favorite": "Favoriten",
     "recent": "Vor Kurzem bearbeitet",
+    "shared": "Geteilt",
     "noFavoritesAvailable": "Sie haben noch keine Datei zu Ihren Favoriten hinzugefügt."
   },
   "search": {
@@ -86,7 +96,8 @@
     "cancel": "Abbrechen",
     "close": "Schließen",
     "create": "Erstellen",
-    "copy": "Kopieren"
+    "copy": "Kopieren",
+    "share": "{{artifactName}} Teilen"
   },
   "properties": {
     "title": "Titel",
@@ -158,5 +169,10 @@
     "lastEdited": "Zuletzt bearbeitet",
     "created": "Erstellungsdatum",
     "name": "Name"
+  },
+  "share": {
+    "successful": "Datei geteilt",
+    "removed": "Datei wird nicht mehr geteilt",
+    "na": "Bisher werden keine Dateien mit diesem Projekt geteilt"
   }
 }

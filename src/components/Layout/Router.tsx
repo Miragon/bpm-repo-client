@@ -10,11 +10,11 @@ const Router: React.FC = () => {
                 exact
                 path="/"
                 component={Overview}/>
-
             <Route
                 exact
                 path="/repository/:repoId"
                 component={Repository}/>
+
         </Switch>
     );
 };

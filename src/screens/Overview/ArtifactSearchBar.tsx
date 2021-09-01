@@ -8,9 +8,10 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import helpers from "../../constants/Functions";
+import helpers from "../../util/helperFunctions";
 import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
 import {searchArtifact} from "../../store/actions";
+import {ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS} from "../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     headerText: {
@@ -18,25 +19,16 @@ const useStyles = makeStyles(() => ({
         fontSize: "20px"
     },
     container: {
-        width: "800px"
+        minWidth: "400px",
+        maxWidth: "1000px",
+        flexGrow: 2
     },
     resultsContainer: {
         marginTop: "15px",
         display: "flex",
+        flexDirection: "column",
         flexWrap: "wrap"
     },
-    listItem: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    artifactName: {
-        color: "black",
-        flexGrow: 3
-    },
-    repoName: {
-        color: "lightgrey",
-    }
 }));
 
 let timeout: NodeJS.Timeout | undefined;
@@ -71,13 +63,6 @@ const ArtifactSearchBar: React.FC = () => {
     }, [open, searchedArtifacts, artifact, displayResult]);
 
     useEffect(() => {
-        if (artifact === "") {
-            setDisplayResult(false);
-            setLoading(false);
-        }
-    }, [artifact]);
-
-    useEffect(() => {
         if (searchedArtifacts.length > 0) {
             setLoading(false);
         }
@@ -85,6 +70,13 @@ const ArtifactSearchBar: React.FC = () => {
             setLoading(false);
         }
     }, [searchedArtifacts, foundDiagrams]);
+
+    useEffect(() => {
+        if (artifact === "") {
+            setDisplayResult(false);
+            setLoading(false);
+        }
+    }, [artifact]);
 
 
     const onChangeWithTimer = ((input: string) => {
@@ -104,8 +96,18 @@ const ArtifactSearchBar: React.FC = () => {
     });
 
     const fetchArtifactSuggestion = useCallback((input: string) => {
-        dispatch(searchArtifact(input));
-    }, [dispatch]);
+        searchArtifact(input).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                dispatch({type: SEARCHED_ARTIFACTS, searchedArtifacts: response.data});
+                dispatch({type: ARTIFACTQUERY_EXECUTED, artifactResultsCount: response.data.length})
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchArtifactSuggestion(input))
+
+        })
+    }, [dispatch, t]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateState = (event: any) => {
@@ -124,9 +126,9 @@ const ArtifactSearchBar: React.FC = () => {
                         id="ArtifactSearchBar"
                         freeSolo
                         style={{ width: "100%" }}
-                        open={open}
+                        open={false}
                         onOpen={() => {
-                            setOpen(true);
+                            setOpen(false);
                         }}
                         onClose={() => {
                             setOpen(false);
