@@ -14,84 +14,53 @@ const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
         flexGrow: 1,
         display: "flex",
-        paddingLeft: "32px",
-        transition: theme.transitions.create("margin")
-    },
-    contentWrapperShift: {
-        marginLeft: "350px"
+        maxHeight: "calc(100vh - 60px)",
+        overflowY: "auto"
     },
     content: {
         display: "flex",
         flexGrow: 1,
+        padding: "2rem 0",
         flexDirection: "column",
-        maxHeight: "calc(100vh - 60px)",
-        padding: "20px 25px",
+        maxWidth: "960px",
         margin: "0 auto"
-    },
-    loadingScreen: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100%",
-        width: "100%",
-        paddingTop: "40vh",
-    },
-    loadingCircle: {
-        color: "green",
     }
 }));
 
-/**
- * Diese Komponente erzeugt das Layout auf oberster Ebene der Anwendung.
- * Es enthält sowohl das Menü als auch sämtlichen Inhalt der Anwendung.
- * Die primäre Aufgabe des Layouts ist die einheitliche
- * Darstellung des globalen Menüs sowie das Routing.
- *
- * Die Komponente bietet keine Anpassungsmöglichkeiten und besitzt
- * keine Parameter.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Layout = (): any => {
+const Layout: React.FC = () => {
     const dispatch = useDispatch();
 
     const classes = useStyles();
-    const [userController] = useState<UserApi>(new UserApi());
 
-    const [userDoesExist, setUserDoesExist] = useState<boolean | undefined>(undefined);
-    const [fileConfigFetched, setFileConfigFetched] = useState<boolean>(false);
+    const [userDoesExist, setUserDoesExist] = useState<boolean>();
+    const [fileConfigFetched, setFileConfigFetched] = useState(false);
 
     useEffect(() => {
         const config = helpers.getClientConfig();
-        userController.getUserInfo(config)
+        new UserApi().getUserInfo(config)
             .then(response => {
                 if (response.data) {
                     setUserDoesExist(true);
                     dispatch({ type: CURRENT_USER_INFO, currentUserInfo: response.data });
-
-
                 } else {
                     setUserDoesExist(false);
                 }
             })
             .catch(() => setUserDoesExist(false));
-    }, [userController, dispatch]);
-
-
-    const [artifactController] = useState<ArtifactApi>(new ArtifactApi());
+    }, [dispatch]);
 
     useEffect(() => {
         if (!fileConfigFetched) {
             const config = helpers.getClientConfig();
-            artifactController.getAllFileTypes(config).then(response2 => {
-                if (response2.data) {
-                    dispatch({ type: FILETYPES, fileTypes: response2.data });
+            new ArtifactApi().getAllFileTypes(config).then(response => {
+                if (response.data) {
+                    dispatch({ type: FILETYPES, fileTypes: response.data });
                     setFileConfigFetched(true);
                 }
             })
 
         }
-    }, [artifactController, dispatch, fileConfigFetched])
-
+    }, [dispatch, fileConfigFetched])
 
     if (userDoesExist === undefined) {
         return null;
@@ -100,7 +69,6 @@ const Layout = (): any => {
     if (!userDoesExist) {
         return <RegisterNewUserScreen />;
     }
-
 
     return (
         <>

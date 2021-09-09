@@ -1,178 +1,184 @@
 {
-  "repository": {
-    "confirmDelete": "Wollen Sie {{repoName}} wirklich löschen?",
-    "repository": "Projekt",
-    "create": "Projekt erstellen",
-    "created": "Projekt erstellt",
-    "delete": "Projekt löschen",
-    "deleted": "Projekt gelöscht",
-    "editUsers": "Mitglieder verwalten",
-    "nameTaken": "Name wird bereits verwendet",
-    "edit": "Projekt bearbeiten",
-    "updated": "Projekt aktualisiert",
-    "notAvailable": "Sie haben noch keine Projekte erstellt",
-    "target": "Projekt"
-  },
-  "artifact": {
-    "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
-    "create": "Datei erstellen",
-    "copy": "{{artifactName}} in anderes Projekt kopieren",
-    "copyTo": "In Projekt kopieren",
-    "createdFromExisting": "Datei aus existierender Version erstellt",
-    "createdDefault": "Datei erstellt",
-    "createBpmn": "BPMN Diagramm erstellen",
-    "createDmn": "DMN Diagramm erstellen",
-    "delete": "Datei löschen",
-    "download": "Datei herunterladen",
-    "edit": "Datei bearbeiten",
-    "modifiedOn": "Bearbeitet am",
-    "share": "Datei teilen",
-    "upload": "Datei hochladen",
-    "updated": "Datei aktualisiert",
-    "import": "Aus Cawemo importieren",
-    "notAvailable": "Sie haben noch keine Artifact erstellt"
-  },
-  "version": {
-    "create": "Version erstellen",
-    "created": "Version erstellt",
-    "deploy": "Version veröffentlichen",
-    "downloading": "Version wird heruntergeladen",
-    "deployed": "Version veröffentlicht",
-    "dialogHeader": "Neue Version von {{artifactName}} erstellen",
-    "edit": "Version bearbeiten",
-    "download": "Version herunterladen",
-    "delete": "Version löschen",
-    "openLatest": "Aktuelle Version öffnen",
-    "version": "Version",
-    "MILESTONE": "Meilenstein",
-    "deploymentHistory": "Veröffentlichungen",
-    "saveAsNewArtifact": "Als neue Datei speichern",
-    "saveVersionXAsNewArtifact": "Version {{milestone}} als neue Datei speichern"
-  },
-  "form": {
-    "create": "Formular erstellen"
-  },
-  "config": {
-    "create": "Konfiguration erstellen"
-  },
-  "assignment": {
-    "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
-    "added": "{{username}} zum Projekt hinzugefügt",
-    "removed": "{{username}} vom Projekt entfernt",
-    "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
-  },
-  "deployment": {
-    "deployment": "Veröffentlichung",
-    "deployments": "Veröffentlichungen",
-    "multiple": "Dateien veröffentlichen",
-    "target": "Ziel",
-    "deployedMultiple": "{{deployedVersions}} Versionen veröffentlicht",
-    "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
-    "dialogHeader": "Version {{versionNumber}} veröffentlichen",
-    "history": "Alle Veröffentlichungen"
-  },
-  "user": {
-    "user": "Benutzer",
-    "users": "Benutzer",
-    "manage": "Benutzer bearbeiten",
-    "OWNER": "Eigentümer",
-    "ADMIN": "Administrator",
-    "MEMBER": "Mitglied",
-    "VIEWER": "Gast",
-    "remove": "Von Projekt entfernen"
-  },
-  "category": {
-    "favorite": "Favoriten",
-    "recent": "Vor Kurzem bearbeitet",
-    "shared": "Geteilt",
-    "noFavoritesAvailable": "Sie haben noch keine Datei zu Ihren Favoriten hinzugefügt."
-  },
-  "search": {
-    "search": "Suchen...",
-    "noResults": "Keine Ergebnisse"
-  },
-  "dialog": {
-    "applyChanges": "Bestätigen",
-    "cancel": "Abbrechen",
-    "close": "Schließen",
-    "create": "Erstellen",
-    "copy": "Kopieren",
-    "share": "{{artifactName}} Teilen"
-  },
-  "properties": {
-    "title": "Titel",
-    "filename": "Name",
-    "version": "Version",
-    "description": "Beschreibung",
-    "comment": "Kommentar",
-    "date": "Datum",
-    "type": "Typ",
-    "target": "Ziel"
-  },
-  "menu": {
-    "Home": "Modellverwaltung",
-    "Forms": "Formulare",
-    "Integration": "Integrationsbausteine"
-  },
-  "registration": {
-    "signup": "Für Miragon Cloud Services anmelden",
-    "firstTime": "Sie versuchen zum ersten Mal, sich bei Miragon Cloud Services anzumelden.",
-    "accountRequired": "Sie benötigen einen Account, um diesen Service zu verwenden.\n Um einen Account zu erstellen, akzeptieren Sie bitte die AGBs.",
-    "agree": "Ich akzeptiere die AGBs",
-    "create": "Neues Benutzerprofil erstellen"
-  },
-  "language": {
-    "german": "Deutsch",
-    "english": "Englisch",
-    "select": "Sprache auswählen"
-  },
-  "defaultErrors": {
-    "error": "Fehler",
-    "400": "Fehlerhafte Anfrage - bitte alle Daten beifügen",
-    "401": "Nicht Authorisiert",
-    "403": "Session abgelaufen - Bitte Seite neu laden",
-    "404": "Nicht gefunden",
-    "409": "Konflikt"
-  },
-  "error": {
-    "missingTool": "Ihr Paket beinhaltet keine Anwendung zum Bearbeiten von {{fileType}}. Kontaktieren Sie den Service, um die Erweiterung zu aktivieren",
-    "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
-    "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
-  },
-  "artifact": {
-    "addedToFavorite": "Datei zu Favoriten hinzugefügt",
-    "addToFavorites": "Zu Favoriten hinzufügen",
-    "confirmDelete": "Wollen Sie die Datei wirklich löschen?",
-    "createBPMN": "BPMN Diagramm erstellen",
-    "createDMN": "DMN Diagramm erstellen",
-    "createFORM": "Formular erstellen",
-    "createCONFIGURATION": "Konfiguration erstellen",
-    "createdDefault": "Datei erstellt",
-    "create": "Datei erstellen",
-    "modifiedOn": "Bearbeitet am",
-    "upload": "Datei hochladen",
-    "updated": "Datei geändert",
-    "download": "Datei herunterladen",
-    "showInRepo": "In Projekt anzeigen",
-    "edit": "Datei bearbeiten",
-    "delete": "Datei löschen"
-  },
-  "path": {
-  "overview": "Übersicht",
-  "repository": "Projekt"
-  },
-  "filter": {
-    "filter": "Filter"
-  },
-  "sort": {
-    "sort": "Sortieren nach",
-    "lastEdited": "Zuletzt bearbeitet",
-    "created": "Erstellungsdatum",
-    "name": "Name"
-  },
-  "share": {
-    "successful": "Datei geteilt",
-    "removed": "Datei wird nicht mehr geteilt",
-    "na": "Bisher werden keine Dateien mit diesem Projekt geteilt"
-  }
+    "repository": {
+        "confirmDelete": "Wollen Sie {{repoName}} wirklich löschen?",
+        "repository": "Projekt",
+        "repositories": "Projekte",
+        "create": "Projekt erstellen",
+        "created": "Projekt erstellt",
+        "delete": "Projekt löschen",
+        "deleted": "Projekt gelöscht",
+        "editUsers": "Mitglieder verwalten",
+        "nameTaken": "Name wird bereits verwendet",
+        "edit": "Projekt bearbeiten",
+        "updated": "Projekt aktualisiert",
+        "notAvailable": "Sie haben noch keine Projekte erstellt",
+        "target": "Projekt"
+    },
+    "artifact": {
+        "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
+        "create": "Datei erstellen",
+        "copy": "{{artifactName}} in anderes Projekt kopieren",
+        "copyTo": "In Projekt kopieren",
+        "createdFromExisting": "Datei aus existierender Version erstellt",
+        "createdDefault": "Datei erstellt",
+        "delete": "Datei löschen",
+        "download": "Datei herunterladen",
+        "edit": "Datei bearbeiten",
+        "modifiedOn": "Bearbeitet am",
+        "share": "Datei teilen",
+        "upload": "Datei hochladen",
+        "import": "Aus Cawemo importieren",
+        "notAvailable": "Sie haben noch keine Artifact erstellt",
+        "addedToFavorite": "Datei zu Favoriten hinzugefügt",
+        "addToFavorites": "Zu Favoriten hinzufügen",
+        "createBPMN": "BPMN Diagramm erstellen",
+        "createDMN": "DMN Diagramm erstellen",
+        "createFORM": "Formular erstellen",
+        "createCONFIGURATION": "Konfiguration erstellen",
+        "updated": "Datei geändert",
+        "showInRepo": "In Projekt anzeigen",
+        "updatedDuration": "{{duration}} aktualisiert",
+        "type": {
+            "BPMN": "BPMN",
+            "DMN": "DMN",
+            "FORM": "Formular",
+            "CONFIGURATION": "Konfiguration"
+        }
+    },
+    "duration": {
+        "ago": {
+            "fewSeconds": "Vor wenigen Sekunden",
+            "lessThanOneMinute": "Vor weniger als 1 Minute",
+            "oneMinute": "Vor 1 Minute",
+            "minutes": "Vor {{minutes}} Minuten",
+            "oneHour": "Vor 1 Stunde",
+            "hours": "Vor {{hours}} Stunden",
+            "oneDay": "Gestern"
+        }
+    },
+    "version": {
+        "create": "Version erstellen",
+        "created": "Version erstellt",
+        "deploy": "Version veröffentlichen",
+        "downloading": "Version wird heruntergeladen",
+        "deployed": "Version veröffentlicht",
+        "dialogHeader": "Neue Version von {{artifactName}} erstellen",
+        "edit": "Version bearbeiten",
+        "download": "Version herunterladen",
+        "delete": "Version löschen",
+        "openLatest": "Aktuelle Version öffnen",
+        "version": "Version",
+        "MILESTONE": "Meilenstein",
+        "deploymentHistory": "Veröffentlichungen",
+        "saveAsNewArtifact": "Als neue Datei speichern",
+        "saveVersionXAsNewArtifact": "Version {{milestone}} als neue Datei speichern"
+    },
+    "form": {
+        "create": "Formular erstellen"
+    },
+    "config": {
+        "create": "Konfiguration erstellen"
+    },
+    "assignment": {
+        "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
+        "added": "{{username}} zum Projekt hinzugefügt",
+        "removed": "{{username}} vom Projekt entfernt",
+        "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
+    },
+    "deployment": {
+        "deployment": "Veröffentlichung",
+        "deployments": "Veröffentlichungen",
+        "multiple": "Dateien veröffentlichen",
+        "target": "Ziel",
+        "deployedMultiple": "{{deployedVersions}} Versionen veröffentlicht",
+        "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
+        "dialogHeader": "Version {{versionNumber}} veröffentlichen",
+        "history": "Alle Veröffentlichungen"
+    },
+    "user": {
+        "user": "Benutzer",
+        "users": "Benutzer",
+        "manage": "Benutzer bearbeiten",
+        "OWNER": "Eigentümer",
+        "ADMIN": "Administrator",
+        "MEMBER": "Mitglied",
+        "VIEWER": "Gast",
+        "remove": "Von Projekt entfernen"
+    },
+    "category": {
+        "favorite": "Favoriten",
+        "recent": "Vor Kurzem bearbeitet",
+        "shared": "Geteilt",
+        "noFavoritesAvailable": "Sie haben noch keine Datei zu Ihren Favoriten hinzugefügt."
+    },
+    "search": {
+        "search": "Suchen...",
+        "noResults": "Keine Ergebnisse"
+    },
+    "dialog": {
+        "applyChanges": "Bestätigen",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "create": "Erstellen",
+        "copy": "Kopieren",
+        "share": "{{artifactName}} Teilen"
+    },
+    "properties": {
+        "title": "Titel",
+        "filename": "Name",
+        "version": "Version",
+        "description": "Beschreibung",
+        "comment": "Kommentar",
+        "date": "Datum",
+        "type": "Typ",
+        "target": "Ziel"
+    },
+    "menu": {
+        "Home": "Modellverwaltung",
+        "Forms": "Formulare",
+        "Integration": "Integrationsbausteine"
+    },
+    "registration": {
+        "signup": "Für Miragon Cloud Services anmelden",
+        "firstTime": "Sie versuchen zum ersten Mal, sich bei Miragon Cloud Services anzumelden.",
+        "accountRequired": "Sie benötigen einen Account, um diesen Service zu verwenden.\n Um einen Account zu erstellen, akzeptieren Sie bitte die AGBs.",
+        "agree": "Ich akzeptiere die AGBs",
+        "create": "Neues Benutzerprofil erstellen"
+    },
+    "language": {
+        "german": "Deutsch",
+        "english": "Englisch",
+        "select": "Sprache auswählen"
+    },
+    "defaultErrors": {
+        "error": "Fehler",
+        "400": "Fehlerhafte Anfrage - bitte alle Daten beifügen",
+        "401": "Nicht Authorisiert",
+        "403": "Session abgelaufen - Bitte Seite neu laden",
+        "404": "Nicht gefunden",
+        "409": "Konflikt"
+    },
+    "error": {
+        "missingTool": "Ihr Paket beinhaltet keine Anwendung zum Bearbeiten von {{fileType}}. Kontaktieren Sie den Service, um die Erweiterung zu aktivieren",
+        "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
+        "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
+    },
+    "path": {
+        "overview": "Übersicht",
+        "repository": "Projekt"
+    },
+    "filter": {
+        "filter": "Filter"
+    },
+    "sort": {
+        "sort": "Sortieren nach",
+        "lastEdited": "Zuletzt bearbeitet",
+        "created": "Erstellungsdatum",
+        "name": "Name"
+    },
+    "share": {
+        "successful": "Datei geteilt",
+        "removed": "Datei wird nicht mehr geteilt",
+        "na": "Bisher werden keine Dateien mit diesem Projekt geteilt"
+    }
 }

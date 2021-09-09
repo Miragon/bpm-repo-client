@@ -1,47 +1,37 @@
-import {makeStyles} from "@material-ui/core/styles";
-import DescriptionIcon from "@material-ui/icons/Description";
-import PeopleIcon from "@material-ui/icons/People";
+import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { DescriptionOutlined, PeopleOutline } from "@material-ui/icons";
 import React from "react";
-import {Tooltip} from "@material-ui/core";
+import { RepositoryTO } from "../../../api";
+import { COLOR_LINK } from "../../../constants/Constants";
 
 const useStyles = makeStyles(theme => ({
-    repoBox: {
+    root: {
         display: "flex",
         flexDirection: "column",
-        marginTop: "10px",
-        transition: "box-shadow .3s",
         width: "200px",
         height: "92px",
         marginRight: "0.5rem",
         borderRadius: "4px",
-        background: `linear-gradient(to bottom, ${theme.palette.primary.main} 40%, ${theme.palette.primary.light} 90%)`,
+        border: "1px solid #CCC",
+        padding: "1rem 0.5rem 0.25rem 1rem",
         cursor: "pointer",
-        color: theme.palette.primary.contrastText,
+        justifyContent: "space-between",
+        transition: theme.transitions.create("box-shadow"),
         "&:hover": {
-            boxShadow: theme.shadows[4]
+            boxShadow: theme.shadows[2]
         }
     },
-    repoHeader: {
-        textAlign: "left",
-        padding: "1rem 1rem 0.5rem 1rem",
-        fontSize: "14px",
+    title: {
+        color: COLOR_LINK,
         fontWeight: "bold",
-        maxHeight: "80%",
-        overflow: "hidden"
+        overflow: "hidden",
+        textOverflow: "ellipsis"
     },
-    repoDescription: {
-        whiteSpace: "normal",
-        padding: "0 1rem",
-        fontSize: "12px",
-    },
-    repoInfo: {
-        marginTop: "auto",
+    metadata: {
         display: "flex",
         justifyContent: "flex-end",
-        alignItems: "center",
-        paddingBottom: "0.5rem",
-        paddingRight: "0.75rem",
-        color: theme.palette.primary.contrastText
+        alignItems: "center"
     },
     icon: {
         width: "20px",
@@ -50,10 +40,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface RepoProps {
-    repoTitle: string;
-    description: string;
-    existingArtifacts: number;
-    assignedUsers: number;
+    repository: RepositoryTO;
     onClick?: () => void;
 }
 
@@ -61,18 +48,22 @@ const RepoCard: React.FC<RepoProps> = props => {
     const classes = useStyles();
 
     return (
-        <div className={classes.repoBox} onClick={props.onClick}>
-            <Tooltip title={props.repoTitle}>
-                <div className={classes.repoHeader}>
-                    {props.repoTitle}
-                </div>
-            </Tooltip>
+        <div
+            onClick={props.onClick}
+            className={classes.root}
+            title={props.repository.name}>
 
-            <div className={classes.repoInfo}>
-                <DescriptionIcon className={classes.icon} />
-                {props.existingArtifacts || 0}
-                <PeopleIcon className={classes.icon} />
-                {props.assignedUsers || 1}
+            <Typography
+                variant="subtitle1"
+                className={classes.title}>
+                {props.repository.name}
+            </Typography>
+
+            <div className={classes.metadata}>
+                <DescriptionOutlined className={classes.icon} />
+                {props.repository.existingArtifacts}
+                <PeopleOutline className={classes.icon} />
+                {props.repository.assignedUsers}
             </div>
 
         </div>

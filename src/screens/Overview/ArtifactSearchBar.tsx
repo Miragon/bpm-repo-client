@@ -5,11 +5,11 @@ import {makeStyles} from "@material-ui/styles";
 import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, RepositoryTO} from "../../api";
+import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
 import helpers from "../../util/helperFunctions";
-import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
 import {searchArtifact} from "../../store/actions";
 import {ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS} from "../../constants/Constants";
 
@@ -166,14 +166,8 @@ const ArtifactSearchBar: React.FC = () => {
                                 <div
                                     key={searchedArtifact.id}
                                     className={classes.container}>
-                                    <ArtifactListItemRough
-                                        artifactTitle={searchedArtifact.name}
-                                        createdDate={searchedArtifact.createdDate}
-                                        updatedDate={searchedArtifact.updatedDate}
-                                        description={searchedArtifact.description}
-                                        repoId={searchedArtifact.repositoryId}
-                                        artifactId={searchedArtifact.id}
-                                        fileType={searchedArtifact.fileType}
+                                    <ArtifactEntry
+                                        artifact={searchedArtifact}
                                         favorite={helpers.isFavorite(searchedArtifact.id, favoriteArtifacts?.map(artifact => artifact.id))}
                                         repository={helpers.getRepoName(searchedArtifact.repositoryId, repos)}/>
                                 </div>

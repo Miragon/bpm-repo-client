@@ -1,15 +1,15 @@
-import {makeStyles} from "@material-ui/styles";
-import {observer} from "mobx-react";
-import React, {useCallback, useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, RepositoryTO} from "../../api";
-import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import {RootState} from "../../store/reducers/rootReducer";
-import {useTranslation} from "react-i18next";
-import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
-import ArtifactListItemRough from "./Holder/ArtifactListItemRough";
+import { makeStyles } from "@material-ui/styles";
+import { observer } from "mobx-react";
+import React, { useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { ArtifactTO, RepositoryTO } from "../../api";
+import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
+import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import { FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE } from "../../constants/Constants";
+import { fetchFavoriteArtifacts } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-import {fetchFavoriteArtifacts} from "../../store/actions";
 
 const useStyles = makeStyles(() => ({
     artifactContainer: {
@@ -20,8 +20,7 @@ const useStyles = makeStyles(() => ({
             fontWeight: "normal"
         }
     },
-    container: {
-    },
+    container: {},
     card: {
         width: "calc(20%)",
         "&:nth-child(5n)>div": {
@@ -33,7 +32,7 @@ const useStyles = makeStyles(() => ({
 const FavoriteArtifacts: React.FC = observer(() => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
 
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
@@ -42,9 +41,9 @@ const FavoriteArtifacts: React.FC = observer(() => {
 
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
-                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: true })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
@@ -55,7 +54,7 @@ const FavoriteArtifacts: React.FC = observer(() => {
     }, [dispatch, t]);
 
     useEffect(() => {
-        if(!syncStatus){
+        if (!syncStatus) {
             fetchFavorite();
         }
     }, [syncStatus, fetchFavorite])
@@ -67,19 +66,11 @@ const FavoriteArtifacts: React.FC = observer(() => {
             <div className={classes.container}>
                 <ErrorBoundary>
                     {favoriteArtifacts?.map(artifact => (
-                        <div
-                            key={artifact.id} >
-                            <ArtifactListItemRough
-                                artifactTitle={artifact.name}
-                                createdDate={artifact.createdDate}
-                                updatedDate={artifact.updatedDate}
-                                description={artifact.description}
-                                repoId={artifact.repositoryId}
-                                artifactId={artifact.id}
-                                fileType={artifact.fileType}
-                                favorite={helpers.isFavorite(artifact.id, favoriteArtifacts?.map(artifact => artifact.id))}
-                                repository={helpers.getRepoName(artifact.repositoryId, repos)}/>
-                        </div>
+                        <ArtifactEntry
+                            key={artifact.id}
+                            artifact={artifact}
+                            favorite={helpers.isFavorite(artifact.id, favoriteArtifacts?.map(artifact => artifact.id))}
+                            repository={helpers.getRepoName(artifact.repositoryId, repos)} />
                     ))}
                     {favoriteArtifacts?.length === 0 && (
                         <span>{t("category.noFavoritesAvailable")}</span>

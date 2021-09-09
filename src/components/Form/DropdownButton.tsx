@@ -11,11 +11,11 @@ import {
     Radio,
     RadioGroup
 } from "@material-ui/core";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {ArrowDropDown} from "@material-ui/icons";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { ArrowDropDown } from "@material-ui/icons";
 import clsx from "clsx";
-import React, {useRef, useState} from "react";
-import {useTranslation} from "react-i18next";
+import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface DropdownButtonItem {
     id: string;
@@ -100,14 +100,14 @@ const DropdownButton: React.FC<Props> = props => {
     DropdownButton.defaultProps = {
         type: "default"
     };
-    
+
     const classes = useStyles();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLButtonElement>(null);
 
-    if (!props.onClick && props.options.find(option => !option.onClick)) {
+    if (!props.onClick && props.options.find(option => !option.onClick && option.type !== "divider" && option.type !== "hint")) {
         throw new Error("You must either pass a global onClick listener or each option needs a special one!");
     }
 
@@ -120,7 +120,7 @@ const DropdownButton: React.FC<Props> = props => {
                 disabled={props.disabled}
                 onClick={() => setOpen(true)}
                 variant="contained"
-                endIcon={<ArrowDropDown/>}>
+                endIcon={<ArrowDropDown />}>
                 {props.title}
             </Button>
             <Popper
@@ -129,16 +129,16 @@ const DropdownButton: React.FC<Props> = props => {
                 role={undefined}
                 transition
                 disablePortal
-                style={{width: ref.current?.offsetWidth}}
+                style={{ width: ref.current?.offsetWidth }}
                 className={classes.popupContainer}>
-                {({TransitionProps}) => (
+                {({ TransitionProps }) => (
                     <Grow
                         {...TransitionProps}
-                        style={{transformOrigin: "top"}}>
+                        style={{ transformOrigin: "top" }}>
                         <Paper className={classes.popup}>
                             <ClickAwayListener onClickAway={() => setOpen(false)}>
                                 <MenuList className={classes.list}>
-                                    
+
                                     {props.type === "default" &&
                                     props.options.map(option => (
                                         <MenuItem
@@ -157,7 +157,7 @@ const DropdownButton: React.FC<Props> = props => {
                                                 }
                                                 setOpen(false);
                                             }}>
-                                            {option.icon? option.icon : null}
+                                            {option.icon ? option.icon : null}
                                             {t(option.label)}
                                         </MenuItem>
                                     ))
@@ -187,12 +187,12 @@ const DropdownButton: React.FC<Props> = props => {
                                                                 }
                                                             }
                                                             }
-                                                            value={option.id}/>}/>
+                                                            value={option.id} />} />
                                             ))}
                                         </RadioGroup>
                                     }
-                                    
-                                    {props.type === "checkbox" &&  
+
+                                    {props.type === "checkbox" &&
                                     props.options.map(option => (
                                         <FormControlLabel
                                             key={option.id}
@@ -210,9 +210,10 @@ const DropdownButton: React.FC<Props> = props => {
                                                             option.onClick();
                                                         } else if (props.onClick) {
                                                             props.onClick(option.id);
-                                                        }}
+                                                        }
                                                     }
-                                                    value={option.id}/>}
+                                                    }
+                                                    value={option.id} />}
                                             label={t(option.label)} />
 
                                     ))}

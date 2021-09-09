@@ -1,22 +1,22 @@
-import {makeStyles} from "@material-ui/styles";
-import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, ArtifactTypeTO} from "../../../api";
-import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {useParams} from "react-router";
-import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
-import {useTranslation} from "react-i18next";
-import {List} from "@material-ui/core";
-import helpers from "../../../util/helperFunctions";
-import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
-import ArtifactListItem from "./Holder/ArtifactListItem";
+import { List } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { ArtifactTO, ArtifactTypeTO } from "../../../api";
+import DropdownButton, { DropdownButtonItem } from "../../../components/Form/DropdownButton";
 import {
     ACTIVE_ARTIFACTS,
     FAVORITE_ARTIFACTS,
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_FAVORITE
 } from "../../../constants/Constants";
+import { fetchArtifactsFromRepo, fetchFavoriteArtifacts } from "../../../store/actions";
+import { RootState } from "../../../store/reducers/rootReducer";
+import helpers from "../../../util/helperFunctions";
+import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
+import ArtifactListItem from "./Holder/ArtifactListItem";
 
 
 const useStyles = makeStyles(() => ({
@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
 const ArtifactDetails: React.FC = (() => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const { repoId } = useParams<{ repoId: string }>();
     const activeArtifacts: Array<ArtifactTO> = useSelector(
@@ -62,10 +62,10 @@ const ArtifactDetails: React.FC = (() => {
 
     const fetchFromRepo = useCallback(async () => {
         fetchArtifactsFromRepo(repoId).then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: ACTIVE_ARTIFACTS, artifacts: response.data });
                 dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
-                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: true })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFromRepo())
             }
@@ -76,9 +76,9 @@ const ArtifactDetails: React.FC = (() => {
 
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
-                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
+                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: true })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
@@ -103,10 +103,9 @@ const ArtifactDetails: React.FC = (() => {
 
     const changeFileTypeFilter = (selectedValue: string) => {
         const currentList = displayedFileTypes
-        if(displayedFileTypes.find(fileType => fileType === selectedValue)){
+        if (displayedFileTypes.find(fileType => fileType === selectedValue)) {
             currentList.splice(currentList.indexOf(selectedValue), 1)
-        }
-        else{
+        } else {
             currentList.push(selectedValue)
         }
         setDisplayedFileTypes(currentList)
@@ -115,15 +114,15 @@ const ArtifactDetails: React.FC = (() => {
 
     //TODO: filteredAndSortedArtifacts ist Alex's vorschlag, um die Sortierfunktion zu vereinfachen
     /*
-    const filteredAndSortedArtifacts = useMemo(() => {
-        const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
-        switch(sortValue) {
-            case "created": return filtered.sort(helpers.compareCreated);
-            case "lastEdited": return filtered.sort(helpers.compareEdited);
-            case "name": return filtered.sort(helpers.compareName);
-        }
-    }, [activeArtifacts, displayedFileTypes, sortValue]);
-*/
+     const filteredAndSortedArtifacts = useMemo(() => {
+     const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
+     switch(sortValue) {
+     case "created": return filtered.sort(helpers.compareCreated);
+     case "lastEdited": return filtered.sort(helpers.compareEdited);
+     case "name": return filtered.sort(helpers.compareName);
+     }
+     }, [activeArtifacts, displayedFileTypes, sortValue]);
+     */
 
     const applyFilters = useCallback(() => {
         const filtered = activeArtifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
@@ -135,9 +134,8 @@ const ArtifactDetails: React.FC = (() => {
     }, [activeArtifacts, applyFilters])
 
 
-
     const sort = (value: string, artifacts: Array<ArtifactTO>) => {
-        switch (value){
+        switch (value) {
             case "created":
                 setSortValue("created")
                 setFilteredArtifacts(artifacts.sort(helpers.compareCreated));
@@ -200,11 +198,14 @@ const ArtifactDetails: React.FC = (() => {
     return (
         <>
             <div className={classes.buttonContainer}>
-                <div >
-                    <DropdownButton className={classes.filter} title={t("filter.filter")} options={filterOptions} type={"checkbox"} selectedFilterOptions={displayedFileTypes} />
-                    <DropdownButton title={t("sort.sort")} options={sortOptions} type={"radio"} defaultSortValue={"lastEdited"}/>
+                <div>
+                    <DropdownButton className={classes.filter} title={t("filter.filter")}
+                        options={filterOptions} type={"checkbox"}
+                        selectedFilterOptions={displayedFileTypes} />
+                    <DropdownButton title={t("sort.sort")} options={sortOptions} type={"radio"}
+                        defaultSortValue={"lastEdited"} />
                 </div>
-                <ArtifactManagementContainer/>
+                <ArtifactManagementContainer />
             </div>
 
             <div className={classes.container}>

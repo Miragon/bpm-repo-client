@@ -25,33 +25,22 @@ fetch("/repository/translations/default/common.json", {
     }
 )
 
-const fetchCustom = (defaultPackage: JSON) => {
-    fetch("/repository/translations/custom/common.json"
-        , {
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
+const fetchCustom = async (defaultPackage: JSON) => {
+    const result = await fetch("/repository/translations/custom/common.json", {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         }
-    ).then(
-        function (res) {
-            return res.json()
-        }).then(function (data) {
-        const customPackage = data
-        initI18(defaultPackage, customPackage)
-    }).catch(
-        function (err) {
-            console.log(err)
-        }
-    )
-}
+    });
+    initI18(defaultPackage, await result.json());
+};
 
 const initI18 = (defaultPackage: JSON, customPackage: JSON) => {
     i18next
         .use(initReactI18next)
         .init({
             interpolation: { escapeValue: false },
-            lng: language ? language : "default",
+            lng: language ?? "default",
             resources: {
                 default: {
                     common: defaultPackage
@@ -61,19 +50,16 @@ const initI18 = (defaultPackage: JSON, customPackage: JSON) => {
                 }
             }
         });
-}
+};
 
-ReactDOM.render(
-    (
-        <Provider store={store}>
-            <HashRouter>
-                <Suspense fallback={"loading"}>
-                    <I18nextProvider i18n={i18next}>
-                        <App />
-                    </I18nextProvider>
-                </Suspense>
-            </HashRouter>
-        </Provider>
-    ),
-    document.getElementById("root")
-);
+ReactDOM.render((
+    <Provider store={store}>
+        <HashRouter>
+            <Suspense fallback="Loading...">
+                <I18nextProvider i18n={i18next}>
+                    <App />
+                </I18nextProvider>
+            </Suspense>
+        </HashRouter>
+    </Provider>
+), document.getElementById("root"));
