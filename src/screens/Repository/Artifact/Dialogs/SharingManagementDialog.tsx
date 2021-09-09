@@ -68,7 +68,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
     //TODO: ShareRepos-state does not update (should happen in the getSharedRepos action)
     //TODO: Sollten Dateien auch mit Repositories geteilt werden können, die dem nutzer nicht direkt zugewiesen sind?
     const isArtifactSharedWithRepo = useCallback((repo: RepositoryTO): boolean => {
-        return sharedRepos.find(sharedRepo => sharedRepo.id === repo.id) ? true : false;
+        return !!sharedRepos.find(sharedRepo => sharedRepo.id === repo.id);
     }, [sharedRepos])
 
     const isRepoManageable = useCallback((repo: RepositoryTO): boolean => {
@@ -107,7 +107,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
         })
     }, [dispatch, props.artifactId, t])
 
-    
+
     useEffect(()=> {
         const opts: MultipleSelectionListItem[] = [];
         sharedRepos.forEach(repo => {

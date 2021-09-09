@@ -25,12 +25,7 @@ const helpers = {
         };
     },
     isFavorite: (id: string, favoriteArtifactIds: Array<string>): boolean => {
-        if(favoriteArtifactIds.includes(id)){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return favoriteArtifactIds.includes(id);
     },
     reformatDate: (date: string | undefined): string => {
         const language = window.localStorage.getItem("language") ? window.localStorage.getItem("language") : "default";

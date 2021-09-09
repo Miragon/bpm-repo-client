@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-export const Toast: React.FC<Props> = props => {
+export const PopupToast: React.FC<Props> = props => {
     const classes = useStyles();
 
     if (props.action && props.onClose) {

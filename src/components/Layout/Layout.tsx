@@ -1,13 +1,12 @@
-import {makeStyles} from "@material-ui/core";
-import {Theme} from "@material-ui/core/styles";
-import clsx from "clsx";
-import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {ToastContainer} from "react-toastify";
-import {ArtifactApi, UserApi} from "../../api";
-import helpers from "../../util/helperFunctions";
+import { makeStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { ArtifactApi, UserApi } from "../../api";
+import { CURRENT_USER_INFO, FILETYPES } from "../../constants/Constants";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
-import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
+import helpers from "../../util/helperFunctions";
 import Menu from "./Menu";
 import Router from "./Router";
 
@@ -53,9 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Layout = (): any => {
-    const [open, setOpen] = useState(true);
     const dispatch = useDispatch();
-
 
     const classes = useStyles();
     const [userController] = useState<UserApi>(new UserApi());
@@ -69,7 +66,7 @@ const Layout = (): any => {
             .then(response => {
                 if (response.data) {
                     setUserDoesExist(true);
-                    dispatch({type: CURRENT_USER_INFO, currentUserInfo: response.data});
+                    dispatch({ type: CURRENT_USER_INFO, currentUserInfo: response.data });
 
 
                 } else {
@@ -83,11 +80,11 @@ const Layout = (): any => {
     const [artifactController] = useState<ArtifactApi>(new ArtifactApi());
 
     useEffect(() => {
-        if(!fileConfigFetched){
+        if (!fileConfigFetched) {
             const config = helpers.getClientConfig();
             artifactController.getAllFileTypes(config).then(response2 => {
-                if(response2.data){
-                    dispatch({type: FILETYPES, fileTypes: response2.data});
+                if (response2.data) {
+                    dispatch({ type: FILETYPES, fileTypes: response2.data });
                     setFileConfigFetched(true);
                 }
             })
@@ -96,28 +93,22 @@ const Layout = (): any => {
     }, [artifactController, dispatch, fileConfigFetched])
 
 
-
     if (userDoesExist === undefined) {
         return null;
     }
 
     if (!userDoesExist) {
-        return <RegisterNewUserScreen/>;
+        return <RegisterNewUserScreen />;
     }
 
 
     return (
         <>
-            <Menu
-                open={open}
-                setOpen={setOpen}/>
-            <div className={clsx(
-                open && classes.contentWrapperShift,
-                classes.contentWrapper
-            )}>
+            <Menu />
+            <div className={classes.contentWrapper}>
                 <div className={classes.content}>
-                    <Router/>
-                    <ToastContainer/>
+                    <Router />
+                    <ToastContainer />
                 </div>
             </div>
         </>
