@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
+import clsx from "clsx";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,14 +35,17 @@ const useStyles = makeStyles(() => ({
         margin: "0px"
     },
     buttonGroup: {
-        display: "flex",
-        "&>*:not(:last-child)": {
-            marginRight: "0.5rem"
-        }
+        display: "flex"
+    },
+    button: {
+        marginRight: "0.5rem"
     },
     types: {
         display: "flex",
         flexDirection: "column"
+    },
+    dropdownButton: {
+        minWidth: "200px"
     }
 }));
 
@@ -107,7 +111,7 @@ const ArtifactDetails: React.FC = (() => {
 
 
     const changeFileTypeFilter = (selectedValue: string) => {
-        const currentList = displayedFileTypes
+        const currentList = [...displayedFileTypes];
         if (displayedFileTypes.find(fileType => fileType === selectedValue)) {
             currentList.splice(currentList.indexOf(selectedValue), 1)
         } else {
@@ -153,21 +157,21 @@ const ArtifactDetails: React.FC = (() => {
                 setFilteredArtifacts(artifacts.sort(helpers.compareName));
                 return;
         }
-    }
+    };
 
     const filterOptions: DropdownButtonItem[] = [];
     fileTypes.map(fileType => (
         filterOptions.push(
             {
                 id: fileType.name,
-                label: fileType.name,
+                label: t(`artifact.type.${fileType.name}`),
                 type: "button",
                 onClick: () => {
                     changeFileTypeFilter(fileType.name)
                 }
             }
         )
-    ))
+    ));
 
     const sortOptions: DropdownButtonItem[] = [
         {
@@ -195,17 +199,20 @@ const ArtifactDetails: React.FC = (() => {
 
             }
         },
-    ]
+    ];
 
     return (
         <>
             <div className={classes.buttonContainer}>
                 <div className={classes.buttonGroup}>
                     <DropdownButton
+                        className={clsx(classes.button, classes.dropdownButton)}
                         title={t("filter.filter")}
-                        options={filterOptions} type={"checkbox"}
+                        options={filterOptions}
+                        type={"checkbox"}
                         selectedFilterOptions={displayedFileTypes} />
                     <DropdownButton
+                        className={classes.dropdownButton}
                         title={t("sort.sort")}
                         options={sortOptions}
                         type={"radio"}
@@ -213,6 +220,7 @@ const ArtifactDetails: React.FC = (() => {
                 </div>
                 <div className={classes.buttonGroup}>
                     <SimpleButton
+                        className={classes.button}
                         title={t("deployment.multiple")}
                         onClick={() => setDeployMultipleOpen(true)} />
                     <ArtifactManagementContainer />
@@ -227,6 +235,7 @@ const ArtifactDetails: React.FC = (() => {
             </div>
 
             <DeployMultipleDialog
+                artifacts={activeArtifacts}
                 open={deployMultipleOpen}
                 onCancelled={() => setDeployMultipleOpen(false)}
                 repoId={repoId} />

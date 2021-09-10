@@ -93,6 +93,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginTop: "0.25rem",
         marginBottom: "0.25rem",
         padding: 0
+    },
+    control: {
+        color: `${theme.palette.secondary.contrastText} !important`
     }
 }));
 
@@ -129,7 +132,7 @@ const DropdownButton: React.FC<Props> = props => {
                 role={undefined}
                 transition
                 disablePortal
-                style={{ width: ref.current?.offsetWidth }}
+                style={{ minWidth: ref.current?.offsetWidth }}
                 className={classes.popupContainer}>
                 {({ TransitionProps }) => (
                     <Grow
@@ -178,6 +181,8 @@ const DropdownButton: React.FC<Props> = props => {
                                                     label={option.label}
                                                     control={
                                                         <Radio
+                                                            size="small"
+                                                            className={classes.control}
                                                             color={"primary"}
                                                             onChange={() => {
                                                                 if (option.onClick) {
@@ -185,8 +190,7 @@ const DropdownButton: React.FC<Props> = props => {
                                                                 } else if (props.onClick) {
                                                                     props.onClick(option.id);
                                                                 }
-                                                            }
-                                                            }
+                                                            }}
                                                             value={option.id} />} />
                                             ))}
                                         </RadioGroup>
@@ -203,8 +207,10 @@ const DropdownButton: React.FC<Props> = props => {
                                             )}
                                             control={
                                                 <Checkbox
+                                                    size="small"
                                                     checked={props.selectedFilterOptions?.includes(option.label) || false}
                                                     color={"primary"}
+                                                    className={classes.control}
                                                     onChange={() => {
                                                         if (option.onClick) {
                                                             option.onClick();
