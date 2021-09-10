@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
         justifyContent: "flex-end",
     },
     artifactButton: {
-        minWidth: "180px"
+        minWidth: "200px"
     }
 }));
 

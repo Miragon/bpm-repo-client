@@ -1,17 +1,17 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {makeStyles} from "@material-ui/styles";
-import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, RepositoryTO} from "../../api";
-import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
-import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import {RootState} from "../../store/reducers/rootReducer";
-import {useTranslation} from "react-i18next";
+import { makeStyles } from "@material-ui/styles";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { ArtifactTO, RepositoryTO } from "../../api";
+import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import { ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS } from "../../constants/Constants";
+import { searchArtifact } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-import {searchArtifact} from "../../store/actions";
-import {ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS} from "../../constants/Constants";
+import OverviewArtifactList from "./OverviewArtifactList";
 
 const useStyles = makeStyles(() => ({
     headerText: {
@@ -36,7 +36,7 @@ let timeout: NodeJS.Timeout | undefined;
 const ArtifactSearchBar: React.FC = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
 
     const searchedArtifacts: Array<ArtifactTO> = useSelector(
@@ -97,9 +97,12 @@ const ArtifactSearchBar: React.FC = () => {
 
     const fetchArtifactSuggestion = useCallback((input: string) => {
         searchArtifact(input).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                dispatch({type: SEARCHED_ARTIFACTS, searchedArtifacts: response.data});
-                dispatch({type: ARTIFACTQUERY_EXECUTED, artifactResultsCount: response.data.length})
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: SEARCHED_ARTIFACTS, searchedArtifacts: response.data });
+                dispatch({
+                    type: ARTIFACTQUERY_EXECUTED,
+                    artifactResultsCount: response.data.length
+                })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
             }
@@ -127,12 +130,8 @@ const ArtifactSearchBar: React.FC = () => {
                         freeSolo
                         style={{ width: "100%" }}
                         open={false}
-                        onOpen={() => {
-                            setOpen(false);
-                        }}
-                        onClose={() => {
-                            setOpen(false);
-                        }}
+                        onOpen={() => setOpen(false)}
+                        onClose={() => setOpen(false)}
                         getOptionSelected={(option, value) => option.name === value.name}
                         getOptionLabel={option => `${option.name}`}
                         onChange={updateState}
@@ -149,34 +148,25 @@ const ArtifactSearchBar: React.FC = () => {
                                     ...params.InputProps,
                                     endAdornment: (
                                         <>
-                                            {(loading && artifact !== "")
-                                                ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20} />
-                                                ) : null}
+                                            {loading && artifact !== "" && (
+                                                <CircularProgress
+                                                    color="inherit"
+                                                    size={20} />
+                                            )}
                                             {params.InputProps.endAdornment}
                                         </>
                                     ),
                                 }} />
                         )} />
-                    {displayResult &&
+                    {displayResult && !loading && (
                         <div className={classes.resultsContainer}>
-                            {!loading && searchedArtifacts.map(searchedArtifact => (
-                                <div
-                                    key={searchedArtifact.id}
-                                    className={classes.container}>
-                                    <ArtifactEntry
-                                        artifact={searchedArtifact}
-                                        favorite={helpers.isFavorite(searchedArtifact.id, favoriteArtifacts?.map(artifact => artifact.id))}
-                                        repository={helpers.getRepoName(searchedArtifact.repositoryId, repos)}/>
-                                </div>
-                            ))}
-                            {!loading && searchedArtifacts?.length === 0 && artifact.length > 0 && (
-                                <span>{t("search.noResults")}</span>
-                            )}
+                            <OverviewArtifactList
+                                fallback="search.noResults"
+                                artifacts={searchedArtifacts}
+                                repositories={repos}
+                                favorites={favoriteArtifacts} />
                         </div>
-                    }
+                    )}
                 </ErrorBoundary>
             </div>
         </>

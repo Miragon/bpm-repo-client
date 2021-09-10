@@ -3,12 +3,12 @@ import React, { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArtifactTO, RepositoryTO } from "../../api";
-import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
 import Section from "../../components/Layout/Section";
 import { RECENT_ARTIFACTS, SYNC_STATUS_RECENT } from "../../constants/Constants";
 import { fetchRecentArtifacts } from "../../store/actions";
 import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
+import OverviewArtifactList from "./OverviewArtifactList";
 
 const RecentArtifacts: React.FC = observer(() => {
     const dispatch = useDispatch();
@@ -40,15 +40,10 @@ const RecentArtifacts: React.FC = observer(() => {
 
     return (
         <Section title="category.recent">
-            {recentArtifacts?.map(artifact => (
-                <ArtifactEntry
-                    artifact={artifact}
-                    favorite={helpers.isFavorite(artifact.id, favoriteArtifacts?.map(artifact => artifact.id))}
-                    repository={helpers.getRepoName(artifact.repositoryId, repos)} />
-            ))}
-            {recentArtifacts?.length === 0 && (
-                <span>{t("category.recent")}</span>
-            )}
+            <OverviewArtifactList
+                artifacts={recentArtifacts}
+                repositories={repos}
+                favorites={favoriteArtifacts} />
         </Section>
     );
 });

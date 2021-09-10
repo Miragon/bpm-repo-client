@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     menuItemDivider: {
         height: "1px",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: theme.palette.secondary.contrastText,
         opacity: "1 !important",
         marginTop: "0.25rem",
         marginBottom: "0.25rem",

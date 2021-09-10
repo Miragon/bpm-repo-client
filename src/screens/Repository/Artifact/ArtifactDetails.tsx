@@ -1,11 +1,11 @@
-import { List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { ArtifactTO, ArtifactTypeTO } from "../../../api";
+import { ArtifactTO, ArtifactTypeTO, RepositoryTO } from "../../../api";
 import DropdownButton, { DropdownButtonItem } from "../../../components/Form/DropdownButton";
+import SimpleButton from "../../../components/Form/SimpleButton";
 import {
     ACTIVE_ARTIFACTS,
     FAVORITE_ARTIFACTS,
@@ -16,7 +16,8 @@ import { fetchArtifactsFromRepo, fetchFavoriteArtifacts } from "../../../store/a
 import { RootState } from "../../../store/reducers/rootReducer";
 import helpers from "../../../util/helperFunctions";
 import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
-import ArtifactListItem from "./Holder/ArtifactListItem";
+import RepositoryArtifactList from "../RepositoryArtifactList";
+import DeployMultipleDialog from "../RepositoryDetails/Dialogs/DeployMultipleDialog";
 
 
 const useStyles = makeStyles(() => ({
@@ -32,12 +33,15 @@ const useStyles = makeStyles(() => ({
         justifyContent: "space-between",
         margin: "0px"
     },
+    buttonGroup: {
+        display: "flex",
+        "&>*:not(:last-child)": {
+            marginRight: "0.5rem"
+        }
+    },
     types: {
         display: "flex",
         flexDirection: "column"
-    },
-    filter: {
-        marginRight: "25px"
     }
 }));
 
@@ -54,11 +58,12 @@ const ArtifactDetails: React.FC = (() => {
     const favoriteSynced = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
+    const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
 
+    const [deployMultipleOpen, setDeployMultipleOpen] = useState(false);
     const [displayedFileTypes, setDisplayedFileTypes] = useState<Array<string>>(fileTypes.map(type => type.name));
     const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(activeArtifacts);
     const [sortValue, setSortValue] = useState<string>("lastEdited");
-
 
     const fetchFromRepo = useCallback(async () => {
         fetchArtifactsFromRepo(repoId).then(response => {
@@ -133,7 +138,6 @@ const ArtifactDetails: React.FC = (() => {
         applyFilters()
     }, [activeArtifacts, applyFilters])
 
-
     const sort = (value: string, artifacts: Array<ArtifactTO>) => {
         switch (value) {
             case "created":
@@ -150,7 +154,6 @@ const ArtifactDetails: React.FC = (() => {
                 return;
         }
     }
-
 
     const filterOptions: DropdownButtonItem[] = [];
     fileTypes.map(fileType => (
@@ -194,36 +197,39 @@ const ArtifactDetails: React.FC = (() => {
         },
     ]
 
-
     return (
         <>
             <div className={classes.buttonContainer}>
-                <div>
-                    <DropdownButton className={classes.filter} title={t("filter.filter")}
+                <div className={classes.buttonGroup}>
+                    <DropdownButton
+                        title={t("filter.filter")}
                         options={filterOptions} type={"checkbox"}
                         selectedFilterOptions={displayedFileTypes} />
-                    <DropdownButton title={t("sort.sort")} options={sortOptions} type={"radio"}
+                    <DropdownButton
+                        title={t("sort.sort")}
+                        options={sortOptions}
+                        type={"radio"}
                         defaultSortValue={"lastEdited"} />
                 </div>
-                <ArtifactManagementContainer />
+                <div className={classes.buttonGroup}>
+                    <SimpleButton
+                        title={t("deployment.multiple")}
+                        onClick={() => setDeployMultipleOpen(true)} />
+                    <ArtifactManagementContainer />
+                </div>
             </div>
 
             <div className={classes.container}>
-                <List>
-                    {filteredArtifacts.map(artifact => (
-                        <ArtifactListItem
-                            key={artifact.id}
-                            artifactTitle={artifact.name}
-                            createdDate={artifact.createdDate}
-                            updatedDate={artifact.updatedDate}
-                            description={artifact.description}
-                            repoId={artifact.repositoryId}
-                            favorite={helpers.isFavorite(artifact.id, favoriteArtifacts?.map(artifact => artifact.id))}
-                            artifactId={artifact.id}
-                            fileType={artifact.fileType} />
-                    ))}
-                </List>
+                <RepositoryArtifactList
+                    artifacts={filteredArtifacts}
+                    repositories={repos}
+                    favorites={favoriteArtifacts} />
             </div>
+
+            <DeployMultipleDialog
+                open={deployMultipleOpen}
+                onCancelled={() => setDeployMultipleOpen(false)}
+                repoId={repoId} />
         </>
     );
 });

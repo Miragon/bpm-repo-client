@@ -26,13 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     logo: {
         display: "flex"
     },
-    logoLeft: {
+    logoText: {
         fontWeight: "bold",
         color: "white"
-    },
-    logoRight: {
-        fontWeight: "bold",
-        color: theme.palette.secondary.main
     },
     languageSelector: {
         minWidth: "200px"
@@ -70,14 +66,9 @@ const Menu: React.FC = () => {
             <div className={classes.menuContent}>
                 <div className={classes.logo}>
                     <Typography
-                        className={classes.logoLeft}
+                        className={classes.logoText}
                         variant="h6">
-                        DigitalWF-
-                    </Typography>
-                    <Typography
-                        className={classes.logoRight}
-                        variant="h6">
-                        Modellverwaltung
+                        DigitalWF-Modellverwaltung
                     </Typography>
                 </div>
                 <DropdownButton

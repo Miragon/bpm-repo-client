@@ -23,7 +23,7 @@ const theme = responsiveFontSizes(
                 dark: blue[700],
                 main: blue[500],
                 light: blue[300],
-                contrastText: "white"
+                contrastText: "#FFF"
             },
             error: {
                 main: "#D32F2F"
