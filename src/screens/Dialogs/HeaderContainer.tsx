@@ -1,87 +1,69 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {observer} from "mobx-react";
-import React, {useEffect, useState} from "react";
-import DropdownButton, {DropdownButtonItem} from "../../components/Form/DropdownButton";
+import { makeStyles } from "@material-ui/core/styles";
+import { observer } from "mobx-react";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { ArtifactTypeTO } from "../../api";
+import DropdownButton, { DropdownButtonItem } from "../../components/Form/DropdownButton";
 import SimpleButton from "../../components/Form/SimpleButton";
+import { RootState } from "../../store/reducers/rootReducer";
 import ArtifactSearchBar from "../Overview/ArtifactSearchBar";
 import CreateArtifactDialog from "./CreateArtifactDialog";
 import CreateRepoDialog from "./CreateRepoDialog";
 import UploadArtifactDialog from "./UploadArtifactDialog";
-import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/reducers/rootReducer";
-import {ArtifactTypeTO} from "../../api";
 
 const useStyles = makeStyles(() => ({
     container: {
-        paddingTop: "25px",
+        paddingTop: "16px",
         display: "flex",
         justifyContent: "space-between",
         whiteSpace: "nowrap"
     },
-    buttons: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        minWidth: "360px",
-        flexGrow: 1
-    },
-    artifactButton: {
-        minWidth: "180px",
-        marginLeft: "1rem"
-    },
-    repositoryButton: {
-        minWidth: "180px",
+    button: {
+        minWidth: "200px",
         marginLeft: "1rem"
     }
 }));
 
-const RepoContainer: React.FC = observer(() => {
+const HeaderContainer: React.FC = observer(() => {
     const classes = useStyles();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
+
     const [createRepoOpen, setCreateRepoOpen] = useState(false);
     const [uploadArtifactOpen, setUploadArtifactOpen] = useState(false);
     const [createArtifactOpen, setCreateArtifactOpen] = useState(false);
-    const [createArtifactType, setCreateArtifactType] = useState<string>("BPMN");
-    const [artifactOptions, setArtifactOptions] = useState<Array<DropdownButtonItem>>([])
+    const [createArtifactType, setCreateArtifactType] = useState("BPMN");
+    const [artifactOptions, setArtifactOptions] = useState<DropdownButtonItem[]>([])
 
-    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
-
+    const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     useEffect(() => {
-        const opts: Array<DropdownButtonItem> = []
+        const opts: DropdownButtonItem[] = []
+
         fileTypes?.forEach(fileType => {
-            opts.push({id: fileType.name,
+            opts.push({
+                id: fileType.name,
                 label: `artifact.create${fileType.name}`,
                 type: "button",
                 onClick: () => {
                     setCreateArtifactOpen(true);
                     setCreateArtifactType(fileType.name)
-                }});
-        })
-
+                }
+            });
+        });
         opts.push({
             id: "divider1",
             type: "divider",
-            label: "",
-            onClick: () => { /* Do nothing */
-            }
-        })
+            label: ""
+        });
         opts.push({
             id: "upload",
             label: "artifact.upload",
             type: "button",
             onClick: () => setUploadArtifactOpen(true)
-        })
-        setOpts(opts)
-
+        });
+        setArtifactOptions(opts);
     }, [fileTypes])
-
-
-    const setOpts = (opts: Array<DropdownButtonItem>) => {
-        setArtifactOptions(opts)
-    }
-
 
     return (
         <>
@@ -89,16 +71,17 @@ const RepoContainer: React.FC = observer(() => {
                 <ArtifactSearchBar />
                 <div>
                     <SimpleButton
-                        className={classes.repositoryButton}
+                        className={classes.button}
                         title={t("repository.create")}
                         onClick={() => setCreateRepoOpen(true)} />
                     <DropdownButton
                         type={"default"}
-                        className={classes.artifactButton}
+                        className={classes.button}
                         title={t("artifact.create")}
                         options={artifactOptions} />
                 </div>
             </div>
+
             <CreateRepoDialog
                 open={createRepoOpen}
                 onCancelled={() => setCreateRepoOpen(false)} />
@@ -115,4 +98,4 @@ const RepoContainer: React.FC = observer(() => {
     );
 });
 
-export default RepoContainer;
+export default HeaderContainer;

@@ -111,7 +111,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
     }, [searchedUsers]);
 
     const isUserAlreadyAssigned = useCallback((username: string): boolean => {
-        return assignedUsers.find(user => user.username === username) === undefined ? false : true;
+        return assignedUsers.find(user => user.username === username) !== undefined;
     }, [assignedUsers])
 
     const addUser = useCallback(() => {

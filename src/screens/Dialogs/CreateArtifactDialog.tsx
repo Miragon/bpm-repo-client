@@ -1,21 +1,21 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, {useCallback, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../api";
+import { ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO } from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
 import SettingsTextField from "../../components/Form/SettingsTextField";
-import {RootState} from "../../store/reducers/rootReducer";
-import {useTranslation} from "react-i18next";
-import {createArtifact, createVersion} from "../../store/actions";
 import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
     SYNC_STATUS_VERSION
 } from "../../constants/Constants";
+import { createArtifact, createVersion } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 
 interface Props {
@@ -27,33 +27,34 @@ interface Props {
 
 const CreateArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
-
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [repoId, setRepoId] = useState<string>(props.repo ? props.repo.id : "");
+    const [repoId, setRepoId] = useState<string>("");
+
+    useEffect(() => {
+        setRepoId(props.repo?.id || "");
+    }, [props.repo]);
 
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
 
     const onCreate = useCallback(async () => {
-        setRepoId(props.repo?.id || "")
         createArtifact(repoId, title, description, props.type)
             .then(response => {
-                if(Math.floor(response.status / 100) === 2){
+                if (Math.floor(response.status / 100) === 2) {
                     createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone)
                         .then(response2 => {
                             if (Math.floor(response2.status / 100) === 2) {
-                                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
-                                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
-                                dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
-                                dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
+                                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                                dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false })
+                                dispatch({ type: SYNC_STATUS_VERSION, dataSynced: false });
                                 setTitle("");
                                 setDescription("");
-                                setRepoId("");
                                 helpers.makeSuccessToast(t("artifact.created"));
                                 props.onCancelled();
                             } else {
@@ -81,7 +82,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}
-            onFirst={onCreate} >
+            onFirst={onCreate}>
 
             <SettingsForm large>
 
@@ -95,7 +96,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                             <MenuItem
                                 key={props.repo?.id}
                                 value={props.repo?.id}
-                                selected >
+                                selected>
                                 {props.repo?.name}
                             </MenuItem>
                         )
@@ -111,7 +112,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                 <SettingsTextField
                     label={t("properties.title")}
                     value={title}
-                    onChanged={setTitle}/>
+                    onChanged={setTitle} />
 
                 <SettingsTextField
                     label={t("properties.description")}
@@ -119,7 +120,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                     multiline
                     rows={3}
                     rowsMax={3}
-                    onChanged={setDescription}/>
+                    onChanged={setDescription} />
 
             </SettingsForm>
         </PopupDialog>

@@ -1,48 +1,29 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {observer} from "mobx-react";
-import React, {useCallback, useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router-dom";
-import RepoCard from "./Holder/RepoCard";
-import {RepositoryTO} from "../../api";
-import {RootState} from "../../store/reducers/rootReducer";
-import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
+import { observer } from "mobx-react";
+import React, { useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import {fetchRepositories} from "../../store/actions/repositoryAction";
-import {useTranslation} from "react-i18next";
-import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
+import { RepositoryTO } from "../../api";
+import Section from "../../components/Layout/Section";
+import { REPOSITORIES, SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
+import { fetchRepositories } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-
-const useStyles = makeStyles(() => ({
-    header: {
-        display: "flex",
-        marginTop: "2rem"
-    },
-    headerText: {
-        color: "black",
-        fontSize: "1.3rem"
-    },
-    container: {
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        padding: "1rem 0",
-    }
-}));
+import { getRepositoryUrl } from "../../util/Redirections";
+import RepoCard from "./Holder/RepoCard";
 
 const RepoContainer: React.FC = observer(() => {
-    const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const allRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
     const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced);
-    
-    
+
     const fetchRepos = useCallback(() => {
         fetchRepositories().then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: REPOSITORIES, repos: response.data });
                 dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
             } else {
@@ -59,36 +40,18 @@ const RepoContainer: React.FC = observer(() => {
         }
     }, [fetchRepos, syncStatus]);
 
-    const openRepoScreen = (repo: RepositoryTO) => {
-        history.push(`/repository/${repo.id}`);
-    };
-
     return (
-        <>
-            <div className={classes.header}>
-                <div className={classes.headerText}>
-                    {t("repository.repository")}
-                </div>
-            </div>
-
-            <div className={classes.container}>
-                <ErrorBoundary>
-                    {allRepos.map(repo => (
-                        // eslint-disable-next-line react/jsx-key
-                        <RepoCard
-                            key={repo.id}
-                            repoTitle={repo.name}
-                            description={repo.description}
-                            existingArtifacts={repo.existingArtifacts}
-                            assignedUsers={repo.assignedUsers}
-                            onClick={() => openRepoScreen(repo)} />
-                    ))}
-                    {allRepos?.length === 0 && (
-                        <span>{t("repository.notAvailable")}</span>
-                    )}
-                </ErrorBoundary>
-            </div>
-        </>
+        <Section title="repository.repositories">
+            {allRepos.map(repo => (
+                <RepoCard
+                    key={repo.id}
+                    repository={repo}
+                    onClick={() => history.push(getRepositoryUrl(repo))} />
+            ))}
+            {allRepos?.length === 0 && (
+                <span>{t("repository.notAvailable")}</span>
+            )}
+        </Section>
     );
 });
 

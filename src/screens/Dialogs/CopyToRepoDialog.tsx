@@ -1,28 +1,26 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {RepositoryTO} from "../../api";
+import { ArtifactTO, RepositoryTO } from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
-import {RootState} from "../../store/reducers/rootReducer";
-import {useTranslation} from "react-i18next";
-import {copyToRepo, fetchRepositories} from "../../store/actions";
+import { REPOSITORIES, SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
+import { copyToRepo, fetchRepositories } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 
 interface Props {
     open: boolean;
     onCancelled: () => void;
-    name: string
-    artifactId: string;
+    artifact: ArtifactTO | undefined;
 }
 
 const CopyToRepoDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
-
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [repoId, setRepoId] = useState<string>("");
@@ -33,8 +31,12 @@ const CopyToRepoDialog: React.FC<Props> = props => {
     const repoSynced: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced)
 
     const onCopy = useCallback(async () => {
-        copyToRepo(repoId, props.artifactId).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
+        if (!props.artifact) {
+            return;
+        }
+
+        copyToRepo(repoId, props.artifact.id).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
                 helpers.makeSuccessToast(t("repo.copied"))
                 setRepoId("")
                 props.onCancelled();
@@ -48,7 +50,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
 
     const fetchRepos = useCallback(() => {
         fetchRepositories().then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: REPOSITORIES, repos: response.data });
                 dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
             } else {
@@ -60,7 +62,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
     }, [dispatch, t]);
 
     useEffect(() => {
-        if(!repoSynced){
+        if (!repoSynced) {
             fetchRepos()
         }
     }, [fetchRepos, repoSynced])
@@ -70,11 +72,11 @@ const CopyToRepoDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("artifact.copy", {artifactName: props.name})}
+            title={t("artifact.copy", { artifactName: props.artifact?.name })}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.copy")}
-            onFirst={onCopy} >
+            onFirst={onCopy}>
 
             <SettingsForm large>
 

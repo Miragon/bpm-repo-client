@@ -1,3 +1,5 @@
+export const COLOR_LINK = "rgb(9, 105, 218)";
+
 export const REPOSITORIES = "GET_REPOS";
 export const ACTIVE_REPO = "ACTIVE_REPO";
 export const MANAGEABLE_REPOS = "MANAGEABLE_REPOS";

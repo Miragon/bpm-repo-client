@@ -7,7 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import React, {ReactNode} from "react";
-import {Toast} from "./Toast";
+import {PopupToast} from "./PopupToast";
 
 interface Props {
     open: boolean;
@@ -113,7 +113,7 @@ const PopupDialog: React.FC<Props> = props => {
                     {props.title}
                 </Typography>
 
-                <Toast
+                <PopupToast
                     message={props.error}
                     onClose={props.onCloseError}
                     className={clsx(classes.error, props.errorClassName)}/>

@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         boxShadow: theme.shadows[4],
         zIndex: theme.zIndex.modal,
         backgroundColor: theme.palette.primary.main,
-        padding: "0.5rem 25px 0.5rem 0.5rem",
+        height: "60px",
         flexDirection: "row",
         alignItems: "center",
         position: "sticky",

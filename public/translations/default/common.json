@@ -2,6 +2,7 @@
   "repository": {
     "confirmDelete": "Are you sure you want to delete {{repoName}}?",
     "repository": "Repository",
+    "repositories": "Repositories",
     "create": "Create Repository",
     "created": "Repository created",
     "delete": "Delete Repository",
@@ -157,7 +158,19 @@
     "download": "Download File",
     "showInRepo": "Show in Repository",
     "edit": "Edit File",
-    "delete": "Delete File"
+    "delete": "Delete File",
+    "updatedDuration": "Updated {{duration}}"
+  },
+  "duration": {
+    "ago": {
+      "fewSeconds": "few seconds ago",
+      "lessThanOneMinute": "less than 1 minute ago",
+      "oneMinute": "1 minute ago",
+      "minutes": "{{minutes}} minutes ago",
+      "oneHour": "1 hour ago",
+      "hours": "{{hours}} hours ago",
+      "oneDay": "yesterday"
+    }
   },
   "path": {
     "overview": "Overview",

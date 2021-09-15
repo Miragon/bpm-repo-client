@@ -1,14 +1,12 @@
-import React, {useEffect} from "react";
-import {ArtifactVersionTO} from "../../../api";
-import {CircularProgress, List, ListItem} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { List } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect } from "react";
+import { ArtifactVersionTO } from "../../../api";
 import VersionListItem from "./Holder/VersionListItem";
 
 const useStyles = makeStyles(() => ({
-
     list: {
         padding: "0px",
-        marginBottom: "20px",
         borderRadius: "2px",
     },
 }));
@@ -16,12 +14,10 @@ const useStyles = makeStyles(() => ({
 interface Props {
     artifactId: string;
     repoId: string;
-    loading: boolean;
     fileType: string;
     artifactTitle: string;
     artifactVersionTOs: ArtifactVersionTO[];
 }
-
 
 const VersionDetails: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
@@ -42,35 +38,23 @@ const VersionDetails: React.FC<Props> = ((props: Props) => {
         return 0;
     };
 
-
     return (
-        <>
-            <List className={classes.list}>
-                {props.loading &&
-                    <ListItem>
-                        <CircularProgress size={20} />
-                    </ListItem>
-                }
-                {props.artifactVersionTOs?.map(version => (
-                    <VersionListItem
-                        key={version.id}
-                        artifactTitle={props.artifactTitle}
-                        milestone={version.milestone}
-                        comment={version.comment}
-                        updatedDate={version.updatedDate}
-                        id={version.id}
-                        artifactId={version.artifactId}
-                        file={version.file}
-                        type={props.fileType}
-                        repoId={version.repositoryId}
-                        deployments={version.deployments} />
-                ))}
-
-            </List>
-
-
-
-        </>
+        <List className={classes.list}>
+            {props.artifactVersionTOs?.map(version => (
+                <VersionListItem
+                    key={version.id}
+                    artifactTitle={props.artifactTitle}
+                    milestone={version.milestone}
+                    comment={version.comment}
+                    updatedDate={version.updatedDate}
+                    id={version.id}
+                    artifactId={version.artifactId}
+                    file={version.file}
+                    type={props.fileType}
+                    repoId={version.repositoryId}
+                    deployments={version.deployments} />
+            ))}
+        </List>
     );
 });
 

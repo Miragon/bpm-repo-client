@@ -1,45 +1,91 @@
-import React, {useCallback, useEffect, useState} from "react";
+import { Checkbox, FormControlLabel, MenuItem, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { ArtifactTO, NewDeploymentTO } from "../../../../api";
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import {List, MenuItem, Paper} from "@material-ui/core";
-import {useDispatch, useSelector} from "react-redux";
-import {useTranslation} from "react-i18next";
-import {ArtifactTO, NewDeploymentTO} from "../../../../api";
-import {SYNC_STATUS_TARGETS, SYNC_STATUS_VERSION, TARGETS} from "../../../../constants/Constants";
-import {RootState} from "../../../../store/reducers/rootReducer";
-import {deployMultiple, fetchTargets} from "../../../../store/actions";
-import helpers from "../../../../util/helperFunctions";
-import AddDeploymentSearchBar from "./AddDeploymentSearchBar";
-import DeploymentListItem from "./DeploymentListItem";
-import SettingsSelect from "../../../../components/Form/SettingsSelect";
+import SearchTextField from "../../../../components/Form/SearchTextField";
 import SettingsForm from "../../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../../components/Form/SettingsSelect";
+import { SYNC_STATUS_TARGETS, SYNC_STATUS_VERSION, TARGETS } from "../../../../constants/Constants";
+import { deployMultiple, fetchTargets } from "../../../../store/actions";
+import { RootState } from "../../../../store/reducers/rootReducer";
+import helpers from "../../../../util/helperFunctions";
 
+const useStyles = makeStyles(() => ({
+    wrapper: {},
+    list: {
+        display: "flex",
+        flexDirection: "column",
+        border: "1px solid #CCC",
+        backgroundColor: "white",
+        borderRadius: "4px",
+        padding: "4px 0",
+        height: "400px",
+        overflowY: "auto"
+    },
+    root: {
+        padding: "4px 16px 4px 8px",
+        margin: 0,
+        "&:not(:last-child)": {
+            borderBottom: "1px solid #CCC"
+        }
+    },
+    disabled: {},
+    checkbox: {},
+    search: {
+        display: "flex",
+        marginBottom: "8px",
+        backgroundColor: "white"
+    },
+    searchField: {
+        flexGrow: 1
+    },
+    placeholder: {
+        padding: "16px",
+        color: "rgba(0, 0, 0, 0.38)"
+    }
+}));
 
 interface Props {
     open: boolean;
     onCancelled: () => void;
     repoId: string;
+    artifacts: ArtifactTO[];
 }
 
-//TODO: wenn in einem listItem keine Version ausgewählt wird, kann die Liste trotzdem deployt werden (alle elemente außer das ohne Version werden dann deplyot)
+//TODO: wenn in einem listItem keine Version ausgewählt wird, kann die Liste trotzdem deployt
+// werden (alle elemente außer das ohne Version werden dann deplyot)
 const DeployMultipleDialog: React.FC<Props> = props => {
+    const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const targetsSynced: boolean = useSelector((state: RootState) => state.dataSynced.targetsSynced)
     const targets: Array<string> = useSelector((state: RootState) => state.deployment.targets)
 
-
     const [error, setError] = useState<string | undefined>(undefined);
-    const [deployments, setDeployments] = useState<Array<NewDeploymentTO>>([]);
-    const [artifacts, setArtifacts] = useState<ArtifactTO[]>([]);
     const [target, setTarget] = useState<string>("");
 
+    const [search, setSearch] = useState("");
+    const [selectedArtifacts, setSelectedArtifacts] = useState<string[]>([]);
+    const [disabled, setDisabled] = useState(false);
+
+    const onArtifactSelected = useCallback((selectedArtifact: string, checked: boolean) => {
+        if (checked) {
+            setSelectedArtifacts(cur => cur.concat(selectedArtifact));
+        } else {
+            setSelectedArtifacts(cur => cur.filter(artifact => artifact !== selectedArtifact));
+        }
+    }, []);
 
     const getTargets = useCallback(async () => {
         fetchTargets().then(response => {
-            if(Math.floor(response.status / 100) === 2){
-                dispatch({type: TARGETS, targets: response.data})
-                dispatch({type: SYNC_STATUS_TARGETS, targetsSynced: true})
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: TARGETS, targets: response.data })
+                dispatch({ type: SYNC_STATUS_TARGETS, targetsSynced: true })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => getTargets())
             }
@@ -48,42 +94,38 @@ const DeployMultipleDialog: React.FC<Props> = props => {
         })
     }, [dispatch, t])
 
+    const filteredArtifacts = useMemo(() => {
+        return props.artifacts.filter(a => a.name.toLowerCase().indexOf(search) !== -1);
+    }, [props.artifacts, search]);
+
     useEffect(() => {
-        if(!targetsSynced){
+        if (!targetsSynced) {
             getTargets()
         }
     }, [getTargets, targetsSynced])
 
-    const addArtifact = (artifact: ArtifactTO | undefined) => {
-        if(artifact){
-            artifacts.push(artifact)
-            setArtifacts([...artifacts])
-        }
-    }
-
-    //manages an array of NewDeploymentTOs
-    // - adds one NewDeploymentTO if it is not yet part of the array
-    // - removes an NewDeploymentTO and adds another NewDeploymentTO, if user changes the version that should be deployed
-    const onChangeMilestone = (artifactId: string, versionId: string) => {
-        const newDeploymentTOs = deployments
-        const newDeploymentTO: NewDeploymentTO = {artifactId, versionId, target}
-        const updatedDeployment = newDeploymentTOs.find(deploymentTOs => deploymentTOs.artifactId === artifactId)
-        if(updatedDeployment){
-            const updatedList = newDeploymentTOs.filter(deploymentTOs => deploymentTOs.artifactId !== artifactId)
-            const newDeploymentTO: NewDeploymentTO = {artifactId, versionId, target}
-            updatedList.push(newDeploymentTO)
-            setDeployments(updatedList)
-        } else {
-            newDeploymentTOs.push(newDeploymentTO)
-            setDeployments(newDeploymentTOs)
-        }
-    }
-
     const deploy = useCallback(async () => {
+        if (!target) {
+            setError("Keine Zielumgebung ausgewählt!");
+            return;
+        }
+
+        if (selectedArtifacts.length === 0) {
+            setError("Keine Dateien ausgewählt!");
+            return;
+        }
+
+        setError(undefined);
+        const deployments: NewDeploymentTO[] = selectedArtifacts.map(artifact => ({
+            target: target,
+            artifactId: artifact,
+            // TODO: Backend muss latest akzeptieren
+            versionId: "latest"
+        }));
         deployMultiple(deployments).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("deployment.deployedMultiple", {deployedVersions: response.data.length}))
-                dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
+            if (Math.floor(response.status / 100) === 2) {
+                helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedVersions: response.data.length }))
+                dispatch({ type: SYNC_STATUS_VERSION, dataSynced: false });
                 props.onCancelled()
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => deploy())
@@ -91,11 +133,10 @@ const DeployMultipleDialog: React.FC<Props> = props => {
         }, error => {
             helpers.makeErrorToast(t(error.response.data), () => deploy())
         })
-    }, [deployments, dispatch, props, t])
-
+    }, [target, selectedArtifacts, dispatch, props, t])
 
     const onCancel = () => {
-        setArtifacts([])
+        setSelectedArtifacts([])
         props.onCancelled()
     }
 
@@ -121,21 +162,42 @@ const DeployMultipleDialog: React.FC<Props> = props => {
 
                 </SettingsSelect>
             </SettingsForm>
-            <List dense={false}>
-                <AddDeploymentSearchBar key="AddDeploymentSearchBar" addedArtifacts={artifacts} repoId={props.repoId} addArtifact={(artifact: ArtifactTO | undefined) => addArtifact(artifact)}/>
-                <Paper>
-                    {artifacts.map(artifact => (
-                        <DeploymentListItem
+            <div className={classes.wrapper}>
+                <div className={classes.search}>
+                    <SearchTextField
+                        className={classes.searchField}
+                        label="Dateien durchsuchen..."
+                        search={search}
+                        onSearchChanged={setSearch} />
+                </div>
+                <div className={classes.list}>
+                    {filteredArtifacts.length === 0 && (
+                        <Typography
+                            variant="body1"
+                            className={classes.placeholder}>
+                            Keine Dateien gefunden.
+                        </Typography>
+                    )}
+                    {filteredArtifacts.map(artifact => (
+                        <FormControlLabel
                             key={artifact.id}
-                            artifactId={artifact.id}
-                            artifactName={artifact.name}
-                            onChangeMilestone={(artifactId: string, versionId: string) => onChangeMilestone(artifactId, versionId)} />
+                            label={artifact.name}
+                            className={clsx(classes.root, disabled && classes.disabled)}
+                            control={(
+                                <Checkbox
+                                    disableFocusRipple
+                                    disableRipple
+                                    disableTouchRipple
+                                    color="primary"
+                                    className={classes.checkbox}
+                                    checked={selectedArtifacts.indexOf(artifact.id) !== -1}
+                                    disabled={disabled}
+                                    onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)} />
+                            )} />
                     ))}
-
-
-                </Paper>
-
-            </List>
-        </PopupDialog>    );
+                </div>
+            </div>
+        </PopupDialog>
+    );
 }
 export default DeployMultipleDialog;
