@@ -71,7 +71,7 @@ const DeployMultipleDialog: React.FC<Props> = props => {
 
     const [search, setSearch] = useState("");
     const [selectedArtifacts, setSelectedArtifacts] = useState<string[]>([]);
-    const [disabled, setDisabled] = useState(false);
+    const disabled = false;
 
     const onArtifactSelected = useCallback((selectedArtifact: string, checked: boolean) => {
         if (checked) {

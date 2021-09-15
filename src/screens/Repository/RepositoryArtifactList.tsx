@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { ArtifactTO, ArtifactTypeTO, RepositoryTO } from "../../api";
 import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
 import { DropdownButtonItem } from "../../components/Form/DropdownButton";
@@ -26,7 +25,6 @@ interface Props {
 
 const OverviewArtifactList: React.FC<Props> = (props: Props) => {
     const dispatch = useDispatch();
-    const history = useHistory();
     const { t } = useTranslation("common");
 
     const {

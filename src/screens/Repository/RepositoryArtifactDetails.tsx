@@ -1,4 +1,3 @@
-import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,13 +26,10 @@ const RepositoryArtifactDetails: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
     const { t } = useTranslation("common");
 
-    const [loading, setLoading] = useState(false);
     const [activeVersions, setActiveVersions] = useState<ArtifactVersionTO[]>([]);
 
     const getVersions = useCallback(async (artifactId: string) => {
-        setLoading(true);
         const response = await getAllVersions(artifactId);
-        setLoading(false);
         if (Math.floor(response.status / 100) === 2) {
             setActiveVersions(response.data);
         } else {
@@ -44,6 +40,7 @@ const RepositoryArtifactDetails: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         getVersions(props.artifact.id);
     }, [getVersions, props.artifact]);
+
 
     return (
         <div className={classes.root}>
