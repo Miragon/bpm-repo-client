@@ -9,9 +9,22 @@ import Section from "../../../components/Layout/Section";
 import { RootState } from "../../../store/reducers/rootReducer";
 import EditRepoDialog from "./Dialogs/EditRepoDialog";
 import UserManagementDialog from "./Dialogs/UserManagementDialog";
+import {makeStyles} from "@material-ui/styles";
+import theme from "../../../theme";
+
+const useStyles = makeStyles(() => ({
+    description: {
+        fontStyle: "italic",
+        color: theme.palette.text.secondary,
+        fontSize: "1rem",
+        paddingBottom: "1rem"
+    }
+}))
+
 
 const RepositoryDetails: React.FC = (() => {
     const { t } = useTranslation("common");
+    const classes = useStyles();
 
     const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
 
@@ -45,6 +58,9 @@ const RepositoryDetails: React.FC = (() => {
                 onClick: event => setOverflowTarget(event.currentTarget),
                 icon: <Settings />
             }]}>
+            <div className={classes.description}>
+                {activeRepo.description}
+            </div>
 
             <PopupSettings
                 open={!!overflowTarget}

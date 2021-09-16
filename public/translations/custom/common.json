@@ -17,6 +17,7 @@
     "artifact": {
         "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
         "create": "Datei erstellen",
+        "created": "Datei erstellt",
         "copy": "{{artifactName}} in anderes Projekt kopieren",
         "copyTo": "In Projekt kopieren",
         "createdFromExisting": "Datei aus existierender Version erstellt",
@@ -28,7 +29,7 @@
         "share": "Datei teilen",
         "upload": "Datei hochladen",
         "import": "Aus Cawemo importieren",
-        "notAvailable": "Sie haben noch keine Artifact erstellt",
+        "notAvailable": "Sie haben noch keine Datei erstellt",
         "addedToFavorite": "Datei zu Favoriten hinzugefügt",
         "addToFavorites": "Zu Favoriten hinzufügen",
         "createBPMN": "BPMN-Diagramm erstellen",

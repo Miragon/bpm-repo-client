@@ -12,9 +12,24 @@ import { RootState } from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import { getRepositoryUrl } from "../../util/Redirections";
 import RepoCard from "./Holder/RepoCard";
+import {makeStyles} from "@material-ui/styles";
+
+const useStyles = makeStyles(() => ({
+    horizontalAlignment: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "start",
+        flexWrap: "wrap",
+        rowGap: "20px",
+        columnGap: "30px"
+
+    }
+}));
+
 
 const RepoContainer: React.FC = observer(() => {
     const dispatch = useDispatch();
+    const classes = useStyles();
     const history = useHistory();
     const { t } = useTranslation("common");
 
@@ -42,15 +57,17 @@ const RepoContainer: React.FC = observer(() => {
 
     return (
         <Section title="repository.repositories">
-            {allRepos.map(repo => (
-                <RepoCard
-                    key={repo.id}
-                    repository={repo}
-                    onClick={() => history.push(getRepositoryUrl(repo))} />
-            ))}
-            {allRepos?.length === 0 && (
-                <span>{t("repository.notAvailable")}</span>
-            )}
+            <div className={classes.horizontalAlignment}>
+                {allRepos.map(repo => (
+                    <RepoCard
+                        key={repo.id}
+                        repository={repo}
+                        onClick={() => history.push(getRepositoryUrl(repo))} />
+                ))}
+                {allRepos?.length === 0 && (
+                    <span>{t("repository.notAvailable")}</span>
+                )}
+            </div>
         </Section>
     );
 });

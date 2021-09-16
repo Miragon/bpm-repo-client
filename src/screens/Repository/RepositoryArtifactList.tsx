@@ -184,7 +184,7 @@ const OverviewArtifactList: React.FC<Props> = (props: Props) => {
                     </ArtifactEntry>
                 ))}
                 {artifacts.length === 0 && (
-                    <span>{t(fallback ?? "category.noFavoritesAvailable")}</span>
+                    <span>{t(fallback ?? "artifact.notAvailable")}</span>
                 )}
             </div>
 

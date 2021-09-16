@@ -11,8 +11,8 @@ interface Props {
     label: string;
     value: string;
     multiline?: boolean;
-    rows?: number;
-    rowsMax?: number;
+    minRows?: number;
+    maxRows?: number;
     spellCheck?: boolean;
 }
 
@@ -33,8 +33,8 @@ const SettingsTextField: React.FC<Props> = props => {
             size="small"
             type={props.type}
             multiline={props.multiline}
-            rows={props.rows}
-            rowsMax={props.rowsMax}
+            minRows={props.minRows}
+            maxRows={props.maxRows}
             className={clsx(classes.root, props.className)}
             disabled={props.disabled}
             onChange={e => props.onChanged && props.onChanged(e.target.value)}

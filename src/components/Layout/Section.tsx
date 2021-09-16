@@ -13,7 +13,7 @@ interface Props {
 
 const useStyles = makeStyles(() => ({
     section: {
-        marginTop: "1rem"
+        marginTop: "1rem",
     },
     title: {
         color: "black",

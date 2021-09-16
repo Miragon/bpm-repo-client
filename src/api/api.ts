@@ -13,24 +13,13 @@
  */
 
 
-import {Configuration} from './configuration';
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-    assertParamExists,
-    createRequestFunction,
-    DUMMY_BASE_URL,
-    serializeDataIfNeeded,
-    setApiKeyToObject,
-    setBasicAuthToObject,
-    setBearerAuthToObject,
-    setOAuthToObject,
-    setSearchParams,
-    toPathString
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * Transports an svg image as preview for an artifact
@@ -645,6 +634,18 @@ export interface ShareWithTeamTO {
      * @memberof ShareWithTeamTO
      */
     role: ShareWithTeamTORoleEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithTeamTO
+     */
+    artifactName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareWithTeamTO
+     */
+    teamName?: string;
 }
 
 /**
@@ -652,6 +653,55 @@ export interface ShareWithTeamTO {
     * @enum {string}
     */
 export enum ShareWithTeamTORoleEnum {
+    Owner = 'OWNER',
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Viewer = 'VIEWER'
+}
+
+/**
+ * 
+ * @export
+ * @interface SharedRepositoryTO
+ */
+export interface SharedRepositoryTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof SharedRepositoryTO
+     */
+    artifactId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SharedRepositoryTO
+     */
+    repositoryId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SharedRepositoryTO
+     */
+    role: SharedRepositoryTORoleEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof SharedRepositoryTO
+     */
+    artifactName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SharedRepositoryTO
+     */
+    repositoryName?: string;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum SharedRepositoryTORoleEnum {
     Owner = 'OWNER',
     Admin = 'ADMIN',
     Member = 'MEMBER',
@@ -3309,7 +3359,7 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSharedRepositories(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
+        async getSharedRepositories(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SharedRepositoryTO>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedRepositories(artifactId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -3417,7 +3467,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSharedRepositories(artifactId: string, options?: any): AxiosPromise<Array<RepositoryTO>> {
+        getSharedRepositories(artifactId: string, options?: any): AxiosPromise<Array<SharedRepositoryTO>> {
             return localVarFp.getSharedRepositories(artifactId, options).then((request) => request(axios, basePath));
         },
         /**

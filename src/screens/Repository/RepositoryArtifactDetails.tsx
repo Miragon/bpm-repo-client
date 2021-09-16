@@ -5,6 +5,9 @@ import { ArtifactTO, ArtifactVersionTO } from "../../api";
 import { getAllVersions } from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 import VersionDetails from "./Version/VersionDetails";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/reducers/rootReducer";
+import {SYNC_STATUS_VERSION} from "../../constants/Constants";
 
 interface Props {
     artifact: ArtifactTO;
@@ -24,7 +27,11 @@ const useStyles = makeStyles(() => ({
 
 const RepositoryArtifactDetails: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const { t } = useTranslation("common");
+
+    const versionSynced = useSelector((state: RootState) => state.dataSynced.versionSynced);
+
 
     const [activeVersions, setActiveVersions] = useState<ArtifactVersionTO[]>([]);
 
@@ -32,15 +39,21 @@ const RepositoryArtifactDetails: React.FC<Props> = (props: Props) => {
         const response = await getAllVersions(artifactId);
         if (Math.floor(response.status / 100) === 2) {
             setActiveVersions(response.data);
+            dispatch({type: SYNC_STATUS_VERSION, dataSynced: true})
         } else {
             helpers.makeErrorToast(t(response.data.toString()), () => getVersions(artifactId))
         }
-    }, [t])
+    }, [t, dispatch])
 
     useEffect(() => {
         getVersions(props.artifact.id);
     }, [getVersions, props.artifact]);
 
+    useEffect(() => {
+        if(!versionSynced){
+            getVersions(props.artifact.id);
+        }
+    }, [getVersions, props.artifact, versionSynced])
 
     return (
         <div className={classes.root}>

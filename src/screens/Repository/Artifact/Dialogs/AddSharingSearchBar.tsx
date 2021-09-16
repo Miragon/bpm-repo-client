@@ -11,7 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {Add} from "@material-ui/icons";
 import {shareWithRepo} from "../../../../store/actions/ShareAction";
 import {searchRepos} from "../../../../store/actions";
-import {SEARCHED_REPOS} from "../../../../constants/Constants";
+import {SEARCHED_REPOS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
 import helpers from "../../../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 
@@ -114,13 +114,19 @@ const AddSharingSearchBar: React.FC<Props> = props => {
             const repository = getRepoByName(repositoryName);
             const repositoryId = repository ? repository.id : "";
             if (repository) {
-                dispatch(shareWithRepo(props.artifactId, repositoryId, ShareWithRepositoryTORoleEnum.Viewer));
-                setRepositoryName("");
+                shareWithRepo(props.artifactId, repositoryId, ShareWithRepositoryTORoleEnum.Viewer).then(response => {
+                    if(Math.floor(response.status / 100) === 2){
+                        dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
+                        helpers.makeSuccessToast(t("share.successful"))
+                    } else {
+                        helpers.makeErrorToast(t(response.data.toString()), () => shareWithRepo(props.artifactId, repositoryId, ShareWithRepositoryTORoleEnum.Viewer))
+                    }
+                });
             }
         } catch (err) {
-            console.log(err);
+            console.log(err)
         }
-    }, [dispatch, repositoryName, props, getRepoByName]);
+    }, [dispatch, t, repositoryName, props, getRepoByName]);
 
     // eslint-disable-next-line
     const updateState = (event: any) => {

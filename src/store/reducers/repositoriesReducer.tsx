@@ -1,12 +1,12 @@
 import {CaseReducer} from "@reduxjs/toolkit";
-import {RepositoryTO} from "../../api";
+import {RepositoryTO, SharedRepositoryTO} from "../../api";
 import {ACTIVE_REPO, MANAGEABLE_REPOS, REPOSITORIES, SEARCHED_REPOS, SHARED_REPOS} from "../../constants/Constants";
 
 const initialState = {
     repos: Array<RepositoryTO>(),
     activeRepo: null,
     manageableRepos: Array<RepositoryTO>(),
-    sharedRepos: Array<RepositoryTO>(),
+    sharedRepos: Array<SharedRepositoryTO>(),
     searchedRepos: Array<RepositoryTO>()
 };
 

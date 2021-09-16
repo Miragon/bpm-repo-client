@@ -1,5 +1,11 @@
 import helpers from "../../util/helperFunctions";
-import {ArtifactTO, RepositoryTO, ShareApi, ShareWithRepositoryTO, ShareWithRepositoryTORoleEnum} from "../../api";
+import {
+    ArtifactTO,
+    ShareApi,
+    SharedRepositoryTO,
+    ShareWithRepositoryTO,
+    ShareWithRepositoryTORoleEnum
+} from "../../api";
 import {AxiosResponse} from "axios";
 
 export const getSharedArtifacts = async(repositoryId: string): Promise<AxiosResponse<ArtifactTO[]>> => {
@@ -38,9 +44,11 @@ export const shareWithRepo = async (artifactId: string, repositoryId: string, ro
 }
 
 
-export const getSharedRepos = async (artifactId: string): Promise<AxiosResponse<RepositoryTO[]>> => {
+export const getSharedRepos = async (artifactId: string): Promise<AxiosResponse<SharedRepositoryTO[]>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
+    console.log("getSharedRepos")
     const response = await shareController.getSharedRepositories(artifactId, config);
+    console.log(response)
     return response;
 }

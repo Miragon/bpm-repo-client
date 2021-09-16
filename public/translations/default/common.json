@@ -17,6 +17,7 @@
   "artifact": {
     "confirmDelete": "Are you sure want to delete {{artifactName}}?",
     "create": "Create Artifact",
+    "created": "Artifact created",
     "copy": "Copy {{artifactName}} to another Repository",
     "copyTo": "Copy to other Repository",
     "createdFromExisting": "Created Artifact os existing Version",

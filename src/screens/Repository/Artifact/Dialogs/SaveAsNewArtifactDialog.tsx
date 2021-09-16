@@ -80,8 +80,8 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
                     label={t("properties.description")}
                     value={description}
                     multiline
-                    rows={3}
-                    rowsMax={3}
+                    minRows={3}
+                    maxRows={3}
                     onChanged={setDescription}/>
 
             </SettingsForm>

@@ -41,6 +41,9 @@ const Repository: React.FC = (() => {
         }
     }, [repoSynced, getRepo, repoId])
 
+    useEffect(() => {
+        getRepo(repoId)
+    }, [repoId, getRepo])
 
     const element = {
         name: "path.overview",

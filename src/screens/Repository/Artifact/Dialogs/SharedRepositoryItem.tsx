@@ -1,6 +1,7 @@
 import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import {ShareWithRepositoryTORoleEnum} from "../../../../api";
 
 const useStyles = makeStyles(() => ({
 
@@ -20,25 +21,25 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-export interface MultipleSelectionListItem {
+export interface SharedListItem {
     name: string;
-    selected: boolean;
+    role: ShareWithRepositoryTORoleEnum;
     onClick: () => void;
     editable: boolean;
 }
 
 interface Props {
-    options: Array<MultipleSelectionListItem>;
+    options: Array<SharedListItem>;
     artifactId: string;
-    selectIcon: string;
-    removeIcon: string;
 }
 
 
-const MultipleSelectionList: React.FC<Props> = props => {
+const SharedRepositoryItem: React.FC<Props> = props => {
     const classes = useStyles();
 
 
+    //TODO: Auf der rechten Seit auswählen lassen, welche Rolle das Repo haben soll
+    //TODO: Share Icon ändern, sodass es bei hover grau wird
     return (
         <List>
             <Paper>
@@ -48,8 +49,8 @@ const MultipleSelectionList: React.FC<Props> = props => {
                     <ListItem className={classes.listItem} button key={option.name}>
                         <div className={classes.leftPanel}>
                             <IconButton onClick={() => option.onClick()}>
-                                <Icon color={option.selected ? "secondary" : "disabled"}>
-                                    {props.selectIcon}
+                                <Icon color={"secondary"}>
+                                    {"shareIcon"}
                                 </Icon>
                             </IconButton>
                         </div>
@@ -57,7 +58,7 @@ const MultipleSelectionList: React.FC<Props> = props => {
                             {option.name}
                         </div>
                         <div>
-                            {option.selected && "SHARED"}
+                            {option.role}
                         </div>
                     </ListItem>
                 ))}
@@ -66,4 +67,4 @@ const MultipleSelectionList: React.FC<Props> = props => {
     );
 };
 
-export default MultipleSelectionList;
+export default SharedRepositoryItem;
