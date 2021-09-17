@@ -1,14 +1,7 @@
 import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
-import React, {useCallback, useMemo} from "react";
+import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {SharedRepositoryTORoleEnum, ShareWithRepositoryTORoleEnum} from "../../../../api";
-import PopupSettings from "../../../../components/Form/PopupSettings";
-import DropdownButton, {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
-import Flag from "react-world-flags";
-import {useTranslation} from "react-i18next";
-import {getSharedRepos} from "../../../../store/actions/shareAction";
-import {SHARED_REPOS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
-import helpers from "../../../../util/helperFunctions";
+import {SharedRepositoryTORoleEnum} from "../../../../api";
 import SelectRoleDropdown from "./SelectRoleDropdown";
 
 const useStyles = makeStyles(() => ({

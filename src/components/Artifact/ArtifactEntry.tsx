@@ -1,22 +1,16 @@
-import { Collapse, Link } from "@material-ui/core";
+import {Collapse, Link} from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import {
-    KeyboardArrowDown,
-    KeyboardArrowUp,
-    MoreVert,
-    Star,
-    StarOutline
-} from "@material-ui/icons";
-import React, { useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { ArtifactTO, ArtifactTypeTO } from "../../api";
-import { COLOR_LINK } from "../../constants/Constants";
-import { RootState } from "../../store/reducers/rootReducer";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {KeyboardArrowDown, KeyboardArrowUp, MoreVert, Star, StarOutline} from "@material-ui/icons";
+import React, {useMemo, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
+import {ArtifactTO, ArtifactTypeTO} from "../../api";
+import {COLOR_LINK} from "../../constants/Constants";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-import { openFileInTool } from "../../util/Redirections";
+import {openFileInTool} from "../../util/Redirections";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

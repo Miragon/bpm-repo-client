@@ -1,12 +1,12 @@
-import { observer } from "mobx-react";
-import React, { useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { ArtifactTO, RepositoryTO } from "../../api";
+import {observer} from "mobx-react";
+import React, {useCallback, useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {ArtifactTO, RepositoryTO} from "../../api";
 import Section from "../../components/Layout/Section";
-import { RECENT_ARTIFACTS, SYNC_STATUS_RECENT } from "../../constants/Constants";
-import { fetchRecentArtifacts } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {RECENT_ARTIFACTS, SYNC_STATUS_RECENT} from "../../constants/Constants";
+import {fetchRecentArtifacts} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
 

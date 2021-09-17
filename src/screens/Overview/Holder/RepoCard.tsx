@@ -1,9 +1,9 @@
-import { Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { DescriptionOutlined, PeopleOutline } from "@material-ui/icons";
+import {Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import {DescriptionOutlined, PeopleOutline} from "@material-ui/icons";
 import React from "react";
-import { RepositoryTO } from "../../../api";
-import { COLOR_LINK } from "../../../constants/Constants";
+import {RepositoryTO} from "../../../api";
+import {COLOR_LINK} from "../../../constants/Constants";
 
 const useStyles = makeStyles(theme => ({
     root: {

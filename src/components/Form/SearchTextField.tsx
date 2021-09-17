@@ -1,5 +1,5 @@
-import { IconButton, InputAdornment, TextField } from "@material-ui/core";
-import { Clear } from "@material-ui/icons";
+import {IconButton, InputAdornment, TextField} from "@material-ui/core";
+import {Clear} from "@material-ui/icons";
 import React from "react";
 
 interface Props {

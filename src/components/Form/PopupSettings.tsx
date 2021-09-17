@@ -1,9 +1,9 @@
-import { Menu, MenuItem } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/styles";
+import {Menu, MenuItem} from "@material-ui/core";
+import {Theme} from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/styles";
 import clsx from "clsx";
 import React from "react";
-import { DropdownButtonItem } from "./DropdownButton";
+import {DropdownButtonItem} from "./DropdownButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
     menuItem: {

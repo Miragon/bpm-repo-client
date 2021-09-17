@@ -1,13 +1,13 @@
-import { observer } from "mobx-react";
-import React, { useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { ArtifactTO, RepositoryTO } from "../../api";
-import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import {observer} from "mobx-react";
+import React, {useCallback, useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {ArtifactTO, RepositoryTO} from "../../api";
+import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import Section from "../../components/Layout/Section";
-import { FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE } from "../../constants/Constants";
-import { fetchFavoriteArtifacts } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
+import {fetchFavoriteArtifacts} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
 

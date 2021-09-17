@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/styles";
-import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { ArtifactTO, ArtifactVersionUploadTOSaveTypeEnum } from "../../../../api";
+import {makeStyles} from "@material-ui/styles";
+import React, {useCallback, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch} from "react-redux";
+import {ArtifactTO, ArtifactVersionUploadTOSaveTypeEnum} from "../../../../api";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import SettingsForm from "../../../../components/Form/SettingsForm";
 import SettingsTextField from "../../../../components/Form/SettingsTextField";
@@ -12,7 +12,7 @@ import {
     SYNC_STATUS_REPOSITORY,
     SYNC_STATUS_VERSION
 } from "../../../../constants/Constants";
-import { createVersion, getLatestVersion } from "../../../../store/actions";
+import {createVersion, getLatestVersion} from "../../../../store/actions";
 import helpers from "../../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({

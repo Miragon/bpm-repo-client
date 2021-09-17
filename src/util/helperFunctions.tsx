@@ -1,8 +1,8 @@
-import { DateTime } from "luxon";
-import React, { ReactText } from "react";
-import { TFunction } from "react-i18next";
-import { toast } from "react-toastify";
-import { ArtifactTO, ArtifactVersionTO, RepositoryTO } from "../api";
+import {DateTime} from "luxon";
+import React, {ReactText} from "react";
+import {TFunction} from "react-i18next";
+import {toast} from "react-toastify";
+import {ArtifactTO, ArtifactVersionTO, RepositoryTO} from "../api";
 import Toast from "../components/Layout/Toast";
 import theme from "../theme";
 

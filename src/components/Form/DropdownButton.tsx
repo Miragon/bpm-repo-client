@@ -11,11 +11,11 @@ import {
     Radio,
     RadioGroup
 } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { ArrowDropDown } from "@material-ui/icons";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {ArrowDropDown} from "@material-ui/icons";
 import clsx from "clsx";
-import React, { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, {useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 export interface DropdownButtonItem {
     id: string;

@@ -1,17 +1,17 @@
-import { Checkbox, FormControlLabel, MenuItem, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import {Checkbox, FormControlLabel, MenuItem, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { ArtifactTO, NewDeploymentTO } from "../../../../api";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {ArtifactTO, NewDeploymentTO} from "../../../../api";
 import PopupDialog from "../../../../components/Form/PopupDialog";
 import SearchTextField from "../../../../components/Form/SearchTextField";
 import SettingsForm from "../../../../components/Form/SettingsForm";
 import SettingsSelect from "../../../../components/Form/SettingsSelect";
-import { SYNC_STATUS_TARGETS, SYNC_STATUS_VERSION, TARGETS } from "../../../../constants/Constants";
-import { deployMultiple, fetchTargets } from "../../../../store/actions";
-import { RootState } from "../../../../store/reducers/rootReducer";
+import {SYNC_STATUS_TARGETS, SYNC_STATUS_VERSION, TARGETS} from "../../../../constants/Constants";
+import {deployMultiple, fetchTargets} from "../../../../store/actions";
+import {RootState} from "../../../../store/reducers/rootReducer";
 import helpers from "../../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({

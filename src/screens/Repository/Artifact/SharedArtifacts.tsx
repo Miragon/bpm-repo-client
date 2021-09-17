@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { ArtifactTO, RepositoryTO } from "../../../api";
-import { ErrorBoundary } from "../../../components/Exception/ErrorBoundary";
+import React, {useCallback, useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router";
+import {ArtifactTO, RepositoryTO} from "../../../api";
+import {ErrorBoundary} from "../../../components/Exception/ErrorBoundary";
 import Section from "../../../components/Layout/Section";
-import { SHARED_ARTIFACTS } from "../../../constants/Constants";
-import { getSharedArtifacts } from "../../../store/actions/shareAction";
-import { RootState } from "../../../store/reducers/rootReducer";
+import {SHARED_ARTIFACTS} from "../../../constants/Constants";
+import {getSharedArtifacts} from "../../../store/actions/shareAction";
+import {RootState} from "../../../store/reducers/rootReducer";
 import helpers from "../../../util/helperFunctions";
 import RepositoryArtifactList from "../RepositoryArtifactList";
 

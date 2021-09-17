@@ -53,14 +53,6 @@ export const fetchArtifactsFromRepo = async (repoId: string): Promise<AxiosRespo
 }
 
 
-export const uploadArtifact = async (repoId: string, name: string, description: string, fileType: string): Promise<AxiosResponse<ArtifactTO>> => {
-    const artifactController = new ArtifactApi();
-    const config = helpers.getClientConfig();
-    const newArtifact: NewArtifactTO = {name, description, fileType};
-    const response = await artifactController.createArtifact(repoId, newArtifact, config);
-    return response;
-}
-
 export const searchArtifact = async (typedTitle: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();

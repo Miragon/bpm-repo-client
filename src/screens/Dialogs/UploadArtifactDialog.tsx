@@ -11,7 +11,7 @@ import SettingsTextField from "../../components/Form/SettingsTextField";
 import {HANDLEDERROR, SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 import {RootState} from "../../store/reducers/rootReducer";
 import {useTranslation} from "react-i18next";
-import {createVersion, uploadArtifact} from "../../store/actions";
+import {createArtifact, createVersion} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
@@ -57,7 +57,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         //1. Create a new Artifact
         //2. Use the returned artifactId to create a new version, which includes the uploaded file
-        uploadArtifact(repoId, title, description, uploadedFileType)
+        createArtifact(repoId, title, description, uploadedFileType)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
                     createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone)

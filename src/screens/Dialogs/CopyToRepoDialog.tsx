@@ -1,15 +1,15 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { ArtifactTO, RepositoryTO } from "../../api";
+import {ArtifactTO, RepositoryTO} from "../../api";
 import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsSelect from "../../components/Form/SettingsSelect";
-import { REPOSITORIES, SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
-import { copyToRepo, fetchRepositories } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
+import {copyToRepo, fetchRepositories} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 
 interface Props {

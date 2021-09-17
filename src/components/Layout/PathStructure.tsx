@@ -1,7 +1,7 @@
-import { Breadcrumbs, Link } from "@material-ui/core";
+import {Breadcrumbs, Link} from "@material-ui/core";
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import {useHistory} from "react-router-dom";
 
 interface Props {
     structure: Array<{ name: string, link: string }>;

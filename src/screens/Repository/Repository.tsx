@@ -59,7 +59,7 @@ const Repository: React.FC = (() => {
     return (
         <>
             {(activeRepo && activeRepo.id === repoId) &&
-                <div className={"content"}>
+                <div>
                     <ErrorBoundary>
                         <PathStructure structure={path} />
                     </ErrorBoundary>

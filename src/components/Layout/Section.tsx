@@ -1,7 +1,7 @@
-import { IconButton } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import {IconButton} from "@material-ui/core";
+import {makeStyles} from "@material-ui/styles";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 interface Props {
     title: string;

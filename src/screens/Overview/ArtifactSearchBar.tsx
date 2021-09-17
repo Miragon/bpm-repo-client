@@ -1,15 +1,15 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { makeStyles } from "@material-ui/styles";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { ArtifactTO, RepositoryTO } from "../../api";
-import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
-import { ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS } from "../../constants/Constants";
-import { searchArtifact } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {makeStyles} from "@material-ui/styles";
+import React, {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {ArtifactTO, RepositoryTO} from "../../api";
+import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
+import {ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS} from "../../constants/Constants";
+import {searchArtifact} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
 

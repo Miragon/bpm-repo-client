@@ -1,10 +1,10 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import i18next from "i18next";
-import React, { useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import React, {useMemo} from "react";
+import {useTranslation} from "react-i18next";
 import Flag from "react-world-flags";
-import DropdownButton, { DropdownButtonItem } from "../Form/DropdownButton";
+import DropdownButton, {DropdownButtonItem} from "../Form/DropdownButton";
 import MenuBar from "./MenuBar";
 
 const useStyles = makeStyles((theme: Theme) => ({

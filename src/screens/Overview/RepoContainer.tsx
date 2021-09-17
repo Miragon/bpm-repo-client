@@ -1,16 +1,16 @@
-import { observer } from "mobx-react";
-import React, { useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import {observer} from "mobx-react";
+import React, {useCallback, useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { RepositoryTO } from "../../api";
+import {RepositoryTO} from "../../api";
 import Section from "../../components/Layout/Section";
-import { REPOSITORIES, SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
-import { fetchRepositories } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
+import {fetchRepositories} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-import { getRepositoryUrl } from "../../util/Redirections";
+import {getRepositoryUrl} from "../../util/Redirections";
 import RepoCard from "./Holder/RepoCard";
 import {makeStyles} from "@material-ui/styles";
 

@@ -1,10 +1,10 @@
-import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { ToastContainer } from "react-toastify";
-import { ArtifactApi, UserApi } from "../../api";
-import { CURRENT_USER_INFO, FILETYPES } from "../../constants/Constants";
+import {makeStyles} from "@material-ui/core";
+import {Theme} from "@material-ui/core/styles";
+import React, {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
+import {ToastContainer} from "react-toastify";
+import {ArtifactApi, UserApi} from "../../api";
+import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
 import helpers from "../../util/helperFunctions";
 import Menu from "./Menu";
@@ -84,3 +84,5 @@ const Layout: React.FC = () => {
 };
 
 export default Layout;
+
+

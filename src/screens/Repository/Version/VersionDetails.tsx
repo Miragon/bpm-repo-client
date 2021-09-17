@@ -1,7 +1,7 @@
-import { List } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import React, { useEffect } from "react";
-import { ArtifactVersionTO } from "../../../api";
+import {List} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import React, {useEffect} from "react";
+import {ArtifactVersionTO} from "../../../api";
 import VersionListItem from "./Holder/VersionListItem";
 
 const useStyles = makeStyles(() => ({

@@ -1,11 +1,11 @@
-import { makeStyles } from "@material-ui/styles";
+import {makeStyles} from "@material-ui/styles";
 import clsx from "clsx";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { ArtifactTO, ArtifactTypeTO, RepositoryTO } from "../../../api";
-import DropdownButton, { DropdownButtonItem } from "../../../components/Form/DropdownButton";
+import React, {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router";
+import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../../api";
+import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
 import SimpleButton from "../../../components/Form/SimpleButton";
 import {
     ACTIVE_ARTIFACTS,
@@ -13,8 +13,8 @@ import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_FAVORITE
 } from "../../../constants/Constants";
-import { fetchArtifactsFromRepo, fetchFavoriteArtifacts } from "../../../store/actions";
-import { RootState } from "../../../store/reducers/rootReducer";
+import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
+import {RootState} from "../../../store/reducers/rootReducer";
 import helpers from "../../../util/helperFunctions";
 import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
 import RepositoryArtifactList from "../RepositoryArtifactList";

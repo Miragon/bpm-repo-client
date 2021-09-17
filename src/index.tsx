@@ -1,9 +1,9 @@
 import i18next from "i18next";
-import React, { Suspense } from "react";
+import React, {Suspense} from "react";
 import ReactDOM from "react-dom";
-import { I18nextProvider, initReactI18next } from "react-i18next";
-import { Provider } from "react-redux";
-import { HashRouter } from "react-router-dom";
+import {I18nextProvider, initReactI18next} from "react-i18next";
+import {Provider} from "react-redux";
+import {HashRouter} from "react-router-dom";
 import App from "./components/Layout/App";
 import "./index.css";
 import store from "./store/store";

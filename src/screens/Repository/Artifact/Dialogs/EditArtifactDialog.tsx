@@ -1,12 +1,12 @@
-import { Input, InputLabel } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { ArtifactTO } from "../../../../api";
+import {Input, InputLabel} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import React, {useCallback, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch} from "react-redux";
+import {ArtifactTO} from "../../../../api";
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import { SYNC_STATUS_ARTIFACT } from "../../../../constants/Constants";
-import { updateArtifact } from "../../../../store/actions";
+import {SYNC_STATUS_ARTIFACT} from "../../../../constants/Constants";
+import {updateArtifact} from "../../../../store/actions";
 import helpers from "../../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({

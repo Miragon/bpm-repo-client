@@ -1,30 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    ArtifactTO,
-    RepositoryTO,
-    SharedRepositoryTO,
-    ShareWithRepositoryTORoleEnum
-} from "../../../../api";
+import React, {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {ArtifactTO, RepositoryTO, SharedRepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../../api";
 
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import {
-    MANAGEABLE_REPOS,
-    SHARED_REPOS,
-    SUCCESS,
-    SYNC_STATUS_SHARED
-} from "../../../../constants/Constants";
-import { getManageableRepos } from "../../../../store/actions";
-import {
-    getSharedRepos,
-    shareWithRepo,
-    unshareWithRepo
-} from "../../../../store/actions/shareAction";
-import { RootState } from "../../../../store/reducers/rootReducer";
+import {MANAGEABLE_REPOS, SHARED_REPOS, SUCCESS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
+import {getManageableRepos} from "../../../../store/actions";
+import {getSharedRepos, shareWithRepo, unshareWithRepo} from "../../../../store/actions/shareAction";
+import {RootState} from "../../../../store/reducers/rootReducer";
 import helpers from "../../../../util/helperFunctions";
 import AddSharingSearchBar from "./AddSharingSearchBar";
-import SharedRepositories, { SharedListItem } from "./SharedRepositories";
+import SharedRepositories, {SharedListItem} from "./SharedRepositories";
 
 interface Props {
     open: boolean;

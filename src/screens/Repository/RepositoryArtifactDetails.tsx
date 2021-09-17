@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/core/styles";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { ArtifactTO, ArtifactVersionTO } from "../../api";
-import { getAllVersions } from "../../store/actions";
+import {makeStyles} from "@material-ui/core/styles";
+import React, {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {ArtifactTO, ArtifactVersionTO} from "../../api";
+import {getAllVersions} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 import VersionDetails from "./Version/VersionDetails";
 import {useDispatch, useSelector} from "react-redux";

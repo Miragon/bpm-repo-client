@@ -1,11 +1,11 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { ArtifactTypeTO, RepositoryTO } from "../../../api";
-import DropdownButton, { DropdownButtonItem } from "../../../components/Form/DropdownButton";
-import { RootState } from "../../../store/reducers/rootReducer";
+import {makeStyles} from "@material-ui/core/styles";
+import {observer} from "mobx-react";
+import React, {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
+import {ArtifactTypeTO, RepositoryTO} from "../../../api";
+import DropdownButton, {DropdownButtonItem} from "../../../components/Form/DropdownButton";
+import {RootState} from "../../../store/reducers/rootReducer";
 import CreateArtifactDialog from "../../Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "../../Dialogs/UploadArtifactDialog";
 
