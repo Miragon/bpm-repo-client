@@ -47,8 +47,16 @@ export const shareWithRepo = async (artifactId: string, repositoryId: string, ro
 export const getSharedRepos = async (artifactId: string): Promise<AxiosResponse<SharedRepositoryTO[]>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
-    console.log("getSharedRepos")
     const response = await shareController.getSharedRepositories(artifactId, config);
-    console.log(response)
+    return response;
+}
+
+export const updateShareWithRepo = async (artifactId: string, repositoryId: string, role: ShareWithRepositoryTORoleEnum): Promise<AxiosResponse<ShareWithRepositoryTO>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const shareWithRepositoryTO: ShareWithRepositoryTO = {
+        artifactId, repositoryId, role
+    }
+    const response = await shareController.updateShareWithRepository(shareWithRepositoryTO, config);
     return response;
 }

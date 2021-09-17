@@ -1,7 +1,15 @@
 import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {ShareWithRepositoryTORoleEnum} from "../../../../api";
+import {SharedRepositoryTORoleEnum, ShareWithRepositoryTORoleEnum} from "../../../../api";
+import PopupSettings from "../../../../components/Form/PopupSettings";
+import DropdownButton, {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
+import Flag from "react-world-flags";
+import {useTranslation} from "react-i18next";
+import {getSharedRepos} from "../../../../store/actions/shareAction";
+import {SHARED_REPOS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
+import helpers from "../../../../util/helperFunctions";
+import SelectRoleDropdown from "./SelectRoleDropdown";
 
 const useStyles = makeStyles(() => ({
 
@@ -22,8 +30,11 @@ const useStyles = makeStyles(() => ({
 }))
 
 export interface SharedListItem {
-    name: string;
-    role: ShareWithRepositoryTORoleEnum;
+    repoName: string;
+    repoId: string;
+    artifactName: string;
+    artifactId: string;
+    role: SharedRepositoryTORoleEnum;
     onClick: () => void;
     editable: boolean;
 }
@@ -34,7 +45,7 @@ interface Props {
 }
 
 
-const SharedRepositoryItem: React.FC<Props> = props => {
+const SharedRepositories: React.FC<Props> = props => {
     const classes = useStyles();
 
 
@@ -46,7 +57,7 @@ const SharedRepositoryItem: React.FC<Props> = props => {
                 
             
                 {props.options.map(option => (
-                    <ListItem className={classes.listItem} button key={option.name}>
+                    <ListItem className={classes.listItem} button key={option.repoName}>
                         <div className={classes.leftPanel}>
                             <IconButton onClick={() => option.onClick()}>
                                 <Icon color={"secondary"}>
@@ -55,11 +66,10 @@ const SharedRepositoryItem: React.FC<Props> = props => {
                             </IconButton>
                         </div>
                         <div className={classes.middlePanel}>
-                            {option.name}
+                            {option.repoName}
                         </div>
-                        <div>
-                            {option.role}
-                        </div>
+                        <SelectRoleDropdown option={option} />
+
                     </ListItem>
                 ))}
             </Paper>
@@ -67,4 +77,4 @@ const SharedRepositoryItem: React.FC<Props> = props => {
     );
 };
 
-export default SharedRepositoryItem;
+export default SharedRepositories;

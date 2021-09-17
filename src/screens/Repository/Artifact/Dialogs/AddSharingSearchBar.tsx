@@ -9,7 +9,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Add} from "@material-ui/icons";
-import {shareWithRepo} from "../../../../store/actions/ShareAction";
+import {shareWithRepo} from "../../../../store/actions/shareAction";
 import {searchRepos} from "../../../../store/actions";
 import {SEARCHED_REPOS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
 import helpers from "../../../../util/helperFunctions";

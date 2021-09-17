@@ -189,7 +189,15 @@
   "share": {
     "successful": "Artifact shared",
     "removed": "Artifact is no longer shared",
-    "na": "No shared Artifacts available"
+    "na": "No shared Artifacts available",
+    "updatedRepoRole": "Changed role for members of repository {{repoName}} to {{role}}"
+
+  },
+  "role": {
+    "owner": "Owner",
+    "admin": "Admin",
+    "member": "Member",
+    "viewer": "Viewer"
   }
 
 }

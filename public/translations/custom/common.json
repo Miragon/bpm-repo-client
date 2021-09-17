@@ -180,6 +180,14 @@
     "share": {
         "successful": "Datei geteilt",
         "removed": "Datei wird nicht mehr geteilt",
-        "na": "Bisher werden keine Dateien mit diesem Projekt geteilt"
+        "na": "Bisher werden keine Dateien mit diesem Projekt geteilt",
+        "updatedRepoRole": "Zugriffsrechte für Mitglieder des Projekts {{repoName}} zu {{role}} geändert"
+
+    },
+    "role": {
+        "owner": "Besitzer",
+        "admin": "Admin",
+        "member": "Mitglied",
+        "viewer": "Gast"
     }
 }

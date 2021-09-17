@@ -20,11 +20,11 @@ import {
     getSharedRepos,
     shareWithRepo,
     unshareWithRepo
-} from "../../../../store/actions/ShareAction";
+} from "../../../../store/actions/shareAction";
 import { RootState } from "../../../../store/reducers/rootReducer";
 import helpers from "../../../../util/helperFunctions";
 import AddSharingSearchBar from "./AddSharingSearchBar";
-import SharedRepositoryItem, { SharedListItem } from "./SharedRepositoryItem";
+import SharedRepositories, { SharedListItem } from "./SharedRepositories";
 
 interface Props {
     open: boolean;
@@ -131,14 +131,17 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
     useEffect(() => {
         const opts: SharedListItem[] = [];
-        sharedRepos.forEach(repo => {
-            (repo.repositoryId !== props.artifact?.repositoryId) && opts.push(
+        sharedRepos.forEach(sharedRepo => {
+            (sharedRepo.repositoryId !== props.artifact?.repositoryId) && opts.push(
                 {
-                    name: repo.repositoryName || "unknown Repository",
-                    role: ShareWithRepositoryTORoleEnum.Viewer,
-                    editable: isRepoManageable(repo),
+                    repoName: sharedRepo.repositoryName || "unknown Repository",
+                    repoId: sharedRepo.repositoryId,
+                    artifactName: sharedRepo.artifactName || "unknown Artifact",
+                    artifactId: sharedRepo.artifactId,
+                    role: sharedRepo.role,
+                    editable: isRepoManageable(sharedRepo),
                     onClick: () => {
-                        unshare(repo.repositoryId)
+                        unshare(sharedRepo.repositoryId)
                     }
                 }
             )
@@ -163,7 +166,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
                     <AddSharingSearchBar
                         artifactId={props.artifact.id}
                         currentRepoId={props.artifact.repositoryId} />
-                    <SharedRepositoryItem
+                    <SharedRepositories
                         options={options}
                         artifactId={props.artifact.id}/>
                 </>
