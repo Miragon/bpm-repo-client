@@ -74,7 +74,6 @@ const ArtifactDetails: React.FC = (() => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: ACTIVE_ARTIFACTS, artifacts: response.data });
                 dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
-                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: true })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFromRepo())
             }
@@ -96,6 +95,10 @@ const ArtifactDetails: React.FC = (() => {
         })
 
     }, [dispatch, t]);
+
+    useEffect(() => {
+        fetchFromRepo()
+    }, [fetchFromRepo, repoId])
 
     useEffect(() => {
         if (!artifactSynced) {
