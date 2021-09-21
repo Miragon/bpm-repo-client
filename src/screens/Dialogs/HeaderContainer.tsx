@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {observer} from "mobx-react";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {ArtifactTypeTO} from "../../api";
@@ -11,6 +11,8 @@ import ArtifactSearchBar from "../Overview/ArtifactSearchBar";
 import CreateArtifactDialog from "./CreateArtifactDialog";
 import CreateRepoDialog from "./CreateRepoDialog";
 import UploadArtifactDialog from "./UploadArtifactDialog";
+import {createTeam} from "../../store/actions/teamAction";
+import helpers from "../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -37,6 +39,25 @@ const HeaderContainer: React.FC = observer(() => {
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
 
+
+    //TODO: Move Team-functions to separate section - just used here for quick test
+
+    const name = "MyNewTeam"
+    const description = "myDesc"
+
+    const createNewTeam = useCallback(async(name: string, description: string) => {
+        createTeam("MyNewTeam", "SomeDescription").then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                console.log(response.data)
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => createNewTeam(name, description))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => createNewTeam(name,description))
+        })
+    }, [t])
+
+
     useEffect(() => {
         const opts: DropdownButtonItem[] = []
 
@@ -62,8 +83,14 @@ const HeaderContainer: React.FC = observer(() => {
             type: "button",
             onClick: () => setUploadArtifactOpen(true)
         });
+        opts.push({
+            id: "createTeam",
+            label: "CreateTeam",
+            type: "button",
+            onClick: () => createNewTeam(name, description)
+        });
         setArtifactOptions(opts);
-    }, [fileTypes])
+    }, [createNewTeam, fileTypes])
 
     return (
         <>

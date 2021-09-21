@@ -39,6 +39,7 @@
     "created": "Version created",
     "edit": "Edit version",
     "deploy": "Deploy version",
+    "deployMultiple": "Deploy versions",
     "deployed": "Version deployed",
     "downloading": "Downloading Version",
     "dialogHeader": "Create new Version of {{artifactName}}",
@@ -198,6 +199,8 @@
     "admin": "Admin",
     "member": "Member",
     "viewer": "Viewer"
+  },
+  "team": {
+    "teams": "Teams"
   }
-
 }

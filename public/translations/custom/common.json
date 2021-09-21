@@ -61,6 +61,7 @@
         "create": "Version erstellen",
         "created": "Version erstellt",
         "deploy": "Version veröffentlichen",
+        "deployMultiple": "Versionen veröffentlichen",
         "downloading": "Version wird heruntergeladen",
         "deployed": "Version veröffentlicht",
         "dialogHeader": "Neue Version von {{artifactName}} erstellen",
@@ -189,5 +190,8 @@
         "admin": "Admin",
         "member": "Mitglied",
         "viewer": "Gast"
+    },
+    "team": {
+        "teams": "Teams"
     }
 }

@@ -23,7 +23,7 @@ interface Props {
     fallback?: string;
 }
 
-const OverviewArtifactList: React.FC<Props> = (props: Props) => {
+const RepositoryArtifactList: React.FC<Props> = (props: Props) => {
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
 
@@ -220,4 +220,4 @@ const OverviewArtifactList: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default OverviewArtifactList;
+export default RepositoryArtifactList;

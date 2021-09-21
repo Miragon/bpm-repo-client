@@ -11,6 +11,19 @@ import {RootState} from "../../../../store/reducers/rootReducer";
 import helpers from "../../../../util/helperFunctions";
 import AddSharingSearchBar from "./AddSharingSearchBar";
 import SharedRepositories, {SharedListItem} from "./SharedRepositories";
+import {Tab, Tabs} from "@material-ui/core";
+import {TabContext, TabList, TabPanel} from "@material-ui/lab";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles((theme: Theme) => ({
+
+    tab: {
+        flexGrow: 1,
+    }
+
+}));
+
 
 interface Props {
     open: boolean;
@@ -20,11 +33,12 @@ interface Props {
 
 const SharingManagementDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
+    const classes = useStyles();
     const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [options, setOptions] = useState<Array<SharedListItem>>([])
-
+    const [openedTab, setOpenedTab] = useState<string>("0");
 
 
     const manageableRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.manageableRepos);
@@ -138,6 +152,18 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
     }, [isRepoManageable, manageableRepos, props.artifact, share, sharedRepos, unshare])
 
+
+    const getProps: any = (index: number) => {
+        return {
+            id: `simple-tab-${index}`,
+            "aria-controls": `simple-tabpanel-${index}`,
+        }
+    }
+
+    const handleChangeTab = (event: any, newValue: string) => {
+        setOpenedTab(newValue)
+    }
+
     return (
         <PopupDialog
             error={error}
@@ -146,15 +172,37 @@ const SharingManagementDialog: React.FC<Props> = props => {
             title={t("artifact.share", { artifactName: props.artifact?.name })}
             firstTitle={t("dialog.close")}
             onFirst={() => props.onCancelled()}>
-
+            
+            
             {props.artifact && (
                 <>
-                    <AddSharingSearchBar
-                        artifactId={props.artifact.id}
-                        currentRepoId={props.artifact.repositoryId} />
-                    <SharedRepositories
-                        options={options}
-                        artifactId={props.artifact.id}/>
+                    <TabContext value={openedTab} >
+
+                        <TabList onChange={handleChangeTab} >
+                            <Tab label={t("repository.repositories")} value="0"  className={classes.tab}/>
+                            <Tab label={t("team.teams")} value="1" className={classes.tab}/>
+                        </TabList>
+
+                        <TabPanel value="0">
+                            <AddSharingSearchBar
+                                artifactId={props.artifact.id}
+                                currentRepoId={props.artifact.repositoryId} />
+                            <SharedRepositories
+                                options={options}
+                                artifactId={props.artifact.id}/>
+                        </TabPanel>
+
+                        <TabPanel value="1">
+                            <AddSharingSearchBar
+                                artifactId={props.artifact.id}
+                                currentRepoId={props.artifact.repositoryId} />
+                            <SharedRepositories
+                                options={options}
+                                artifactId={props.artifact.id}/>
+                        </TabPanel>
+
+                    </TabContext>
+
                 </>
             )}
 

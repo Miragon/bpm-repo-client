@@ -13,24 +13,13 @@
  */
 
 
-import {Configuration} from './configuration';
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-    assertParamExists,
-    createRequestFunction,
-    DUMMY_BASE_URL,
-    serializeDataIfNeeded,
-    setApiKeyToObject,
-    setBasicAuthToObject,
-    setBearerAuthToObject,
-    setOAuthToObject,
-    setSearchParams,
-    toPathString
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * Transports an svg image as preview for an artifact
@@ -523,6 +512,25 @@ export interface NewRepositoryTO {
     description: string;
 }
 /**
+ * Client created object for creating a new team
+ * @export
+ * @interface NewTeamTO
+ */
+export interface NewTeamTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof NewTeamTO
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NewTeamTO
+     */
+    description: string;
+}
+/**
  * Containing information about a repository
  * @export
  * @interface RepositoryTO
@@ -546,12 +554,6 @@ export interface RepositoryTO {
      * @memberof RepositoryTO
      */
     description: string;
-    /**
-     * 
-     * @type {Array<ArtifactTO>}
-     * @memberof RepositoryTO
-     */
-    sharedArtifacts?: Array<ArtifactTO>;
     /**
      * 
      * @type {number}
@@ -719,6 +721,80 @@ export enum SharedRepositoryTORoleEnum {
     Viewer = 'VIEWER'
 }
 
+/**
+ * Containing information about a user-team relation
+ * @export
+ * @interface TeamAssignmentTO
+ */
+export interface TeamAssignmentTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamAssignmentTO
+     */
+    teamId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamAssignmentTO
+     */
+    userId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamAssignmentTO
+     */
+    username: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamAssignmentTO
+     */
+    role: TeamAssignmentTORoleEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum TeamAssignmentTORoleEnum {
+    Owner = 'OWNER',
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Viewer = 'VIEWER'
+}
+
+/**
+ * Containing information about a team
+ * @export
+ * @interface TeamTO
+ */
+export interface TeamTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamTO
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamTO
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamTO
+     */
+    description: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TeamTO
+     */
+    assignedUsers: number;
+}
 /**
  * 
  * @export
@@ -3660,6 +3736,220 @@ export class ShareApi extends BaseAPI {
      */
     public updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any) {
         return ShareApiFp(this.configuration).updateShareWithTeam(shareWithTeamTO, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * TeamApi - axios parameter creator
+ * @export
+ */
+export const TeamApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create a new Team
+         * @param {NewTeamTO} newTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTeam: async (newTeamTO: NewTeamTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'newTeamTO' is not null or undefined
+            assertParamExists('createTeam', 'newTeamTO', newTeamTO)
+            const localVarPath = `/api/team`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(newTeamTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TeamApi - functional programming interface
+ * @export
+ */
+export const TeamApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TeamApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a new Team
+         * @param {NewTeamTO} newTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createTeam(newTeamTO: NewTeamTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TeamTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createTeam(newTeamTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TeamApi - factory interface
+ * @export
+ */
+export const TeamApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TeamApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a new Team
+         * @param {NewTeamTO} newTeamTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTeam(newTeamTO: NewTeamTO, options?: any): AxiosPromise<TeamTO> {
+            return localVarFp.createTeam(newTeamTO, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TeamApi - object-oriented interface
+ * @export
+ * @class TeamApi
+ * @extends {BaseAPI}
+ */
+export class TeamApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create a new Team
+     * @param {NewTeamTO} newTeamTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamApi
+     */
+    public createTeam(newTeamTO: NewTeamTO, options?: any) {
+        return TeamApiFp(this.configuration).createTeam(newTeamTO, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * TeamAssignmentApi - axios parameter creator
+ * @export
+ */
+export const TeamAssignmentApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create user assignment to Team
+         * @param {TeamAssignmentTO} teamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTeamAssignment: async (teamAssignmentTO: TeamAssignmentTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'teamAssignmentTO' is not null or undefined
+            assertParamExists('createTeamAssignment', 'teamAssignmentTO', teamAssignmentTO)
+            const localVarPath = `/api/teamAssignment`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(teamAssignmentTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TeamAssignmentApi - functional programming interface
+ * @export
+ */
+export const TeamAssignmentApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TeamAssignmentApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create user assignment to Team
+         * @param {TeamAssignmentTO} teamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createTeamAssignment(teamAssignmentTO: TeamAssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TeamAssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createTeamAssignment(teamAssignmentTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TeamAssignmentApi - factory interface
+ * @export
+ */
+export const TeamAssignmentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TeamAssignmentApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create user assignment to Team
+         * @param {TeamAssignmentTO} teamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTeamAssignment(teamAssignmentTO: TeamAssignmentTO, options?: any): AxiosPromise<TeamAssignmentTO> {
+            return localVarFp.createTeamAssignment(teamAssignmentTO, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TeamAssignmentApi - object-oriented interface
+ * @export
+ * @class TeamAssignmentApi
+ * @extends {BaseAPI}
+ */
+export class TeamAssignmentApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create user assignment to Team
+     * @param {TeamAssignmentTO} teamAssignmentTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamAssignmentApi
+     */
+    public createTeamAssignment(teamAssignmentTO: TeamAssignmentTO, options?: any) {
+        return TeamAssignmentApiFp(this.configuration).createTeamAssignment(teamAssignmentTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -41,7 +41,7 @@ const FavoriteArtifacts: React.FC = observer(() => {
 
 
     return (
-        <Section title="category.favorite">
+        <Section title="category.favorite" key={"favorite"}>
             <ErrorBoundary>
                 <OverviewArtifactList
                     artifacts={favoriteArtifacts}

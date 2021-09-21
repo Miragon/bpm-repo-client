@@ -146,7 +146,7 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             title={t("deployment.multiple")}
             error={error}
             onCloseError={() => setError(undefined)}
-            firstTitle={t("dialog.deploy")}
+            firstTitle={t("version.deployMultiple")}
             onFirst={deploy}
             secondTitle={t("dialog.close")}
             onSecond={onCancel}>
