@@ -3,8 +3,11 @@ import {
     ArtifactTO,
     ShareApi,
     SharedRepositoryTO,
+    SharedTeamTO,
     ShareWithRepositoryTO,
-    ShareWithRepositoryTORoleEnum
+    ShareWithRepositoryTORoleEnum,
+    ShareWithTeamTO,
+    ShareWithTeamTORoleEnum
 } from "../../api";
 import {AxiosResponse} from "axios";
 
@@ -19,6 +22,13 @@ export const getAllSharedArtifacts = async (): Promise<AxiosResponse<ArtifactTO[
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const response = await shareController.getAllSharedArtifacts(config);
+    return response;
+}
+
+export const getAllArtifactsSharedWithTeam = async (teamId: string): Promise<AxiosResponse<Array<ArtifactTO>>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const response = await shareController.getSharedWithTeamArtifacts(teamId, config);
     return response;
 }
 
@@ -43,11 +53,29 @@ export const shareWithRepo = async (artifactId: string, repositoryId: string, ro
     return response
 }
 
+export const shareWithTeam = async (artifactId: string, teamId: string, role: ShareWithTeamTORoleEnum): Promise<AxiosResponse<ShareWithTeamTO>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    console.log("Trying to share")
+    const shareWithTeamTO: ShareWithTeamTO = {
+        artifactId, teamId, role
+    }
+    const response = await shareController.shareWithTeam(shareWithTeamTO, config);
+    return response
+}
+
 
 export const getSharedRepos = async (artifactId: string): Promise<AxiosResponse<SharedRepositoryTO[]>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();
     const response = await shareController.getSharedRepositories(artifactId, config);
+    return response;
+}
+
+export const getSharedTeams = async (artifactId: string): Promise<AxiosResponse<SharedTeamTO[]>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const response = await shareController.getSharedTeams(artifactId, config);
     return response;
 }
 

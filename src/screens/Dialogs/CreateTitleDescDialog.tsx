@@ -4,16 +4,19 @@ import PopupDialog from "../../components/Form/PopupDialog";
 import SettingsForm from "../../components/Form/SettingsForm";
 import SettingsTextField from "../../components/Form/SettingsTextField";
 import {useTranslation} from "react-i18next";
-import {createRepository} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
-import {SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
+import {AxiosResponse} from "axios";
 
 interface Props {
     open: boolean;
     onCancelled: () => void;
+    title: string;
+    createMethod: (title: string, description: string) => Promise<AxiosResponse>;
+    //Key required to update the state after a new object has been created
+    dataSyncedType: string;
 }
 
-const CreateRepoDialog: React.FC<Props> = props => {
+const CreateTitleDescDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
@@ -25,9 +28,9 @@ const CreateRepoDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState("");
 
     const onCreate = useCallback(async() => {
-        createRepository(title, description).then(response => {
+        props.createMethod(title, description).then(response => {
             if(Math.floor(response.status / 100) === 2) {
-                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
+                dispatch({type: props.dataSyncedType, dataSynced: false})
                 setTitle("")
                 setDescription("")
                 onCancelled()
@@ -38,14 +41,14 @@ const CreateRepoDialog: React.FC<Props> = props => {
             helpers.makeErrorToast(t(error.response.data), () => onCreate())
         })
 
-    }, [title, description, dispatch, onCancelled, t]);
+    }, [props, title, description, dispatch, onCancelled, t]);
 
     return (
         <PopupDialog
             error={error}
             onCloseError={() => setError(undefined)}
             open={open}
-            title={t("repository.create")}
+            title={props.title}
             secondTitle={t("dialog.cancel")}
             onSecond={onCancelled}
             firstTitle={t("dialog.create")}
@@ -74,4 +77,4 @@ const CreateRepoDialog: React.FC<Props> = props => {
     );
 };
 
-export default CreateRepoDialog;
+export default CreateTitleDescDialog;

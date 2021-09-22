@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {observer} from "mobx-react";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {ArtifactTypeTO} from "../../api";
@@ -9,10 +9,11 @@ import SimpleButton from "../../components/Form/SimpleButton";
 import {RootState} from "../../store/reducers/rootReducer";
 import ArtifactSearchBar from "../Overview/ArtifactSearchBar";
 import CreateArtifactDialog from "./CreateArtifactDialog";
-import CreateRepoDialog from "./CreateRepoDialog";
+import CreateTitleDescDialog from "./CreateTitleDescDialog";
 import UploadArtifactDialog from "./UploadArtifactDialog";
 import {createTeam} from "../../store/actions/teamAction";
-import helpers from "../../util/helperFunctions";
+import {createRepository} from "../../store/actions";
+import {SYNC_STATUS_REPOSITORY, SYNC_STATUS_TEAM} from "../../constants/Constants";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(() => ({
         whiteSpace: "nowrap"
     },
     button: {
-        minWidth: "200px",
+        minWidth: "100px",
         marginLeft: "1rem"
     }
 }));
@@ -34,28 +35,11 @@ const HeaderContainer: React.FC = observer(() => {
     const [createRepoOpen, setCreateRepoOpen] = useState(false);
     const [uploadArtifactOpen, setUploadArtifactOpen] = useState(false);
     const [createArtifactOpen, setCreateArtifactOpen] = useState(false);
+    const [createTeamOpen, setCreateTeamOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("BPMN");
     const [artifactOptions, setArtifactOptions] = useState<DropdownButtonItem[]>([])
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
-
-
-    //TODO: Move Team-functions to separate section - just used here for quick test
-
-    const name = "MyNewTeam"
-    const description = "myDesc"
-
-    const createNewTeam = useCallback(async(name: string, description: string) => {
-        createTeam("MyNewTeam", "SomeDescription").then(response => {
-            if(Math.floor(response.status / 100) === 2){
-                console.log(response.data)
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => createNewTeam(name, description))
-            }
-        }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => createNewTeam(name,description))
-        })
-    }, [t])
 
 
     useEffect(() => {
@@ -83,14 +67,9 @@ const HeaderContainer: React.FC = observer(() => {
             type: "button",
             onClick: () => setUploadArtifactOpen(true)
         });
-        opts.push({
-            id: "createTeam",
-            label: "CreateTeam",
-            type: "button",
-            onClick: () => createNewTeam(name, description)
-        });
+
         setArtifactOptions(opts);
-    }, [createNewTeam, fileTypes])
+    }, [fileTypes])
 
     return (
         <>
@@ -101,6 +80,10 @@ const HeaderContainer: React.FC = observer(() => {
                         className={classes.button}
                         title={t("repository.create")}
                         onClick={() => setCreateRepoOpen(true)} />
+                    <SimpleButton
+                        className={classes.button}
+                        title={t("team.create")}
+                        onClick={() => setCreateTeamOpen(true)} />
                     <DropdownButton
                         type={"default"}
                         className={classes.button}
@@ -109,9 +92,19 @@ const HeaderContainer: React.FC = observer(() => {
                 </div>
             </div>
 
-            <CreateRepoDialog
+            <CreateTitleDescDialog
                 open={createRepoOpen}
-                onCancelled={() => setCreateRepoOpen(false)} />
+                onCancelled={() => setCreateRepoOpen(false)}
+                title={t("repository.create")}
+                createMethod={createRepository}
+                dataSyncedType={SYNC_STATUS_REPOSITORY}/>
+
+            <CreateTitleDescDialog
+                open={createTeamOpen}
+                onCancelled={() => setCreateTeamOpen(false)}
+                title={t("team.create")}
+                createMethod={createTeam}
+                dataSyncedType={SYNC_STATUS_TEAM}/>
 
             <CreateArtifactDialog
                 open={createArtifactOpen}

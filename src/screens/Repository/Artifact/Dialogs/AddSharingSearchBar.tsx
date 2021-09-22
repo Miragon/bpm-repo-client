@@ -1,19 +1,18 @@
 import {makeStyles} from "@material-ui/styles";
 import theme from "../../../../theme";
 import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../../api";
-import {RootState} from "../../../../store/reducers/rootReducer";
+import {useDispatch} from "react-redux";
+import {RepositoryTO, ShareWithRepositoryTORoleEnum, ShareWithTeamTORoleEnum, TeamTO} from "../../../../api";
 import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Add} from "@material-ui/icons";
 import {shareWithRepo} from "../../../../store/actions/shareAction";
-import {searchRepos} from "../../../../store/actions";
-import {SEARCHED_REPOS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
+import {SYNC_STATUS_SHARED} from "../../../../constants/Constants";
 import helpers from "../../../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
+import {AxiosResponse} from "axios";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -36,8 +35,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    currentRepoId: string;
     artifactId: string;
+    entity: "repository" | "team";
+    searchMethod: (input: string) => Promise<AxiosResponse>;
+    shareMethod: (artifactId: string, teamOrRepoId: string, role: any) => Promise<AxiosResponse>;
+    roleForNewAssignments: ShareWithTeamTORoleEnum | ShareWithRepositoryTORoleEnum;
 }
 
 let timeout: NodeJS.Timeout | undefined;
@@ -48,89 +50,90 @@ const AddSharingSearchBar: React.FC<Props> = props => {
     const {t} = useTranslation("common");
 
 
-    const searchedRepos: Array<RepositoryTO> = useSelector(
-        (state: RootState) => state.repos.searchedRepos
-    );
 
-    const [repositoryName, setRepositoryName] = useState("");
+
+    const [elementName, setElementName] = useState("");
     const [open, setOpen] = React.useState(false);
-    const [options, setOptions] = React.useState<RepositoryTO[]>([]);
+    const [options, setOptions] = React.useState<RepositoryTO[] | TeamTO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const [searchedElements, setSearchedElements] = useState<Array<RepositoryTO | TeamTO>>([]);
+
 
     useEffect(() => {
         if (!open) {
             setOptions([]);
         }
         if (open) {
-            setOptions(searchedRepos);
+            setOptions(searchedElements);
         }
-    }, [open, searchedRepos]);
+    }, [open, searchedElements]);
 
     useEffect(() => {
-        if (searchedRepos.length > 0) {
+        if (searchedElements.length > 0) {
             setLoading(false);
         }
-        if (searchedRepos.length === 0) {
+        if (searchedElements.length === 0) {
             setLoading(false);
         }
-    }, [searchedRepos]);
+    }, [searchedElements]);
 
     useEffect(() => {
-        if (repositoryName === "") {
+        if (elementName === "") {
             setLoading(false);
         }
-    }, [repositoryName]);
+    }, [elementName]);
 
     const onChangeWithTimer = ((input: string) => {
-        setRepositoryName(input);
+        setElementName(input);
         if (input !== "") {
             if (timeout) {
                 clearTimeout(timeout);
             }
             setLoading(true);
-            timeout = setTimeout(() => fetchRepositorySuggestion(input), 500);
+            timeout = setTimeout(() => fetchSuggestion(input), 500);
         }
     });
 
-    const fetchRepositorySuggestion = useCallback((input: string) => {
-        searchRepos(input).then(response => {
+    const fetchSuggestion = useCallback((input: string) => {
+        props.searchMethod(input).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                dispatch({type: SEARCHED_REPOS, searchedRepos: response.data});
+                setSearchedElements(response.data)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchRepositorySuggestion(input))
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchRepositorySuggestion(input))
+            helpers.makeErrorToast(t(error.response.data), () => fetchSuggestion(input))
         })
-    }, [dispatch, t]);
+    }, [props, t]);
 
 
-    const getRepoByName = useCallback((repositoryName: string) => {
-        return searchedRepos.find(repo => repo.name.toLowerCase() === repositoryName.toLowerCase());
-    }, [searchedRepos]);
+    const getElementByName = useCallback((elementName: string) => {
+        return searchedElements.find(element => element.name.toLowerCase() === elementName.toLowerCase());
+    }, [searchedElements]);
 
-    const addRepository = useCallback(() => {
+    const add = useCallback(() => {
         try {
-            const repository = getRepoByName(repositoryName);
-            const repositoryId = repository ? repository.id : "";
-            if (repository) {
-                shareWithRepo(props.artifactId, repositoryId, ShareWithRepositoryTORoleEnum.Viewer).then(response => {
+            const element = getElementByName(elementName);
+            const elementId = element ? element.id : "";
+            if (element) {
+                props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments).then(response => {
                     if(Math.floor(response.status / 100) === 2){
                         dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
                         helpers.makeSuccessToast(t("share.successful"))
                     } else {
-                        helpers.makeErrorToast(t(response.data.toString()), () => shareWithRepo(props.artifactId, repositoryId, ShareWithRepositoryTORoleEnum.Viewer))
+                        helpers.makeErrorToast(t(response.data.toString()), () => shareWithRepo(props.artifactId, elementId, ShareWithRepositoryTORoleEnum.Viewer))
                     }
                 });
             }
         } catch (err) {
             console.log(err)
         }
-    }, [dispatch, t, repositoryName, props, getRepoByName]);
+    }, [dispatch, t, elementName, props, getElementByName]);
 
     // eslint-disable-next-line
     const updateState = (event: any) => {
-        setRepositoryName(event.target.textContent);
+        setElementName(event.target.textContent);
     };
 
     return (
@@ -154,7 +157,7 @@ const AddSharingSearchBar: React.FC<Props> = props => {
                 renderInput={params => (
                     <TextField
                         {...params}
-                        label="Add Repository"
+                        label={t(`${props.entity}.add`)}
                         variant="outlined"
                         onChange={event => onChangeWithTimer(event.target.value)}
                         InputProps={{
@@ -168,7 +171,7 @@ const AddSharingSearchBar: React.FC<Props> = props => {
                         }} />
                 )} />
             <ListItemSecondaryAction>
-                <IconButton className={classes.addButton} edge="end" onClick={() => addRepository()}>
+                <IconButton className={classes.addButton} edge="end" onClick={() => add()}>
                     <Add />
                 </IconButton>
             </ListItemSecondaryAction>

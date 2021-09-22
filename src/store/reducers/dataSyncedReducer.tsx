@@ -1,6 +1,7 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {
     SYNC_STATUS_ACTIVE_REPOSITORY,
+    SYNC_STATUS_ACTIVE_TEAM,
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_ASSIGNMENT,
     SYNC_STATUS_FAVORITE,
@@ -9,6 +10,7 @@ import {
     SYNC_STATUS_REPOSITORY,
     SYNC_STATUS_SHARED,
     SYNC_STATUS_TARGETS,
+    SYNC_STATUS_TEAM,
     SYNC_STATUS_VERSION
 } from "../../constants/Constants";
 
@@ -21,7 +23,8 @@ const initialState = {
     assignmentSynced: false,
     menuSynced: false,
     sharedSynced: false,
-    targetsSynced: false
+    targetsSynced: false,
+    teamSynced: false
 };
 
 const reducer: CaseReducer = (state = initialState, action) => {
@@ -31,6 +34,18 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 repoSynced: action.dataSynced
             };
+
+        case SYNC_STATUS_TEAM:
+            return {
+                ...state,
+                teamSynced: action.dataSynced
+            }
+
+        case SYNC_STATUS_ACTIVE_TEAM:
+            return {
+                ...state,
+                activeTeamSynced: action.dataSynced
+            }
 
         case SYNC_STATUS_TARGETS:
             return {

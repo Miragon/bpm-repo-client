@@ -192,6 +192,7 @@
         "viewer": "Gast"
     },
     "team": {
-        "teams": "Teams"
+        "teams": "Teams",
+        "create": "Team erstellen"
     }
 }

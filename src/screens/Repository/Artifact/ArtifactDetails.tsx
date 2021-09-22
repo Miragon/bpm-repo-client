@@ -13,12 +13,13 @@ import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_FAVORITE
 } from "../../../constants/Constants";
-import {fetchArtifactsFromRepo, fetchFavoriteArtifacts} from "../../../store/actions";
+import {fetchFavoriteArtifacts} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
 import helpers from "../../../util/helperFunctions";
 import ArtifactManagementContainer from "../Buttons/ArtifactManagementContainer";
 import RepositoryArtifactList from "../RepositoryArtifactList";
 import DeployMultipleDialog from "../RepositoryDetails/Dialogs/DeployMultipleDialog";
+import {AxiosResponse} from "axios";
 
 
 const useStyles = makeStyles(() => ({
@@ -49,7 +50,14 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const ArtifactDetails: React.FC = (() => {
+interface Props {
+    view: "repository" | "team";
+    id: string;
+    fetchArtifactsMethod: (id: string) => Promise<AxiosResponse>;
+
+}
+
+const ArtifactDetails: React.FC<Props> = (props => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
@@ -69,18 +77,18 @@ const ArtifactDetails: React.FC = (() => {
     const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(activeArtifacts);
     const [sortValue, setSortValue] = useState<string>("lastEdited");
 
-    const fetchFromRepo = useCallback(async () => {
-        fetchArtifactsFromRepo(repoId).then(response => {
+    const fetchArtifacts = useCallback(async () => {
+        props.fetchArtifactsMethod(props.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: ACTIVE_ARTIFACTS, artifacts: response.data });
                 dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchFromRepo())
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchFromRepo())
+            helpers.makeErrorToast(t(error.response.data), () => fetchArtifacts())
         })
-    }, [dispatch, repoId, t])
+    }, [dispatch, props, t])
 
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
@@ -97,14 +105,14 @@ const ArtifactDetails: React.FC = (() => {
     }, [dispatch, t]);
 
     useEffect(() => {
-        fetchFromRepo()
-    }, [fetchFromRepo, repoId])
+        fetchArtifacts()
+    }, [fetchArtifacts, repoId])
 
     useEffect(() => {
         if (!artifactSynced) {
-            fetchFromRepo()
+            fetchArtifacts()
         }
-    }, [artifactSynced, repoId, fetchFromRepo]);
+    }, [artifactSynced, repoId, fetchArtifacts]);
 
     useEffect(() => {
         if (!favoriteSynced) {

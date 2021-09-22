@@ -201,6 +201,7 @@
     "viewer": "Viewer"
   },
   "team": {
-    "teams": "Teams"
+    "teams": "Teams",
+    "create": "Create Team"
   }
 }

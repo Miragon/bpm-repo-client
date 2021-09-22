@@ -7,6 +7,7 @@ import repoReducer from "./repositoriesReducer";
 import versionsReducer from "./versionsReducer";
 import menuReducer from "./menuReducer";
 import deploymentReducer from "./deploymentReducer";
+import teamReducer from "./teamReducer";
 
 export const rootReducer = combineReducers({
     menuItems: menuReducer,
@@ -16,7 +17,8 @@ export const rootReducer = combineReducers({
     versions: versionsReducer,
     user: usersReducer,
     resultsCount: resultsCountReducer,
-    deployment: deploymentReducer
+    deployment: deploymentReducer,
+    team: teamReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

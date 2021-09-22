@@ -1,19 +1,26 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, RepositoryTO, SharedRepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../../api";
+import {
+    ArtifactTO,
+    RepositoryTO,
+    SharedRepositoryTO,
+    ShareWithRepositoryTORoleEnum,
+    ShareWithTeamTORoleEnum
+} from "../../../../api";
 
 import PopupDialog from "../../../../components/Form/PopupDialog";
-import {MANAGEABLE_REPOS, SHARED_REPOS, SUCCESS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
-import {getManageableRepos} from "../../../../store/actions";
-import {getSharedRepos, shareWithRepo, unshareWithRepo} from "../../../../store/actions/shareAction";
+import {MANAGEABLE_REPOS, SUCCESS, SYNC_STATUS_SHARED} from "../../../../constants/Constants";
+import {getManageableRepos, searchRepos} from "../../../../store/actions";
+import {getSharedRepos, shareWithRepo, shareWithTeam, unshareWithRepo} from "../../../../store/actions/shareAction";
 import {RootState} from "../../../../store/reducers/rootReducer";
 import helpers from "../../../../util/helperFunctions";
 import AddSharingSearchBar from "./AddSharingSearchBar";
 import SharedRepositories, {SharedListItem} from "./SharedRepositories";
-import {Tab, Tabs} from "@material-ui/core";
+import {Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {makeStyles, Theme} from "@material-ui/core/styles";
+import {searchTeam} from "../../../../store/actions/teamAction";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,8 +49,9 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
 
     const manageableRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.manageableRepos);
-    const sharedRepos: Array<SharedRepositoryTO> = useSelector((state: RootState) => state.repos.sharedRepos);
     const sharedSynced: boolean = useSelector((state: RootState) => state.dataSynced.sharedSynced);
+
+    const [sharedRepos, setSharedRepos] = useState<Array<SharedRepositoryTO>>([]);
 
 
     const getShared = useCallback(async () => {
@@ -53,7 +61,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
         getSharedRepos(props.artifact.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SHARED_REPOS, sharedRepos: response.data });
+                setSharedRepos(response.data)
                 dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: true });
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => getShared())
@@ -93,29 +101,11 @@ const SharingManagementDialog: React.FC<Props> = props => {
         setOptions(opts)
     }
 
-    const share = useCallback((repoId: string) => {
-        if (!props.artifact) {
-            return;
-        }
-
-        shareWithRepo(props.artifact.id, repoId, ShareWithRepositoryTORoleEnum.Viewer).then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SUCCESS, successMessage: "share.successful" });
-                dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => share(repoId))
-            }
-        }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => share(repoId))
-
-        })
-    }, [dispatch, props.artifact, t])
 
     const unshare = useCallback((repoId: string) => {
         if (!props.artifact) {
             return;
         }
-
         unshareWithRepo(props.artifact.id, repoId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: SUCCESS, successMessage: "share.successful" });
@@ -146,19 +136,10 @@ const SharingManagementDialog: React.FC<Props> = props => {
                 }
             )
         })
-
-
         setOpts(opts)
+    }, [isRepoManageable, manageableRepos, props.artifact, sharedRepos, unshare])
 
-    }, [isRepoManageable, manageableRepos, props.artifact, share, sharedRepos, unshare])
 
-
-    const getProps: any = (index: number) => {
-        return {
-            id: `simple-tab-${index}`,
-            "aria-controls": `simple-tabpanel-${index}`,
-        }
-    }
 
     const handleChangeTab = (event: any, newValue: string) => {
         setOpenedTab(newValue)
@@ -185,8 +166,11 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
                         <TabPanel value="0">
                             <AddSharingSearchBar
+                                entity="repository"
                                 artifactId={props.artifact.id}
-                                currentRepoId={props.artifact.repositoryId} />
+                                roleForNewAssignments={ShareWithRepositoryTORoleEnum.Viewer}
+                                searchMethod={searchRepos}
+                                shareMethod={shareWithRepo}/>
                             <SharedRepositories
                                 options={options}
                                 artifactId={props.artifact.id}/>
@@ -194,8 +178,11 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
                         <TabPanel value="1">
                             <AddSharingSearchBar
+                                entity="team"
                                 artifactId={props.artifact.id}
-                                currentRepoId={props.artifact.repositoryId} />
+                                roleForNewAssignments={ShareWithTeamTORoleEnum.Viewer}
+                                searchMethod={searchTeam}
+                                shareMethod={shareWithTeam}/>
                             <SharedRepositories
                                 options={options}
                                 artifactId={props.artifact.id}/>

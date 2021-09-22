@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
-import {getSingleRepository} from "../../store/actions";
+import {fetchArtifactsFromRepo, getSingleRepository} from "../../store/actions";
 import ArtifactDetails from "./Artifact/ArtifactDetails";
 import {RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
@@ -67,7 +67,7 @@ const Repository: React.FC = (() => {
                         <RepositoryDetails/>
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <ArtifactDetails/>
+                        <ArtifactDetails fetchArtifactsMethod={fetchArtifactsFromRepo} id={repoId} view={"repository"}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
                         <SharedArtifacts/>

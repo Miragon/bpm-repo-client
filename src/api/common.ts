@@ -13,9 +13,9 @@
  */
 
 
-import { Configuration } from "./configuration";
-import { RequiredError,　RequestArgs } from "./base";
-import { AxiosInstance } from 'axios';
+import {Configuration} from "./configuration";
+import {RequestArgs, RequiredError} from "./base";
+import {AxiosInstance} from 'axios';
 
 /**
  *

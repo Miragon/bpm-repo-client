@@ -2,7 +2,6 @@ import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {DescriptionOutlined, PeopleOutline} from "@material-ui/icons";
 import React from "react";
-import {RepositoryTO} from "../../../api";
 import {COLOR_LINK} from "../../../constants/Constants";
 
 const useStyles = makeStyles(theme => ({
@@ -39,35 +38,37 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-interface RepoProps {
-    repository: RepositoryTO;
+interface Props {
+    title: string;
+    existingArtifacts: number;
+    assignedUsers: number;
     onClick?: () => void;
 }
 
-const RepoCard: React.FC<RepoProps> = props => {
+const Card: React.FC<Props> = props => {
     const classes = useStyles();
 
     return (
         <div
             onClick={props.onClick}
             className={classes.root}
-            title={props.repository.name}>
+            title={props.title}>
 
             <Typography
                 variant="subtitle1"
                 className={classes.title}>
-                {props.repository.name}
+                {props.title}
             </Typography>
 
             <div className={classes.metadata}>
                 <DescriptionOutlined className={classes.icon} />
-                {props.repository.existingArtifacts}
+                {props.existingArtifacts}
                 <PeopleOutline className={classes.icon} />
-                {props.repository.assignedUsers}
+                {props.assignedUsers}
             </div>
 
         </div>
     );
 };
 
-export default RepoCard;
+export default Card;

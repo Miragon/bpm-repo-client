@@ -42,6 +42,8 @@ const SharedRepositories: React.FC<Props> = props => {
     const classes = useStyles();
 
 
+
+    //TODO: Request "getSharedRepos" und "getSharedTeams" hierher verschieben
     //TODO: Auf der rechten Seit auswählen lassen, welche Rolle das Repo haben soll
     //TODO: Share Icon ändern, sodass es bei hover grau wird
     return (
