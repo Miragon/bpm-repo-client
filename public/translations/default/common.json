@@ -25,11 +25,11 @@
     "createBpmn": "Create BPMN Artifact",
     "createDmn": "Create DMN Artifact",
     "delete": "Delete Artifact",
+    "sharewith": "Share Artifact",
     "download": "Download Artifact",
     "edit": "Edit Artifact",
     "modifiedOn": "Modified on",
     "upload": "Upload Artifact",
-    "share": "Share Artifact",
     "updated": "Artifact updated",
     "import": "Import from Cawemo",
     "notAvailable": "You haven't added any artifacts yet"
@@ -56,7 +56,7 @@
   "assignment": {
     "changedAssignment": "Changed role of {{username}} to {{role}}",
     "added": "Added {{username}} to Repository",
-    "removed": "Removed {{username}} from Repository",
+    "removed": "Removed {{username}}",
     "alreadyPresent": "{{username}} is already assigned to this project"
   },
   "form": {
@@ -176,7 +176,8 @@
   },
   "path": {
     "overview": "Overview",
-    "repository": "Repository"
+    "repository": "Repository",
+    "team": "Team"
   },
   "filter": {
     "filter": "Filter"
@@ -191,17 +192,27 @@
     "successful": "Artifact shared",
     "removed": "Artifact is no longer shared",
     "na": "No shared Artifacts available",
-    "updatedRepoRole": "Changed role for members of repository {{repoName}} to {{role}}"
+    "updatedRepoRole": "Changed role for members of repository {{repoName}} to {{role}}",
+    "targetNotFound": "Target not found",
+    "removed": "Stopped sharing with {{targetName}}"
 
   },
   "role": {
     "owner": "Owner",
     "admin": "Admin",
     "member": "Member",
-    "viewer": "Viewer"
+    "viewer": "Viewer",
+    "updated": "Updated access rights",
+    "notFound": "Could not check for admin rights"
   },
   "team": {
+    "team": "Team",
     "teams": "Teams",
-    "create": "Create Team"
+    "create": "Create Team",
+    "edit": "Edit Team"
+
+  },
+  "options": {
+    "editUsers": "Mitglieder verwalten"
   }
 }

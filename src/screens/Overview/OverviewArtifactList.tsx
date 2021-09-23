@@ -4,12 +4,12 @@ import {useDispatch} from "react-redux";
 import {useHistory} from "react-router-dom";
 import {ArtifactTO, RepositoryTO} from "../../api";
 import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
-import {DropdownButtonItem} from "../../components/Form/DropdownButton";
-import PopupSettings from "../../components/Form/PopupSettings";
 import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import {addToFavorites, deleteArtifact, getLatestVersion} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
-import EditArtifactDialog from "../Repository/Artifact/Dialogs/EditArtifactDialog";
+import {DropdownButtonItem} from "../../components/Shared/Form/DropdownButton";
+import PopupSettings from "../../components/Shared/Form/PopupSettings";
+import EditArtifactDialog from "../../components/Artifact/Dialogs/EditArtifactDialog";
 
 interface Props {
     artifacts: ArtifactTO[];

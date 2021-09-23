@@ -4,8 +4,8 @@ import i18next from "i18next";
 import React, {useMemo} from "react";
 import {useTranslation} from "react-i18next";
 import Flag from "react-world-flags";
-import DropdownButton, {DropdownButtonItem} from "../Form/DropdownButton";
 import MenuBar from "./MenuBar";
+import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
     menu: {

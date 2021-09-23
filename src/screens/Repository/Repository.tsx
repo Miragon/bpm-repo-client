@@ -1,17 +1,23 @@
 import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
-import {fetchArtifactsFromRepo, getSingleRepository} from "../../store/actions";
-import ArtifactDetails from "./Artifact/ArtifactDetails";
+import {
+    createUserAssignment,
+    deleteAssignment,
+    fetchArtifactsFromRepo,
+    fetchAssignedUsers,
+    getSingleRepository, updateUserAssignment
+} from "../../store/actions";
 import {RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import PathStructure from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import SharedArtifacts from "./Artifact/SharedArtifacts";
-import RepositoryDetails from "./RepositoryDetails/RepositoryDetails";
 import {ACTIVE_REPO, SYNC_STATUS_ACTIVE_REPOSITORY} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
+import Details from "../../components/Shared/Details";
+import ArtifactDetails from "../../components/Artifact/ArtifactDetails";
+import SharedArtifacts from "../../components/Artifact/SharedArtifacts";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
@@ -20,6 +26,8 @@ const Repository: React.FC = (() => {
     const { repoId } = useParams<{ repoId: string }>();
     const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
     const repoSynced: boolean = useSelector((state: RootState) => state.dataSynced.activeRepoSynced);
+
+
 
     const getRepo = useCallback((repositoryId: string) => {
         getSingleRepository(repositoryId).then(response => {
@@ -64,10 +72,20 @@ const Repository: React.FC = (() => {
                         <PathStructure structure={path} />
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <RepositoryDetails/>
+                        <Details
+                            object={activeRepo}
+                            createAssignmentMethod={createUserAssignment}
+                            deleteAssignmentMethod={deleteAssignment}
+                            entity={"repository"}
+                            fetchAssignedUsersMethod={fetchAssignedUsers}
+                            id={repoId}
+                            updateAssignmentMethod={updateUserAssignment}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <ArtifactDetails fetchArtifactsMethod={fetchArtifactsFromRepo} id={repoId} view={"repository"}/>
+                        <ArtifactDetails
+                            fetchArtifactsMethod={fetchArtifactsFromRepo}
+                            id={repoId}
+                            view={"repository"}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
                         <SharedArtifacts/>

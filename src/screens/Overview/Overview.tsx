@@ -3,10 +3,10 @@ import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import PathStructure from "../../components/Layout/PathStructure";
-import HeaderContainer from "../Dialogs/HeaderContainer";
 import FavoriteArtifacts from "./FavoriteArtifacts";
 import RecentArtifacts from "./RecentArtifacts";
 import RepoContainer from "./RepoContainer";
+import HeaderContainer from "../../components/Shared/HeaderContainer";
 
 const path = [{
     name: "path.overview",

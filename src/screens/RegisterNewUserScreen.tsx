@@ -5,7 +5,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from "react-router-dom";
-import {toast, ToastContainer} from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import {UserApi} from "../api/api";
 import helpers from "../util/helperFunctions";
 import {useTranslation} from "react-i18next";
@@ -88,7 +88,7 @@ const RegisterNewUserScreen: React.FC = () => {
             await userController.createUser(config);
             history.push("/");
         } catch (response) {
-            toast.error("Could not persist the new User");
+            helpers.makeErrorToast("Could not persist the new User", () => handleCreateUserProfile());
         }
     }, [history, userController]);
 

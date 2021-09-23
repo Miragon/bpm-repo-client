@@ -8,9 +8,15 @@ import {ACTIVE_TEAM, SYNC_STATUS_ACTIVE_TEAM} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import PathStructure from "../../components/Layout/PathStructure";
-import ArtifactDetails from "../Repository/Artifact/ArtifactDetails";
 import {getTeam} from "../../store/actions/teamAction";
 import {getAllArtifactsSharedWithTeam} from "../../store/actions/shareAction";
+import Details from "../../components/Shared/Details";
+import {
+    createUserTeamAssignment,
+    deleteUserTeamAssignment,
+    fetchTeamAssignedUsers, updateUserTeamAssignment
+} from "../../store/actions/teamAssignmentAction";
+import ArtifactDetails from "../../components/Artifact/ArtifactDetails";
 
 
 const Team: React.FC = (() => {
@@ -22,30 +28,31 @@ const Team: React.FC = (() => {
     const activeTeam: TeamTO = useSelector((state: RootState) => state.team.activeTeam);
     const teamSynced: boolean = useSelector((state: RootState) => state.dataSynced.activeTeamSynced);
 
-    const fetchTeam = useCallback((repositoryId: string) => {
-        getTeam(repositoryId).then(response => {
+    const fetchTeam = useCallback(() => {
+        getTeam(teamId).then(response => {
             if(Math.floor(response.status / 100) === 2){
                 console.log(response.data)
                 dispatch({ type: ACTIVE_TEAM, activeTeam: response.data });
                 dispatch({type: SYNC_STATUS_ACTIVE_TEAM, dataSynced: true})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchTeam(teamId))
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchTeam())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchTeam(teamId))
+            helpers.makeErrorToast(t(error.response.data), () => fetchTeam())
         })
-    }, [dispatch, teamId, t]);
+    }, [dispatch, t, teamId]);
 
 
     useEffect(() => {
         if(!teamSynced){
-            fetchTeam(teamId);
+            fetchTeam();
         }
     }, [fetchTeam, teamId, teamSynced])
 
     useEffect(() => {
-        fetchTeam(teamId)
-    }, [teamId, fetchTeam])
+        fetchTeam();
+    }, [fetchTeam, teamId])
+
 
     const element = {
         name: "path.overview",
@@ -66,7 +73,20 @@ const Team: React.FC = (() => {
                         <PathStructure structure={path} />
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <ArtifactDetails fetchArtifactsMethod={getAllArtifactsSharedWithTeam} id={teamId} view={"repository"}/>
+                        <Details
+                            object={activeTeam}
+                            entity={"team"}
+                            createAssignmentMethod={createUserTeamAssignment}
+                            deleteAssignmentMethod={deleteUserTeamAssignment}
+                            fetchAssignedUsersMethod={fetchTeamAssignedUsers}
+                            id={teamId}
+                            updateAssignmentMethod={updateUserTeamAssignment}/>
+                    </ErrorBoundary>
+                    <ErrorBoundary>
+                        <ArtifactDetails
+                            fetchArtifactsMethod={getAllArtifactsSharedWithTeam}
+                            id={teamId}
+                            view={"team"}/>
                     </ErrorBoundary>
 
                 </div>

@@ -26,7 +26,7 @@
         "download": "Datei herunterladen",
         "edit": "Datei bearbeiten",
         "modifiedOn": "Bearbeitet am",
-        "share": "Datei teilen",
+        "sharewith": "Datei teilen",
         "upload": "Datei hochladen",
         "import": "Aus Cawemo importieren",
         "notAvailable": "Sie haben noch keine Datei erstellt",
@@ -84,7 +84,7 @@
     "assignment": {
         "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
         "added": "{{username}} zum Projekt hinzugefügt",
-        "removed": "{{username}} vom Projekt entfernt",
+        "removed": "{{username}} entfernt",
         "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
     },
     "deployment": {
@@ -167,7 +167,8 @@
     },
     "path": {
         "overview": "Übersicht",
-        "repository": "Projekt"
+        "repository": "Projekt",
+        "team": "Team"
     },
     "filter": {
         "filter": "Filter"
@@ -182,17 +183,29 @@
         "successful": "Datei geteilt",
         "removed": "Datei wird nicht mehr geteilt",
         "na": "Bisher werden keine Dateien mit diesem Projekt geteilt",
-        "updatedRepoRole": "Zugriffsrechte für Mitglieder des Projekts {{repoName}} zu {{role}} geändert"
+        "updatedRepoRole": "Zugriffsrechte für Mitglieder des Projekts {{repoName}} zu {{role}} geändert",
+        "targetNotFound": "Ziel existiert nicht",
+        "withrepository": "Mit Projekt teilen",
+        "withteam": "Mit Team teilen",
+        "removed": "Datei wird nicht mehr mit {{targetName}} geteilt"
 
     },
     "role": {
         "owner": "Besitzer",
         "admin": "Admin",
         "member": "Mitglied",
-        "viewer": "Gast"
+        "viewer": "Gast",
+        "updated": "Zugriffsrechte aktualisiert",
+        "notFound": "Administrationsrechte konnten nicht überprüft werden"
+
     },
     "team": {
+        "team": "Team",
         "teams": "Teams",
-        "create": "Team erstellen"
+        "create": "Team erstellen",
+        "edit": "Team bearbeiten"
+    },
+    "options": {
+        "editUsers": "Mitglieder verwalten"
     }
 }

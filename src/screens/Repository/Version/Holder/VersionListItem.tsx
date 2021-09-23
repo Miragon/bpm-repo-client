@@ -7,15 +7,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {ArtifactTypeTO, DeploymentTO} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
-import {DropdownButtonItem} from "../../../../components/Form/DropdownButton";
 import {fetchTargets} from "../../../../store/actions";
 import {openFileInTool} from "../../../../util/Redirections";
 import helpers from "../../../../util/helperFunctions";
-import PopupSettings from "../../../../components/Form/PopupSettings";
-import DeployVersionDialog from "../../Artifact/Dialogs/DeployVersionDialog";
-import SaveAsNewArtifactDialog from "../../Artifact/Dialogs/SaveAsNewArtifactDialog";
-import DeploymentHistory from "../../Artifact/Dialogs/DeploymentHistory";
 import {TARGETS} from "../../../../constants/Constants";
+import {DropdownButtonItem} from "../../../../components/Shared/Form/DropdownButton";
+import PopupSettings from "../../../../components/Shared/Form/PopupSettings";
+import DeployVersionDialog from "../../../../components/Artifact/Dialogs/DeployVersionDialog";
+import DeploymentHistory from "../../../../components/Artifact/Dialogs/DeploymentHistory";
+import SaveAsNewArtifactDialog from "../../../../components/Artifact/Dialogs/SaveAsNewArtifactDialog";
 
 const useStyles = makeStyles(() => ({
 

@@ -3,18 +3,18 @@ import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../api";
 import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
-import {DropdownButtonItem} from "../../components/Form/DropdownButton";
-import PopupSettings from "../../components/Form/PopupSettings";
 import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import {addToFavorites, deleteArtifact, getLatestVersion} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import {openFileInTool} from "../../util/Redirections";
-import CopyToRepoDialog from "../Dialogs/CopyToRepoDialog";
-import EditArtifactDialog from "../Repository/Artifact/Dialogs/EditArtifactDialog";
-import CreateVersionDialog from "./Artifact/Dialogs/CreateVersionDialog";
-import SharingManagementDialog from "./Artifact/Dialogs/SharingManagementDialog";
 import RepositoryArtifactDetails from "./RepositoryArtifactDetails";
+import {DropdownButtonItem} from "../../components/Shared/Form/DropdownButton";
+import PopupSettings from "../../components/Shared/Form/PopupSettings";
+import EditArtifactDialog from "../../components/Artifact/Dialogs/EditArtifactDialog";
+import CreateVersionDialog from "../../components/Artifact/Dialogs/CreateVersionDialog";
+import CopyToRepoDialog from "../../components/Shared/Dialogs/CopyToRepoDialog";
+import SharingManagementDialog from "../../components/Artifact/Dialogs/SharingManagementDialog";
 
 interface Props {
     artifacts: ArtifactTO[];
@@ -133,7 +133,7 @@ const RepositoryArtifactList: React.FC<Props> = (props: Props) => {
         },
         {
             id: "ShareWithRepository",
-            label: t("artifact.share"),
+            label: t("artifact.sharewith"),
             type: "button",
             onClick: () => menu && onShare(menu.artifact)
         },
