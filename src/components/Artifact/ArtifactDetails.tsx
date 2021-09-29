@@ -18,8 +18,8 @@ import {fetchFavoriteArtifacts} from "../../store/actions";
 import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
 import SimpleButton from "../Shared/Form/SimpleButton";
 import ArtifactManagementContainer from "../Shared/Buttons/ArtifactManagementContainer";
-import RepositoryArtifactList from "../../screens/Repository/RepositoryArtifactList";
 import DeployMultipleDialog from "../Shared/Dialogs/DeployMultipleDialog";
+import ArtifactListWithVersions from "./ArtifactListWithVersions";
 
 
 const useStyles = makeStyles(() => ({
@@ -52,8 +52,8 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
     view: "repository" | "team";
+    artifacts: Array<ArtifactTO>;
     id: string;
-    fetchArtifactsMethod: (id: string) => Promise<AxiosResponse>;
 }
 
 const ArtifactDetails: React.FC<Props> = (props => {
@@ -62,32 +62,17 @@ const ArtifactDetails: React.FC<Props> = (props => {
     const { t } = useTranslation("common");
 
     const { repoId } = useParams<{ repoId: string }>();
-    const activeArtifacts: Array<ArtifactTO> = useSelector(
-        (state: RootState) => state.artifacts.artifacts
-    );
-    const artifactSynced = useSelector((state: RootState) => state.dataSynced.artifactSynced);
-    const favoriteSynced = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
+    const favoriteSynced: boolean = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
 
     const [deployMultipleOpen, setDeployMultipleOpen] = useState(false);
     const [displayedFileTypes, setDisplayedFileTypes] = useState<Array<string>>(fileTypes.map(type => type.name));
-    const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(activeArtifacts);
+    const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(props.artifacts);
     const [sortValue, setSortValue] = useState<string>("lastEdited");
 
-    const fetchArtifacts = useCallback(async () => {
-        props.fetchArtifactsMethod(props.id).then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: ACTIVE_ARTIFACTS, artifacts: response.data });
-                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
-            }
-        }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchArtifacts())
-        })
-    }, [dispatch, props, t])
+
 
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
@@ -103,15 +88,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
 
     }, [dispatch, t]);
 
-    useEffect(() => {
-        fetchArtifacts()
-    }, [fetchArtifacts, repoId])
 
-    useEffect(() => {
-        if (!artifactSynced) {
-            fetchArtifacts()
-        }
-    }, [artifactSynced, repoId, fetchArtifacts]);
 
     useEffect(() => {
         if (!favoriteSynced) {
@@ -144,13 +121,13 @@ const ArtifactDetails: React.FC<Props> = (props => {
      */
 
     const applyFilters = useCallback(() => {
-        const filtered = activeArtifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
+        const filtered = props.artifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
         sort(sortValue, filtered)
-    }, [activeArtifacts, displayedFileTypes, sortValue])
+    }, [displayedFileTypes, props.artifacts, sortValue])
 
     useEffect(() => {
         applyFilters()
-    }, [activeArtifacts, applyFilters])
+    }, [applyFilters])
 
     const sort = (value: string, artifacts: Array<ArtifactTO>) => {
         switch (value) {
@@ -243,14 +220,14 @@ const ArtifactDetails: React.FC<Props> = (props => {
             </div>
 
             <div className={classes.container}>
-                <RepositoryArtifactList
+                <ArtifactListWithVersions
                     artifacts={filteredArtifacts}
                     repositories={repos}
                     favorites={favoriteArtifacts} />
             </div>
 
             <DeployMultipleDialog
-                artifacts={activeArtifacts}
+                artifacts={props.artifacts}
                 open={deployMultipleOpen}
                 onCancelled={() => setDeployMultipleOpen(false)}
                 repoId={repoId} />

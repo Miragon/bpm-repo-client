@@ -208,7 +208,7 @@ const DropdownButton: React.FC<Props> = props => {
                                             control={
                                                 <Checkbox
                                                     size="small"
-                                                    checked={props.selectedFilterOptions?.includes(option.label) || false}
+                                                    checked={props.selectedFilterOptions?.includes(option.id) || false}
                                                     color={"primary"}
                                                     className={classes.control}
                                                     onChange={() => {

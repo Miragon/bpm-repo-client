@@ -14,26 +14,6 @@
     "notAvailable": "You haven't added any Repositories yet.",
     "target": "Target Repository"
   },
-  "artifact": {
-    "confirmDelete": "Are you sure want to delete {{artifactName}}?",
-    "create": "Create Artifact",
-    "created": "Artifact created",
-    "copy": "Copy {{artifactName}} to another Repository",
-    "copyTo": "Copy to other Repository",
-    "createdFromExisting": "Created Artifact os existing Version",
-    "createdDefault": "Created Artifact",
-    "createBpmn": "Create BPMN Artifact",
-    "createDmn": "Create DMN Artifact",
-    "delete": "Delete Artifact",
-    "sharewith": "Share Artifact",
-    "download": "Download Artifact",
-    "edit": "Edit Artifact",
-    "modifiedOn": "Modified on",
-    "upload": "Upload Artifact",
-    "updated": "Artifact updated",
-    "import": "Import from Cawemo",
-    "notAvailable": "You haven't added any artifacts yet"
-  },
   "version": {
     "create": "Create new Version",
     "created": "Version created",
@@ -83,7 +63,7 @@
     "ADMIN": "Admin",
     "MEMBER": "Member",
     "VIEWER": "Viewer",
-    "remove": "Remove from Repository"
+    "remove": "Remove user"
   },
   "category": {
     "favorite": "Favorites",
@@ -147,21 +127,37 @@
   "artifact": {
     "addedToFavorite": "File added to Favorites",
     "addToFavorites": "Add to Favorites",
-    "confirmDelete": "Do you really want to delete the file?",
     "createBPMN": "Create BPMN Diagram",
     "createDMN": "Create DMN Diagram",
     "createFORM": "Create Form",
     "createCONFIGURATION": "Create Configuration",
-    "createdDefault": "File created",
-    "create": "Create File",
+    "confirmDelete": "Are you sure want to delete {{artifactName}}?",
+    "create": "Create Artifact",
+    "created": "Artifact created",
+    "copy": "Copy {{artifactName}} to another Repository",
+    "copyTo": "Copy to Repository",
+    "createdFromExisting": "Created Artifact os existing Version",
+    "createdDefault": "Created Artifact",
+    "createBpmn": "Create BPMN Artifact",
+    "createDmn": "Create DMN Artifact",
+    "delete": "Delete Artifact",
+    "sharewith": "Share Artifact",
+    "download": "Download Artifact",
+    "edit": "Edit Artifact",
     "modifiedOn": "Modified on",
-    "upload": "Upload File",
-    "updated": "File updated",
-    "download": "Download File",
+    "upload": "Upload Artifact",
+    "updated": "Artifact updated",
+    "import": "Import from Cawemo",
+    "notAvailable": "You haven't added any artifacts yet",
+    "share": "Share File",
     "showInRepo": "Show in Repository",
-    "edit": "Edit File",
-    "delete": "Delete File",
-    "updatedDuration": "Updated {{duration}}"
+    "updatedDuration": "Updated {{duration}}",
+    "type": {
+      "BPMN": "BPMN",
+      "DMN": "DMN",
+      "FORM": "Formular",
+      "CONFIGURATION": "Konfiguration"
+    }
   },
   "duration": {
     "ago": {
@@ -209,7 +205,8 @@
     "team": "Team",
     "teams": "Teams",
     "create": "Create Team",
-    "edit": "Edit Team"
+    "edit": "Edit Team",
+    "notAvailable": "No Team available"
 
   },
   "options": {

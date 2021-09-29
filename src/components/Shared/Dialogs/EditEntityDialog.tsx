@@ -7,13 +7,20 @@ import {useTranslation} from "react-i18next";
 import {deleteRepository, updateRepository} from "../../../store/actions";
 import helpers from "../../../util/helperFunctions";
 import {
-    SYNC_STATUS_ACTIVE_REPOSITORY,
+    SYNC_STATUS_ACTIVE_ENTITY,
     SYNC_STATUS_FAVORITE,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY
 } from "../../../constants/Constants";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsTextField from "../Form/SettingsTextField";
+import {AxiosResponse} from "axios";
+import {useHistory} from "react-router-dom";
+
+
+/**
+Component shows a Popup Menu which lets the user change properties of a Repository or Team or delete it, depending from which screen this dialog is opened
+**/
 
 const useStyles = makeStyles(() => ({
     line: {
@@ -50,14 +57,18 @@ const useStyles = makeStyles(() => ({
 interface Props {
     open: boolean;
     onCancelled: () => void;
-    repoId: string;
+    targetId: string;
     repoName: string;
     repoDescription: string;
+    updateEntityMethod: (targetId: string, target: string, description: string) => Promise<AxiosResponse>;
+    deleteEntityMethod: (targetId: string) => Promise<AxiosResponse>;
 }
 
-const EditRepoDialog: React.FC<Props> = props => {
+
+const EditEntityDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
+    const history = useHistory();
     const {t} = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
@@ -65,10 +76,10 @@ const EditRepoDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState<string>(props.repoDescription);
 
     const applyChanges = useCallback(async () => {
-        updateRepository(props.repoId, title, description).then(response => {
+        props.updateEntityMethod(props.targetId, title, description).then(response => {
             if(Math.floor(response.status / 100) === 2) {
                 helpers.makeSuccessToast(t("repository.updated"))
-                dispatch({type: SYNC_STATUS_ACTIVE_REPOSITORY, dataSynced: false});
+                dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false});
                 props.onCancelled()
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
@@ -80,12 +91,13 @@ const EditRepoDialog: React.FC<Props> = props => {
 
     const deleteRepo = useCallback(() => {
         if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
-            deleteRepository(props.repoId).then(response => {
+            props.deleteEntityMethod(props.targetId).then(response => {
                 if(Math.floor(response.status / 100) === 2) {
                     dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
                     dispatch({type: SYNC_STATUS_RECENT, dataSynced: false});
                     dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
                     helpers.makeSuccessToast(t("repository.deleted"))
+                    history.push("/repository")
                 } else {
                     helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
                 }
@@ -93,7 +105,7 @@ const EditRepoDialog: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(error.response.data), () => deleteRepo())
             })
         }
-    }, [dispatch, props.repoId, title, t]);
+    }, [t, title, props, dispatch, history]);
 
     return (
         <PopupDialog
@@ -134,4 +146,4 @@ const EditRepoDialog: React.FC<Props> = props => {
     );
 };
 
-export default EditRepoDialog;
+export default EditEntityDialog;

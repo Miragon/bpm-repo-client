@@ -26,7 +26,7 @@
         "download": "Datei herunterladen",
         "edit": "Datei bearbeiten",
         "modifiedOn": "Bearbeitet am",
-        "sharewith": "Datei teilen",
+        "share": "Datei teilen",
         "upload": "Datei hochladen",
         "import": "Aus Cawemo importieren",
         "notAvailable": "Sie haben noch keine Datei erstellt",
@@ -105,7 +105,7 @@
         "ADMIN": "Administrator",
         "MEMBER": "Mitglied",
         "VIEWER": "Gast",
-        "remove": "Von Projekt entfernen"
+        "remove": "Benutzer entfernen"
     },
     "category": {
         "favorite": "Favoriten",
@@ -203,7 +203,8 @@
         "team": "Team",
         "teams": "Teams",
         "create": "Team erstellen",
-        "edit": "Team bearbeiten"
+        "edit": "Team bearbeiten",
+        "notAvailable": "Keine Teams verfügbar"
     },
     "options": {
         "editUsers": "Mitglieder verwalten"

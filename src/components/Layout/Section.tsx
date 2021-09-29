@@ -40,13 +40,13 @@ const Section: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     return (
-        <div className={classes.section}>
+        <div className={classes.section} >
             <div className={classes.header}>
                 <h1 className={classes.title}>{t(props.title)}</h1>
                 {props.actions && (
                     <div className={classes.actions}>
-                        {props.actions.map(action => (
-                            <IconButton onClick={action.onClick}>
+                        {props.actions.map((action, index) => (
+                            <IconButton onClick={action.onClick} key={index}>
                                 {action.icon}
                             </IconButton>
                         ))}

@@ -31,7 +31,7 @@ const UserListItem: React.FC<Props> = props => {
     const ref = useRef<HTMLButtonElement>(null);
 
     const changeRole = useCallback(role => {
-        updateUserAssignment(props.assignmentTargetId, props.assignmentUserId, props.assignmentUserName, role)
+        props.updateAssignmentMethod(props.assignmentTargetId, props.assignmentUserId, props.assignmentUserName, role)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
                     dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
@@ -41,11 +41,11 @@ const UserListItem: React.FC<Props> = props => {
             }, error => {
                 helpers.makeErrorToast(t(error.response.data), () => changeRole(role))
             })
-    }, [dispatch, props.assignmentTargetId, props.assignmentUserId, props.assignmentUserName, t]);
+    }, [dispatch, props, t]);
 
 
     const removeUser = useCallback(() => {
-        deleteAssignment(props.assignmentTargetId, props.assignmentUserId)
+        props.deleteAssignmentMethod(props.assignmentTargetId, props.assignmentUserId)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
                     helpers.makeSuccessToast(t("assignment.removed", {username: props.assignmentUserName}))
@@ -57,7 +57,7 @@ const UserListItem: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(error.response.data), () => removeUser())
             })
 
-    }, [dispatch, props.assignmentTargetId, props.assignmentUserId, props.assignmentUserName, t]);
+    }, [dispatch, props, t]);
 
     const options: DropdownButtonItem[] = [
         {

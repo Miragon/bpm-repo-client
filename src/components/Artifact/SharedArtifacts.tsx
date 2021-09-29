@@ -9,7 +9,7 @@ import {SHARED_ARTIFACTS} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import Section from "../Layout/Section";
 import {ErrorBoundary} from "../Exception/ErrorBoundary";
-import RepositoryArtifactList from "../../screens/Repository/RepositoryArtifactList";
+import ArtifactListWithVersions from "./ArtifactListWithVersions";
 
 const SharedArtifacts: React.FC = (() => {
     const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const SharedArtifacts: React.FC = (() => {
     return (
         <Section title="category.shared">
             <ErrorBoundary>
-                <RepositoryArtifactList
+                <ArtifactListWithVersions
                     artifacts={sharedArtifacts}
                     repositories={repos}
                     fallback="share.na"

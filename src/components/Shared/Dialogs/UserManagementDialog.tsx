@@ -34,26 +34,26 @@ const UserManagementDialog: React.FC<Props> = props => {
     const [assignedUsers, setAssignedUsers] = useState<Array<AssignmentTO | TeamAssignmentTO>>([]);
 
 
+
     const getAllAssignedUsers = useCallback(async (repoId: string) => {
         props.fetchAssignedUsersMethod(props.targetId).then(response => {
             if(Math.floor(response.status / 100) === 2){
                 setAssignedUsers(response.data)
-                dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: true });
             } else{
                 helpers.makeErrorToast(t(response.data.toString()), () => getAllAssignedUsers(repoId))
             }
         }, error => {
             helpers.makeErrorToast(t(error.response.data), () => getAllAssignedUsers(repoId))
         })
-    }, [dispatch, props, t])
+    }, [props, t])
 
 
-    //TODO DELETE
     useEffect(() => {
         if(!syncStatus){
             getAllAssignedUsers(props.targetId)
+            dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: true });
         }
-    }, [getAllAssignedUsers, props.targetId, syncStatus]);
+    }, [dispatch, getAllAssignedUsers, props.targetId, syncStatus]);
 
     const checkForAdminPermissions = useMemo(() => {
         const currentUserAssignment = assignedUsers.find(assignmentTO => assignmentTO.userId === currentUser.id);

@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
         justifyContent: "start",
         flexWrap: "wrap",
         rowGap: "20px",
-        columnGap: "30px"
+        columnGap: "20px"
     },
     tab: {
         flexGrow: 1,
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const RepoContainer: React.FC = observer(() => {
+const RepoAndTeamContainer: React.FC = observer(() => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
@@ -93,53 +93,28 @@ const RepoContainer: React.FC = observer(() => {
         setOpenedTab(newValue)
     }
 
+
+    //TODO: Tabs hier rausnehmen
     return (
         <Section title="repository.repositories">
 
-            <TabContext value={openedTab} >
 
-                <TabList onChange={handleChangeTab} >
-                    <Tab label={t("repository.repositories")} value="0"  className={classes.tab} fullWidth={true}/>
-                    <Tab label={t("team.teams")} value="1" className={classes.tab} fullWidth={true}/>
-                </TabList>
-
-                <TabPanel value="0" >
-                    <div className={classes.horizontalAlignment}>
-                        {allRepos.map(repo => (
-                            <Card
-                                key={repo.id}
-                                title={repo.name}
-                                onClick={() => history.push(getRepositoryUrl(repo))}
-                                assignedUsers={repo.assignedUsers}
-                                existingArtifacts={repo.existingArtifacts}/>
-                        ))}
-                        {allRepos?.length === 0 && (
-                            <span>{t("repository.notAvailable")}</span>
-                        )}
-                    </div>
-                </TabPanel>
-
-                <TabPanel value="1" >
-                    <div className={classes.horizontalAlignment}>
-                        {allTeams.map(team => (
-                            <Card
-                                key={team.id}
-                                title={team.name}
-                                assignedUsers={team.assignedUsers}
-                                existingArtifacts={0}
-                                onClick={() => history.push(getTeamUrl(team))} />
-                        ))}
-                        {allRepos?.length === 0 && (
-                            <span>{t("repository.notAvailable")}</span>
-                        )}
-                    </div>
-                </TabPanel>
-
-            </TabContext>
-
+            <div className={classes.horizontalAlignment}>
+                {allRepos.map(repo => (
+                    <Card
+                        key={repo.id}
+                        title={repo.name}
+                        onClick={() => history.push(getRepositoryUrl(repo))}
+                        assignedUsers={repo.assignedUsers}
+                        existingArtifacts={repo.existingArtifacts}/>
+                ))}
+                {allRepos?.length === 0 && (
+                    <span>{t("repository.notAvailable")}</span>
+                )}
+            </div>
 
         </Section>
     );
 });
 
-export default RepoContainer;
+export default RepoAndTeamContainer;

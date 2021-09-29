@@ -13,24 +13,13 @@
  */
 
 
-import {Configuration} from './configuration';
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-    assertParamExists,
-    createRequestFunction,
-    DUMMY_BASE_URL,
-    serializeDataIfNeeded,
-    setApiKeyToObject,
-    setBasicAuthToObject,
-    setBearerAuthToObject,
-    setOAuthToObject,
-    setSearchParams,
-    toPathString
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * Transports an svg image as preview for an artifact
@@ -499,6 +488,43 @@ export interface NewTeamTO {
     description: string;
 }
 /**
+ * Containing information about a repository-team relation
+ * @export
+ * @interface RepoTeamAssignmentTO
+ */
+export interface RepoTeamAssignmentTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof RepoTeamAssignmentTO
+     */
+    teamId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RepoTeamAssignmentTO
+     */
+    repositoryId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RepoTeamAssignmentTO
+     */
+    role: RepoTeamAssignmentTORoleEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RepoTeamAssignmentTORoleEnum {
+    Owner = 'OWNER',
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Viewer = 'VIEWER'
+}
+
+/**
  * Containing information about a repository
  * @export
  * @interface RepositoryTO
@@ -799,6 +825,25 @@ export interface TeamTO {
      * @memberof TeamTO
      */
     assignedUsers: number;
+}
+/**
+ * Containing information about a team update
+ * @export
+ * @interface TeamUpdateTO
+ */
+export interface TeamUpdateTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamUpdateTO
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamUpdateTO
+     */
+    description: string;
 }
 /**
  * 
@@ -1935,323 +1980,6 @@ export class ArtifactApi extends BaseAPI {
 
 
 /**
- * AssignmentApi - axios parameter creator
- * @export
- */
-export const AssignmentApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Create user assignment to repository
-         * @param {AssignmentTO} assignmentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUserAssignment: async (assignmentTO: AssignmentTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'assignmentTO' is not null or undefined
-            assertParamExists('createUserAssignment', 'assignmentTO', assignmentTO)
-            const localVarPath = `/api/assignment`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(assignmentTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Delete user assignment to repository
-         * @param {string} repositoryId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserAssignment: async (repositoryId: string, userId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('deleteUserAssignment', 'repositoryId', repositoryId)
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('deleteUserAssignment', 'userId', userId)
-            const localVarPath = `/api/assignment/{repositoryId}/{userId}`
-                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get all users assigned to a repository
-         * @param {string} repositoryId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllAssignedUsers: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getAllAssignedUsers', 'repositoryId', repositoryId)
-            const localVarPath = `/api/assignment/{repositoryId}`
-                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Update user assignment to repository
-         * @param {AssignmentTO} assignmentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserAssignment: async (assignmentTO: AssignmentTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'assignmentTO' is not null or undefined
-            assertParamExists('updateUserAssignment', 'assignmentTO', assignmentTO)
-            const localVarPath = `/api/assignment`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(assignmentTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * AssignmentApi - functional programming interface
- * @export
- */
-export const AssignmentApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = AssignmentApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Create user assignment to repository
-         * @param {AssignmentTO} assignmentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createUserAssignment(assignmentTO: AssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserAssignment(assignmentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Delete user assignment to repository
-         * @param {string} repositoryId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteUserAssignment(repositoryId: string, userId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserAssignment(repositoryId, userId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get all users assigned to a repository
-         * @param {string} repositoryId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAllAssignedUsers(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AssignmentTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllAssignedUsers(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Update user assignment to repository
-         * @param {AssignmentTO} assignmentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateUserAssignment(assignmentTO: AssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserAssignment(assignmentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * AssignmentApi - factory interface
- * @export
- */
-export const AssignmentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = AssignmentApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Create user assignment to repository
-         * @param {AssignmentTO} assignmentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUserAssignment(assignmentTO: AssignmentTO, options?: any): AxiosPromise<AssignmentTO> {
-            return localVarFp.createUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Delete user assignment to repository
-         * @param {string} repositoryId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserAssignment(repositoryId: string, userId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteUserAssignment(repositoryId, userId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get all users assigned to a repository
-         * @param {string} repositoryId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllAssignedUsers(repositoryId: string, options?: any): AxiosPromise<Array<AssignmentTO>> {
-            return localVarFp.getAllAssignedUsers(repositoryId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Update user assignment to repository
-         * @param {AssignmentTO} assignmentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserAssignment(assignmentTO: AssignmentTO, options?: any): AxiosPromise<AssignmentTO> {
-            return localVarFp.updateUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * AssignmentApi - object-oriented interface
- * @export
- * @class AssignmentApi
- * @extends {BaseAPI}
- */
-export class AssignmentApi extends BaseAPI {
-    /**
-     * 
-     * @summary Create user assignment to repository
-     * @param {AssignmentTO} assignmentTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AssignmentApi
-     */
-    public createUserAssignment(assignmentTO: AssignmentTO, options?: any) {
-        return AssignmentApiFp(this.configuration).createUserAssignment(assignmentTO, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Delete user assignment to repository
-     * @param {string} repositoryId 
-     * @param {string} userId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AssignmentApi
-     */
-    public deleteUserAssignment(repositoryId: string, userId: string, options?: any) {
-        return AssignmentApiFp(this.configuration).deleteUserAssignment(repositoryId, userId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get all users assigned to a repository
-     * @param {string} repositoryId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AssignmentApi
-     */
-    public getAllAssignedUsers(repositoryId: string, options?: any) {
-        return AssignmentApiFp(this.configuration).getAllAssignedUsers(repositoryId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Update user assignment to repository
-     * @param {AssignmentTO} assignmentTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AssignmentApi
-     */
-    public updateUserAssignment(assignmentTO: AssignmentTO, options?: any) {
-        return AssignmentApiFp(this.configuration).updateUserAssignment(assignmentTO, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * DeploymentApi - axios parameter creator
  * @export
  */
@@ -2586,6 +2314,573 @@ export class MenuApi extends BaseAPI {
 
 
 /**
+ * RepoAssignmentApi - axios parameter creator
+ * @export
+ */
+export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create user assignment to repository
+         * @param {AssignmentTO} assignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUserAssignment: async (assignmentTO: AssignmentTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'assignmentTO' is not null or undefined
+            assertParamExists('createUserAssignment', 'assignmentTO', assignmentTO)
+            const localVarPath = `/api/repoAssignment`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(assignmentTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete user assignment to repository
+         * @param {string} repositoryId 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserAssignment: async (repositoryId: string, userId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('deleteUserAssignment', 'repositoryId', repositoryId)
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('deleteUserAssignment', 'userId', userId)
+            const localVarPath = `/api/repoAssignment/{repositoryId}/{userId}`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all users assigned to a repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllAssignedUsers: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('getAllAssignedUsers', 'repositoryId', repositoryId)
+            const localVarPath = `/api/repoAssignment/{repositoryId}`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update user assignment to repository
+         * @param {AssignmentTO} assignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserAssignment: async (assignmentTO: AssignmentTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'assignmentTO' is not null or undefined
+            assertParamExists('updateUserAssignment', 'assignmentTO', assignmentTO)
+            const localVarPath = `/api/repoAssignment`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(assignmentTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * RepoAssignmentApi - functional programming interface
+ * @export
+ */
+export const RepoAssignmentApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RepoAssignmentApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create user assignment to repository
+         * @param {AssignmentTO} assignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createUserAssignment(assignmentTO: AssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserAssignment(assignmentTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Delete user assignment to repository
+         * @param {string} repositoryId 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUserAssignment(repositoryId: string, userId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserAssignment(repositoryId, userId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get all users assigned to a repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllAssignedUsers(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AssignmentTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllAssignedUsers(repositoryId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update user assignment to repository
+         * @param {AssignmentTO} assignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateUserAssignment(assignmentTO: AssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserAssignment(assignmentTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * RepoAssignmentApi - factory interface
+ * @export
+ */
+export const RepoAssignmentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RepoAssignmentApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create user assignment to repository
+         * @param {AssignmentTO} assignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUserAssignment(assignmentTO: AssignmentTO, options?: any): AxiosPromise<AssignmentTO> {
+            return localVarFp.createUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete user assignment to repository
+         * @param {string} repositoryId 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserAssignment(repositoryId: string, userId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteUserAssignment(repositoryId, userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all users assigned to a repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllAssignedUsers(repositoryId: string, options?: any): AxiosPromise<Array<AssignmentTO>> {
+            return localVarFp.getAllAssignedUsers(repositoryId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update user assignment to repository
+         * @param {AssignmentTO} assignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserAssignment(assignmentTO: AssignmentTO, options?: any): AxiosPromise<AssignmentTO> {
+            return localVarFp.updateUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * RepoAssignmentApi - object-oriented interface
+ * @export
+ * @class RepoAssignmentApi
+ * @extends {BaseAPI}
+ */
+export class RepoAssignmentApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create user assignment to repository
+     * @param {AssignmentTO} assignmentTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoAssignmentApi
+     */
+    public createUserAssignment(assignmentTO: AssignmentTO, options?: any) {
+        return RepoAssignmentApiFp(this.configuration).createUserAssignment(assignmentTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete user assignment to repository
+     * @param {string} repositoryId 
+     * @param {string} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoAssignmentApi
+     */
+    public deleteUserAssignment(repositoryId: string, userId: string, options?: any) {
+        return RepoAssignmentApiFp(this.configuration).deleteUserAssignment(repositoryId, userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all users assigned to a repository
+     * @param {string} repositoryId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoAssignmentApi
+     */
+    public getAllAssignedUsers(repositoryId: string, options?: any) {
+        return RepoAssignmentApiFp(this.configuration).getAllAssignedUsers(repositoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update user assignment to repository
+     * @param {AssignmentTO} assignmentTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoAssignmentApi
+     */
+    public updateUserAssignment(assignmentTO: AssignmentTO, options?: any) {
+        return RepoAssignmentApiFp(this.configuration).updateUserAssignment(assignmentTO, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * RepoTeamAssignmentApi - axios parameter creator
+ * @export
+ */
+export const RepoTeamAssignmentApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create an assignment between team and repository
+         * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRepoTeamAssignment: async (repoTeamAssignmentTO: RepoTeamAssignmentTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repoTeamAssignmentTO' is not null or undefined
+            assertParamExists('createRepoTeamAssignment', 'repoTeamAssignmentTO', repoTeamAssignmentTO)
+            const localVarPath = `/api/team/repoTeamAssignemnt`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(repoTeamAssignmentTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete an assignment between team and repository
+         * @param {string} teamId 
+         * @param {string} repoId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRepoTeamAssignment: async (teamId: string, repoId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'teamId' is not null or undefined
+            assertParamExists('deleteRepoTeamAssignment', 'teamId', teamId)
+            // verify required parameter 'repoId' is not null or undefined
+            assertParamExists('deleteRepoTeamAssignment', 'repoId', repoId)
+            const localVarPath = `/api/team/repoTeamAssignemnt/delete/{teamId}/{repoId}`
+                .replace(`{${"teamId"}}`, encodeURIComponent(String(teamId)))
+                .replace(`{${"repoId"}}`, encodeURIComponent(String(repoId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update an assignment between team and repository
+         * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateRepoTeamAssignment: async (repoTeamAssignmentTO: RepoTeamAssignmentTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repoTeamAssignmentTO' is not null or undefined
+            assertParamExists('updateRepoTeamAssignment', 'repoTeamAssignmentTO', repoTeamAssignmentTO)
+            const localVarPath = `/api/team/repoTeamAssignemnt`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(repoTeamAssignmentTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * RepoTeamAssignmentApi - functional programming interface
+ * @export
+ */
+export const RepoTeamAssignmentApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RepoTeamAssignmentApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create an assignment between team and repository
+         * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createRepoTeamAssignment(repoTeamAssignmentTO: RepoTeamAssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepoTeamAssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRepoTeamAssignment(repoTeamAssignmentTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Delete an assignment between team and repository
+         * @param {string} teamId 
+         * @param {string} repoId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteRepoTeamAssignment(teamId: string, repoId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRepoTeamAssignment(teamId, repoId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update an assignment between team and repository
+         * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateRepoTeamAssignment(repoTeamAssignmentTO: RepoTeamAssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepoTeamAssignmentTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRepoTeamAssignment(repoTeamAssignmentTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * RepoTeamAssignmentApi - factory interface
+ * @export
+ */
+export const RepoTeamAssignmentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RepoTeamAssignmentApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create an assignment between team and repository
+         * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRepoTeamAssignment(repoTeamAssignmentTO: RepoTeamAssignmentTO, options?: any): AxiosPromise<RepoTeamAssignmentTO> {
+            return localVarFp.createRepoTeamAssignment(repoTeamAssignmentTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete an assignment between team and repository
+         * @param {string} teamId 
+         * @param {string} repoId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRepoTeamAssignment(teamId: string, repoId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteRepoTeamAssignment(teamId, repoId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update an assignment between team and repository
+         * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateRepoTeamAssignment(repoTeamAssignmentTO: RepoTeamAssignmentTO, options?: any): AxiosPromise<RepoTeamAssignmentTO> {
+            return localVarFp.updateRepoTeamAssignment(repoTeamAssignmentTO, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * RepoTeamAssignmentApi - object-oriented interface
+ * @export
+ * @class RepoTeamAssignmentApi
+ * @extends {BaseAPI}
+ */
+export class RepoTeamAssignmentApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create an assignment between team and repository
+     * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoTeamAssignmentApi
+     */
+    public createRepoTeamAssignment(repoTeamAssignmentTO: RepoTeamAssignmentTO, options?: any) {
+        return RepoTeamAssignmentApiFp(this.configuration).createRepoTeamAssignment(repoTeamAssignmentTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete an assignment between team and repository
+     * @param {string} teamId 
+     * @param {string} repoId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoTeamAssignmentApi
+     */
+    public deleteRepoTeamAssignment(teamId: string, repoId: string, options?: any) {
+        return RepoTeamAssignmentApiFp(this.configuration).deleteRepoTeamAssignment(teamId, repoId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update an assignment between team and repository
+     * @param {RepoTeamAssignmentTO} repoTeamAssignmentTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepoTeamAssignmentApi
+     */
+    public updateRepoTeamAssignment(repoTeamAssignmentTO: RepoTeamAssignmentTO, options?: any) {
+        return RepoTeamAssignmentApiFp(this.configuration).updateRepoTeamAssignment(repoTeamAssignmentTO, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
  * RepositoryApi - axios parameter creator
  * @export
  */
@@ -2669,6 +2964,40 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          */
         getAllRepositories: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/repo`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all repositories accessible by the provided team
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllRepositoriesForTeam: async (teamId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'teamId' is not null or undefined
+            assertParamExists('getAllRepositoriesForTeam', 'teamId', teamId)
+            const localVarPath = `/api/repo/team/{teamId}`
+                .replace(`{${"teamId"}}`, encodeURIComponent(String(teamId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2873,6 +3202,17 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get all repositories accessible by the provided team
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllRepositoriesForTeam(teamId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRepositoriesForTeam(teamId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get all repositories that can be managed
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2953,6 +3293,16 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          */
         getAllRepositories(options?: any): AxiosPromise<Array<RepositoryTO>> {
             return localVarFp.getAllRepositories(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all repositories accessible by the provided team
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllRepositoriesForTeam(teamId: string, options?: any): AxiosPromise<Array<RepositoryTO>> {
+            return localVarFp.getAllRepositoriesForTeam(teamId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3037,6 +3387,18 @@ export class RepositoryApi extends BaseAPI {
      */
     public getAllRepositories(options?: any) {
         return RepositoryApiFp(this.configuration).getAllRepositories(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all repositories accessible by the provided team
+     * @param {string} teamId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepositoryApi
+     */
+    public getAllRepositoriesForTeam(teamId: string, options?: any) {
+        return RepositoryApiFp(this.configuration).getAllRepositoriesForTeam(teamId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3923,6 +4285,40 @@ export const TeamApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Delete a Team
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteTeam: async (teamId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'teamId' is not null or undefined
+            assertParamExists('deleteTeam', 'teamId', teamId)
+            const localVarPath = `/api/team/{teamId}`
+                .replace(`{${"teamId"}}`, encodeURIComponent(String(teamId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all assigned Teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4019,6 +4415,46 @@ export const TeamApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Update a Team
+         * @param {string} teamId 
+         * @param {TeamUpdateTO} teamUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTeam: async (teamId: string, teamUpdateTO: TeamUpdateTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'teamId' is not null or undefined
+            assertParamExists('updateTeam', 'teamId', teamId)
+            // verify required parameter 'teamUpdateTO' is not null or undefined
+            assertParamExists('updateTeam', 'teamUpdateTO', teamUpdateTO)
+            const localVarPath = `/api/team/{teamId}`
+                .replace(`{${"teamId"}}`, encodeURIComponent(String(teamId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(teamUpdateTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -4038,6 +4474,17 @@ export const TeamApiFp = function(configuration?: Configuration) {
          */
         async createTeam(newTeamTO: NewTeamTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TeamTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createTeam(newTeamTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Delete a Team
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteTeam(teamId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTeam(teamId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4072,6 +4519,18 @@ export const TeamApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.searchTeams(typedName, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary Update a Team
+         * @param {string} teamId 
+         * @param {TeamUpdateTO} teamUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateTeam(teamId: string, teamUpdateTO: TeamUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TeamTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateTeam(teamId, teamUpdateTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -4091,6 +4550,16 @@ export const TeamApiFactory = function (configuration?: Configuration, basePath?
          */
         createTeam(newTeamTO: NewTeamTO, options?: any): AxiosPromise<TeamTO> {
             return localVarFp.createTeam(newTeamTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete a Team
+         * @param {string} teamId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteTeam(teamId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteTeam(teamId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4121,6 +4590,17 @@ export const TeamApiFactory = function (configuration?: Configuration, basePath?
         searchTeams(typedName: string, options?: any): AxiosPromise<Array<TeamTO>> {
             return localVarFp.searchTeams(typedName, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Update a Team
+         * @param {string} teamId 
+         * @param {TeamUpdateTO} teamUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTeam(teamId: string, teamUpdateTO: TeamUpdateTO, options?: any): AxiosPromise<TeamTO> {
+            return localVarFp.updateTeam(teamId, teamUpdateTO, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -4141,6 +4621,18 @@ export class TeamApi extends BaseAPI {
      */
     public createTeam(newTeamTO: NewTeamTO, options?: any) {
         return TeamApiFp(this.configuration).createTeam(newTeamTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete a Team
+     * @param {string} teamId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamApi
+     */
+    public deleteTeam(teamId: string, options?: any) {
+        return TeamApiFp(this.configuration).deleteTeam(teamId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4176,6 +4668,19 @@ export class TeamApi extends BaseAPI {
      */
     public searchTeams(typedName: string, options?: any) {
         return TeamApiFp(this.configuration).searchTeams(typedName, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update a Team
+     * @param {string} teamId 
+     * @param {TeamUpdateTO} teamUpdateTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamApi
+     */
+    public updateTeam(teamId: string, teamUpdateTO: TeamUpdateTO, options?: any) {
+        return TeamApiFp(this.configuration).updateTeam(teamId, teamUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -5005,6 +5510,44 @@ export const VersionApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {number} milestone 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMilestoneVersion: async (artifactId: string, milestone: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('getMilestoneVersion', 'artifactId', artifactId)
+            // verify required parameter 'milestone' is not null or undefined
+            assertParamExists('getMilestoneVersion', 'milestone', milestone)
+            const localVarPath = `/api/version/{artifactId}/milestone/{milestone}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
+                .replace(`{${"milestone"}}`, encodeURIComponent(String(milestone)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get a specific version, read-permission granted even if Artifact is locked
          * @param {string} artifactId 
          * @param {string} versionId 
@@ -5135,6 +5678,18 @@ export const VersionApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {number} milestone 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMilestoneVersion(artifactId: string, milestone: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMilestoneVersion(artifactId, milestone, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get a specific version, read-permission granted even if Artifact is locked
          * @param {string} artifactId 
          * @param {string} versionId 
@@ -5207,6 +5762,17 @@ export const VersionApiFactory = function (configuration?: Configuration, basePa
          */
         getLatestVersion(artifactId: string, options?: any): AxiosPromise<ArtifactVersionTO> {
             return localVarFp.getLatestVersion(artifactId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {number} milestone 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMilestoneVersion(artifactId: string, milestone: number, options?: any): AxiosPromise<ArtifactVersionTO> {
+            return localVarFp.getMilestoneVersion(artifactId, milestone, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -5287,6 +5853,19 @@ export class VersionApi extends BaseAPI {
      */
     public getLatestVersion(artifactId: string, options?: any) {
         return VersionApiFp(this.configuration).getLatestVersion(artifactId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
+     * @param {string} artifactId 
+     * @param {number} milestone 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VersionApi
+     */
+    public getMilestoneVersion(artifactId: string, milestone: number, options?: any) {
+        return VersionApiFp(this.configuration).getMilestoneVersion(artifactId, milestone, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

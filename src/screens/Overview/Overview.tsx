@@ -5,7 +5,7 @@ import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import PathStructure from "../../components/Layout/PathStructure";
 import FavoriteArtifacts from "./FavoriteArtifacts";
 import RecentArtifacts from "./RecentArtifacts";
-import RepoContainer from "./RepoContainer";
+import RepoAndTeamContainer from "./RepoAndTeamContainer";
 import HeaderContainer from "../../components/Shared/HeaderContainer";
 
 const path = [{
@@ -21,7 +21,7 @@ const Overview: React.FC = observer(() => {
                 <HeaderContainer />
             </ErrorBoundary>
             <ErrorBoundary>
-                <RepoContainer />
+                <RepoAndTeamContainer />
             </ErrorBoundary>
             <ErrorBoundary>
                 <RecentArtifacts />

@@ -8,7 +8,7 @@ import {Settings} from "@material-ui/icons";
 import {AxiosResponse} from "axios";
 import PopupSettings from "./Form/PopupSettings";
 import UserManagementDialog from "./Dialogs/UserManagementDialog";
-import EditRepoDialog from "./Dialogs/EditRepoDialog";
+import EditEntityDialog from "./Dialogs/EditEntityDialog";
 import {DropdownButtonItem} from "./Form/DropdownButton";
 
 
@@ -22,13 +22,15 @@ const useStyles = makeStyles(() => ({
 }))
 
 interface Props {
-    id: string;
+    targetId: string;
     entity: "repository" | "team";
     object: TeamTO | RepositoryTO;
     fetchAssignedUsersMethod: (targetId: string) => Promise<AxiosResponse>;
     createAssignmentMethod: (targetId: string, userId: string, username: string, role: any) => Promise<AxiosResponse>;
     updateAssignmentMethod: (targetId: string, userId: string, userName: string, role: any) => Promise<AxiosResponse>;
     deleteAssignmentMethod: (targetId: string, userName: string) => Promise<AxiosResponse>;
+    updateEntityMethod: (targetId: string, title: string, description: string) => Promise<AxiosResponse>;
+    deleteEntityMethod: (targetId: string) => Promise<AxiosResponse>;
 }
 
 
@@ -43,20 +45,19 @@ const Details: React.FC<Props> = (props => {
     const options: DropdownButtonItem[] = [
         {
             id: "UserManagement",
-            label: t("option.editUsers"),
+            label: t("options.editUsers"),
             type: "button",
             onClick: () => setUserManagementOpen(true)
         },
         {
             id: "RepoManagement",
-            label: t("team.edit"),
+            label: t("repository.edit"),
             type: "button",
             onClick: () => setRepoManagementOpen(true)
         }
     ]
 
 
-    //TODO Make the EditRepoDialog Component generic, so it can handle repos and teams
 
     return (
         <Section
@@ -78,7 +79,7 @@ const Details: React.FC<Props> = (props => {
             <UserManagementDialog
                 open={userManagementOpen}
                 onCancelled={() => setUserManagementOpen(false)}
-                targetId={props.id}
+                targetId={props.targetId}
                 fetchAssignedUsersMethod={props.fetchAssignedUsersMethod}
                 deleteAssignmentMethod={props.deleteAssignmentMethod}
                 updateAssignmentMethod={props.updateAssignmentMethod}
@@ -86,12 +87,14 @@ const Details: React.FC<Props> = (props => {
                 entity={props.entity} />
 
 
-            <EditRepoDialog
+            <EditEntityDialog
                 open={repoManagementOpen}
                 onCancelled={() => setRepoManagementOpen(false)}
-                repoId={props.object.id}
+                targetId={props.object.id}
                 repoName={props.object.name}
-                repoDescription={props.object.description} />
+                repoDescription={props.object.description}
+                deleteEntityMethod={props.deleteEntityMethod}
+                updateEntityMethod={props.updateEntityMethod} />
 
         </Section>
     )

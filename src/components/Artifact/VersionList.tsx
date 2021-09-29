@@ -4,10 +4,10 @@ import {useTranslation} from "react-i18next";
 import {ArtifactTO, ArtifactVersionTO} from "../../api";
 import {getAllVersions} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
-import VersionDetails from "./Version/VersionDetails";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import {SYNC_STATUS_VERSION} from "../../constants/Constants";
+import VersionDetails from "../../screens/Repository/Version/VersionDetails";
 
 interface Props {
     artifact: ArtifactTO;
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const RepositoryArtifactDetails: React.FC<Props> = (props: Props) => {
+const VersionList: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
@@ -67,4 +67,4 @@ const RepositoryArtifactDetails: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default RepositoryArtifactDetails;
+export default VersionList;

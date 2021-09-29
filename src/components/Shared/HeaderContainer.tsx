@@ -14,6 +14,7 @@ import SimpleButton from "./Form/SimpleButton";
 import CreateTitleDescDialog from "./Dialogs/CreateTitleDescDialog";
 import CreateArtifactDialog from "./Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "./Dialogs/UploadArtifactDialog";
+import Identity from "./Identity";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -45,6 +46,25 @@ const HeaderContainer: React.FC = observer(() => {
     useEffect(() => {
         const opts: DropdownButtonItem[] = []
 
+        opts.push({
+            id: "createRepo",
+            label: "repository.create",
+            type: "button",
+            onClick: () => setCreateRepoOpen(true)
+        });
+        opts.push({
+            id: "createTeam",
+            label: "team.create",
+            type: "button",
+            onClick: () => setCreateTeamOpen(true)
+        });
+
+        opts.push({
+            id: "divider1",
+            type: "divider",
+            label: ""
+        });
+
         fileTypes?.forEach(fileType => {
             opts.push({
                 id: fileType.name,
@@ -57,7 +77,7 @@ const HeaderContainer: React.FC = observer(() => {
             });
         });
         opts.push({
-            id: "divider1",
+            id: "divider2",
             type: "divider",
             label: ""
         });
@@ -74,20 +94,16 @@ const HeaderContainer: React.FC = observer(() => {
     return (
         <>
             <div className={classes.container}>
+                <div>
+                    <Identity />
+                </div>
+
                 <ArtifactSearchBar />
                 <div>
-                    <SimpleButton
-                        className={classes.button}
-                        title={t("repository.create")}
-                        onClick={() => setCreateRepoOpen(true)} />
-                    <SimpleButton
-                        className={classes.button}
-                        title={t("team.create")}
-                        onClick={() => setCreateTeamOpen(true)} />
                     <DropdownButton
                         type={"default"}
                         className={classes.button}
-                        title={t("artifact.create")}
+                        title={t("action.createNew")}
                         options={artifactOptions} />
                 </div>
             </div>

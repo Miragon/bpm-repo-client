@@ -8,7 +8,7 @@ import {addToFavorites, deleteArtifact, getLatestVersion} from "../../store/acti
 import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import {openFileInTool} from "../../util/Redirections";
-import RepositoryArtifactDetails from "./RepositoryArtifactDetails";
+import VersionList from "./VersionList";
 import {DropdownButtonItem} from "../../components/Shared/Form/DropdownButton";
 import PopupSettings from "../../components/Shared/Form/PopupSettings";
 import EditArtifactDialog from "../../components/Artifact/Dialogs/EditArtifactDialog";
@@ -23,7 +23,7 @@ interface Props {
     fallback?: string;
 }
 
-const RepositoryArtifactList: React.FC<Props> = (props: Props) => {
+const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
 
@@ -133,7 +133,7 @@ const RepositoryArtifactList: React.FC<Props> = (props: Props) => {
         },
         {
             id: "ShareWithRepository",
-            label: t("artifact.sharewith"),
+            label: t("artifact.share"),
             type: "button",
             onClick: () => menu && onShare(menu.artifact)
         },
@@ -180,7 +180,7 @@ const RepositoryArtifactList: React.FC<Props> = (props: Props) => {
                         onFavorite={onFavorite}
                         favorite={helpers.isFavorite(artifact.id, favorites.map(artifact => artifact.id))}
                         repository={helpers.getRepoName(artifact.repositoryId, repositories)}>
-                        <RepositoryArtifactDetails artifact={artifact} />
+                        <VersionList artifact={artifact} />
                     </ArtifactEntry>
                 ))}
                 {artifacts.length === 0 && (
@@ -220,4 +220,4 @@ const RepositoryArtifactList: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default RepositoryArtifactList;
+export default ArtifactListWithVersions;
