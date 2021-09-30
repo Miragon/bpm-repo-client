@@ -12,13 +12,12 @@ export const fetchAssignedUsers = async (repoId: string): Promise<AxiosResponse<
 }
 
 
-export const createUserAssignment = async (repoId: string, userId: string, username: string, role: AssignmentTORoleEnum): Promise<AxiosResponse<AssignmentTO>> => {
+export const createUserAssignment = async (repoId: string, userId: string, role: AssignmentTORoleEnum): Promise<AxiosResponse<AssignmentTO>> => {
     const assignmentController = new RepoAssignmentApi();
     const config = helpers.getClientConfig();
     const assignmentTO: AssignmentTO = {
         repositoryId: repoId,
         userId: userId,
-        username: username,
         role: (role) || AssignmentTORoleEnum.Member
     }
     const response = await assignmentController.createUserAssignment(assignmentTO, config);
@@ -26,13 +25,12 @@ export const createUserAssignment = async (repoId: string, userId: string, usern
 }
 
 
-export const updateUserAssignment = async (repoId: string, userId: string, username: string, role: AssignmentTORoleEnum): Promise<AxiosResponse<AssignmentTO>> => {
+export const updateUserAssignment = async (repoId: string, userId: string, role: AssignmentTORoleEnum): Promise<AxiosResponse<AssignmentTO>> => {
     const assignmentController = new RepoAssignmentApi();
     const config = helpers.getClientConfig();
     const assignmentUpdateTO: AssignmentTO = {
         repositoryId: repoId,
         userId: userId,
-        username: username,
         role: role
     };
     const response = await assignmentController.updateUserAssignment(assignmentUpdateTO, config);

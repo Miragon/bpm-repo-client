@@ -12,7 +12,9 @@
     "edit": "Edit Repository",
     "updated": "Repository updated",
     "notAvailable": "You haven't added any Repositories yet.",
-    "target": "Target Repository"
+    "target": "Target Repository",
+    "members": "Members",
+    "settings": "Settings"
   },
   "version": {
     "create": "Create new Version",
@@ -125,6 +127,7 @@
     "unknown": "Unknown Error - Please refresh the page"
   },
   "artifact": {
+    "artifacts": "Artifacts",
     "addedToFavorite": "File added to Favorites",
     "addToFavorites": "Add to Favorites",
     "createBPMN": "Create BPMN Diagram",
@@ -202,14 +205,23 @@
     "notFound": "Could not check for admin rights"
   },
   "team": {
+    "members": "Members",
     "team": "Team",
     "teams": "Teams",
     "create": "Create Team",
     "edit": "Edit Team",
-    "notAvailable": "No Team available"
+    "notAvailable": "No Team available",
+    "settings": "Settings"
 
   },
   "options": {
     "editUsers": "Mitglieder verwalten"
+  },
+  "action": {
+    "createNew": "New"
+  },
+  "exception": {
+    "changeOwnRole": "You can't change your own role",
+    "authFailed": "Authorization failed"
   }
 }

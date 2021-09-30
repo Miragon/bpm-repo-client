@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
-import {InputLabel, MenuItem, Select} from "@material-ui/core";
+import {MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import PersonIcon from "@material-ui/icons/Person";
@@ -11,7 +11,6 @@ import {SYNC_STATUS_TEAM, TEAMS} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import {TeamTO} from "../../api";
-import {getTeamUrl} from "../../util/Redirections";
 import {useHistory} from "react-router-dom";
 
 
@@ -24,6 +23,7 @@ const useStyles = makeStyles(() => ({
         whiteSpace: "nowrap"
     },
     icon: {
+        marginRight: "10px",
         flexGrow: 1
     },
     name: {
@@ -74,9 +74,11 @@ const Identity: React.FC = (() => {
 
 
     useEffect(() => {
-        fetchTeams()
-        setActiveIdentityId(currentUser.id)
-        setActiveIdentityName(currentUser.username)
+        if(currentUser){
+            fetchTeams()
+            setActiveIdentityId(currentUser.id)
+            setActiveIdentityName(currentUser.username)
+        }
     }, [currentUser, fetchTeams])
 
 
@@ -95,7 +97,7 @@ const Identity: React.FC = (() => {
                     onChange={changeIdentity}>
                     <MenuItem value={activeIdentityId}>
                         <div className={classes.iconAndText}>
-                            <div>
+                            <div className={classes.icon}>
                                 <PersonIcon/>
                             </div>
                             <div>
@@ -105,9 +107,9 @@ const Identity: React.FC = (() => {
                     </MenuItem>
                     {
                         teams?.map(team => (
-                            <MenuItem value={team.id}>
+                            <MenuItem value={team.id} key={team.id}>
                                 <div className={classes.iconAndText}>
-                                    <div>
+                                    <div className={classes.icon}>
                                         <PeopleAltIcon/>
                                     </div>
                                     <div>
@@ -121,12 +123,6 @@ const Identity: React.FC = (() => {
                 </Select>
             </FormControl>
 
-            <div className={classes.icon}>
-
-            </div>
-            <div className={classes.name}>
-
-            </div>
 
         </div>
     )

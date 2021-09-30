@@ -3,11 +3,9 @@ import {ArtifactTO, ArtifactTypeTO} from "../../api";
 import {
     ACTIVE_ARTIFACTS,
     ARTIFACT_UPLOAD,
-    ARTIFACTS_BY_REPO_AND_TYPE,
     FAVORITE_ARTIFACTS,
     FILETYPES,
     RECENT_ARTIFACTS,
-    SEARCHED_ARTIFACTS,
     SHARED_ARTIFACTS
 } from "../../constants/Constants";
 
@@ -45,11 +43,7 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 favoriteArtifacts: action.favoriteArtifacts
             };
-        case SEARCHED_ARTIFACTS:
-            return {
-                ...state,
-                searchedArtifacts: action.searchedArtifacts
-            };
+
         case FILETYPES:
             return {
                 ...state,
@@ -62,11 +56,6 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 sharedArtifacts: action.sharedArtifacts
             }
 
-        case ARTIFACTS_BY_REPO_AND_TYPE:
-            return {
-                ...state,
-                artifactsByRepoAndType: action.artifactsByRepoAndType
-            }
     }
     return state;
 };

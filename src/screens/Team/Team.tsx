@@ -4,12 +4,7 @@ import {useParams} from "react-router";
 import {ArtifactTO, RepositoryTO, TeamTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import React, {useCallback, useEffect, useState} from "react";
-import {
-    ACTIVE_ARTIFACTS,
-    ACTIVE_TEAM,
-    SYNC_STATUS_ACTIVE_ENTITY,
-    SYNC_STATUS_ARTIFACT
-} from "../../constants/Constants";
+import {SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import PathStructure from "../../components/Layout/PathStructure";
@@ -19,17 +14,19 @@ import Details from "../../components/Shared/Details";
 import {
     createUserTeamAssignment,
     deleteUserTeamAssignment,
-    fetchTeamAssignedUsers, updateUserTeamAssignment
+    fetchTeamAssignedUsers,
+    updateUserTeamAssignment
 } from "../../store/actions/teamAssignmentAction";
 import ArtifactDetails from "../../components/Artifact/ArtifactDetails";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
-import {setRef, Tab} from "@material-ui/core";
+import {Tab} from "@material-ui/core";
 import {getAllRepositoriesForTeam} from "../../store/actions";
 import Card from "../Overview/Holder/Card";
 import {getRepositoryUrl} from "../../util/Redirections";
 import {makeStyles} from "@material-ui/styles";
 import {useHistory} from "react-router-dom";
-import Section from "../../components/Layout/Section";
+import Settings from "../../components/Shared/Settings";
+import TeamMembers from "./TeamMembers";
 
 const useStyles = makeStyles(() => ({
     horizontalAlignment: {
@@ -73,16 +70,16 @@ const Team: React.FC = (() => {
     const fetchTeam = useCallback(() => {
         getTeam(teamId).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                console.log("Team data:")
-                console.log(response.data)
                 setTeam(response.data)
+                dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true});
+
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchTeam())
             }
         }, error => {
             helpers.makeErrorToast(t(error.response.data), () => fetchTeam())
         })
-    }, [t, teamId]);
+    }, [dispatch, t, teamId]);
 
     const fetchArtifacts = useCallback(async () => {
         getAllArtifactsSharedWithTeam(teamId).then(response => {
@@ -101,7 +98,6 @@ const Team: React.FC = (() => {
         getAllRepositoriesForTeam(teamId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 setRepos(response.data)
-                console.log(response.data)
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
             }
@@ -113,7 +109,7 @@ const Team: React.FC = (() => {
 
     useEffect(() => {
         if(!activeEntitySynced){
-            //fetchTeam();
+            fetchTeam();
         }
     }, [fetchTeam, teamId, activeEntitySynced])
 
@@ -124,7 +120,6 @@ const Team: React.FC = (() => {
     }, [teamId, activeEntitySynced, artifactSynced, fetchArtifacts])
 
     useEffect(() => {
-        console.log("in Teams")
         fetchTeam();
         fetchRepositories();
         fetchArtifacts();
@@ -146,7 +141,7 @@ const Team: React.FC = (() => {
     const path = [element, element2]
 
 
-    //TODO hier tabs mit "Repositories", "Artifacts", "Members", "Settings"
+    //TODO hier tabs mit "Repositories", "Artifacts", "TeamMembers", "Settings"
     return (
         <>
             {(team && (team.id === teamId)) &&
@@ -156,21 +151,13 @@ const Team: React.FC = (() => {
                     </ErrorBoundary>
                     <ErrorBoundary>
                         <Details
-                            targetId={teamId}
-                            entity={"team"}
-                            object={team}
-                            createAssignmentMethod={createUserTeamAssignment}
-                            deleteAssignmentMethod={deleteUserTeamAssignment}
-                            fetchAssignedUsersMethod={fetchTeamAssignedUsers}
-                            updateAssignmentMethod={updateUserTeamAssignment}
-                            deleteEntityMethod={deleteTeam}
-                            updateEntityMethod={updateTeam}/>
+                            object={team} />
                     </ErrorBoundary>
                     <ErrorBoundary>
                         <TabContext value={openedTab} >
 
                             <TabList onChange={handleChangeTab}>
-                                <Tab label={t("repository.repositories")} value="repositories"   fullWidth={true}/>
+                                <Tab label={t("repository.repositories")} value="repositories" fullWidth={true}/>
                                 <Tab label={t("artifact.artifacts")} value="artifacts" fullWidth={true}/>
                                 <Tab label={t("team.members")} value="members" fullWidth={true} />
                                 <Tab label={t("team.settings")} value="settings" fullWidth={true} />
@@ -202,16 +189,24 @@ const Team: React.FC = (() => {
 
 
                             <TabPanel value={"members"}>
-
+                                <TeamMembers
+                                    targetId={teamId} />
                             </TabPanel>
 
                             <TabPanel value={"settings"}>
+                                <Settings
+                                    targetId={team.id}
+                                    entityName={team.name}
+                                    entityDescription={team.description}
+                                    updateEntityMethod={updateTeam}
+                                    deleteEntityMethod={deleteTeam} />
 
                             </TabPanel>
 
 
                         </TabContext>
                     </ErrorBoundary>
+
 
 
                 </div>

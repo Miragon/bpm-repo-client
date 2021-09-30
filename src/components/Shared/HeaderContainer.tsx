@@ -10,7 +10,6 @@ import {SYNC_STATUS_REPOSITORY, SYNC_STATUS_TEAM} from "../../constants/Constant
 import DropdownButton, {DropdownButtonItem} from "./Form/DropdownButton";
 import {RootState} from "../../store/reducers/rootReducer";
 import ArtifactSearchBar from "../../screens/Overview/ArtifactSearchBar";
-import SimpleButton from "./Form/SimpleButton";
 import CreateTitleDescDialog from "./Dialogs/CreateTitleDescDialog";
 import CreateArtifactDialog from "./Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "./Dialogs/UploadArtifactDialog";

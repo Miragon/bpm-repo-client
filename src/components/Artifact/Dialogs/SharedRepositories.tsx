@@ -13,7 +13,7 @@ import {
     SharedTeamTORoleEnum
 } from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
-import {SUCCESS, SYNC_STATUS_SHARED} from "../../../constants/Constants";
+import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
@@ -83,7 +83,6 @@ const SharedRepositories: React.FC<Props> = props => {
     const unshare = useCallback((repoId: string, targetName: string) => {
         props.unshareMethod(props.artifact.id, repoId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SUCCESS, successMessage: "share.successful" });
                 dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
                 helpers.makeSuccessToast(t("share.removed", {targetName}))
             } else {

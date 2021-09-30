@@ -4,21 +4,21 @@ import {Settings} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
-import {AssignmentTO, AssignmentTORoleEnum, TeamAssignmentTO, TeamAssignmentTORoleEnum} from "../../../api";
-import {deleteAssignment, updateUserAssignment} from "../../../store/actions";
-import {SYNC_STATUS_ASSIGNMENT} from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
-import {DropdownButtonItem} from "../Form/DropdownButton";
-import PopupSettings from "../Form/PopupSettings";
+import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
+import helpers from "../../util/helperFunctions";
+import {DropdownButtonItem} from "./Form/DropdownButton";
+import PopupSettings from "./Form/PopupSettings";
+import {AssignmentTORoleEnum, TeamAssignmentTORoleEnum} from "../../api";
 
 interface Props {
-    assignmentTO: AssignmentTO | TeamAssignmentTO;
     assignmentTargetId: string;
-    assignmentUserId: string;
-    assignmentUserName: string;
+    assignmentTargetEntity: "team" | "repository";
+    userId: string;
+    username: string;
+    role: TeamAssignmentTORoleEnum | AssignmentTORoleEnum;
     hasAdminPermissions: boolean;
-    updateAssignmentMethod: (targetId: string, userId: string, userName: string, role: any) => Promise<AxiosResponse>;
-    deleteAssignmentMethod: (targetId: string, userName: string) => Promise<AxiosResponse>;
+    updateAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse>;
+    deleteAssignmentMethod: (targetId: string, userId: string) => Promise<AxiosResponse>;
 }
 
 
@@ -31,7 +31,7 @@ const UserListItem: React.FC<Props> = props => {
     const ref = useRef<HTMLButtonElement>(null);
 
     const changeRole = useCallback(role => {
-        props.updateAssignmentMethod(props.assignmentTargetId, props.assignmentUserId, props.assignmentUserName, role)
+        props.updateAssignmentMethod(props.assignmentTargetId, props.userId, role)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
                     dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
@@ -45,10 +45,10 @@ const UserListItem: React.FC<Props> = props => {
 
 
     const removeUser = useCallback(() => {
-        props.deleteAssignmentMethod(props.assignmentTargetId, props.assignmentUserId)
+        props.deleteAssignmentMethod(props.assignmentTargetId, props.userId)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
-                    helpers.makeSuccessToast(t("assignment.removed", {username: props.assignmentUserName}))
+                    helpers.makeSuccessToast(t("assignment.removed", {username: props.username}))
                     dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
                 } else {
                     helpers.makeErrorToast(t("error.unknown"), () => removeUser())
@@ -65,7 +65,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.OWNER"),
             type: "button",
             onClick: () => {
-                changeRole(("repositoryId" in props.assignmentTO) ? AssignmentTORoleEnum.Owner : TeamAssignmentTORoleEnum.Owner);
+                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Owner : TeamAssignmentTORoleEnum.Owner);
             }
         },
         {
@@ -73,7 +73,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.ADMIN"),
             type: "button",
             onClick: () => {
-                changeRole(("repositoryId" in props.assignmentTO) ? AssignmentTORoleEnum.Admin : TeamAssignmentTORoleEnum.Admin);
+                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Admin : TeamAssignmentTORoleEnum.Admin);
             }
         },
         {
@@ -81,7 +81,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.MEMBER"),
             type: "button",
             onClick: () => {
-                changeRole(("repositoryId" in props.assignmentTO) ? AssignmentTORoleEnum.Member : TeamAssignmentTORoleEnum.Member);
+                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Member : TeamAssignmentTORoleEnum.Member);
             }
         },
         {
@@ -89,7 +89,7 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.VIEWER"),
             type: "button",
             onClick: () => {
-                changeRole(("repositoryId" in props.assignmentTO) ? AssignmentTORoleEnum.Viewer : TeamAssignmentTORoleEnum.Viewer);
+                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Viewer : TeamAssignmentTORoleEnum.Viewer);
             }
         },
         {
@@ -113,8 +113,8 @@ const UserListItem: React.FC<Props> = props => {
         <>
             <ListItem>
                 <ListItemText
-                    primary={props.assignmentTO.username}
-                    secondary={t(`user.${props.assignmentTO.role}`)} />
+                    primary={props.username}
+                    secondary={t(`user.${props.role}`)} />
                 {props.hasAdminPermissions && (
                     <ListItemSecondaryAction>
                         <IconButton ref={ref} edge="end" onClick={() => setOpen(true)}>

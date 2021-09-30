@@ -8,11 +8,13 @@ import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
-import {AssignmentTO, AssignmentTORoleEnum, TeamAssignmentTO, TeamAssignmentTORoleEnum, UserInfoTO} from "../../../api";
-import theme from "../../../theme";
-import helpers from "../../../util/helperFunctions";
-import {searchUsers} from "../../../store/actions";
-import {SYNC_STATUS_ASSIGNMENT} from "../../../constants/Constants";
+import {AssignmentTO, AssignmentTORoleEnum, TeamAssignmentTORoleEnum, TeamTO, User, UserInfoTO} from "../../api";
+import theme from "../../theme";
+import helpers from "../../util/helperFunctions";
+import {searchTeam} from "../../store/actions/teamAction";
+import {searchUsers} from "../../store/actions";
+import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
+
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -36,9 +38,14 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
     targetId: string;
-    assignedUsers: Array<AssignmentTO | TeamAssignmentTO>;
-    entity: "repository" |"team",
-    createAssignmentMethod: (targetId: string, userId: string, username: string, role: any) => Promise<AxiosResponse>;
+    assignedUsers: Array<UserInfoTO>;
+    createAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse<any>>;
+}
+
+interface assignmentObject {
+    id: string;
+    name: string;
+    type: "user" | "team";
 }
 
 let timeout: NodeJS.Timeout | undefined;
@@ -50,29 +57,43 @@ const AddUserSearchBar: React.FC<Props> = props => {
 
 
     const [username, setUsername] = useState("");
-    const [open, setOpen] = React.useState(false);
-    const [options, setOptions] = React.useState<UserInfoTO[]>([]);
+    const [options, setOptions] = React.useState<Array<any>>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [searchedUsers, setSearchedUsers] = useState<UserInfoTO[]>([]);
-    const [numberReturnedUsers, setNumberReturnedUsers] = useState<number>();
+    const [searchedTeams, setSearchedTeams] = useState<TeamTO[]>([]);
 
     useEffect(() => {
-        if (!open) {
-            setOptions([]);
-        }
-        if (open) {
-            setOptions(searchedUsers);
-        }
-    }, [open, searchedUsers]);
+        console.log(options)
+    }, [options])
 
     useEffect(() => {
-        if (searchedUsers.length > 0) {
+        const resultsArray: Array<any> = [];
+
+        searchedUsers.map(user => {
+            const o: assignmentObject = {id: user.id,
+                name: user.username,
+                type: "user"}
+            resultsArray.push(o)});
+
+        searchedTeams.map(team => {
+            const o: assignmentObject = {
+                id: team.id,
+                name: team.name,
+                type: "team"
+            }
+            resultsArray.push(o)
+        })
+        setOptions(resultsArray);
+    }, [searchedTeams, searchedUsers]);
+
+    useEffect(() => {
+        if (searchedUsers.length + searchedTeams.length > 0) {
             setLoading(false);
         }
-        if (numberReturnedUsers === 0) {
+        if (searchedUsers.length + searchedTeams.length === 0) {
             setLoading(false);
         }
-    }, [numberReturnedUsers, searchedUsers]);
+    }, [searchedTeams.length, searchedUsers]);
 
     useEffect(() => {
         if (username === "") {
@@ -87,45 +108,61 @@ const AddUserSearchBar: React.FC<Props> = props => {
                 clearTimeout(timeout);
             }
             setLoading(true);
-            timeout = setTimeout(() => fetchUserSuggestions(input), 500);
+            timeout = setTimeout(() => fetchUserAndTeamSuggestion(input), 500);
         }
     });
 
-    const fetchUserSuggestions = useCallback((input: string) => {
+    const fetchUserAndTeamSuggestion = useCallback((input: string) => {
         searchUsers(input).then(response => {
             if(Math.floor(response.status / 100) === 2) {
                 setSearchedUsers(response.data)
-                setNumberReturnedUsers(response.data.length)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserSuggestions(input))
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserAndTeamSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchUserSuggestions(input))
+            helpers.makeErrorToast(t(error.response.data), () => fetchUserAndTeamSuggestion(input))
+        })
+
+        searchTeam(input).then(response => {
+            if(Math.floor(response.status / 100) === 2) {
+                setSearchedTeams(response.data)
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserAndTeamSuggestion(input))
+                setLoading(false)
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchUserAndTeamSuggestion(input))
         })
     }, [t]);
 
 
-    const getUserByName = useCallback((username: string) => {
-        return searchedUsers.find(user => user.username.toLowerCase() === username.toLowerCase());
-    }, [searchedUsers]);
+    const getObjectByName = useCallback((targetName: string) => {
+        return options.find(option => option.name.toLowerCase() === targetName.toLowerCase());
+    }, [options]);
 
-    const isUserAlreadyAssigned = useCallback((username: string): boolean => {
-        return props.assignedUsers.find(user => user.username === username) !== undefined;
+
+    const isUserAlreadyAssigned = useCallback((userName: string): boolean => {
+
+        return props.assignedUsers.find(user => user.username === userName) !== undefined
+
     }, [props.assignedUsers])
 
-    const addUser = useCallback(() => {
-        const user = getUserByName(username);
-        if (user) {
+    const addUser = () => {
+        console.log("Adding")
+        console.log(options)
+        const object = getObjectByName(username);
+        console.log(object)
+        if (object?.type === "user") {
             if(isUserAlreadyAssigned(username)){
-                helpers.makeErrorToast(t("assignment.alreadyPresent", {username}), () => addUser())
+                helpers.makeErrorToast(t("assignment.alreadyPresent", username), () => addUser())
                 return;
             }
-            const role = props.entity === "team" ? TeamAssignmentTORoleEnum.Member : AssignmentTORoleEnum.Member
-            props.createAssignmentMethod(props.targetId, user.id, username, role).then(response => {
+            const role = AssignmentTORoleEnum.Member
+            props.createAssignmentMethod(props.targetId, object.id, role).then(response => {
                 setUsername("");
                 if(Math.floor(response.status / 100) === 2){
                     dispatch({type: SYNC_STATUS_ASSIGNMENT, assignmentSynced: false})
-                    helpers.makeSuccessToast(t("assignment.added", {username}))
+                    helpers.makeSuccessToast(t("assignment.added", username))
                 } else {
                     helpers.makeErrorToast(response.data.toString(), () => addUser())
                 }
@@ -133,30 +170,18 @@ const AddUserSearchBar: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(error.response.data), () => addUser)
             })
         }
-    }, [getUserByName, username, isUserAlreadyAssigned, props, t, dispatch]);
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updateState = (event: any) => {
-        setUsername(event.target.textContent);
-    };
 
     return (
-        <ListItem className={classes.listItem}>
+        <ListItem className={classes.listItem} >
             <Autocomplete
                 id="UserSearchBar"
                 freeSolo
-                style={{ width: 500 }}
-                open={open}
-                onOpen={() => {
-                    setOpen(true);
-                }}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                getOptionSelected={(option, value) => option.username === value.username}
-                getOptionLabel={option => option.username}
+                fullWidth
+                getOptionSelected={(option, value) => option.name === value.name}
+                getOptionLabel={option => option.name}
                 options={options}
-                onChange={updateState}
                 loading={loading}
                 renderInput={params => (
                     <TextField

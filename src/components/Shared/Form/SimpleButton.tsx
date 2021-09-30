@@ -8,6 +8,7 @@ interface Props {
     onClick: () => void;
     className?: string;
     disabled?: boolean;
+    fullWidth?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,6 +27,7 @@ const DropdownButton: React.FC<Props> = props => {
 
     return (
         <Button
+            fullWidth={props.fullWidth}
             color="secondary"
             className={clsx(classes.button, props.className)}
             disabled={props.disabled}

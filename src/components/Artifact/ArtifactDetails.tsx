@@ -4,15 +4,9 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
-import {AxiosResponse} from "axios";
 import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
-import {
-    ACTIVE_ARTIFACTS,
-    FAVORITE_ARTIFACTS,
-    SYNC_STATUS_ARTIFACT,
-    SYNC_STATUS_FAVORITE
-} from "../../constants/Constants";
+import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {fetchFavoriteArtifacts} from "../../store/actions";
 import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";

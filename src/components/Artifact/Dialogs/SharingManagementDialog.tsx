@@ -1,23 +1,25 @@
 import React, {useCallback, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import AddSharingSearchBar from "./AddSharingSearchBar";
 import SharedRepositories from "./SharedRepositories";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {ArtifactTO, RepositoryTO, ShareWithRepositoryTORoleEnum, ShareWithTeamTORoleEnum} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
 import {getManageableRepos, searchRepos} from "../../../store/actions";
-import {MANAGEABLE_REPOS, SYNC_STATUS_SHARED} from "../../../constants/Constants";
+import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import {
-    getSharedRepos, getSharedTeams,
+    getSharedRepos,
+    getSharedTeams,
     shareWithRepo,
     shareWithTeam,
-    unshareWithRepo, unshareWithTeam,
-    updateShareWithRepo, updateShareWithTeam
+    unshareWithRepo,
+    unshareWithTeam,
+    updateShareWithRepo,
+    updateShareWithTeam
 } from "../../../store/actions/shareAction";
 import {searchTeam} from "../../../store/actions/teamAction";
 
@@ -44,6 +46,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [openedTab, setOpenedTab] = useState<string>("0");
+    const [manageableRepos, setManageableRepos] = useState<RepositoryTO[]>([]);
 
 
 
@@ -51,19 +54,18 @@ const SharingManagementDialog: React.FC<Props> = props => {
     // direkt zugewiesen sind?
     // GetManageable verwenden, um die möglichen Aktionen des users auf eigene Repos zu beschränken
 
-    const manageableRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.manageableRepos);
 
     const getManageable = useCallback(async () => {
         getManageableRepos().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: MANAGEABLE_REPOS, manageableRepos: response.data });
+                setManageableRepos(response.data)
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => getManageable())
             }
         }, error => {
             helpers.makeErrorToast(t(error.response.data), () => getManageable())
         })
-    }, [dispatch, t])
+    }, [t])
 
 
 

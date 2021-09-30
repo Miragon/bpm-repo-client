@@ -1,6 +1,6 @@
 import {List} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import React, {useEffect} from "react";
+import React from "react";
 import {ArtifactVersionTO} from "../../../api";
 import VersionListItem from "./Holder/VersionListItem";
 
@@ -22,21 +22,7 @@ interface Props {
 const VersionDetails: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
 
-    useEffect(() => {
-        if (props.artifactVersionTOs) {
-            props.artifactVersionTOs.sort(compare);
-        }
-    }, [props.artifactVersionTOs]);
 
-    const compare = (a: ArtifactVersionTO, b: ArtifactVersionTO) => {
-        if (a.milestone < b.milestone) {
-            return -1;
-        }
-        if (a.milestone > b.milestone) {
-            return 1;
-        }
-        return 0;
-    };
 
     return (
         <List className={classes.list}>

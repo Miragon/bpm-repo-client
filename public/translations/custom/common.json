@@ -12,9 +12,12 @@
         "edit": "Projekt bearbeiten",
         "updated": "Projekt aktualisiert",
         "notAvailable": "Sie haben noch keine Projekte erstellt",
-        "target": "Projekt"
+        "target": "Projekt",
+        "members": "Mitglieder",
+        "settings": "Einstellungen"
     },
     "artifact": {
+        "artifacts": "Dateien",
         "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
         "create": "Datei erstellen",
         "created": "Datei erstellt",
@@ -200,13 +203,22 @@
 
     },
     "team": {
+        "members": "Mitglieder",
         "team": "Team",
         "teams": "Teams",
         "create": "Team erstellen",
         "edit": "Team bearbeiten",
-        "notAvailable": "Keine Teams verfügbar"
+        "notAvailable": "Keine Teams verfügbar",
+        "settings": "Einstellungen"
     },
     "options": {
         "editUsers": "Mitglieder verwalten"
+    },
+    "action": {
+        "createNew": "Neu"
+    },
+    "exception": {
+        "changeOwnRole": "Sie können Ihre eigene Rolle nicht ändern",
+        "authFailed": "Authorisation fehlgeschlagen"
     }
 }

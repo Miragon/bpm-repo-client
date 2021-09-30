@@ -4,7 +4,7 @@ import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import PopupDialog from "../Form/PopupDialog";
-import {HANDLEDERROR, SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
+import {SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
 import {ArtifactTypeTO, ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../../api";
@@ -89,7 +89,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
             const f = files[0];
             const fileExtension = f.name.substring(f.name.lastIndexOf(".") + 1, f.name.length);
             if (!fileTypeList.includes(fileExtension)) {
-                dispatch({ type: HANDLEDERROR, errorMessage: "File type not supported" });
+                helpers.makeErrorToast("exception.fileTypeNotSupported", () => onFileChanged)
             }
             setUploadedFileType(fileExtension);
             const reader = new FileReader();
@@ -100,7 +100,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
             });
             reader.readAsText(f);
         }
-    }, [fileTypeList, dispatch]);
+    }, [fileTypeList]);
 
     return (
         <PopupDialog

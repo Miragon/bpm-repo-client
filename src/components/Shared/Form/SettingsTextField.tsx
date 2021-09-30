@@ -28,6 +28,7 @@ const SettingsTextField: React.FC<Props> = props => {
     return (
         <TextField
             label={props.label}
+            fullWidth
             variant="outlined"
             spellCheck={props.spellCheck}
             size="small"

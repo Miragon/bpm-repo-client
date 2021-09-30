@@ -38,7 +38,8 @@ const VersionList: React.FC<Props> = (props: Props) => {
     const getVersions = useCallback(async (artifactId: string) => {
         const response = await getAllVersions(artifactId);
         if (Math.floor(response.status / 100) === 2) {
-            setActiveVersions(response.data);
+            const sortedVersions = response.data.sort(compare)
+            setActiveVersions(sortedVersions);
             dispatch({type: SYNC_STATUS_VERSION, dataSynced: true})
         } else {
             helpers.makeErrorToast(t(response.data.toString()), () => getVersions(artifactId))
@@ -54,6 +55,17 @@ const VersionList: React.FC<Props> = (props: Props) => {
             getVersions(props.artifact.id);
         }
     }, [getVersions, props.artifact, versionSynced])
+
+    const compare = (a: ArtifactVersionTO, b: ArtifactVersionTO) => {
+        if (a.milestone < b.milestone) {
+            return -1;
+        }
+        if (a.milestone > b.milestone) {
+            return 1;
+        }
+        return 0;
+    };
+
 
     return (
         <div className={classes.root}>

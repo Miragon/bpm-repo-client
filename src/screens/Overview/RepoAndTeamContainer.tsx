@@ -1,27 +1,24 @@
 import {observer} from "mobx-react";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import {RepositoryTO, TeamTO} from "../../api";
+import {RepositoryTO} from "../../api";
 import Section from "../../components/Layout/Section";
-import {REPOSITORIES, SYNC_STATUS_REPOSITORY, SYNC_STATUS_TEAM, TEAMS} from "../../constants/Constants";
+import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 import {fetchRepositories} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
-import {getRepositoryUrl, getTeamUrl} from "../../util/Redirections";
+import {getRepositoryUrl} from "../../util/Redirections";
 import Card from "./Holder/Card";
 import {makeStyles} from "@material-ui/styles";
-import {TabContext, TabList, TabPanel} from "@material-ui/lab";
-import {Tab} from "@material-ui/core";
-import {getAllTeams} from "../../store/actions/teamAction";
 
 const useStyles = makeStyles(() => ({
     horizontalAlignment: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "start",
+        justifyContent: "space-between",
         flexWrap: "wrap",
         rowGap: "20px",
         columnGap: "20px"
@@ -44,11 +41,7 @@ const RepoAndTeamContainer: React.FC = observer(() => {
     const { t } = useTranslation("common");
 
     const allRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
-    const allTeams: Array<TeamTO> = useSelector((state: RootState) => state.team.teams);
-    const syncStatusTeam: boolean = useSelector((state: RootState) => state.dataSynced.teamSynced);
     const syncStatusRepo: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced);
-
-    const [openedTab, setOpenedTab] = useState<string>("0");
 
 
     const fetchRepos = useCallback(() => {
@@ -64,18 +57,6 @@ const RepoAndTeamContainer: React.FC = observer(() => {
         })
     }, [dispatch, t]);
 
-    const fetchTeams = useCallback(() => {
-        getAllTeams().then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: TEAMS, teams: response.data });
-                dispatch({ type: SYNC_STATUS_TEAM, dataSynced: true });
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchTeams())
-            }
-        }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchTeams())
-        })
-    }, [dispatch, t]);
 
     useEffect(() => {
         if (!syncStatusRepo) {
@@ -83,18 +64,7 @@ const RepoAndTeamContainer: React.FC = observer(() => {
         }
     }, [fetchRepos, syncStatusRepo]);
 
-    useEffect(() => {
-        if (!syncStatusTeam) {
-            fetchTeams();
-        }
-    }, [fetchTeams, syncStatusTeam]);
 
-    const handleChangeTab = (event: any, newValue: string) => {
-        setOpenedTab(newValue)
-    }
-
-
-    //TODO: Tabs hier rausnehmen
     return (
         <Section title="repository.repositories">
 

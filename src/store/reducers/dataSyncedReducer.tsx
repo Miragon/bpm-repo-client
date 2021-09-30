@@ -4,7 +4,6 @@ import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_ASSIGNMENT,
     SYNC_STATUS_FAVORITE,
-    SYNC_STATUS_MENU,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
     SYNC_STATUS_SHARED,
@@ -80,12 +79,6 @@ const reducer: CaseReducer = (state = initialState, action) => {
             return {
                 ...state,
                 assignmentSynced: action.dataSynced
-            };
-
-        case SYNC_STATUS_MENU:
-            return {
-                ...state,
-                menuSynced: action.dataSynced
             };
 
         case SYNC_STATUS_SHARED:

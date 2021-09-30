@@ -10,26 +10,24 @@ export const fetchTeamAssignedUsers = async (teamId: string): Promise<AxiosRespo
     return response;
 }
 
-export const createUserTeamAssignment = async(teamId: string, userId: string, username: string, role: TeamAssignmentTORoleEnum): Promise<AxiosResponse> => {
+export const createUserTeamAssignment = async(teamId: string, userId: string, role: TeamAssignmentTORoleEnum): Promise<AxiosResponse> => {
     const teamAssignmentController = new TeamAssignmentApi();
     const config = helpers.getClientConfig();
     const teamAssignmentTO: TeamAssignmentTO = {
         teamId,
         userId,
-        username,
         role
     }
     const response = await teamAssignmentController.createTeamAssignment(teamAssignmentTO, config);
     return response;
 }
 
-export const updateUserTeamAssignment = async(teamId: string, userId: string, username: string, role: TeamAssignmentTORoleEnum): Promise<AxiosResponse> => {
+export const updateUserTeamAssignment = async(teamId: string, userId: string, role: TeamAssignmentTORoleEnum): Promise<AxiosResponse> => {
     const teamAssignmentController = new TeamAssignmentApi();
     const config = helpers.getClientConfig();
     const teamAssignmentTO: TeamAssignmentTO = {
         teamId,
         userId,
-        username,
         role
     };
     const response = await teamAssignmentController.updateTeamAssignment(teamAssignmentTO, config);

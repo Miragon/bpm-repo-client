@@ -1,25 +1,21 @@
-import React, {useCallback, useState} from "react";
-import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import {IconButton, Typography} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import {AxiosResponse} from "axios";
+import {useDispatch} from "react-redux";
+import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import helpers from "../../../util/helperFunctions";
+import React, {useCallback, useState} from "react";
+import helpers from "../../util/helperFunctions";
 import {
     SYNC_STATUS_ACTIVE_ENTITY,
     SYNC_STATUS_FAVORITE,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY
-} from "../../../constants/Constants";
-import PopupDialog from "../Form/PopupDialog";
-import SettingsTextField from "../Form/SettingsTextField";
-import {AxiosResponse} from "axios";
-import {useHistory} from "react-router-dom";
+} from "../../constants/Constants";
+import {IconButton, Typography} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import SettingsTextField from "./Form/SettingsTextField";
+import SimpleButton from "./Form/SimpleButton";
 
-
-/**
-Component shows a Popup Menu which lets the user change properties of a Repository or Team or delete it, depending from which screen this dialog is opened
-**/
 
 const useStyles = makeStyles(() => ({
     line: {
@@ -54,32 +50,28 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    open: boolean;
-    onCancelled: () => void;
     targetId: string;
-    repoName: string;
-    repoDescription: string;
+    entityName: string;
+    entityDescription: string;
     updateEntityMethod: (targetId: string, target: string, description: string) => Promise<AxiosResponse>;
     deleteEntityMethod: (targetId: string) => Promise<AxiosResponse>;
 }
 
 
-const EditEntityDialog: React.FC<Props> = props => {
+const Settings: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
     const {t} = useTranslation("common");
 
-    const [error, setError] = useState<string | undefined>(undefined);
-    const [title, setTitle] = useState<string>(props.repoName);
-    const [description, setDescription] = useState<string>(props.repoDescription);
+    const [title, setTitle] = useState<string>(props.entityName);
+    const [description, setDescription] = useState<string>(props.entityDescription);
 
     const applyChanges = useCallback(async () => {
         props.updateEntityMethod(props.targetId, title, description).then(response => {
             if(Math.floor(response.status / 100) === 2) {
                 helpers.makeSuccessToast(t("repository.updated"))
                 dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false});
-                props.onCancelled()
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
             }
@@ -88,7 +80,7 @@ const EditEntityDialog: React.FC<Props> = props => {
         })
     }, [props, title, description, t, dispatch]);
 
-    const deleteRepo = useCallback(() => {
+    const deleteEntity = useCallback(() => {
         if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
             props.deleteEntityMethod(props.targetId).then(response => {
                 if(Math.floor(response.status / 100) === 2) {
@@ -98,34 +90,19 @@ const EditEntityDialog: React.FC<Props> = props => {
                     helpers.makeSuccessToast(t("repository.deleted"))
                     history.push("/repository")
                 } else {
-                    helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
+                    helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteEntity())
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => deleteRepo())
+                helpers.makeErrorToast(t(error.response.data), () => deleteEntity())
             })
         }
     }, [t, title, props, dispatch, history]);
 
-    return (
-        <PopupDialog
-            open={props.open}
-            title={props.repoName}
-            error={error}
-            onCloseError={() => setError(undefined)}
-            firstTitle={t("dialog.applyChanges")}
-            onFirst={applyChanges}
-            secondTitle={t("dialog.cancel")}
-            onSecond={props.onCancelled}>
-            <div className={classes.deleteSection}>
-                <Typography variant="h5">
-                    {t("repository.delete")}
-                </Typography>
-                <IconButton className={classes.deleteButton} onClick={deleteRepo}>
-                    <DeleteIcon />
-                </IconButton>
-            </div>
 
-            <div className={classes.spacer} />
+
+    return (
+        <>
+
 
             <SettingsTextField
                 label={t("properties.title")}
@@ -141,8 +118,27 @@ const EditEntityDialog: React.FC<Props> = props => {
                 multiline
                 minRows={4} />
 
-        </PopupDialog>
-    );
-};
+            <div className={classes.spacer} />
 
-export default EditEntityDialog;
+            <div className={classes.deleteSection}>
+                <Typography variant="h5">
+                    {t("repository.delete")}
+                </Typography>
+                <IconButton className={classes.deleteButton} onClick={deleteEntity}>
+                    <DeleteIcon />
+                </IconButton>
+            </div>
+
+            <div  className={classes.spacer} />
+            <div  className={classes.spacer} />
+
+            <div>
+                <SimpleButton title={"Apply"} onClick={applyChanges} fullWidth={true}/>
+            </div>
+
+
+        </>
+    )
+}
+
+export default Settings;

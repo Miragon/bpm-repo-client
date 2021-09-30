@@ -311,12 +311,6 @@ export interface AssignmentTO {
      * @type {string}
      * @memberof AssignmentTO
      */
-    username: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AssignmentTO
-     */
     role: AssignmentTORoleEnum;
 }
 
@@ -775,12 +769,6 @@ export interface TeamAssignmentTO {
      * @type {string}
      * @memberof TeamAssignmentTO
      */
-    username: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TeamAssignmentTO
-     */
     role: TeamAssignmentTORoleEnum;
 }
 
@@ -894,7 +882,7 @@ export interface UserTO {
      * @type {string}
      * @memberof UserTO
      */
-    userName: string;
+    username: string;
 }
 /**
  * 
@@ -4349,6 +4337,42 @@ export const TeamApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Get multiple Teams by providing their Ids
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMultipleTeams: async (requestBody: Array<string>, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('getMultipleTeams', 'requestBody', requestBody)
+            const localVarPath = `/api/team/multiple`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get a single Team by providing its ID
          * @param {string} teamId 
          * @param {*} [options] Override http request option.
@@ -4499,6 +4523,17 @@ export const TeamApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get multiple Teams by providing their Ids
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMultipleTeams(requestBody: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TeamTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMultipleTeams(requestBody, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get a single Team by providing its ID
          * @param {string} teamId 
          * @param {*} [options] Override http request option.
@@ -4569,6 +4604,16 @@ export const TeamApiFactory = function (configuration?: Configuration, basePath?
          */
         getAllTeams(options?: any): AxiosPromise<Array<TeamTO>> {
             return localVarFp.getAllTeams(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get multiple Teams by providing their Ids
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMultipleTeams(requestBody: Array<string>, options?: any): AxiosPromise<Array<TeamTO>> {
+            return localVarFp.getMultipleTeams(requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4644,6 +4689,18 @@ export class TeamApi extends BaseAPI {
      */
     public getAllTeams(options?: any) {
         return TeamApiFp(this.configuration).getAllTeams(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get multiple Teams by providing their Ids
+     * @param {Array<string>} requestBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamApi
+     */
+    public getMultipleTeams(requestBody: Array<string>, options?: any) {
+        return TeamApiFp(this.configuration).getMultipleTeams(requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5040,6 +5097,42 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Get a list of users by providing their Ids
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMultipleUsers: async (requestBody: Array<string>, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('getMultipleUsers', 'requestBody', requestBody)
+            const localVarPath = `/api/user/multiple`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Returns the User that is currently sending requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5190,6 +5283,17 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get a list of users by providing their Ids
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMultipleUsers(requestBody: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserInfoTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMultipleUsers(requestBody, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Returns the User that is currently sending requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5251,6 +5355,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Get a list of users by providing their Ids
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMultipleUsers(requestBody: Array<string>, options?: any): AxiosPromise<Array<UserInfoTO>> {
+            return localVarFp.getMultipleUsers(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Returns the User that is currently sending requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5306,6 +5420,18 @@ export class UserApi extends BaseAPI {
      */
     public createUser(options?: any) {
         return UserApiFp(this.configuration).createUser(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get a list of users by providing their Ids
+     * @param {Array<string>} requestBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getMultipleUsers(requestBody: Array<string>, options?: any) {
+        return UserApiFp(this.configuration).getMultipleUsers(requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

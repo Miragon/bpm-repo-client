@@ -3,41 +3,48 @@ import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
 import {
     createUserAssignment,
-    deleteAssignment, deleteRepository,
+    deleteAssignment,
+    deleteRepository,
     fetchArtifactsFromRepo,
     fetchAssignedUsers,
-    getSingleRepository, updateRepository, updateUserAssignment
+    getSingleRepository,
+    updateRepository,
+    updateUserAssignment
 } from "../../store/actions";
-import {ArtifactTO, RepositoryTO} from "../../api";
+import {ArtifactTO, RepositoryTO, TeamTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import PathStructure from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import {ACTIVE_REPO, SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
+import {SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import Details from "../../components/Shared/Details";
 import ArtifactDetails from "../../components/Artifact/ArtifactDetails";
 import SharedArtifacts from "../../components/Artifact/SharedArtifacts";
-import {getAllArtifactsSharedWithTeam} from "../../store/actions/shareAction";
+import {TabContext, TabList, TabPanel} from "@material-ui/lab";
+import {Tab} from "@material-ui/core";
+import Settings from "../../components/Shared/Settings";
+import RepositoryMembers from "./RepositoryMembers";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
 
     const { repoId } = useParams<{ repoId: string }>();
-    const activeRepo: RepositoryTO = useSelector((state: RootState) => state.repos.activeRepo);
     const activeEntitySynced: boolean = useSelector((state: RootState) => state.dataSynced.activeEntitySynced);
     const artifactSynced: boolean = useSelector((state: RootState) => state.dataSynced.artifactSynced);
 
-
+    const [repository, setRepository] = useState<RepositoryTO>();
     const [artifacts, setArtifacts] = useState<Array<ArtifactTO>>([]);
+    const [openedTab, setOpenedTab] = useState<string>("artifacts");
 
 
 
     const getRepo = useCallback(() => {
         getSingleRepository(repoId).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                dispatch({ type: ACTIVE_REPO, activeRepo: response.data });
+                setRepository(response.data)
+                dispatch({ type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true });
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => getRepo())
             }
@@ -51,34 +58,37 @@ const Repository: React.FC = (() => {
         fetchArtifactsFromRepo(repoId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 setArtifacts(response.data)
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
             }
         }, error => {
             helpers.makeErrorToast(t(error.response.data), () => fetchArtifacts())
         })
-    }, [t, repoId])
+    }, [repoId, dispatch, t])
 
     useEffect(() => {
         if(!activeEntitySynced){
             getRepo();
-            dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true})
         }
-    }, [activeEntitySynced, dispatch, getRepo])
+    }, [activeEntitySynced, getRepo])
 
     useEffect(() => {
         if(!artifactSynced){
             fetchArtifacts();
-            dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
         }
-    }, [activeEntitySynced, artifactSynced, dispatch, fetchArtifacts])
+    }, [activeEntitySynced, artifactSynced, fetchArtifacts])
 
     useEffect(() => {
         getRepo()
-        dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true})
         fetchArtifacts();
-        dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
-    }, [getRepo, fetchArtifacts, dispatch])
+    }, [getRepo, fetchArtifacts])
+
+
+    const handleChangeTab = (event: any, newValue: string) => {
+        setOpenedTab(newValue)
+    }
+
 
     const element = {
         name: "path.overview",
@@ -93,32 +103,58 @@ const Repository: React.FC = (() => {
 
     return (
         <>
-            {(activeRepo && activeRepo.id === repoId) &&
+            {(repository && repository.id === repoId) &&
                 <div>
                     <ErrorBoundary>
                         <PathStructure structure={path} />
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <Details
-                            targetId={repoId}
-                            entity={"repository"}
-                            object={activeRepo}
-                            createAssignmentMethod={createUserAssignment}
-                            deleteAssignmentMethod={deleteAssignment}
-                            fetchAssignedUsersMethod={fetchAssignedUsers}
-                            updateAssignmentMethod={updateUserAssignment}
-                            deleteEntityMethod={deleteRepository}
-                            updateEntityMethod={updateRepository}/>
+                        <Details object={repository}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <ArtifactDetails
-                            id={repoId}
-                            view={"repository"}
-                            artifacts={artifacts}/>
+
+                        <TabContext value={openedTab} >
+
+                            <TabList onChange={handleChangeTab}>
+                                <Tab label={t("artifact.artifacts")} value="artifacts" fullWidth={true}/>
+                                <Tab label={t("repository.members")} value="members" fullWidth={true} />
+                                <Tab label={t("deployment.deployments")} value="deployments" fullWidth={true} />
+                                <Tab label={t("repository.settings")} value="settings" fullWidth={true} />
+                            </TabList>
+
+                            <TabPanel value={"artifacts"}>
+                                <ArtifactDetails
+                                    artifacts={artifacts}
+                                    id={repoId}
+                                    view={"repository"}/>
+
+                                <SharedArtifacts/>
+
+                            </TabPanel>
+
+                            <TabPanel value={"members"}>
+                                <RepositoryMembers
+                                    targetId={repoId} />
+                            </TabPanel>
+
+                            <TabPanel value={"deployments"}>
+                                TBD
+                            </TabPanel>
+
+                            <TabPanel value={"settings"}>
+                                <Settings
+                                    targetId={repository.id}
+                                    entityName={repository.name}
+                                    entityDescription={repository.description}
+                                    updateEntityMethod={updateRepository}
+                                    deleteEntityMethod={deleteRepository} />
+
+                            </TabPanel>
+
+                        </TabContext>
+
                     </ErrorBoundary>
-                    <ErrorBoundary>
-                        <SharedArtifacts/>
-                    </ErrorBoundary>
+
 
                 </div>
             }
