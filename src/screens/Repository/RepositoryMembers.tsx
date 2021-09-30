@@ -1,10 +1,9 @@
-import {AxiosResponse} from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {RootState} from "../../store/reducers/rootReducer";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import helpers from "../../util/helperFunctions";
-import {AssignmentTO, AssignmentTORoleEnum, TeamAssignmentTO, TeamAssignmentTORoleEnum, UserInfoTO} from "../../api";
+import {AssignmentTO, AssignmentTORoleEnum, UserInfoTO} from "../../api";
 import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 import {List, Paper} from "@material-ui/core";
 
@@ -15,7 +14,6 @@ import {
     getMultipleUsers,
     updateUserAssignment
 } from "../../store/actions";
-import {deleteUserTeamAssignment, updateUserTeamAssignment} from "../../store/actions/teamAssignmentAction";
 import AddUserSearchBar from "../Team/AddUserSearchBar";
 import UserListItem from "../../components/Shared/UserListItem";
 

@@ -11,12 +11,6 @@ import PathStructure from "../../components/Layout/PathStructure";
 import {deleteTeam, getTeam, updateTeam} from "../../store/actions/teamAction";
 import {getAllArtifactsSharedWithTeam} from "../../store/actions/shareAction";
 import Details from "../../components/Shared/Details";
-import {
-    createUserTeamAssignment,
-    deleteUserTeamAssignment,
-    fetchTeamAssignedUsers,
-    updateUserTeamAssignment
-} from "../../store/actions/teamAssignmentAction";
 import ArtifactDetails from "../../components/Artifact/ArtifactDetails";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {Tab} from "@material-ui/core";

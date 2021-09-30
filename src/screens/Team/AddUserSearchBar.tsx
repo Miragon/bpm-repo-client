@@ -8,10 +8,9 @@ import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
-import {AssignmentTO, AssignmentTORoleEnum, TeamAssignmentTORoleEnum, TeamTO, User, UserInfoTO} from "../../api";
+import {AssignmentTORoleEnum, UserInfoTO} from "../../api";
 import theme from "../../theme";
 import helpers from "../../util/helperFunctions";
-import {searchTeam} from "../../store/actions/teamAction";
 import {searchUsers} from "../../store/actions";
 import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 
@@ -45,7 +44,6 @@ interface Props {
 interface assignmentObject {
     id: string;
     name: string;
-    type: "user" | "team";
 }
 
 let timeout: NodeJS.Timeout | undefined;
@@ -60,40 +58,30 @@ const AddUserSearchBar: React.FC<Props> = props => {
     const [options, setOptions] = React.useState<Array<any>>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [searchedUsers, setSearchedUsers] = useState<UserInfoTO[]>([]);
-    const [searchedTeams, setSearchedTeams] = useState<TeamTO[]>([]);
 
     useEffect(() => {
         console.log(options)
     }, [options])
 
     useEffect(() => {
-        const resultsArray: Array<any> = [];
+        const resultsArray: Array<assignmentObject> = [];
 
         searchedUsers.map(user => {
             const o: assignmentObject = {id: user.id,
-                name: user.username,
-                type: "user"}
+                name: user.username}
             resultsArray.push(o)});
 
-        searchedTeams.map(team => {
-            const o: assignmentObject = {
-                id: team.id,
-                name: team.name,
-                type: "team"
-            }
-            resultsArray.push(o)
-        })
         setOptions(resultsArray);
-    }, [searchedTeams, searchedUsers]);
+    }, [searchedUsers]);
 
     useEffect(() => {
-        if (searchedUsers.length + searchedTeams.length > 0) {
+        if (searchedUsers.length > 0) {
             setLoading(false);
         }
-        if (searchedUsers.length + searchedTeams.length === 0) {
+        if (searchedUsers.length === 0) {
             setLoading(false);
         }
-    }, [searchedTeams.length, searchedUsers]);
+    }, [searchedUsers]);
 
     useEffect(() => {
         if (username === "") {
@@ -108,31 +96,21 @@ const AddUserSearchBar: React.FC<Props> = props => {
                 clearTimeout(timeout);
             }
             setLoading(true);
-            timeout = setTimeout(() => fetchUserAndTeamSuggestion(input), 500);
+            timeout = setTimeout(() => fetchUserSuggestion(input), 500);
         }
     });
 
-    const fetchUserAndTeamSuggestion = useCallback((input: string) => {
+    const fetchUserSuggestion = useCallback((input: string) => {
         searchUsers(input).then(response => {
             if(Math.floor(response.status / 100) === 2) {
                 setSearchedUsers(response.data)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserAndTeamSuggestion(input))
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchUserAndTeamSuggestion(input))
+            helpers.makeErrorToast(t(error.response.data), () => fetchUserSuggestion(input))
         })
 
-        searchTeam(input).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                setSearchedTeams(response.data)
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserAndTeamSuggestion(input))
-                setLoading(false)
-            }
-        }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchUserAndTeamSuggestion(input))
-        })
     }, [t]);
 
 
@@ -148,11 +126,8 @@ const AddUserSearchBar: React.FC<Props> = props => {
     }, [props.assignedUsers])
 
     const addUser = () => {
-        console.log("Adding")
-        console.log(options)
         const object = getObjectByName(username);
-        console.log(object)
-        if (object?.type === "user") {
+        if (object) {
             if(isUserAlreadyAssigned(username)){
                 helpers.makeErrorToast(t("assignment.alreadyPresent", username), () => addUser())
                 return;

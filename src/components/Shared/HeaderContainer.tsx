@@ -51,13 +51,15 @@ const HeaderContainer: React.FC = observer(() => {
             type: "button",
             onClick: () => setCreateRepoOpen(true)
         });
+        //TODO: wieder aufnehmen
+        /*
         opts.push({
             id: "createTeam",
             label: "team.create",
             type: "button",
             onClick: () => setCreateTeamOpen(true)
         });
-
+        */
         opts.push({
             id: "divider1",
             type: "divider",

@@ -1,21 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
-import {
-    createUserAssignment,
-    deleteAssignment,
-    deleteRepository,
-    fetchArtifactsFromRepo,
-    fetchAssignedUsers,
-    getSingleRepository,
-    updateRepository,
-    updateUserAssignment
-} from "../../store/actions";
-import {ArtifactTO, RepositoryTO, TeamTO} from "../../api";
+import {deleteRepository, fetchArtifactsFromRepo, getSingleRepository, updateRepository} from "../../store/actions";
+import {ArtifactTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import PathStructure from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import {SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
+import {SHARED_ARTIFACTS, SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import Details from "../../components/Shared/Details";
@@ -25,6 +16,7 @@ import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {Tab} from "@material-ui/core";
 import Settings from "../../components/Shared/Settings";
 import RepositoryMembers from "./RepositoryMembers";
+import {getSharedArtifacts} from "../../store/actions/shareAction";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
@@ -36,6 +28,7 @@ const Repository: React.FC = (() => {
 
     const [repository, setRepository] = useState<RepositoryTO>();
     const [artifacts, setArtifacts] = useState<Array<ArtifactTO>>([]);
+    const [sharedArtifacts, setSharedArtifacts] = useState<Array<ArtifactTO>>([]);
     const [openedTab, setOpenedTab] = useState<string>("artifacts");
 
 
@@ -67,6 +60,19 @@ const Repository: React.FC = (() => {
         })
     }, [repoId, dispatch, t])
 
+    const fetchSharedArtifacts = useCallback(async (repoId: string) => {
+        getSharedArtifacts(repoId).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                setSharedArtifacts(response.data)
+                dispatch({ type: SHARED_ARTIFACTS, sharedArtifacts: response.data })
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchSharedArtifacts(repoId))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchSharedArtifacts(repoId))
+        })
+    }, [dispatch, t])
+
     useEffect(() => {
         if(!activeEntitySynced){
             getRepo();
@@ -82,7 +88,8 @@ const Repository: React.FC = (() => {
     useEffect(() => {
         getRepo()
         fetchArtifacts();
-    }, [getRepo, fetchArtifacts])
+        fetchSharedArtifacts(repoId);
+    }, [getRepo, fetchArtifacts, fetchSharedArtifacts, repoId])
 
 
     const handleChangeTab = (event: any, newValue: string) => {
@@ -92,7 +99,11 @@ const Repository: React.FC = (() => {
 
     const element = {
         name: "path.overview",
-        link: "/"
+        link: "/",
+        onClick: () => {
+            setArtifacts([])
+            setSharedArtifacts([])
+        }
     }
     const element2 = {
         name: "path.repository",
@@ -128,7 +139,7 @@ const Repository: React.FC = (() => {
                                     id={repoId}
                                     view={"repository"}/>
 
-                                <SharedArtifacts/>
+                                <SharedArtifacts sharedArtifacts={sharedArtifacts}/>
 
                             </TabPanel>
 

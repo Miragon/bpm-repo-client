@@ -8,18 +8,10 @@ import {Add} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
-import {
-    AssignmentTO,
-    AssignmentTORoleEnum,
-    RepoTeamAssignmentTO,
-    TeamAssignmentTORoleEnum,
-    TeamTO,
-    UserInfoTO
-} from "../../api";
+import {AssignmentTO, RepoTeamAssignmentTO, TeamTO, UserInfoTO} from "../../api";
 import helpers from "../../util/helperFunctions";
 import {searchUsers} from "../../store/actions";
 import {searchTeam} from "../../store/actions/teamAction";
-import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 import theme from "../../theme";
 
 const useStyles = makeStyles(() => ({
@@ -149,9 +141,11 @@ const AddUserOrTeamSearchBar: React.FC<Props> = props => {
     }, [t]);
 
 
-    const getTargetByName = useCallback((targetName: string) => {
+    const getObjectByName = useCallback((targetName: string) => {
         return options.find(option => option.name.toLowerCase() === targetName.toLowerCase());
     }, [options]);
+
+    //TODO Call createTeamAssignment if it's a team, createUserAssignment if its a user
     /*
     const isTeamAlreadyAssigned = useCallback((teamName: string): boolean => {
         return props.assignedTeams.find(team => team.name === teamName) !== undefined;

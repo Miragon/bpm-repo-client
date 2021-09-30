@@ -1,10 +1,8 @@
-import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/styles";
 import theme from "../../theme";
 import {RepositoryTO, TeamTO} from "../../api";
-import React, {useState} from "react";
+import React from "react";
 import Section from "../../components/Layout/Section";
-import {Settings} from "@material-ui/icons";
 
 
 const useStyles = makeStyles(() => ({

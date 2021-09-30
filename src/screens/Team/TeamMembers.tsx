@@ -1,4 +1,3 @@
-import {AxiosResponse} from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {RootState} from "../../store/reducers/rootReducer";

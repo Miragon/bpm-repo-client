@@ -75,7 +75,8 @@ const Identity: React.FC = (() => {
 
     useEffect(() => {
         if(currentUser){
-            fetchTeams()
+            //TODO: Uncomment the fetchTeams function as soon as the team-function returns
+            //fetchTeams()
             setActiveIdentityId(currentUser.id)
             setActiveIdentityName(currentUser.username)
         }
