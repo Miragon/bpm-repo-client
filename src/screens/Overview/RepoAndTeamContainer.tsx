@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     horizontalAlignment: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "start",
         flexWrap: "wrap",
         rowGap: "20px",
         columnGap: "20px"

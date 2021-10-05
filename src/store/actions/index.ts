@@ -7,4 +7,3 @@ export * from "./deploymentAction";
 export * from "./errorAction";
 export * from "./fileTypesAction";
 export * from "./menuAction";
-export * from "./actions";

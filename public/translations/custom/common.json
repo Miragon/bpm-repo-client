@@ -26,6 +26,7 @@
         "createdFromExisting": "Datei aus existierender Version erstellt",
         "createdDefault": "Datei erstellt",
         "delete": "Datei löschen",
+        "deleted": "Datei gelöscht",
         "download": "Datei herunterladen",
         "edit": "Datei bearbeiten",
         "modifiedOn": "Bearbeitet am",
@@ -112,7 +113,7 @@
     },
     "category": {
         "favorite": "Favoriten",
-        "recent": "Vor Kurzem bearbeitet",
+        "recent": "Zuletzt bearbeitet",
         "shared": "Geteilt",
         "noFavoritesAvailable": "Sie haben noch keine Datei zu Ihren Favoriten hinzugefügt."
     },
@@ -219,6 +220,11 @@
     },
     "exception": {
         "changeOwnRole": "Sie können Ihre eigene Rolle nicht ändern",
-        "authFailed": "Authorisation fehlgeschlagen"
+        "authFailed": "Autorisierung fehlgeschlagen",
+        "editDeployedVersion": "Sie können keine Dateien überspeichern, die bereits veröffentlicht wurden",
+        "accessHistory": "Dateien aus dem Archiv können nicht geändert werden",
+        "oldMilestone": "Sie betrachten eine veraltete Datei, ein neuerer Meilenstein ist verfügbar. Zum Öffnen hier klicken",
+        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten - ein neuer Meilenstein ist verfügbar",
+        "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet"
     }
 }

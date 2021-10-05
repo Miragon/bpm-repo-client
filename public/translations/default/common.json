@@ -144,6 +144,7 @@
     "createBpmn": "Create BPMN Artifact",
     "createDmn": "Create DMN Artifact",
     "delete": "Delete Artifact",
+    "deleted": "Artifact deleted",
     "sharewith": "Share Artifact",
     "download": "Download Artifact",
     "edit": "Edit Artifact",
@@ -222,6 +223,12 @@
   },
   "exception": {
     "changeOwnRole": "You can't change your own role",
-    "authFailed": "Authorization failed"
+    "authFailed": "Authorization failed",
+    "editDeployedVersion": "You can't edit files that have already been deployed",
+    "accessHistory": "Artifacts from archive can not be changed",
+    "oldMilestone": "You have opened an old version of this artifact. A newer milestone is available. Click here to open",
+    "historicalDataAccess": "You can't edit this file, a new Milestone is available",
+    "locked": "This file is currently being edited by another user"
+
   }
 }
