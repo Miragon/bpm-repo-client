@@ -23,13 +23,15 @@
         "created": "Datei erstellt",
         "copy": "{{artifactName}} in anderes Projekt kopieren",
         "copyTo": "In Projekt kopieren",
-        "createdFromExisting": "Datei aus existierender Version erstellt",
+        "createdFromExisting": "Datei aus existierender Milestone erstellt",
         "createdDefault": "Datei erstellt",
         "delete": "Datei löschen",
         "deleted": "Datei gelöscht",
+        "changed": "Änderungen gespeichert",
         "download": "Datei herunterladen",
         "edit": "Datei bearbeiten",
         "modifiedOn": "Bearbeitet am",
+        "locked": "Sie haben die Datei zur Bearbeitung gesperrt",
         "share": "Datei teilen",
         "upload": "Datei hochladen",
         "import": "Aus Cawemo importieren",
@@ -61,23 +63,23 @@
             "oneDay": "Gestern"
         }
     },
-    "version": {
-        "create": "Version erstellen",
-        "created": "Version erstellt",
-        "deploy": "Version veröffentlichen",
-        "deployMultiple": "Versionen veröffentlichen",
-        "downloading": "Version wird heruntergeladen",
-        "deployed": "Version veröffentlicht",
-        "dialogHeader": "Neue Version von {{artifactName}} erstellen",
-        "edit": "Version bearbeiten",
-        "download": "Version herunterladen",
-        "delete": "Version löschen",
-        "openLatest": "Aktuelle Version öffnen",
-        "version": "Version",
+    "milestone": {
+        "create": "Milestone erstellen",
+        "created": "Milestone erstellt",
+        "deploy": "Milestone veröffentlichen",
+        "deployMultiple": "Milestoneen veröffentlichen",
+        "downloading": "Milestone wird heruntergeladen",
+        "deployed": "Milestone veröffentlicht",
+        "dialogHeader": "Neue Milestone von {{artifactName}} erstellen",
+        "edit": "Milestone bearbeiten",
+        "download": "Milestone herunterladen",
+        "delete": "Milestone löschen",
+        "openLatest": "Aktuellen Meilenstein öffnen",
+        "milestone": "Milestone",
         "MILESTONE": "Meilenstein",
         "deploymentHistory": "Veröffentlichungen",
         "saveAsNewArtifact": "Als neue Datei speichern",
-        "saveVersionXAsNewArtifact": "Version {{milestone}} als neue Datei speichern"
+        "saveMilestoneXAsNewArtifact": "Milestone {{milestone}} als neue Datei speichern"
     },
     "form": {
         "create": "Formular erstellen"
@@ -96,9 +98,9 @@
         "deployments": "Veröffentlichungen",
         "multiple": "Dateien veröffentlichen",
         "target": "Ziel",
-        "deployedMultiple": "{{deployedVersions}} Versionen veröffentlicht",
+        "deployedMultiple": "{{deployedMilestones}} Milestoneen veröffentlicht",
         "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
-        "dialogHeader": "Version {{versionNumber}} veröffentlichen",
+        "dialogHeader": "Milestone {{milestoneNumber}} veröffentlichen",
         "history": "Alle Veröffentlichungen"
     },
     "user": {
@@ -132,7 +134,7 @@
     "properties": {
         "title": "Titel",
         "filename": "Name",
-        "version": "Version",
+        "milestone": "Milestone",
         "description": "Beschreibung",
         "comment": "Kommentar",
         "date": "Datum",
@@ -172,7 +174,8 @@
     "path": {
         "overview": "Übersicht",
         "repository": "Projekt",
-        "team": "Team"
+        "team": "Team",
+        "editor": "Editor"
     },
     "filter": {
         "filter": "Filter"
@@ -216,15 +219,23 @@
         "editUsers": "Mitglieder verwalten"
     },
     "action": {
-        "createNew": "Neu"
+        "createNew": "Neu",
+        "save": "Speichern",
+        "saveAsNewMilestone": "Als neuen Meilenstein speichern",
+        "saveAsNewArtifact": "Als neue Datei speichern",
+        "copied": "Datei kopiert",
+        "saved": "Gespeichert"
+
     },
     "exception": {
         "changeOwnRole": "Sie können Ihre eigene Rolle nicht ändern",
         "authFailed": "Autorisierung fehlgeschlagen",
-        "editDeployedVersion": "Sie können keine Dateien überspeichern, die bereits veröffentlicht wurden",
+        "editDeployedMilestone": "Sie können keine Dateien überspeichern, die bereits veröffentlicht wurden",
         "accessHistory": "Dateien aus dem Archiv können nicht geändert werden",
         "oldMilestone": "Sie betrachten eine veraltete Datei, ein neuerer Meilenstein ist verfügbar. Zum Öffnen hier klicken",
         "historicalDataAccess": "Sie können diese Datei nicht bearbeiten - ein neuer Meilenstein ist verfügbar",
-        "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet"
+        "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet",
+        "noAssignmentOrShareFound": "Keine direkte oder indirekte Zugriffserlaubnis",
+        "emptyTitle": "Der Titel darf nicht leer sein"
     }
 }

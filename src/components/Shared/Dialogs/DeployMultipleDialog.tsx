@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, NewDeploymentTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {deployMultiple, fetchTargets} from "../../../store/actions";
-import {SYNC_STATUS_TARGETS, SYNC_STATUS_VERSION, TARGETS} from "../../../constants/Constants";
+import {SYNC_STATUS_TARGETS, SYNC_STATUS_MILESTONE, TARGETS} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
@@ -56,8 +56,8 @@ interface Props {
     artifacts: ArtifactTO[];
 }
 
-//TODO: wenn in einem listItem keine Version ausgewählt wird, kann die Liste trotzdem deployt
-// werden (alle elemente außer das ohne Version werden dann deplyot)
+//TODO: wenn in einem listItem keine MIlestone ausgewählt wird, kann die Liste trotzdem deployt
+// werden (alle elemente außer das ohne MIlestone werden dann deplyot)
 const DeployMultipleDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -120,12 +120,12 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             target: target,
             artifactId: artifact,
             // TODO: Backend muss latest akzeptieren
-            versionId: "latest"
+            milestoneId: "latest"
         }));
         deployMultiple(deployments).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedVersions: response.data.length }))
-                dispatch({ type: SYNC_STATUS_VERSION, dataSynced: false });
+                helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.data.length }))
+                dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
                 props.onCancelled()
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => deploy())
@@ -146,7 +146,7 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             title={t("deployment.multiple")}
             error={error}
             onCloseError={() => setError(undefined)}
-            firstTitle={t("version.deployMultiple")}
+            firstTitle={t("milestone.deployMultiple")}
             onFirst={deploy}
             secondTitle={t("dialog.close")}
             onSecond={onCancel}>

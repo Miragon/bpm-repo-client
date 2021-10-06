@@ -16,24 +16,24 @@
     "members": "Members",
     "settings": "Settings"
   },
-  "version": {
-    "create": "Create new Version",
-    "created": "Version created",
-    "edit": "Edit version",
-    "deploy": "Deploy version",
-    "deployMultiple": "Deploy versions",
-    "deployed": "Version deployed",
-    "downloading": "Downloading Version",
-    "dialogHeader": "Create new Version of {{artifactName}}",
-    "download": "Download version",
-    "delete": "Delete version",
-    "openLatest": "Open latest Version",
-    "version": "Version",
+  "milestone": {
+    "create": "Create new Milestone",
+    "created": "Milestone created",
+    "edit": "Edit milestone",
+    "deploy": "Deploy milestone",
+    "deployMultiple": "Deploy milestones",
+    "deployed": "Milestone deployed",
+    "downloading": "Downloading Milestone",
+    "dialogHeader": "Create new Milestone of {{artifactName}}",
+    "download": "Download milestone",
+    "delete": "Delete milestone",
+    "openLatest": "Open latest Milestone",
+    "milestone": "Milestone",
     "RELEASE": "Release",
     "MILESTONE": "Milestone",
     "deploymentHistory": "Deployments",
     "saveAsNewArtifact": "Save as new Artifact",
-    "saveVersionXAsNewArtifact": "Save Version {{milestone}} as new Artifact"
+    "saveMilestoneXAsNewArtifact": "Save Milestone {{milestone}} as new Artifact"
   },
   "assignment": {
     "changedAssignment": "Changed role of {{username}} to {{role}}",
@@ -50,11 +50,11 @@
   "deployment": {
     "deployment": "Deployment",
     "deployments": "Deployments",
-    "multiple": "Deploy multiple Versions",
+    "multiple": "Deploy multiple Milestones",
     "target": "Ziel",
-    "deployedMultiple": "Deployed {{deployedVersions}} Versions",
+    "deployedMultiple": "Deployed {{deployedMilestones}} Milestones",
     "adminPermissionsRequired": "You need admin permissions to deploy artifacts",
-    "dialogHeader": "Deploy Version {{versionNumber}}",
+    "dialogHeader": "Deploy Milestone {{milestoneNumber}}",
     "history": "All Deployments"
   },
   "user": {
@@ -89,7 +89,7 @@
   "properties": {
     "title": "Title",
     "filename": "Name",
-    "version": "Version",
+    "milestone": "Milestone",
     "description": "Description",
     "comment": "Comment",
     "date": "Date",
@@ -136,14 +136,16 @@
     "createCONFIGURATION": "Create Configuration",
     "confirmDelete": "Are you sure want to delete {{artifactName}}?",
     "create": "Create Artifact",
+    "changed": "Changes saved",
     "created": "Artifact created",
     "copy": "Copy {{artifactName}} to another Repository",
     "copyTo": "Copy to Repository",
-    "createdFromExisting": "Created Artifact os existing Version",
+    "createdFromExisting": "Created Artifact os existing Milestone",
     "createdDefault": "Created Artifact",
     "createBpmn": "Create BPMN Artifact",
     "createDmn": "Create DMN Artifact",
     "delete": "Delete Artifact",
+    "locked": "You locked the file for editing",
     "deleted": "Artifact deleted",
     "sharewith": "Share Artifact",
     "download": "Download Artifact",
@@ -177,7 +179,9 @@
   "path": {
     "overview": "Overview",
     "repository": "Repository",
-    "team": "Team"
+    "team": "Team",
+    "editor": "Editor"
+
   },
   "filter": {
     "filter": "Filter"
@@ -216,19 +220,26 @@
 
   },
   "options": {
-    "editUsers": "Mitglieder verwalten"
+    "editUsers": "Edit members"
   },
   "action": {
-    "createNew": "New"
+    "createNew": "New",
+    "save": "Save",
+    "saveAsNewMilestone": "Save as new milestone",
+    "saveAsNewArtifact": "Save as new file",
+    "copied": "Artifact copied",
+    "saved": "Saved"
   },
   "exception": {
     "changeOwnRole": "You can't change your own role",
     "authFailed": "Authorization failed",
-    "editDeployedVersion": "You can't edit files that have already been deployed",
+    "editDeployedMilestone": "You can't edit files that have already been deployed",
     "accessHistory": "Artifacts from archive can not be changed",
-    "oldMilestone": "You have opened an old version of this artifact. A newer milestone is available. Click here to open",
+    "oldMilestone": "You have opened an old milestone of this artifact. A newer milestone is available. Click here to open",
     "historicalDataAccess": "You can't edit this file, a new Milestone is available",
-    "locked": "This file is currently being edited by another user"
+    "locked": "This file is currently being edited by another user",
+    "noAssignmentOrShareFound": "No direct or indirect access rights",
+    "emptyTitle": "Title must not be empty"
 
   }
 }

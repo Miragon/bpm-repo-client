@@ -8,9 +8,7 @@ import {AxiosResponse} from "axios";
 import {
     ArtifactTO,
     SharedRepositoryTO,
-    SharedRepositoryTORoleEnum,
-    SharedTeamTO,
-    SharedTeamTORoleEnum
+    SharedRepositoryTORoleEnum, SharedTeamTO, SharedTeamTORoleEnum,
 } from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
@@ -155,9 +153,9 @@ const SharedRepositories: React.FC<Props> = props => {
                         <div className={classes.middlePanel}>
                             {option.repoName}
                         </div>
-                        <SelectRoleDropdown
-                            option={option}
-                            updateMethod={props.updateMethod}/>
+                        <div>
+
+                        </div>
 
                     </ListItem>
                 ))}
@@ -167,3 +165,10 @@ const SharedRepositories: React.FC<Props> = props => {
 };
 
 export default SharedRepositories;
+
+//TODO SelectRoleDropdown can be used if roles for Sharing are implemented (The authentication methods in backend are not adjusted to sharing with roles!)
+/*
+                        <SelectRoleDropdown
+                            option={option}
+                            updateMethod={props.updateMethod}/>
+ */

@@ -110,6 +110,23 @@ const SharingManagementDialog: React.FC<Props> = props => {
                                 updateMethod={updateShareWithRepo}/>
                         </TabPanel>
 
+
+
+                    </TabContext>
+
+                </>
+            )}
+
+        </PopupDialog>
+    );
+};
+export default SharingManagementDialog;
+
+
+
+//TODO Add this tab when Teams return
+
+/*
                         <TabPanel value="1">
                             <AddSharingSearchBar
                                 entity="team"
@@ -125,13 +142,4 @@ const SharingManagementDialog: React.FC<Props> = props => {
                                 unshareMethod={unshareWithTeam}
                                 updateMethod={updateShareWithTeam}/>
                         </TabPanel>
-
-                    </TabContext>
-
-                </>
-            )}
-
-        </PopupDialog>
-    );
-};
-export default SharingManagementDialog;
+ */

@@ -27,7 +27,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
+            type=semver,pattern={{milestone}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
@@ -36,7 +36,7 @@ jobs:
       - name: Setup NodeJS 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-milestone: '14'
       - name: Set Yarn Cache Directory
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"

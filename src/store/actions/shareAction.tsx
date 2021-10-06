@@ -25,6 +25,13 @@ export const getAllSharedArtifacts = async (): Promise<AxiosResponse<ArtifactTO[
     return response;
 }
 
+export const getAllSharedArtifactsByType = async (type: string): Promise<AxiosResponse<ArtifactTO[]>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const response = await shareController.getSharedArtifactsByType(type, config);
+    return response;
+}
+
 export const getAllArtifactsSharedWithTeam = async (teamId: string): Promise<AxiosResponse<Array<ArtifactTO>>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();

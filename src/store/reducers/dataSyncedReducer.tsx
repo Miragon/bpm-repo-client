@@ -9,7 +9,7 @@ import {
     SYNC_STATUS_SHARED,
     SYNC_STATUS_TARGETS,
     SYNC_STATUS_TEAM,
-    SYNC_STATUS_VERSION
+    SYNC_STATUS_MILESTONE
 } from "../../constants/Constants";
 
 const initialState = {
@@ -17,7 +17,7 @@ const initialState = {
     activeEntitySynced: false,
     recentSynced: false,
     artifactSynced: false,
-    versionSynced: undefined,
+    milestoneSynced: undefined,
     assignmentSynced: false,
     menuSynced: false,
     sharedSynced: false,
@@ -69,10 +69,10 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 artifactSynced: action.dataSynced
             };
 
-        case SYNC_STATUS_VERSION:
+        case SYNC_STATUS_MILESTONE:
             return {
                 ...state,
-                versionSynced: action.dataSynced
+                milestoneSynced: action.dataSynced
             };
 
         case SYNC_STATUS_ASSIGNMENT:

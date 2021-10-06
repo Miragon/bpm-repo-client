@@ -7,12 +7,13 @@ import PopupDialog from "../Form/PopupDialog";
 import {SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
-import {ArtifactTypeTO, ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../../api";
+import {ArtifactMilestoneUploadTOSaveTypeEnum, ArtifactTypeTO, RepositoryTO} from "../../../api";
 import {useTranslation} from "react-i18next";
 import {RootState} from "../../../store/reducers/rootReducer";
-import {createArtifact, createVersion} from "../../../store/actions";
+import {createArtifact} from "../../../store/actions";
 import helpers from "../../../util/helperFunctions";
 import SettingsTextField from "../Form/SettingsTextField";
+import {createMilestone} from "../../../store/actions/milestoneAction";
 
 
 const useStyles = makeStyles(() => ({
@@ -57,11 +58,11 @@ const UploadArtifactDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         //1. Create a new Artifact
-        //2. Use the returned artifactId to create a new version, which includes the uploaded file
+        //2. Use the returned artifactId to create a new milestone, which includes the uploaded file
         createArtifact(repoId, title, description, uploadedFileType)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
-                    createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone)
+                    createMilestone(response.data.id, file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone)
                         .then(response2 => {
                             if(Math.floor(response2.status / 100) === 2){
                                 dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
@@ -69,10 +70,10 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                                 helpers.makeSuccessToast(t("artifact.created"))
                                 props.onCancelled()
                             } else{
-                                helpers.makeErrorToast(t(response2.data.toString()), () => createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                                helpers.makeErrorToast(t(response2.data.toString()), () => createMilestone(response.data.id, file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
                             }
                         }, error => {
-                            helpers.makeErrorToast(t(error.response.data), () => createVersion(response.data.id, file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                            helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
                         })
                 } else {
                     helpers.makeErrorToast(t(response.data.toString()), () => onCreate())

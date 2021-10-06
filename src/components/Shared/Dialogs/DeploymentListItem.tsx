@@ -12,9 +12,9 @@ import {
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
-import {ArtifactVersionTO} from "../../../api";
-import {getAllVersions} from "../../../store/actions";
-import {DEPLOYMENT_VERSIONS} from "../../../constants/Constants";
+import {ArtifactMilestoneTO} from "../../../api";
+import {getAllMilestones} from "../../../store/actions";
+import {DEPLOYMENT_MILESTONES} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 interface Props {
     artifactId: string;
     artifactName: string;
-    onChangeMilestone: (artifactId: string, versionId: string) => void;
+    onChangeMilestone: (artifactId: string, milestoneId: string) => void;
 }
 
 const DeploymentListItem: React.FC<Props> = props => {
@@ -37,38 +37,38 @@ const DeploymentListItem: React.FC<Props> = props => {
     const classes = useStyles();
     const {t} = useTranslation("common");
 
-    const [versions, setVersions] = useState<ArtifactVersionTO[]>([]);
-    const [selectedVersion, setSelectedVersion] = useState<string>("");
+    const [milestones, setMilestones] = useState<ArtifactMilestoneTO[]>([]);
+    const [selectedMilestone, setSelectedMilestone] = useState<string>("");
 
 
-    const getVersions = useCallback(async (artifactId: string) => {
-        getAllVersions(artifactId).then(response => {
+    const getMilestones = useCallback(async (artifactId: string) => {
+        getAllMilestones(artifactId).then(response => {
             if(Math.floor(response.status / 100) === 2) {
-                dispatch({type: DEPLOYMENT_VERSIONS, deploymentVersions: response.data})
-                setVersions(response.data)
+                dispatch({type: DEPLOYMENT_MILESTONES, deploymentMilestones: response.data})
+                setMilestones(response.data)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getVersions(artifactId))
+                helpers.makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getVersions(artifactId))
+            helpers.makeErrorToast(t(error.response.data), () => getMilestones(artifactId))
         })
     }, [dispatch, t])
 
 
     useEffect(() => {
-        getVersions(props.artifactId)
-    }, [getVersions, props.artifactId])
+        getMilestones(props.artifactId)
+    }, [getMilestones, props.artifactId])
 
-    const changeMilestone = (versionId: string) => {
-        props.onChangeMilestone(props.artifactId, versionId)
+    const changeMilestone = (milestoneId: string) => {
+        props.onChangeMilestone(props.artifactId, milestoneId)
     }
 
 
-    //TODO: Fetching all Versions, including all files, will become very expensive => write new endpoint that returns only VersionIds and MileStones
+    //TODO: Fetching all Milestones, including all files, will become very expensive => write new endpoint that returns only MilestoneIds and MileStones
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         changeMilestone(event.target.value as string);
-        setSelectedVersion(event.target.value as string)
+        setSelectedMilestone(event.target.value as string)
     };
 
 
@@ -81,16 +81,16 @@ const DeploymentListItem: React.FC<Props> = props => {
 
                 <ListItemSecondaryAction>
                     <FormControl >
-                        <InputLabel id="versionSelector">{t("version.version")}</InputLabel>
+                        <InputLabel id="milestoneSelector">{t("milestone.milestone")}</InputLabel>
                         <Select
                             required
                             className={classes.select}
-                            labelId="versionSelector"
+                            labelId="milestoneSelector"
                             id="selector"
-                            value={selectedVersion}
+                            value={selectedMilestone}
                             onChange={handleChange} >
-                            {versions.map(version => (
-                                <MenuItem key={version.id} value={version.id}>{version.milestone}</MenuItem>
+                            {milestones.map(milestone => (
+                                <MenuItem key={milestone.id} value={milestone.id}>{milestone.milestone}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>

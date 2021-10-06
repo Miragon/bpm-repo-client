@@ -2,7 +2,7 @@ import {DateTime} from "luxon";
 import React, {ReactText} from "react";
 import {TFunction} from "react-i18next";
 import {toast} from "react-toastify";
-import {ArtifactTO, ArtifactVersionTO, RepositoryTO} from "../api";
+import {ArtifactTO, ArtifactMilestoneTO, RepositoryTO} from "../api";
 import Toast from "../components/Layout/Toast";
 import theme from "../theme";
 
@@ -52,8 +52,8 @@ const helpers = {
         return assignedRepo ? assignedRepo.name : "";
     },
 
-    download: ((artifactVersion: ArtifactVersionTO): void => {
-        const filePath = `/api/version/${artifactVersion.artifactId}/${artifactVersion.id}/download`
+    download: ((artifactMilestone: ArtifactMilestoneTO): void => {
+        const filePath = `/api/milestone/${artifactMilestone.artifactId}/${artifactMilestone.id}/download`
         const link = document.createElement("a");
         link.href = filePath;
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);

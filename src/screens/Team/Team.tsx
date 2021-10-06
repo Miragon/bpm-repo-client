@@ -7,7 +7,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import PathStructure from "../../components/Layout/PathStructure";
+import PathStructure, {CrumbElement} from "../../components/Layout/PathStructure";
 import {deleteTeam, getTeam, updateTeam} from "../../store/actions/teamAction";
 import {getAllArtifactsSharedWithTeam} from "../../store/actions/shareAction";
 import Details from "../../components/Shared/Details";
@@ -114,6 +114,9 @@ const Team: React.FC = (() => {
     }, [teamId, activeEntitySynced, artifactSynced, fetchArtifacts])
 
     useEffect(() => {
+        setTeam(undefined)
+        setRepos([])
+        setArtifacts([])
         fetchTeam();
         fetchRepositories();
         fetchArtifacts();
@@ -124,13 +127,18 @@ const Team: React.FC = (() => {
         setOpenedTab(newValue)
     }
 
-    const element = {
+    const element: CrumbElement = {
         name: "path.overview",
-        link: "/"
+        onClick: () => {
+            setTeam(undefined)
+            setRepos([])
+            setArtifacts([])
+            history.push("/repository")
+        }
     }
-    const element2 = {
+    const element2: CrumbElement = {
         name: "path.team",
-        link: `#/team/${teamId}`
+        onClick: () => history.push(`/repository/team/${teamId}`)
     }
     const path = [element, element2]
 

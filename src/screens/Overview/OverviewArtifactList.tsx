@@ -5,7 +5,7 @@ import {useHistory} from "react-router-dom";
 import {ArtifactTO, RepositoryTO} from "../../api";
 import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
 import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
-import {addToFavorites, deleteArtifact, getLatestVersion} from "../../store/actions";
+import {addToFavorites, deleteArtifact, getLatestMilestone} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 import {DropdownButtonItem} from "../../components/Shared/Form/DropdownButton";
 import PopupSettings from "../../components/Shared/Form/PopupSettings";
@@ -39,42 +39,45 @@ const OverviewArtifactList: React.FC<Props> = (props: Props) => {
     }>();
 
     const onFavorite = useCallback(async (artifact: ArtifactTO) => {
-        const response = await addToFavorites(artifact.id);
-        if (Math.floor(response.status / 100) === 2) {
-            dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
-            dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: false })
-        } else {
-            helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => onFavorite(artifact))
-        }
+        addToFavorites(artifact.id).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: false });
+            } else {
+                helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => onFavorite(artifact))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => onFavorite(artifact))
+        })
     }, [dispatch, t]);
 
     const onDownload = useCallback(async (artifact: ArtifactTO) => {
-        const response = await getLatestVersion(artifact.id);
-        if (Math.floor(response.status / 100) === 2) {
-            helpers.download(response.data)
-            helpers.makeSuccessToast(t("download.started"))
-        } else {
-            helpers.makeErrorToast(t(response.data.toString()), () => onDownload(artifact))
-        }
+        getLatestMilestone(artifact.id).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                helpers.download(response.data)
+                helpers.makeSuccessToast(t("download.started"))
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => onDownload(artifact))
+            }
+
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => onDownload(artifact))
+        })
     }, [t]);
 
     const onDelete = useCallback(async (artifact: ArtifactTO) => {
         // eslint-disable-next-line no-restricted-globals
         if (confirm(t("artifact.confirmDelete", { artifactName: artifact.name }))) {
-            try {
-                const response = await dispatch(deleteArtifact(artifact.id));
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                if (response?.status === 200) {
+            deleteArtifact(artifact.id).then(response => {
+                if (Math.floor(response.status / 100) === 2) {
                     helpers.makeSuccessToast(t("artifact.deleted"));
+                    dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
                 } else {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    helpers.makeErrorToast(t(response.data), () => onDelete(artifact));
+                    helpers.makeErrorToast(t(response.statusText), () => onDelete(artifact));
                 }
-            } catch (err) {
-                console.log(err);
-            }
+            }, error => {
+                helpers.makeErrorToast(t(error.response.data), () => onDelete(artifact))
+            })
         }
     }, [dispatch, t]);
 

@@ -3,20 +3,21 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {ArtifactVersionUploadTOSaveTypeEnum, RepositoryTO} from "../../../api";
+import {ArtifactMilestoneUploadTOSaveTypeEnum, RepositoryTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
-import {createArtifact, createVersion} from "../../../store/actions";
+import {createArtifact} from "../../../store/actions";
 import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
-    SYNC_STATUS_VERSION
+    SYNC_STATUS_MILESTONE
 } from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
 import SettingsTextField from "../Form/SettingsTextField";
+import {createMilestone} from "../../../store/actions/milestoneAction";
 
 interface Props {
     open: boolean;
@@ -46,22 +47,22 @@ const CreateArtifactDialog: React.FC<Props> = props => {
         createArtifact(repoId, title, description, props.type)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone)
+                    createMilestone(response.data.id, "", ArtifactMilestoneUploadTOSaveTypeEnum.Milestone)
                         .then(response2 => {
                             if (Math.floor(response2.status / 100) === 2) {
                                 dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
                                 dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
                                 dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false })
-                                dispatch({ type: SYNC_STATUS_VERSION, dataSynced: false });
+                                dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
                                 setTitle("");
                                 setDescription("");
                                 helpers.makeSuccessToast(t("artifact.created"));
                                 props.onCancelled();
                             } else {
-                                helpers.makeErrorToast(response2.data.toString(), () => createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                                helpers.makeErrorToast(response2.data.toString(), () => createMilestone(response.data.id, "", ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
                             }
                         }, error => {
-                            helpers.makeErrorToast(t(error.response.data), () => createVersion(response.data.id, "", ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                            helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, "", ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
                         })
                 } else {
                     helpers.makeErrorToast(t(response.data.toString()), () => onCreate())

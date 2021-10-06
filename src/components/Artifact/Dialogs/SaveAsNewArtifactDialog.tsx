@@ -1,25 +1,25 @@
 import React, {useCallback, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {createArtifact, createVersion} from "../../../store/actions";
-import {ArtifactVersionUploadTOSaveTypeEnum} from "../../../api";
+import {createArtifact, createMilestone} from "../../../store/actions";
 import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY,
-    SYNC_STATUS_VERSION
+    SYNC_STATUS_MILESTONE
 } from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import SettingsForm from "../../Shared/Form/SettingsForm";
 import SettingsTextField from "../../Shared/Form/SettingsTextField";
+import {ArtifactMilestoneUploadTOSaveTypeEnum} from "../../../api";
 
 interface Props {
     open: boolean;
     onCancelled: () => void;
     type: string;
     repoId: string;
-    versionNo: number;
+    milestoneNo: number;
     file: string;
     artifactId: string;
 }
@@ -36,17 +36,17 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         createArtifact(props.repoId, title, description, props.type).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                createVersion(response.data.id, props.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone).then(response => {
+                createMilestone(response.data.id, props.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone).then(response => {
                     if(Math.floor(response.status / 100) === 2){
                         dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false });
                         dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
                         dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
-                        dispatch({type: SYNC_STATUS_VERSION, dataSynced: false});
+                        dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
                     } else {
-                        helpers.makeErrorToast(t(response.data.toString()), () => createVersion(response.data.id, props.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                        helpers.makeErrorToast(t(response.data.toString()), () => createMilestone(response.data.id, props.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
                     }
                 }, error => {
-                    helpers.makeErrorToast(t(error.response.data), () => createVersion(response.data.id, props.file, ArtifactVersionUploadTOSaveTypeEnum.Milestone))
+                    helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, props.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
                 })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
@@ -63,7 +63,7 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("version.saveVersionXAsNewArtifact", {milestone: props.versionNo})}
+            title={t("milestone.saveMilestoneXAsNewArtifact", {milestone: props.milestoneNo})}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}

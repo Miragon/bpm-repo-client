@@ -1,6 +1,6 @@
 import {Input, InputLabel} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {ArtifactTO} from "../../../api";
@@ -8,20 +8,9 @@ import {updateArtifact} from "../../../store/actions";
 import {SYNC_STATUS_ARTIFACT} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
+import SettingsTextField from "../../Shared/Form/SettingsTextField";
 
-const useStyles = makeStyles(() => ({
-    line: {
-        display: "flex",
-        flexDirection: "column"
-    },
-    property: {
-        flexBasis: "20px"
-    },
-    spacer: {
-        marginTop: "15px"
-    }
 
-}));
 
 interface Props {
     open: boolean;
@@ -31,12 +20,16 @@ interface Props {
 
 const EditArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const classes = useStyles();
     const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [title, setTitle] = useState<string>();
-    const [description, setDescription] = useState<string>();
+    const [title, setTitle] = useState<string>(props.artifact?.name || "");
+    const [description, setDescription] = useState<string>(props.artifact?.description || "");
+
+    useEffect(() => {
+        props.artifact && setTitle(props.artifact.name)
+        props.artifact && setDescription(props.artifact.description)
+    }, [props.artifact])
 
     const applyChanges = useCallback(async () => {
         if (!props.artifact) {
@@ -44,7 +37,7 @@ const EditArtifactDialog: React.FC<Props> = props => {
         }
 
         if (!title) {
-            setError("Der Titel darf nicht leer sein!");
+            setError(t("exception.emptyTitle"));
             return;
         }
 
@@ -70,21 +63,17 @@ const EditArtifactDialog: React.FC<Props> = props => {
             onFirst={applyChanges}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}>
-            <InputLabel style={{ fontSize: "12px" }}
-                htmlFor="Title">{t("properties.title")}</InputLabel>
-            <Input
-                id="Name"
+            <SettingsTextField
+                label={t("properties.title")}
                 value={title}
-                onChange={event => setTitle(event.target.value)} />
-            <div className={classes.spacer} />
-            <InputLabel style={{ fontSize: "12px" }}
-                htmlFor="Description">{t("properties.description")}</InputLabel>
-            <Input
-                id="Description"
+                onChanged={setTitle}/>
+
+            <SettingsTextField
+                label={t("properties.description")}
                 value={description}
+                onChanged={setDescription}
                 multiline
-                rows={4}
-                onChange={event => setDescription(event.target.value)} />
+                minRows={4}/>
 
         </PopupDialog>
     );

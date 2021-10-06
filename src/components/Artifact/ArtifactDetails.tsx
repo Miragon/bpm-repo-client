@@ -13,7 +13,7 @@ import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton"
 import SimpleButton from "../Shared/Form/SimpleButton";
 import ArtifactManagementContainer from "../Shared/Buttons/ArtifactManagementContainer";
 import DeployMultipleDialog from "../Shared/Dialogs/DeployMultipleDialog";
-import ArtifactListWithVersions from "./ArtifactListWithVersions";
+import ArtifactListWithMilestones from "./ArtifactListWithMilestones";
 
 
 const useStyles = makeStyles(() => ({
@@ -214,7 +214,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
             </div>
 
             <div className={classes.container}>
-                <ArtifactListWithVersions
+                <ArtifactListWithMilestones
                     artifacts={filteredArtifacts}
                     repositories={repos}
                     favorites={favoriteArtifacts} />

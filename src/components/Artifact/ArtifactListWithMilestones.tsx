@@ -4,15 +4,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../api";
 import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
 import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
-import {addToFavorites, deleteArtifact, getLatestVersion} from "../../store/actions";
+import {addToFavorites, deleteArtifact, getLatestMilestone} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import {openFileInTool} from "../../util/Redirections";
-import VersionList from "./VersionList";
+import MilestoneList from "./MilestoneList";
 import {DropdownButtonItem} from "../../components/Shared/Form/DropdownButton";
 import PopupSettings from "../../components/Shared/Form/PopupSettings";
 import EditArtifactDialog from "../../components/Artifact/Dialogs/EditArtifactDialog";
-import CreateVersionDialog from "../../components/Artifact/Dialogs/CreateVersionDialog";
+import CreateMilestoneDialog from "../../components/Artifact/Dialogs/CreateMilestoneDialog";
 import CopyToRepoDialog from "../../components/Shared/Dialogs/CopyToRepoDialog";
 import SharingManagementDialog from "../../components/Artifact/Dialogs/SharingManagementDialog";
 
@@ -23,7 +23,7 @@ interface Props {
     fallback?: string;
 }
 
-const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
+const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
 
@@ -37,7 +37,7 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     const [shareArtifact, setShareArtifact] = useState<ArtifactTO>();
-    const [createVersionArtifact, setCreateVersionArtifact] = useState<ArtifactTO>();
+    const [createMilestoneArtifact, setCreateMilestoneArtifact] = useState<ArtifactTO>();
     const [copyArtifact, setCopyArtifact] = useState<ArtifactTO>();
     const [editArtifact, setEditArtifact] = useState<ArtifactTO>();
     const [menu, setMenu] = useState<{
@@ -62,7 +62,7 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
     }, [dispatch, t]);
 
     const onDownload = useCallback(async (artifact: ArtifactTO) => {
-        getLatestVersion(artifact.id).then(response => {
+        getLatestMilestone(artifact.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 helpers.download(response.data)
                 helpers.makeSuccessToast(t("download.started"))
@@ -103,8 +103,8 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
         openFileInTool(fileTypes, artifact.fileType, artifact.repositoryId, artifact.id, t("error.missingTool", artifact.fileType));
     }, [fileTypes, t]);
 
-    const onCreateVersion = useCallback((artifact: ArtifactTO) => {
-        setCreateVersionArtifact(artifact);
+    const onCreateMilestone = useCallback((artifact: ArtifactTO) => {
+        setCreateMilestoneArtifact(artifact);
     }, []);
 
     const onShare = useCallback((artifact: ArtifactTO) => {
@@ -118,15 +118,15 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
     const options: DropdownButtonItem[] = useMemo(() => [
         {
             id: "OpenLatest",
-            label: t("version.openLatest"),
+            label: t("milestone.openLatest"),
             type: "button",
             onClick: () => menu && onOpen(menu.artifact)
         },
         {
-            id: "CreateVersion",
-            label: t("version.create"),
+            id: "CreateMilestone",
+            label: t("milestone.create"),
             type: "button",
-            onClick: () => menu && onCreateVersion(menu.artifact)
+            onClick: () => menu && onCreateMilestone(menu.artifact)
         },
         {
             id: "divider1",
@@ -173,7 +173,7 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
             type: "button",
             onClick: () => menu && onDelete(menu.artifact)
         }
-    ], [menu, onCopy, onCreateVersion, onShare, onOpen, onDelete, onDownload, onEdit, t]);
+    ], [menu, onCopy, onCreateMilestone, onShare, onOpen, onDelete, onDownload, onEdit, t]);
 
     return (
         <div>
@@ -188,7 +188,7 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
                         onFavorite={onFavorite}
                         favorite={helpers.isFavorite(artifact.id, favorites.map(artifact => artifact.id))}
                         repository={helpers.getRepoName(artifact.repositoryId, repositories)}>
-                        <VersionList artifact={artifact} />
+                        <MilestoneList artifact={artifact} />
                     </ArtifactEntry>
                 ))}
                 {artifacts.length === 0 && (
@@ -208,11 +208,11 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
                 onCancelled={() => setEditArtifact(undefined)}
                 artifact={editArtifact} />
 
-            <CreateVersionDialog
-                open={!!createVersionArtifact}
-                onCancelled={() => setCreateVersionArtifact(undefined)}
-                onCreated={() => setCreateVersionArtifact(undefined)}
-                artifact={createVersionArtifact} />
+            <CreateMilestoneDialog
+                open={!!createMilestoneArtifact}
+                onCancelled={() => setCreateMilestoneArtifact(undefined)}
+                onCreated={() => setCreateMilestoneArtifact(undefined)}
+                artifact={createMilestoneArtifact} />
 
             <CopyToRepoDialog
                 open={!!copyArtifact}
@@ -228,4 +228,4 @@ const ArtifactListWithVersions: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default ArtifactListWithVersions;
+export default ArtifactListWithMilestones;

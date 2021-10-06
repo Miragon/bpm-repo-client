@@ -4,7 +4,7 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import Section from "../Layout/Section";
 import {ErrorBoundary} from "../Exception/ErrorBoundary";
-import ArtifactListWithVersions from "./ArtifactListWithVersions";
+import ArtifactListWithMilestones from "./ArtifactListWithMilestones";
 
 
 interface Props {
@@ -21,7 +21,7 @@ const SharedArtifacts: React.FC<Props> = (props => {
     return (
         <Section title="category.shared">
             <ErrorBoundary>
-                <ArtifactListWithVersions
+                <ArtifactListWithMilestones
                     artifacts={sharedArtifacts}
                     repositories={repos}
                     fallback="share.na"

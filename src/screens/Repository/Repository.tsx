@@ -4,7 +4,7 @@ import {useParams} from "react-router";
 import {deleteRepository, fetchArtifactsFromRepo, getSingleRepository, updateRepository} from "../../store/actions";
 import {ArtifactTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
-import PathStructure from "../../components/Layout/PathStructure";
+import PathStructure, {CrumbElement} from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {SHARED_ARTIFACTS, SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
@@ -17,10 +17,12 @@ import {Tab} from "@material-ui/core";
 import Settings from "../../components/Shared/Settings";
 import RepositoryMembers from "./RepositoryMembers";
 import {getSharedArtifacts} from "../../store/actions/shareAction";
+import {useHistory} from "react-router-dom";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
+    const history = useHistory();
 
     const { repoId } = useParams<{ repoId: string }>();
     const activeEntitySynced: boolean = useSelector((state: RootState) => state.dataSynced.activeEntitySynced);
@@ -86,6 +88,9 @@ const Repository: React.FC = (() => {
     }, [activeEntitySynced, artifactSynced, fetchArtifacts])
 
     useEffect(() => {
+        setRepository(undefined)
+        setArtifacts([])
+        setSharedArtifacts([])
         getRepo()
         fetchArtifacts();
         fetchSharedArtifacts(repoId);
@@ -97,19 +102,19 @@ const Repository: React.FC = (() => {
     }
 
 
-    const element = {
+    const element: CrumbElement = {
         name: "path.overview",
-        link: "/",
         onClick: () => {
-            setArtifacts([])
-            setSharedArtifacts([])
+            setArtifacts([]);
+            setSharedArtifacts([]);
+            history.push("/repository")
         }
     }
-    const element2 = {
+    const element2: CrumbElement = {
         name: "path.repository",
-        link: `#/repository/${repoId}`
+        onClick: () => history.push(`/repository/${repoId}`)
     }
-    const path = [element, element2]
+    const path: Array<CrumbElement> = [element, element2]
 
 
     return (

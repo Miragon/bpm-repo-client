@@ -1,13 +1,13 @@
 import {makeStyles} from "@material-ui/core/styles";
 import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {ArtifactTO, ArtifactVersionTO} from "../../api";
-import {getAllVersions} from "../../store/actions";
+import {ArtifactTO, ArtifactMilestoneTO} from "../../api";
+import {getAllMilestones} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
-import {SYNC_STATUS_VERSION} from "../../constants/Constants";
-import VersionDetails from "../../screens/Repository/Version/VersionDetails";
+import {SYNC_STATUS_MILESTONE} from "../../constants/Constants";
+import MilestoneDetails from "../../screens/Repository/MIlestone/MilestoneDetails";
 
 interface Props {
     artifact: ArtifactTO;
@@ -25,38 +25,38 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const VersionList: React.FC<Props> = (props: Props) => {
+const MilestoneList: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
 
-    const versionSynced = useSelector((state: RootState) => state.dataSynced.versionSynced);
+    const milestoneSynced = useSelector((state: RootState) => state.dataSynced.milestoneSynced);
 
 
-    const [activeVersions, setActiveVersions] = useState<ArtifactVersionTO[]>([]);
+    const [activeMilestones, setActiveMilestones] = useState<ArtifactMilestoneTO[]>([]);
 
-    const getVersions = useCallback(async (artifactId: string) => {
-        const response = await getAllVersions(artifactId);
+    const getMilestones = useCallback(async (artifactId: string) => {
+        const response = await getAllMilestones(artifactId);
         if (Math.floor(response.status / 100) === 2) {
-            const sortedVersions = response.data.sort(compare)
-            setActiveVersions(sortedVersions);
-            dispatch({type: SYNC_STATUS_VERSION, dataSynced: true})
+            const sortedMilestones = response.data.sort(compare)
+            setActiveMilestones(sortedMilestones);
+            dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: true})
         } else {
-            helpers.makeErrorToast(t(response.data.toString()), () => getVersions(artifactId))
+            helpers.makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId))
         }
     }, [t, dispatch])
 
     useEffect(() => {
-        getVersions(props.artifact.id);
-    }, [getVersions, props.artifact]);
+        getMilestones(props.artifact.id);
+    }, [getMilestones, props.artifact]);
 
     useEffect(() => {
-        if(!versionSynced){
-            getVersions(props.artifact.id);
+        if(!milestoneSynced){
+            getMilestones(props.artifact.id);
         }
-    }, [getVersions, props.artifact, versionSynced])
+    }, [getMilestones, props.artifact, milestoneSynced])
 
-    const compare = (a: ArtifactVersionTO, b: ArtifactVersionTO) => {
+    const compare = (a: ArtifactMilestoneTO, b: ArtifactMilestoneTO) => {
         if (a.milestone < b.milestone) {
             return -1;
         }
@@ -69,14 +69,14 @@ const VersionList: React.FC<Props> = (props: Props) => {
 
     return (
         <div className={classes.root}>
-            <VersionDetails
+            <MilestoneDetails
                 artifactId={props.artifact.id}
                 repoId={props.artifact.repositoryId}
                 fileType={props.artifact.fileType}
-                artifactVersionTOs={activeVersions}
+                artifactMilestoneTOs={activeMilestones}
                 artifactTitle={props.artifact.name} />
         </div>
     );
 };
 
-export default VersionList;
+export default MilestoneList;

@@ -13,7 +13,7 @@ import helpers from "../../../../util/helperFunctions";
 import {TARGETS} from "../../../../constants/Constants";
 import {DropdownButtonItem} from "../../../../components/Shared/Form/DropdownButton";
 import PopupSettings from "../../../../components/Shared/Form/PopupSettings";
-import DeployVersionDialog from "../../../../components/Artifact/Dialogs/DeployVersionDialog";
+import DeployMilestoneDialog from "../../../../components/Artifact/Dialogs/DeployMilestoneDialog";
 import DeploymentHistory from "../../../../components/Artifact/Dialogs/DeploymentHistory";
 import SaveAsNewArtifactDialog from "../../../../components/Artifact/Dialogs/SaveAsNewArtifactDialog";
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
             borderBottom: "1px solid lightgrey"
         }
     },
-    versionNumber: {
+    milestoneNumber: {
         maxWidth: "10%",
         minWidth: "10%",
         fontSize: "1.25rem"
@@ -106,7 +106,7 @@ interface Props {
 }
 
 
-const VersionListItem: React.FC<Props> = ((props: Props) => {
+const MilestoneListItem: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const ref = useRef<HTMLButtonElement>(null);
@@ -115,7 +115,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
 
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [historyOpen, setHistoryOpen] = useState<boolean>(false);
-    const [deployVersionOpen, setDeployVersionOpen] = useState<boolean>(false);
+    const [deployMilestoneOpen, setDeployMilestoneOpen] = useState<boolean>(false);
     const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
 
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
@@ -139,21 +139,21 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
 
     const options: DropdownButtonItem[] = [
         {
-            id: "DeployVersion",
-            label: t("version.deploy"),
+            id: "DeployMilestone",
+            label: t("milestone.deploy"),
             type: "button",
             onClick: () => {
                 getTargets()
-                setDeployVersionOpen(true);
+                setDeployMilestoneOpen(true);
 
             }
         },
         {
-            id: "DownloadVersion",
-            label: t("version.download"),
+            id: "DownloadMilestone",
+            label: t("milestone.download"),
             type: "button",
             onClick: () => {
-                const filePath = `/api/version/${props.artifactId}/${props.id}/download`
+                const filePath = `/api/milestone/${props.artifactId}/${props.id}/download`
                 const link = document.createElement("a");
                 link.href = filePath;
                 link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
@@ -162,7 +162,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
         },
         {
             id: "DeploymentHistory",
-            label: t("version.deploymentHistory"),
+            label: t("milestone.deploymentHistory"),
             type: "button",
             onClick: () => {
                 setHistoryOpen(true);
@@ -171,7 +171,7 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
         },
         {
             id: "SaveAsNewArtifact",
-            label: t("version.saveAsNewArtifact"),
+            label: t("milestone.saveAsNewArtifact"),
             type: "button",
             onClick: () => {
                 setSaveDialogOpen(true);
@@ -239,17 +239,17 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
                 onCancel={() => setSettingsOpen(false)}
                 options={options} />
 
-            <DeployVersionDialog
-                open={deployVersionOpen}
-                onCancelled={() => setDeployVersionOpen(false)}
+            <DeployMilestoneDialog
+                open={deployMilestoneOpen}
+                onCancelled={() => setDeployMilestoneOpen(false)}
                 artifactId={props.artifactId}
-                versionId={props.id}
-                versionNumber={props.milestone} />
+                milestoneId={props.id}
+                milestoneNumber={props.milestone} />
 
             <DeploymentHistory
-                versionId={props.id}
+                milestoneId={props.id}
                 artifactTitle={props.artifactTitle}
-                versionComment={props.comment}
+                milestoneComment={props.comment}
                 milestone={props.milestone}
                 open={historyOpen}
                 onCancelled={() => setHistoryOpen(false)}
@@ -261,10 +261,10 @@ const VersionListItem: React.FC<Props> = ((props: Props) => {
                 artifactId={props.artifactId}
                 onCancelled={() => setSaveDialogOpen(false)}
                 type={props.type}
-                versionNo={props.milestone}
+                milestoneNo={props.milestone}
                 file={props.file}/>
         </>
     );
 })
 
-export default VersionListItem
+export default MilestoneListItem

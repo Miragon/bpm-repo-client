@@ -14,10 +14,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    versionId: string;
+    milestoneId: string;
     milestone: number;
     artifactTitle: string;
-    versionComment: string | undefined;
+    milestoneComment: string | undefined;
     open: boolean;
     onCancelled: () => void;
     deployments: Array<DeploymentTO>;
@@ -61,10 +61,10 @@ const DeploymentHistory: React.FC<Props> = props => {
                 {t("properties.filename")}: <b> {props.artifactTitle} </b>
             </p>
             <p>
-                {t("properties.version")}: <b> {props.milestone} </b>
+                {t("properties.milestone")}: <b> {props.milestone} </b>
             </p>
             <p>
-                {t("properties.comment")}: <b> {props.versionComment} </b>
+                {t("properties.comment")}: <b> {props.milestoneComment} </b>
             </p>
             <div className={classes.spacer}/>
             <Table size="small">

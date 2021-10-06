@@ -1,19 +1,34 @@
 import {observer} from "mobx-react";
-import React from "react";
+import React, {useEffect} from "react";
 import "react-toastify/dist/ReactToastify.css";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import PathStructure from "../../components/Layout/PathStructure";
+import PathStructure, {CrumbElement} from "../../components/Layout/PathStructure";
 import FavoriteArtifacts from "./FavoriteArtifacts";
 import RecentArtifacts from "./RecentArtifacts";
 import RepoAndTeamContainer from "./RepoAndTeamContainer";
 import HeaderContainer from "../../components/Shared/HeaderContainer";
+import {useHistory} from "react-router-dom";
+import {getAllSharedArtifactsByType} from "../../store/actions/shareAction";
 
-const path = [{
-    name: "path.overview",
-    link: "/"
-}];
+
 
 const Overview: React.FC = observer(() => {
+    const history = useHistory();
+
+    const path: Array<CrumbElement> = [{
+        name: "path.overview",
+        onClick: () => {
+            history.push("/repository")
+        }
+    }];
+
+    useEffect(() => {
+        getAllSharedArtifactsByType("CONFIGURATION").then(response => {
+            console.log(response.data)
+        })
+
+    })
+
     return (
         <>
             <PathStructure structure={path} />

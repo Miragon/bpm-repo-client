@@ -37,7 +37,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
 
         copyToRepo(repoId, props.artifact.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("repo.copied"))
+                helpers.makeSuccessToast(t("action.copied"))
                 setRepoId("")
                 props.onCancelled();
             } else {
@@ -83,7 +83,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     disabled={false}
                     value={repoId}
-                    label={t("repoId.target")}
+                    label={t("repository.target")}
                     onChanged={setRepoId}>
                     {allRepos?.map(repo => (
                         <MenuItem

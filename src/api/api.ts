@@ -13,24 +13,150 @@
  */
 
 
-import {Configuration} from './configuration';
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-    assertParamExists,
-    createRequestFunction,
-    DUMMY_BASE_URL,
-    serializeDataIfNeeded,
-    setApiKeyToObject,
-    setBasicAuthToObject,
-    setBearerAuthToObject,
-    setOAuthToObject,
-    setSearchParams,
-    toPathString
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+
+/**
+ * version of an artifact, contains the file and information about deployments
+ * @export
+ * @interface ArtifactMilestoneTO
+ */
+export interface ArtifactMilestoneTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArtifactMilestoneTO
+     */
+    milestone: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    file: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    saveType: ArtifactMilestoneTOSaveTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    updatedDate: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    artifactId: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ArtifactMilestoneTO
+     */
+    latestMilestone: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneTO
+     */
+    repositoryId: string;
+    /**
+     * 
+     * @type {Array<DeploymentTO>}
+     * @memberof ArtifactMilestoneTO
+     */
+    deployments: Array<DeploymentTO>;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ArtifactMilestoneTOSaveTypeEnum {
+    Milestone = 'MILESTONE',
+    Autosave = 'AUTOSAVE'
+}
+
+/**
+ * Client created Object for updating accessible properties of a version
+ * @export
+ * @interface ArtifactMilestoneUpdateTO
+ */
+export interface ArtifactMilestoneUpdateTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneUpdateTO
+     */
+    milestoneId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneUpdateTO
+     */
+    file?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneUpdateTO
+     */
+    comment?: string;
+}
+/**
+ * Client created object for uploading a version from the client
+ * @export
+ * @interface ArtifactMilestoneUploadTO
+ */
+export interface ArtifactMilestoneUploadTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneUploadTO
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneUploadTO
+     */
+    file?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactMilestoneUploadTO
+     */
+    saveType?: ArtifactMilestoneUploadTOSaveTypeEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ArtifactMilestoneUploadTOSaveTypeEnum {
+    Milestone = 'MILESTONE',
+    Autosave = 'AUTOSAVE'
+}
 
 /**
  * Transports an svg image as preview for an artifact
@@ -99,6 +225,18 @@ export interface ArtifactTO {
      * @memberof ArtifactTO
      */
     fileType: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactTO
+     */
+    lockedBy?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactTO
+     */
+    lockedUntil?: string;
 }
 /**
  * Specifies properties for supported file types
@@ -162,143 +300,6 @@ export interface ArtifactUpdateTO {
      */
     svgPreview?: string;
 }
-/**
- * version of an artifact, contains the file and information about deployments
- * @export
- * @interface ArtifactVersionTO
- */
-export interface ArtifactVersionTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ArtifactVersionTO
-     */
-    milestone: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    file: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    saveType: ArtifactVersionTOSaveTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    updatedDate: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    artifactId: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ArtifactVersionTO
-     */
-    latestVersion: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionTO
-     */
-    repositoryId: string;
-    /**
-     * 
-     * @type {Array<DeploymentTO>}
-     * @memberof ArtifactVersionTO
-     */
-    deployments: Array<DeploymentTO>;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ArtifactVersionTOSaveTypeEnum {
-    Milestone = 'MILESTONE',
-    Autosave = 'AUTOSAVE'
-}
-
-/**
- * Client created Object for updating accessible properties of a version
- * @export
- * @interface ArtifactVersionUpdateTO
- */
-export interface ArtifactVersionUpdateTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUpdateTO
-     */
-    versionId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUpdateTO
-     */
-    file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUpdateTO
-     */
-    comment?: string;
-}
-/**
- * Client created object for uploading a version from the client
- * @export
- * @interface ArtifactVersionUploadTO
- */
-export interface ArtifactVersionUploadTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUploadTO
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUploadTO
-     */
-    file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactVersionUploadTO
-     */
-    saveType?: ArtifactVersionUploadTOSaveTypeEnum;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ArtifactVersionUploadTOSaveTypeEnum {
-    Milestone = 'MILESTONE',
-    Autosave = 'AUTOSAVE'
-}
-
 /**
  * Containing information about a user-repository relation
  * @export
@@ -446,7 +447,7 @@ export interface NewDeploymentTO {
      * @type {string}
      * @memberof NewDeploymentTO
      */
-    versionId: string;
+    milestoneId: string;
     /**
      * 
      * @type {string}
@@ -1986,15 +1987,15 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
     return {
         /**
          * 
-         * @summary Deploy multiple versions
-         * @param {Array<NewDeploymentTO>} newDeploymentTO 
+         * @summary Deploy artifact milestone
+         * @param {NewDeploymentTO} newDeploymentTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deployMultipleVersions: async (newDeploymentTO: Array<NewDeploymentTO>, options: any = {}): Promise<RequestArgs> => {
+        deployMilestone: async (newDeploymentTO: NewDeploymentTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'newDeploymentTO' is not null or undefined
-            assertParamExists('deployMultipleVersions', 'newDeploymentTO', newDeploymentTO)
-            const localVarPath = `/api/deploy/list`;
+            assertParamExists('deployMilestone', 'newDeploymentTO', newDeploymentTO)
+            const localVarPath = `/api/deploy`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2022,15 +2023,15 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
-         * @summary Deploy artifact version
-         * @param {NewDeploymentTO} newDeploymentTO 
+         * @summary Deploy multiple milestones
+         * @param {Array<NewDeploymentTO>} newDeploymentTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deployVersion: async (newDeploymentTO: NewDeploymentTO, options: any = {}): Promise<RequestArgs> => {
+        deployMultipleMilestones: async (newDeploymentTO: Array<NewDeploymentTO>, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'newDeploymentTO' is not null or undefined
-            assertParamExists('deployVersion', 'newDeploymentTO', newDeploymentTO)
-            const localVarPath = `/api/deploy`;
+            assertParamExists('deployMultipleMilestones', 'newDeploymentTO', newDeploymentTO)
+            const localVarPath = `/api/deploy/list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2098,24 +2099,24 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Deploy multiple versions
-         * @param {Array<NewDeploymentTO>} newDeploymentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deployMultipleVersions(newDeploymentTO: Array<NewDeploymentTO>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactVersionTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deployMultipleVersions(newDeploymentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Deploy artifact version
+         * @summary Deploy artifact milestone
          * @param {NewDeploymentTO} newDeploymentTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deployVersion(newDeploymentTO: NewDeploymentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deployVersion(newDeploymentTO, options);
+        async deployMilestone(newDeploymentTO: NewDeploymentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deployMilestone(newDeploymentTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Deploy multiple milestones
+         * @param {Array<NewDeploymentTO>} newDeploymentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deployMultipleMilestones(newDeploymentTO: Array<NewDeploymentTO>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactMilestoneTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deployMultipleMilestones(newDeploymentTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2140,23 +2141,23 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
     return {
         /**
          * 
-         * @summary Deploy multiple versions
-         * @param {Array<NewDeploymentTO>} newDeploymentTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deployMultipleVersions(newDeploymentTO: Array<NewDeploymentTO>, options?: any): AxiosPromise<Array<ArtifactVersionTO>> {
-            return localVarFp.deployMultipleVersions(newDeploymentTO, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deploy artifact version
+         * @summary Deploy artifact milestone
          * @param {NewDeploymentTO} newDeploymentTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deployVersion(newDeploymentTO: NewDeploymentTO, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.deployVersion(newDeploymentTO, options).then((request) => request(axios, basePath));
+        deployMilestone(newDeploymentTO: NewDeploymentTO, options?: any): AxiosPromise<ArtifactMilestoneTO> {
+            return localVarFp.deployMilestone(newDeploymentTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Deploy multiple milestones
+         * @param {Array<NewDeploymentTO>} newDeploymentTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deployMultipleMilestones(newDeploymentTO: Array<NewDeploymentTO>, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
+            return localVarFp.deployMultipleMilestones(newDeploymentTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2179,26 +2180,26 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
 export class DeploymentApi extends BaseAPI {
     /**
      * 
-     * @summary Deploy multiple versions
-     * @param {Array<NewDeploymentTO>} newDeploymentTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DeploymentApi
-     */
-    public deployMultipleVersions(newDeploymentTO: Array<NewDeploymentTO>, options?: any) {
-        return DeploymentApiFp(this.configuration).deployMultipleVersions(newDeploymentTO, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deploy artifact version
+     * @summary Deploy artifact milestone
      * @param {NewDeploymentTO} newDeploymentTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DeploymentApi
      */
-    public deployVersion(newDeploymentTO: NewDeploymentTO, options?: any) {
-        return DeploymentApiFp(this.configuration).deployVersion(newDeploymentTO, options).then((request) => request(this.axios, this.basePath));
+    public deployMilestone(newDeploymentTO: NewDeploymentTO, options?: any) {
+        return DeploymentApiFp(this.configuration).deployMilestone(newDeploymentTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Deploy multiple milestones
+     * @param {Array<NewDeploymentTO>} newDeploymentTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeploymentApi
+     */
+    public deployMultipleMilestones(newDeploymentTO: Array<NewDeploymentTO>, options?: any) {
+        return DeploymentApiFp(this.configuration).deployMultipleMilestones(newDeploymentTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2308,6 +2309,545 @@ export class MenuApi extends BaseAPI {
      */
     public getAllMenuItems(options?: any) {
         return MenuApiFp(this.configuration).getAllMenuItems(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * MilestoneApi - axios parameter creator
+ * @export
+ */
+export const MilestoneApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create a new milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+         * @param {string} artifactId 
+         * @param {ArtifactMilestoneUploadTO} artifactMilestoneUploadTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createMilestone: async (artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('createMilestone', 'artifactId', artifactId)
+            // verify required parameter 'artifactMilestoneUploadTO' is not null or undefined
+            assertParamExists('createMilestone', 'artifactMilestoneUploadTO', artifactMilestoneUploadTO)
+            const localVarPath = `/api/milestone/{artifactId}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactMilestoneUploadTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Download a specific milestone
+         * @param {string} artifactId 
+         * @param {string} milestoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadMilestone: async (artifactId: string, milestoneId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('downloadMilestone', 'artifactId', artifactId)
+            // verify required parameter 'milestoneId' is not null or undefined
+            assertParamExists('downloadMilestone', 'milestoneId', milestoneId)
+            const localVarPath = `/api/milestone/{artifactId}/{milestoneId}/download`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
+                .replace(`{${"milestoneId"}}`, encodeURIComponent(String(milestoneId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all milestones of the artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllMilestones: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('getAllMilestones', 'artifactId', artifactId)
+            const localVarPath = `/api/milestone/{artifactId}/milestone`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get the latest milestone of the requested milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {number} milestone 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getByMilestoneNumber: async (artifactId: string, milestone: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('getByMilestoneNumber', 'artifactId', artifactId)
+            // verify required parameter 'milestone' is not null or undefined
+            assertParamExists('getByMilestoneNumber', 'milestone', milestone)
+            const localVarPath = `/api/milestone/{artifactId}/milestoneNumber/{milestone}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
+                .replace(`{${"milestone"}}`, encodeURIComponent(String(milestone)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Return the latest milestone of the requested artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLatestMilestone: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('getLatestMilestone', 'artifactId', artifactId)
+            const localVarPath = `/api/milestone/{artifactId}/milestone/latest`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get a specific milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {string} milestoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMilestone: async (artifactId: string, milestoneId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactId' is not null or undefined
+            assertParamExists('getMilestone', 'artifactId', artifactId)
+            // verify required parameter 'milestoneId' is not null or undefined
+            assertParamExists('getMilestone', 'milestoneId', milestoneId)
+            const localVarPath = `/api/milestone/{artifactId}/milestone/{milestoneId}`
+                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
+                .replace(`{${"milestoneId"}}`, encodeURIComponent(String(milestoneId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+         * @param {ArtifactMilestoneUpdateTO} artifactMilestoneUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateMilestone: async (artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactMilestoneUpdateTO' is not null or undefined
+            assertParamExists('updateMilestone', 'artifactMilestoneUpdateTO', artifactMilestoneUpdateTO)
+            const localVarPath = `/api/milestone/update`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactMilestoneUpdateTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * MilestoneApi - functional programming interface
+ * @export
+ */
+export const MilestoneApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = MilestoneApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a new milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+         * @param {string} artifactId 
+         * @param {ArtifactMilestoneUploadTO} artifactMilestoneUploadTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createMilestone(artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createMilestone(artifactId, artifactMilestoneUploadTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Download a specific milestone
+         * @param {string} artifactId 
+         * @param {string} milestoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async downloadMilestone(artifactId: string, milestoneId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadMilestone(artifactId, milestoneId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get all milestones of the artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllMilestones(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactMilestoneTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllMilestones(artifactId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get the latest milestone of the requested milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {number} milestone 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getByMilestoneNumber(artifactId: string, milestone: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getByMilestoneNumber(artifactId, milestone, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Return the latest milestone of the requested artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getLatestMilestone(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getLatestMilestone(artifactId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get a specific milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {string} milestoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMilestone(artifactId: string, milestoneId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMilestone(artifactId, milestoneId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+         * @param {ArtifactMilestoneUpdateTO} artifactMilestoneUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateMilestone(artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateMilestone(artifactMilestoneUpdateTO, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * MilestoneApi - factory interface
+ * @export
+ */
+export const MilestoneApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = MilestoneApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a new milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+         * @param {string} artifactId 
+         * @param {ArtifactMilestoneUploadTO} artifactMilestoneUploadTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createMilestone(artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options?: any): AxiosPromise<ArtifactMilestoneTO> {
+            return localVarFp.createMilestone(artifactId, artifactMilestoneUploadTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Download a specific milestone
+         * @param {string} artifactId 
+         * @param {string} milestoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadMilestone(artifactId: string, milestoneId: string, options?: any): AxiosPromise<any> {
+            return localVarFp.downloadMilestone(artifactId, milestoneId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all milestones of the artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllMilestones(artifactId: string, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
+            return localVarFp.getAllMilestones(artifactId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get the latest milestone of the requested milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {number} milestone 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getByMilestoneNumber(artifactId: string, milestone: number, options?: any): AxiosPromise<ArtifactMilestoneTO> {
+            return localVarFp.getByMilestoneNumber(artifactId, milestone, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Return the latest milestone of the requested artifact
+         * @param {string} artifactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLatestMilestone(artifactId: string, options?: any): AxiosPromise<ArtifactMilestoneTO> {
+            return localVarFp.getLatestMilestone(artifactId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get a specific milestone, read-permission granted even if Artifact is locked
+         * @param {string} artifactId 
+         * @param {string} milestoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMilestone(artifactId: string, milestoneId: string, options?: any): AxiosPromise<ArtifactMilestoneTO> {
+            return localVarFp.getMilestone(artifactId, milestoneId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+         * @param {ArtifactMilestoneUpdateTO} artifactMilestoneUpdateTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateMilestone(artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options?: any): AxiosPromise<ArtifactMilestoneTO> {
+            return localVarFp.updateMilestone(artifactMilestoneUpdateTO, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * MilestoneApi - object-oriented interface
+ * @export
+ * @class MilestoneApi
+ * @extends {BaseAPI}
+ */
+export class MilestoneApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create a new milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+     * @param {string} artifactId 
+     * @param {ArtifactMilestoneUploadTO} artifactMilestoneUploadTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public createMilestone(artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options?: any) {
+        return MilestoneApiFp(this.configuration).createMilestone(artifactId, artifactMilestoneUploadTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Download a specific milestone
+     * @param {string} artifactId 
+     * @param {string} milestoneId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public downloadMilestone(artifactId: string, milestoneId: string, options?: any) {
+        return MilestoneApiFp(this.configuration).downloadMilestone(artifactId, milestoneId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all milestones of the artifact
+     * @param {string} artifactId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public getAllMilestones(artifactId: string, options?: any) {
+        return MilestoneApiFp(this.configuration).getAllMilestones(artifactId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get the latest milestone of the requested milestone, read-permission granted even if Artifact is locked
+     * @param {string} artifactId 
+     * @param {number} milestone 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public getByMilestoneNumber(artifactId: string, milestone: number, options?: any) {
+        return MilestoneApiFp(this.configuration).getByMilestoneNumber(artifactId, milestone, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Return the latest milestone of the requested artifact
+     * @param {string} artifactId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public getLatestMilestone(artifactId: string, options?: any) {
+        return MilestoneApiFp(this.configuration).getLatestMilestone(artifactId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get a specific milestone, read-permission granted even if Artifact is locked
+     * @param {string} artifactId 
+     * @param {string} milestoneId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public getMilestone(artifactId: string, milestoneId: string, options?: any) {
+        return MilestoneApiFp(this.configuration).getMilestone(artifactId, milestoneId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update milestone of the artifact. (The artifact has to be locked by the user to use this endpoint)
+     * @param {ArtifactMilestoneUpdateTO} artifactMilestoneUpdateTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public updateMilestone(artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options?: any) {
+        return MilestoneApiFp(this.configuration).updateMilestone(artifactMilestoneUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3463,7 +4003,7 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          * @throws {RequiredError}
          */
         getAllSharedArtifacts: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/share/`;
+            const localVarPath = `/api/share/artifacts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3498,6 +4038,40 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
             assertParamExists('getSharedArtifacts', 'repositoryId', repositoryId)
             const localVarPath = `/api/share/repository/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all artifacts that are shared via diverse repositories and filter by artifactType
+         * @param {string} type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifactsByType: async (type: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'type' is not null or undefined
+            assertParamExists('getSharedArtifactsByType', 'type', type)
+            const localVarPath = `/api/share/artifacts/{type}`
+                .replace(`{${"type"}}`, encodeURIComponent(String(type)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3875,6 +4449,17 @@ export const ShareApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get all artifacts that are shared via diverse repositories and filter by artifactType
+         * @param {string} type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSharedArtifactsByType(type: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifactsByType(type, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get all repositories that can access a specific artifact (Admin permission required)
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -4005,6 +4590,16 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get all artifacts that are shared via diverse repositories and filter by artifactType
+         * @param {string} type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifactsByType(type: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
+            return localVarFp.getSharedArtifactsByType(type, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all repositories that can access a specific artifact (Admin permission required)
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -4126,6 +4721,18 @@ export class ShareApi extends BaseAPI {
      */
     public getSharedArtifacts(repositoryId: string, options?: any) {
         return ShareApiFp(this.configuration).getSharedArtifacts(repositoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all artifacts that are shared via diverse repositories and filter by artifactType
+     * @param {string} type 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public getSharedArtifactsByType(type: string, options?: any) {
+        return ShareApiFp(this.configuration).getSharedArtifactsByType(type, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5489,545 +6096,6 @@ export class UserApi extends BaseAPI {
      */
     public updateUser(userUpdateTO: UserUpdateTO, options?: any) {
         return UserApiFp(this.configuration).updateUser(userUpdateTO, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * VersionApi - axios parameter creator
- * @export
- */
-export const VersionApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Create a new version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-         * @param {string} artifactId 
-         * @param {ArtifactVersionUploadTO} artifactVersionUploadTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createVersion: async (artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('createVersion', 'artifactId', artifactId)
-            // verify required parameter 'artifactVersionUploadTO' is not null or undefined
-            assertParamExists('createVersion', 'artifactVersionUploadTO', artifactVersionUploadTO)
-            const localVarPath = `/api/version/{artifactId}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactVersionUploadTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Download a specific version
-         * @param {string} artifactId 
-         * @param {string} versionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        downloadVersion: async (artifactId: string, versionId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('downloadVersion', 'artifactId', artifactId)
-            // verify required parameter 'versionId' is not null or undefined
-            assertParamExists('downloadVersion', 'versionId', versionId)
-            const localVarPath = `/api/version/{artifactId}/{versionId}/download`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
-                .replace(`{${"versionId"}}`, encodeURIComponent(String(versionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get all versions of the artifact
-         * @param {string} artifactId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllVersions: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getAllVersions', 'artifactId', artifactId)
-            const localVarPath = `/api/version/{artifactId}/version`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Return the latest version of the requested artifact
-         * @param {string} artifactId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestVersion: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getLatestVersion', 'artifactId', artifactId)
-            const localVarPath = `/api/version/{artifactId}/version/latest`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
-         * @param {string} artifactId 
-         * @param {number} milestone 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMilestoneVersion: async (artifactId: string, milestone: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getMilestoneVersion', 'artifactId', artifactId)
-            // verify required parameter 'milestone' is not null or undefined
-            assertParamExists('getMilestoneVersion', 'milestone', milestone)
-            const localVarPath = `/api/version/{artifactId}/milestone/{milestone}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
-                .replace(`{${"milestone"}}`, encodeURIComponent(String(milestone)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get a specific version, read-permission granted even if Artifact is locked
-         * @param {string} artifactId 
-         * @param {string} versionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getVersion: async (artifactId: string, versionId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getVersion', 'artifactId', artifactId)
-            // verify required parameter 'versionId' is not null or undefined
-            assertParamExists('getVersion', 'versionId', versionId)
-            const localVarPath = `/api/version/{artifactId}/version/{versionId}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
-                .replace(`{${"versionId"}}`, encodeURIComponent(String(versionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Update version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-         * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateVersion: async (artifactVersionUpdateTO: ArtifactVersionUpdateTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactVersionUpdateTO' is not null or undefined
-            assertParamExists('updateVersion', 'artifactVersionUpdateTO', artifactVersionUpdateTO)
-            const localVarPath = `/api/version/update`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactVersionUpdateTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * VersionApi - functional programming interface
- * @export
- */
-export const VersionApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = VersionApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Create a new version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-         * @param {string} artifactId 
-         * @param {ArtifactVersionUploadTO} artifactVersionUploadTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createVersion(artifactId, artifactVersionUploadTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Download a specific version
-         * @param {string} artifactId 
-         * @param {string} versionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async downloadVersion(artifactId: string, versionId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadVersion(artifactId, versionId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get all versions of the artifact
-         * @param {string} artifactId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAllVersions(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactVersionTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllVersions(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Return the latest version of the requested artifact
-         * @param {string} artifactId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getLatestVersion(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getLatestVersion(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
-         * @param {string} artifactId 
-         * @param {number} milestone 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getMilestoneVersion(artifactId: string, milestone: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMilestoneVersion(artifactId, milestone, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get a specific version, read-permission granted even if Artifact is locked
-         * @param {string} artifactId 
-         * @param {string} versionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getVersion(artifactId: string, versionId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getVersion(artifactId, versionId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Update version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-         * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateVersion(artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactVersionTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateVersion(artifactVersionUpdateTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * VersionApi - factory interface
- * @export
- */
-export const VersionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = VersionApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Create a new version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-         * @param {string} artifactId 
-         * @param {ArtifactVersionUploadTO} artifactVersionUploadTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.createVersion(artifactId, artifactVersionUploadTO, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Download a specific version
-         * @param {string} artifactId 
-         * @param {string} versionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        downloadVersion(artifactId: string, versionId: string, options?: any): AxiosPromise<any> {
-            return localVarFp.downloadVersion(artifactId, versionId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get all versions of the artifact
-         * @param {string} artifactId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllVersions(artifactId: string, options?: any): AxiosPromise<Array<ArtifactVersionTO>> {
-            return localVarFp.getAllVersions(artifactId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Return the latest version of the requested artifact
-         * @param {string} artifactId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestVersion(artifactId: string, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.getLatestVersion(artifactId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
-         * @param {string} artifactId 
-         * @param {number} milestone 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMilestoneVersion(artifactId: string, milestone: number, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.getMilestoneVersion(artifactId, milestone, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get a specific version, read-permission granted even if Artifact is locked
-         * @param {string} artifactId 
-         * @param {string} versionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getVersion(artifactId: string, versionId: string, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.getVersion(artifactId, versionId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Update version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-         * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateVersion(artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any): AxiosPromise<ArtifactVersionTO> {
-            return localVarFp.updateVersion(artifactVersionUpdateTO, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * VersionApi - object-oriented interface
- * @export
- * @class VersionApi
- * @extends {BaseAPI}
- */
-export class VersionApi extends BaseAPI {
-    /**
-     * 
-     * @summary Create a new version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-     * @param {string} artifactId 
-     * @param {ArtifactVersionUploadTO} artifactVersionUploadTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public createVersion(artifactId: string, artifactVersionUploadTO: ArtifactVersionUploadTO, options?: any) {
-        return VersionApiFp(this.configuration).createVersion(artifactId, artifactVersionUploadTO, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Download a specific version
-     * @param {string} artifactId 
-     * @param {string} versionId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public downloadVersion(artifactId: string, versionId: string, options?: any) {
-        return VersionApiFp(this.configuration).downloadVersion(artifactId, versionId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get all versions of the artifact
-     * @param {string} artifactId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public getAllVersions(artifactId: string, options?: any) {
-        return VersionApiFp(this.configuration).getAllVersions(artifactId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Return the latest version of the requested artifact
-     * @param {string} artifactId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public getLatestVersion(artifactId: string, options?: any) {
-        return VersionApiFp(this.configuration).getLatestVersion(artifactId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get the latest version of the requested milestone, read-permission granted even if Artifact is locked
-     * @param {string} artifactId 
-     * @param {number} milestone 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public getMilestoneVersion(artifactId: string, milestone: number, options?: any) {
-        return VersionApiFp(this.configuration).getMilestoneVersion(artifactId, milestone, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get a specific version, read-permission granted even if Artifact is locked
-     * @param {string} artifactId 
-     * @param {string} versionId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public getVersion(artifactId: string, versionId: string, options?: any) {
-        return VersionApiFp(this.configuration).getVersion(artifactId, versionId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Update version of the artifact. (The artifact has to be locked by the user to use this endpoint)
-     * @param {ArtifactVersionUpdateTO} artifactVersionUpdateTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof VersionApi
-     */
-    public updateVersion(artifactVersionUpdateTO: ArtifactVersionUpdateTO, options?: any) {
-        return VersionApiFp(this.configuration).updateVersion(artifactVersionUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
