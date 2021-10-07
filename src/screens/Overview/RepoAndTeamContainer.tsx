@@ -1,4 +1,3 @@
-import {observer} from "mobx-react";
 import React, {useCallback, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
@@ -34,7 +33,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const RepoAndTeamContainer: React.FC = observer(() => {
+const RepoAndTeamContainer: React.FC = (() => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();

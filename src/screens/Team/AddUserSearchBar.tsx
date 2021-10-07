@@ -147,6 +147,10 @@ const AddUserSearchBar: React.FC<Props> = props => {
         }
     }
 
+    // eslint-disable-next-line
+    const updateState = (event: any) => {
+        setUsername(event.target.textContent);
+    };
 
     return (
         <ListItem className={classes.listItem} >
@@ -157,6 +161,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
                 getOptionSelected={(option, value) => option.name === value.name}
                 getOptionLabel={option => option.name}
                 options={options}
+                onChange={updateState}
                 loading={loading}
                 renderInput={params => (
                     <TextField

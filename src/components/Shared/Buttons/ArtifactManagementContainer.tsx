@@ -1,5 +1,4 @@
 import {makeStyles} from "@material-ui/core/styles";
-import {observer} from "mobx-react";
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
@@ -20,7 +19,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const ArtifactManagementContainer: React.FC = observer(() => {
+const ArtifactManagementContainer: React.FC = (() => {
     const classes = useStyles();
     const { t } = useTranslation("common");
 

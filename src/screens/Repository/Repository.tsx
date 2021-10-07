@@ -18,6 +18,7 @@ import Settings from "../../components/Shared/Settings";
 import RepositoryMembers from "./RepositoryMembers";
 import {getSharedArtifacts} from "../../store/actions/shareAction";
 import {useHistory} from "react-router-dom";
+import Deployments from "./Deployments";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
@@ -154,7 +155,7 @@ const Repository: React.FC = (() => {
                             </TabPanel>
 
                             <TabPanel value={"deployments"}>
-                                TBD
+                                <Deployments artifacts={artifacts} repositoryId={repoId} />
                             </TabPanel>
 
                             <TabPanel value={"settings"}>

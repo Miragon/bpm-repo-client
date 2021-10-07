@@ -1,14 +1,15 @@
 import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
 import React, {useCallback, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import SelectRoleDropdown from "./SelectShareWithRepositoryRoleDropDown";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import {
     ArtifactTO,
     SharedRepositoryTO,
-    SharedRepositoryTORoleEnum, SharedTeamTO, SharedTeamTORoleEnum,
+    SharedRepositoryTORoleEnum,
+    SharedTeamTO,
+    SharedTeamTORoleEnum,
 } from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";

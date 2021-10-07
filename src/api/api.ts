@@ -13,13 +13,24 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import {Configuration} from './configuration';
+import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import {
+    assertParamExists,
+    createRequestFunction,
+    DUMMY_BASE_URL,
+    serializeDataIfNeeded,
+    setApiKeyToObject,
+    setBasicAuthToObject,
+    setBearerAuthToObject,
+    setOAuthToObject,
+    setSearchParams,
+    toPathString
+} from './common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
 
 /**
  * version of an artifact, contains the file and information about deployments
@@ -348,6 +359,18 @@ export interface DeploymentTO {
      * @type {string}
      * @memberof DeploymentTO
      */
+    repositoryId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentTO
+     */
+    artifactId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentTO
+     */
     id: string;
     /**
      * 
@@ -436,6 +459,12 @@ export interface NewArtifactTO {
  * @interface NewDeploymentTO
  */
 export interface NewDeploymentTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof NewDeploymentTO
+     */
+    repositoryId: string;
     /**
      * 
      * @type {string}
@@ -566,6 +595,12 @@ export interface RepositoryTO {
      * @memberof RepositoryTO
      */
     assignedUsers: number;
+    /**
+     * 
+     * @type {Array<ArtifactTO>}
+     * @memberof RepositoryTO
+     */
+    sharedArtifacts: Array<ArtifactTO>;
 }
 /**
  * 
@@ -2087,6 +2122,40 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Get all deployments of a repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllDeploymentsFromRepository: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('getAllDeploymentsFromRepository', 'repositoryId', repositoryId)
+            const localVarPath = `/api/deploy/repository/{repositoryId}`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2129,6 +2198,17 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllDeploymentTargets(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary Get all deployments of a repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllDeploymentsFromRepository(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DeploymentTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllDeploymentsFromRepository(repositoryId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -2167,6 +2247,16 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          */
         getAllDeploymentTargets(options?: any): AxiosPromise<Array<string>> {
             return localVarFp.getAllDeploymentTargets(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all deployments of a repository
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllDeploymentsFromRepository(repositoryId: string, options?: any): AxiosPromise<Array<DeploymentTO>> {
+            return localVarFp.getAllDeploymentsFromRepository(repositoryId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2211,6 +2301,18 @@ export class DeploymentApi extends BaseAPI {
      */
     public getAllDeploymentTargets(options?: any) {
         return DeploymentApiFp(this.configuration).getAllDeploymentTargets(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all deployments of a repository
+     * @param {string} repositoryId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeploymentApi
+     */
+    public getAllDeploymentsFromRepository(repositoryId: string, options?: any) {
+        return DeploymentApiFp(this.configuration).getAllDeploymentsFromRepository(repositoryId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4096,6 +4198,44 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary Get shared artifacts from repository by type
+         * @param {string} repositoryId 
+         * @param {string} type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifactsFromRepositoryByType: async (repositoryId: string, type: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('getSharedArtifactsFromRepositoryByType', 'repositoryId', repositoryId)
+            // verify required parameter 'type' is not null or undefined
+            assertParamExists('getSharedArtifactsFromRepositoryByType', 'type', type)
+            const localVarPath = `/api/share/repository/{repositoryId}/type/{type}`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
+                .replace(`{${"type"}}`, encodeURIComponent(String(type)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all repositories that can access a specific artifact (Admin permission required)
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -4460,6 +4600,18 @@ export const ShareApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get shared artifacts from repository by type
+         * @param {string} repositoryId 
+         * @param {string} type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSharedArtifactsFromRepositoryByType(repositoryId: string, type: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifactsFromRepositoryByType(repositoryId, type, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get all repositories that can access a specific artifact (Admin permission required)
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -4600,6 +4752,17 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get shared artifacts from repository by type
+         * @param {string} repositoryId 
+         * @param {string} type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSharedArtifactsFromRepositoryByType(repositoryId: string, type: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
+            return localVarFp.getSharedArtifactsFromRepositoryByType(repositoryId, type, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all repositories that can access a specific artifact (Admin permission required)
          * @param {string} artifactId 
          * @param {*} [options] Override http request option.
@@ -4733,6 +4896,19 @@ export class ShareApi extends BaseAPI {
      */
     public getSharedArtifactsByType(type: string, options?: any) {
         return ShareApiFp(this.configuration).getSharedArtifactsByType(type, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get shared artifacts from repository by type
+     * @param {string} repositoryId 
+     * @param {string} type 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShareApi
+     */
+    public getSharedArtifactsFromRepositoryByType(repositoryId: string, type: string, options?: any) {
+        return ShareApiFp(this.configuration).getSharedArtifactsFromRepositoryByType(repositoryId, type, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

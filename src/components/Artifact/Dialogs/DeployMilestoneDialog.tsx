@@ -11,6 +11,7 @@ import SettingsSelect from "../../Shared/Form/SettingsSelect";
 
 
 interface Props {
+    repositoryId: string;
     artifactId: string;
     milestoneId: string;
     open: boolean;
@@ -34,7 +35,7 @@ const DeployMilestoneDialog: React.FC<Props> = props => {
 
 
     const deploy = useCallback(async () => {
-        deployMilestone(target, props.artifactId, props.milestoneId).then(response => {
+        deployMilestone(target, props.repositoryId, props.artifactId, props.milestoneId).then(response => {
             if(Math.floor(response.status / 100) === 2) {
                 dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false})
                 helpers.makeSuccessToast(t("milestone.deployed"))

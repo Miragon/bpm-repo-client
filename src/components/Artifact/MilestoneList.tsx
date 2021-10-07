@@ -1,7 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {ArtifactTO, ArtifactMilestoneTO} from "../../api";
+import {ArtifactMilestoneTO, ArtifactTO} from "../../api";
 import {getAllMilestones} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 import {useDispatch, useSelector} from "react-redux";

@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ArtifactTO, NewDeploymentTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {deployMultiple, fetchTargets} from "../../../store/actions";
-import {SYNC_STATUS_TARGETS, SYNC_STATUS_MILESTONE, TARGETS} from "../../../constants/Constants";
+import {SYNC_STATUS_MILESTONE, SYNC_STATUS_TARGETS, TARGETS} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
@@ -118,6 +118,7 @@ const DeployMultipleDialog: React.FC<Props> = props => {
         setError(undefined);
         const deployments: NewDeploymentTO[] = selectedArtifacts.map(artifact => ({
             target: target,
+            repositoryId: props.repoId,
             artifactId: artifact,
             // TODO: Backend muss latest akzeptieren
             milestoneId: "latest"

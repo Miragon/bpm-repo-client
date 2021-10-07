@@ -113,3 +113,10 @@ export const updateShareWithTeam = async (artifactId: string, teamId: string, ro
     const response = await shareController.updateShareWithTeam(shareWithTeamTO, config);
     return response;
 }
+
+export const getSharedArtifactsFromRepositoryByType= async(repositoryId: string, type: string): Promise<AxiosResponse<Array<ArtifactTO>>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const response = await shareController.getSharedArtifactsFromRepositoryByType(repositoryId, type, config);
+    return response;
+}

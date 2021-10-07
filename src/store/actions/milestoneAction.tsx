@@ -1,13 +1,13 @@
 import * as api from "../../api/api";
-
-import helpers from "../../util/helperFunctions";
-import {AxiosResponse} from "axios";
 import {
     ArtifactMilestoneTO,
     ArtifactMilestoneUpdateTO,
     ArtifactMilestoneUploadTO,
     ArtifactMilestoneUploadTOSaveTypeEnum
 } from "../../api/api";
+
+import helpers from "../../util/helperFunctions";
+import {AxiosResponse} from "axios";
 
 
 export const createMilestone = async (artifactId: string, file: string, saveType: ArtifactMilestoneUploadTOSaveTypeEnum, comment?: string): Promise<AxiosResponse<ArtifactMilestoneTO>> => {

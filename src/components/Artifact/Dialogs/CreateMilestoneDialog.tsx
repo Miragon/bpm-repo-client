@@ -5,9 +5,9 @@ import {useDispatch} from "react-redux";
 import {ArtifactMilestoneUploadTOSaveTypeEnum, ArtifactTO} from "../../../api";
 import {
     SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_MILESTONE,
     SYNC_STATUS_RECENT,
-    SYNC_STATUS_REPOSITORY,
-    SYNC_STATUS_MILESTONE
+    SYNC_STATUS_REPOSITORY
 } from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";

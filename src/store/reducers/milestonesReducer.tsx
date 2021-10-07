@@ -1,6 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {ArtifactMilestoneTO} from "../../api";
-import {ACTIVE_MILESTONES, DEPLOYMENT_MILESTONES, LATEST_MILESTONE} from "../../constants/Constants";
+import {ACTIVE_MILESTONES, DEPLOYMENT_MILESTONES} from "../../constants/Constants";
 
 const initialState = {
     activeMilestones: Array<ArtifactMilestoneTO>(),

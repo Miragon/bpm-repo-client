@@ -80,7 +80,6 @@ const useStyles = makeStyles(() => ({
     deployment: {
         whiteSpace: "nowrap",
         textTransform: "none"
-
     },
 
     icons: {
@@ -242,6 +241,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
             <DeployMilestoneDialog
                 open={deployMilestoneOpen}
                 onCancelled={() => setDeployMilestoneOpen(false)}
+                repositoryId={props.repoId}
                 artifactId={props.artifactId}
                 milestoneId={props.id}
                 milestoneNumber={props.milestone} />

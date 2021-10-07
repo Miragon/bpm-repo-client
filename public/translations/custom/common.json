@@ -98,6 +98,8 @@
         "deployments": "Veröffentlichungen",
         "multiple": "Dateien veröffentlichen",
         "target": "Ziel",
+        "milestone": "{{milestoneNumber}}. Meilenstein",
+        "deploymentDuration": "{{duration}} veröffentlicht",
         "deployedMultiple": "{{deployedMilestones}} Milestoneen veröffentlicht",
         "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
         "dialogHeader": "Milestone {{milestoneNumber}} veröffentlichen",
@@ -236,6 +238,7 @@
         "historicalDataAccess": "Sie können diese Datei nicht bearbeiten - ein neuer Meilenstein ist verfügbar",
         "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet",
         "noAssignmentOrShareFound": "Keine direkte oder indirekte Zugriffserlaubnis",
-        "emptyTitle": "Der Titel darf nicht leer sein"
+        "emptyTitle": "Der Titel darf nicht leer sein",
+        "alreadyDeployed": "Diese Datei wurde bereits im angegebene Ziel veröffentlicht"
     }
 }

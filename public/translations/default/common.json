@@ -52,6 +52,8 @@
     "deployments": "Deployments",
     "multiple": "Deploy multiple Milestones",
     "target": "Ziel",
+    "milestone": "{{milestoneNumber}}. Milestone",
+    "deploymentDuration": "Deployed {{duration}}",
     "deployedMultiple": "Deployed {{deployedMilestones}} Milestones",
     "adminPermissionsRequired": "You need admin permissions to deploy artifacts",
     "dialogHeader": "Deploy Milestone {{milestoneNumber}}",
@@ -239,7 +241,9 @@
     "historicalDataAccess": "You can't edit this file, a new Milestone is available",
     "locked": "This file is currently being edited by another user",
     "noAssignmentOrShareFound": "No direct or indirect access rights",
-    "emptyTitle": "Title must not be empty"
+    "emptyTitle": "Title must not be empty",
+    "alreadyDeployed": "This file has already been deployed to the provided target"
+
 
   }
 }

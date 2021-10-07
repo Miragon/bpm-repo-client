@@ -1,4 +1,3 @@
-import {observer} from "mobx-react";
 import React, {useEffect} from "react";
 import "react-toastify/dist/ReactToastify.css";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
@@ -8,11 +7,10 @@ import RecentArtifacts from "./RecentArtifacts";
 import RepoAndTeamContainer from "./RepoAndTeamContainer";
 import HeaderContainer from "../../components/Shared/HeaderContainer";
 import {useHistory} from "react-router-dom";
-import {getAllSharedArtifactsByType} from "../../store/actions/shareAction";
+import {getSharedArtifactsFromRepositoryByType} from "../../store/actions/shareAction";
 
 
-
-const Overview: React.FC = observer(() => {
+const Overview: React.FC = (() => {
     const history = useHistory();
 
     const path: Array<CrumbElement> = [{
@@ -23,7 +21,7 @@ const Overview: React.FC = observer(() => {
     }];
 
     useEffect(() => {
-        getAllSharedArtifactsByType("CONFIGURATION").then(response => {
+        getSharedArtifactsFromRepositoryByType("54b5c73e-29d9-4c2c-948f-e56341318238", "BPMN").then(response => {
             console.log(response.data)
         })
 

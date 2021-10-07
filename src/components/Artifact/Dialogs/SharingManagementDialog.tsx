@@ -6,22 +6,12 @@ import SharedRepositories from "./SharedRepositories";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {makeStyles, Theme} from "@material-ui/core/styles";
-import {ArtifactTO, RepositoryTO, ShareWithRepositoryTORoleEnum, ShareWithTeamTORoleEnum} from "../../../api";
+import {ArtifactTO, RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../api";
 import {getManageableRepos, searchRepos} from "../../../store/actions";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
-import {
-    getSharedRepos,
-    getSharedTeams,
-    shareWithRepo,
-    shareWithTeam,
-    unshareWithRepo,
-    unshareWithTeam,
-    updateShareWithRepo,
-    updateShareWithTeam
-} from "../../../store/actions/shareAction";
-import {searchTeam} from "../../../store/actions/teamAction";
+import {getSharedRepos, shareWithRepo, unshareWithRepo, updateShareWithRepo} from "../../../store/actions/shareAction";
 
 
 const useStyles = makeStyles((theme: Theme) => ({

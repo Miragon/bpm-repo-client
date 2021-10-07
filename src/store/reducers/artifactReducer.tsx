@@ -1,13 +1,6 @@
 import {CaseReducer} from "@reduxjs/toolkit";
 import {ArtifactTO, ArtifactTypeTO} from "../../api";
-import {
-    ACTIVE_ARTIFACTS,
-    ARTIFACT_UPLOAD,
-    FAVORITE_ARTIFACTS,
-    FILETYPES,
-    RECENT_ARTIFACTS,
-    SHARED_ARTIFACTS
-} from "../../constants/Constants";
+import {ACTIVE_ARTIFACTS, FAVORITE_ARTIFACTS, FILETYPES, SHARED_ARTIFACTS} from "../../constants/Constants";
 
 const initialState = {
     artifacts: Array<ArtifactTO>(),
