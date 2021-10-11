@@ -31,11 +31,12 @@ const Overview: React.FC = (() => {
         <>
             <PathStructure structure={path} />
             <ErrorBoundary>
-                <HeaderContainer />
-            </ErrorBoundary>
-            <ErrorBoundary>
                 <RepoAndTeamContainer />
             </ErrorBoundary>
+            <ErrorBoundary>
+                <HeaderContainer />
+            </ErrorBoundary>
+
             <ErrorBoundary>
                 <RecentArtifacts />
             </ErrorBoundary>

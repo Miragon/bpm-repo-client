@@ -12,6 +12,7 @@ import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import {TeamTO} from "../../api";
 import {useHistory} from "react-router-dom";
+import theme from "../../theme";
 
 
 const useStyles = makeStyles(() => ({
@@ -20,7 +21,8 @@ const useStyles = makeStyles(() => ({
         paddingRight: "20px",
         display: "flex",
         justifyContent: "space-between",
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
+        color: theme.palette.primary.contrastText
     },
     icon: {
         marginRight: "10px",
@@ -33,6 +35,9 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center"
+    },
+    contrastText: {
+        color: "white"
     }
 }));
 
@@ -93,15 +98,16 @@ const Identity: React.FC = (() => {
         <div className={classes.container}>
             <FormControl>
                 <Select
+                    disabled
                     id="identity"
                     value={activeIdentityId}
                     onChange={event => changeIdentity}>
                     <MenuItem value={activeIdentityId}>
                         <div className={classes.iconAndText}>
                             <div className={classes.icon}>
-                                <PersonIcon/>
+                                <PersonIcon htmlColor={"white"}/>
                             </div>
-                            <div>
+                            <div className={classes.contrastText}>
                                 {activeIdentityName}
                             </div>
                         </div>
@@ -111,9 +117,9 @@ const Identity: React.FC = (() => {
                             <MenuItem value={team.id} key={team.id}>
                                 <div className={classes.iconAndText}>
                                     <div className={classes.icon}>
-                                        <PeopleAltIcon/>
+                                        <PeopleAltIcon htmlColor={"white"}/>
                                     </div>
-                                    <div>
+                                    <div className={classes.contrastText}>
                                         {team.name}
                                     </div>
                                 </div>

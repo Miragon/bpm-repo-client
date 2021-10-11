@@ -94,10 +94,6 @@ const HeaderContainer: React.FC = (() => {
     return (
         <>
             <div className={classes.container}>
-                <div>
-                    <Identity />
-                </div>
-
                 <ArtifactSearchBar />
                 <div>
                     <DropdownButton
