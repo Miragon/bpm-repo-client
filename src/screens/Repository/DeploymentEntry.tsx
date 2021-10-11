@@ -9,6 +9,8 @@ import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import {COLOR_LINK} from "../../constants/Constants";
 import {openFileInTool} from "../../util/Redirections";
+import {CloudDownload} from "@material-ui/icons";
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -65,7 +67,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     menuContainer: {
         marginLeft: "16px",
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        gap: "20px"
     },
     textContainer: {
         flexGrow: 1,
@@ -79,6 +82,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         whiteSpace: "nowrap",
         textTransform: "none"
     },
+    icon: {
+        cursor: "pointer"
+    }
 }))
 
 
@@ -107,6 +113,14 @@ const DeploymentEntry: React.FC<Props> = props => {
      * openFileInTool(fileTypes, props.artifact.fileType, props.artifact.repositoryId, props.artifact.id, t("error.missingTool", props.artifact.fileType), props.milestone.milestone)
      */
 
+    const download = () => {
+        const filePath = `/api/milestone/${props.artifact?.id}/${props.milestone?.id}/download`
+        const link = document.createElement("a");
+        link.href = filePath;
+        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
+        link.click();
+    }
+
     return (
         <>
             <div className={classes.root}>
@@ -120,7 +134,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                         {props.artifact !== undefined &&
                             <Link
                                 href="#"
-                                onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", "tool.notFound", props.milestone?.milestone)}
+                                onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", t("error.missingTool", props.artifact?.fileType), props.milestone?.milestone)}
                                 className={classes.title}>
                                 {props.artifact.name}
                             </Link>
@@ -137,6 +151,10 @@ const DeploymentEntry: React.FC<Props> = props => {
                             <span className={classes.subtitleText}>
                                 {t("deployment.deploymentDuration", { duration: helpers.formatTimeSince(props.deployment.timestamp, t) })}
                             </span>
+                            &#8226;
+                            <span className={classes.subtitleText}>
+                                {props.milestone?.comment}
+                            </span>
                         </div>
                     </div>
 
@@ -145,6 +163,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                         <h2>
                             {props.deployment.target}
                         </h2>
+                        <CloudDownload className={classes.icon} onClick={download}/>
 
 
 
