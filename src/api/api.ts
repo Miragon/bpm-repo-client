@@ -2535,6 +2535,42 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
+         * @summary Get by deploymentId
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getByDeployment: async (requestBody: Array<string>, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('getByDeployment', 'requestBody', requestBody)
+            const localVarPath = `/api/milestone/findByDeployment`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get the latest milestone of the requested milestone, read-permission granted even if Artifact is locked
          * @param {string} artifactId 
          * @param {number} milestone 
@@ -2726,6 +2762,17 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get by deploymentId
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getByDeployment(requestBody: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactMilestoneTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getByDeployment(requestBody, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get the latest milestone of the requested milestone, read-permission granted even if Artifact is locked
          * @param {string} artifactId 
          * @param {number} milestone 
@@ -2811,6 +2858,16 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          */
         getAllMilestones(artifactId: string, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
             return localVarFp.getAllMilestones(artifactId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get by deploymentId
+         * @param {Array<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getByDeployment(requestBody: Array<string>, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
+            return localVarFp.getByDeployment(requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2900,6 +2957,18 @@ export class MilestoneApi extends BaseAPI {
      */
     public getAllMilestones(artifactId: string, options?: any) {
         return MilestoneApiFp(this.configuration).getAllMilestones(artifactId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get by deploymentId
+     * @param {Array<string>} requestBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MilestoneApi
+     */
+    public getByDeployment(requestBody: Array<string>, options?: any) {
+        return MilestoneApiFp(this.configuration).getByDeployment(requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

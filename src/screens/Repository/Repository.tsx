@@ -98,7 +98,7 @@ const Repository: React.FC = (() => {
     }, [getRepo, fetchArtifacts, fetchSharedArtifacts, repoId])
 
 
-    const handleChangeTab = (event: any, newValue: string) => {
+    const handleChangeTab = (event: React.ChangeEvent, newValue: string) => {
         setOpenedTab(newValue)
     }
 
@@ -132,7 +132,7 @@ const Repository: React.FC = (() => {
 
                         <TabContext value={openedTab} >
 
-                            <TabList onChange={handleChangeTab}>
+                            <TabList onChange={event => handleChangeTab}>
                                 <Tab label={t("artifact.artifacts")} value="artifacts" fullWidth={true}/>
                                 <Tab label={t("repository.members")} value="members" fullWidth={true} />
                                 <Tab label={t("deployment.deployments")} value="deployments" fullWidth={true} />

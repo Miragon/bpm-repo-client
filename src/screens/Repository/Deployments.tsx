@@ -1,9 +1,8 @@
-import {ArtifactTO, DeploymentTO} from "../../api";
+import {ArtifactMilestoneTO, ArtifactTO, DeploymentTO} from "../../api";
 import {useCallback, useEffect, useState} from "react";
-import {getAllDeploymentsFromRepository} from "../../store/actions";
+import {getAllByDeploymentId, getAllDeploymentsFromRepository} from "../../store/actions";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
-import {useDispatch} from "react-redux";
 import DeploymentEntry from "./DeploymentEntry";
 
 
@@ -14,14 +13,32 @@ interface Props {
 
 const Deployments: React.FC<Props> = props => {
     const {t} = useTranslation("common");
-    const dispatch = useDispatch();
 
     const [deployments, setDeployments] = useState<Array<DeploymentTO>>([])
+    const [milestones, setMilestones] = useState<Array<ArtifactMilestoneTO>>([])
+
+
+    const fetchMilestones = useCallback((deploymentIds: Array<string>) => {
+        getAllByDeploymentId(deploymentIds).then(response => {
+            if(Math.floor(response.status / 100) === 2){
+                setMilestones(response.data)
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchMilestones(deploymentIds))
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchMilestones(deploymentIds))
+        })
+    }, [t])
+
 
     const fetchDeployments = useCallback(() => {
         getAllDeploymentsFromRepository(props.repositoryId).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                setDeployments(response.data)
+
+                setDeployments(response.data.sort(helpers.compareTimestamp))
+                console.log("DeploymentVersions : ")
+                const deploymentIds = response.data.map(deployment => deployment.id)
+                fetchMilestones(deploymentIds);
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchDeployments())
             }
@@ -29,7 +46,7 @@ const Deployments: React.FC<Props> = props => {
             helpers.makeErrorToast(t(error.response.data), () => fetchDeployments())
 
         })
-    }, [props.repositoryId, t])
+    }, [fetchMilestones, props.repositoryId, t])
 
     //Alle Versionen müssen hier gefetcht werden -> List der VersionsIds ist in Deployments
 
@@ -42,11 +59,17 @@ const Deployments: React.FC<Props> = props => {
         return props.artifacts.find(artifact => artifact.id === artifactId)
     }
 
+    const getMilestoneFromList = (deploymentId: string) => {
+        return milestones.find(milestone => milestone.deployments.find(deployment => deployment.id === deploymentId))
+    }
+
     return (
         <>
             {deployments.map(deployment => (
-                <DeploymentEntry 
+                <DeploymentEntry
+                    key={deployment.id}
                     deployment={deployment}
+                    milestone={getMilestoneFromList(deployment.id)}
                     artifact={getArtifactFromList(deployment.artifactId)} />
             )
             )}

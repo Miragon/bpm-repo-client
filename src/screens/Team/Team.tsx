@@ -123,7 +123,7 @@ const Team: React.FC = (() => {
     }, [fetchArtifacts, fetchRepositories, fetchTeam, teamId])
 
 
-    const handleChangeTab = (event: any, newValue: string) => {
+    const handleChangeTab = (event: React.ChangeEvent, newValue: string) => {
         setOpenedTab(newValue)
     }
 
@@ -158,7 +158,7 @@ const Team: React.FC = (() => {
                     <ErrorBoundary>
                         <TabContext value={openedTab} >
 
-                            <TabList onChange={handleChangeTab}>
+                            <TabList onChange={event => handleChangeTab}>
                                 <Tab label={t("repository.repositories")} value="repositories" fullWidth={true}/>
                                 <Tab label={t("artifact.artifacts")} value="artifacts" fullWidth={true}/>
                                 <Tab label={t("team.members")} value="members" fullWidth={true} />

@@ -95,7 +95,7 @@ const Identity: React.FC = (() => {
                 <Select
                     id="identity"
                     value={activeIdentityId}
-                    onChange={changeIdentity}>
+                    onChange={event => changeIdentity}>
                     <MenuItem value={activeIdentityId}>
                         <div className={classes.iconAndText}>
                             <div className={classes.icon}>

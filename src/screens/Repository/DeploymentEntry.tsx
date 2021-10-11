@@ -1,13 +1,14 @@
-import {ArtifactTO, ArtifactTypeTO, DeploymentTO} from "../../api";
+import {ArtifactMilestoneTO, ArtifactTO, ArtifactTypeTO, DeploymentTO} from "../../api";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
-import React, {useMemo, useRef} from "react";
+import React, {useMemo} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
-import {Button, Link} from "@material-ui/core";
+import {Link} from "@material-ui/core";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import {COLOR_LINK} from "../../constants/Constants";
+import {openFileInTool} from "../../util/Redirections";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -83,13 +84,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
     deployment: DeploymentTO;
+    milestone?: ArtifactMilestoneTO;
     artifact?: ArtifactTO;
 }
 
 const DeploymentEntry: React.FC<Props> = props => {
     const classes = useStyles();
     const { t } = useTranslation("common");
-    const ref = useRef<HTMLButtonElement>(null);
 
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
@@ -119,14 +120,14 @@ const DeploymentEntry: React.FC<Props> = props => {
                         {props.artifact !== undefined &&
                             <Link
                                 href="#"
-                                onClick={() => console.log("Open Tool now")}
+                                onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", "tool.notFound", props.milestone?.milestone)}
                                 className={classes.title}>
                                 {props.artifact.name}
                             </Link>
                         }
                         <div className={classes.subtitle}>
                             <span className={classes.subtitleText}>
-                                {t("deployment.milestone",{milestoneNumber: "x"})}
+                                {t("deployment.milestone",{milestoneNumber: props.milestone?.milestone})}
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
@@ -141,18 +142,10 @@ const DeploymentEntry: React.FC<Props> = props => {
 
 
                     <div className={classes.menuContainer}>
+                        <h2>
+                            {props.deployment.target}
+                        </h2>
 
-                        <Button
-                            ref={ref}
-                            color="primary"
-                            className={classes.deployment}
-                            onClick={event => console.log("Open dialog")}
-                            variant="contained"
-                            aria-multiline={false}
-                            size={"small"}>
-                            {`${props.deployment.target}`}
-
-                        </Button>
 
 
                     </div>

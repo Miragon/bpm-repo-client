@@ -36,6 +36,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [openedTab, setOpenedTab] = useState<string>("0");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [manageableRepos, setManageableRepos] = useState<RepositoryTO[]>([]);
 
 
@@ -59,7 +60,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
 
 
-    const handleChangeTab = (event: any, newValue: string) => {
+    const handleChangeTab = (event: React.ChangeEvent, newValue: string) => {
         setOpenedTab(newValue)
         dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
 
@@ -79,7 +80,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
                 <>
                     <TabContext value={openedTab} >
 
-                        <TabList onChange={handleChangeTab} >
+                        <TabList onChange={event => handleChangeTab} >
                             <Tab label={t("repository.repositories")} value="0"  className={classes.tab}/>
                             <Tab label={t("team.teams")} value="1" className={classes.tab}/>
                         </TabList>

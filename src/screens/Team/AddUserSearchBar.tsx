@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
 interface Props {
     targetId: string;
     assignedUsers: Array<UserInfoTO>;
-    createAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse<any>>;
+    createAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse>;
 }
 
 interface assignmentObject {
@@ -55,21 +55,17 @@ const AddUserSearchBar: React.FC<Props> = props => {
 
 
     const [username, setUsername] = useState("");
-    const [options, setOptions] = React.useState<Array<any>>([]);
+    const [options, setOptions] = React.useState<Array<assignmentObject>>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [searchedUsers, setSearchedUsers] = useState<UserInfoTO[]>([]);
 
-    useEffect(() => {
-        console.log(options)
-    }, [options])
 
     useEffect(() => {
-        const resultsArray: Array<assignmentObject> = [];
 
-        searchedUsers.map(user => {
-            const o: assignmentObject = {id: user.id,
-                name: user.username}
-            resultsArray.push(o)});
+        const resultsArray: Array<assignmentObject> = searchedUsers.map(user => {
+            const o: assignmentObject = {id: user.id, name: user.username}
+            return o
+        });
 
         setOptions(resultsArray);
     }, [searchedUsers]);

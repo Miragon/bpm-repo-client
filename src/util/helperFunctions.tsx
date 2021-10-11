@@ -2,7 +2,7 @@ import {DateTime} from "luxon";
 import React, {ReactText} from "react";
 import {TFunction} from "react-i18next";
 import {toast} from "react-toastify";
-import {ArtifactMilestoneTO, ArtifactTO, RepositoryTO} from "../api";
+import {ArtifactMilestoneTO, ArtifactTO, DeploymentTO, RepositoryTO} from "../api";
 import Toast from "../components/Layout/Toast";
 import theme from "../theme";
 
@@ -59,6 +59,18 @@ const helpers = {
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
         link.click();
     }),
+
+    compareTimestamp: (a: DeploymentTO, b: DeploymentTO): number => {
+        const c = new Date(a.timestamp)
+        const d = new Date(b.timestamp)
+        if(c < d) {
+            return 1;
+        }
+        if(c > d) {
+            return -1;
+        }
+        return 0;
+    },
 
     compareCreated: (a: ArtifactTO, b: ArtifactTO): number => {
         const c = new Date(a.createdDate)
