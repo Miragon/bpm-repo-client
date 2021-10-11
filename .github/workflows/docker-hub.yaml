@@ -34,7 +34,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Setup NodeJS 14.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-milestone: '14'
       - name: Set Yarn Cache Directory
