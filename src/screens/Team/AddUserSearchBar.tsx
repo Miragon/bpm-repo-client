@@ -38,6 +38,7 @@ const useStyles = makeStyles(() => ({
 interface Props {
     targetId: string;
     assignedUsers: Array<UserInfoTO>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     createAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse>;
 }
 

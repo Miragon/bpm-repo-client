@@ -17,6 +17,7 @@ interface Props {
     username: string;
     role: TeamAssignmentTORoleEnum | AssignmentTORoleEnum;
     hasAdminPermissions: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse>;
     deleteAssignmentMethod: (targetId: string, userId: string) => Promise<AxiosResponse>;
 }

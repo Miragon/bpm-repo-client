@@ -87,11 +87,10 @@ const Identity: React.FC = (() => {
         }
     }, [currentUser, fetchTeams])
 
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const changeIdentity = (event: any) => {
         setActiveIdentityId(event.target.value)
         history.push(`/team/${event.target.value}`)
-
     }
 
     return (

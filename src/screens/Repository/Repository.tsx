@@ -98,10 +98,10 @@ const Repository: React.FC = (() => {
     }, [getRepo, fetchArtifacts, fetchSharedArtifacts, repoId])
 
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleChangeTab = (event: any, newValue: string) => {
         setOpenedTab(newValue)
     }
-
 
     const element: CrumbElement = {
         name: "path.overview",

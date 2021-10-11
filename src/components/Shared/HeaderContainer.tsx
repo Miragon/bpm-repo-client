@@ -12,7 +12,6 @@ import ArtifactSearchBar from "../../screens/Overview/ArtifactSearchBar";
 import CreateTitleDescDialog from "./Dialogs/CreateTitleDescDialog";
 import CreateArtifactDialog from "./Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "./Dialogs/UploadArtifactDialog";
-import Identity from "./Identity";
 
 const useStyles = makeStyles(() => ({
     container: {

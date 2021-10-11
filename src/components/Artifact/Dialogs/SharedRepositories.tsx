@@ -9,7 +9,7 @@ import {
     SharedRepositoryTO,
     SharedRepositoryTORoleEnum,
     SharedTeamTO,
-    SharedTeamTORoleEnum,
+    SharedTeamTORoleEnum, ShareWithRepositoryTORoleEnum,
 } from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
@@ -48,10 +48,8 @@ interface Props {
     artifact: ArtifactTO;
     getSharedMethod: (id: string) => Promise<AxiosResponse>;
     unshareMethod: (artifactId: string, shareTargetId: string) => Promise<AxiosResponse>;
-    updateMethod: (artifactId: string, targetId: string, role: any) => Promise<AxiosResponse>;
+    updateMethod: (artifactId: string, targetId: string, role: ShareWithRepositoryTORoleEnum) => Promise<AxiosResponse>;
 }
-
-
 
 const SharedRepositories: React.FC<Props> = props => {
     const classes = useStyles();

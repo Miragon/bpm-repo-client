@@ -38,6 +38,7 @@ interface Props {
     repositoryId: string;
     entity: "repository" | "team";
     searchMethod: (input: string) => Promise<AxiosResponse>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     shareMethod: (artifactId: string, teamOrRepoId: string, role: any) => Promise<AxiosResponse>;
     roleForNewAssignments: ShareWithTeamTORoleEnum | ShareWithRepositoryTORoleEnum;
 }
@@ -48,9 +49,6 @@ const AddSharingSearchBar: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
-
-
-
 
     const [elementName, setElementName] = useState("");
     const [open, setOpen] = React.useState(false);
