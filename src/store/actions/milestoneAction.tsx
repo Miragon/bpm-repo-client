@@ -46,6 +46,6 @@ export const updateMilestone = async (milestoneId: string, file?: string, commen
 export const getAllByDeploymentId = async(deploymentIds: Array<string>): Promise<AxiosResponse<Array<ArtifactMilestoneTO>>> => {
     const milestoneController = new api.MilestoneApi();
     const config = helpers.getClientConfig();
-    const response = await milestoneController.getByDeployment(deploymentIds, config);
+    const response = await milestoneController.getAllByDeploymentIds(deploymentIds, config);
     return response;
 }

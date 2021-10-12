@@ -103,7 +103,8 @@
         "deployedMultiple": "{{deployedMilestones}} Milestoneen veröffentlicht",
         "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
         "dialogHeader": "Milestone {{milestoneNumber}} veröffentlichen",
-        "history": "Alle Veröffentlichungen"
+        "history": "Alle Veröffentlichungen",
+        "notAvailable": "Es wurden noch keine Dateien veröffentlicht"
     },
     "user": {
         "user": "Benutzer",

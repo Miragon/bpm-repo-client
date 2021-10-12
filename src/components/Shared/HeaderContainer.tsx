@@ -3,9 +3,8 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {ArtifactTypeTO} from "../../api";
-import {createTeam} from "../../store/actions/teamAction";
 import {createRepository} from "../../store/actions";
-import {SYNC_STATUS_REPOSITORY, SYNC_STATUS_TEAM} from "../../constants/Constants";
+import {SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 import DropdownButton, {DropdownButtonItem} from "./Form/DropdownButton";
 import {RootState} from "../../store/reducers/rootReducer";
 import ArtifactSearchBar from "../../screens/Overview/ArtifactSearchBar";
@@ -33,7 +32,6 @@ const HeaderContainer: React.FC = (() => {
     const [createRepoOpen, setCreateRepoOpen] = useState(false);
     const [uploadArtifactOpen, setUploadArtifactOpen] = useState(false);
     const [createArtifactOpen, setCreateArtifactOpen] = useState(false);
-    const [createTeamOpen, setCreateTeamOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("BPMN");
     const [artifactOptions, setArtifactOptions] = useState<DropdownButtonItem[]>([])
 
@@ -111,13 +109,7 @@ const HeaderContainer: React.FC = (() => {
                 createMethod={createRepository}
                 dataSyncedType={SYNC_STATUS_REPOSITORY}/>
 
-            <CreateTitleDescDialog
-                open={createTeamOpen}
-                onCancelled={() => setCreateTeamOpen(false)}
-                successMessage={t("team.created")}
-                title={t("team.create")}
-                createMethod={createTeam}
-                dataSyncedType={SYNC_STATUS_TEAM}/>
+
 
             <CreateArtifactDialog
                 open={createArtifactOpen}

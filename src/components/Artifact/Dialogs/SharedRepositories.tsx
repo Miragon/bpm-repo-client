@@ -4,13 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
-import {
-    ArtifactTO,
-    SharedRepositoryTO,
-    SharedRepositoryTORoleEnum,
-    SharedTeamTO,
-    SharedTeamTORoleEnum, ShareWithRepositoryTORoleEnum,
-} from "../../../api";
+import {ArtifactTO, SharedRepositoryTO, SharedRepositoryTORoleEnum, ShareWithRepositoryTORoleEnum,} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
@@ -38,7 +32,7 @@ export interface SharedListItem {
     targetId: string;
     artifactName: string;
     artifactId: string;
-    role: SharedRepositoryTORoleEnum | SharedTeamTORoleEnum;
+    role: SharedRepositoryTORoleEnum;
     onClick: () => void;
     editable?: boolean;
 }
@@ -58,7 +52,7 @@ const SharedRepositories: React.FC<Props> = props => {
 
     const sharedSynced: boolean = useSelector((state: RootState) => state.dataSynced.sharedSynced);
 
-    const [shareTarget, setShareTarget] = useState<Array<SharedRepositoryTO | SharedTeamTO>>([]);
+    const [shareTarget, setShareTarget] = useState<Array<SharedRepositoryTO>>([]);
     const [options, setOptions] = useState<Array<SharedListItem>>([])
 
 
@@ -66,7 +60,6 @@ const SharedRepositories: React.FC<Props> = props => {
 
         props.getSharedMethod(props.artifact.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                console.log(response.data)
                 setShareTarget(response.data)
                 dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: true });
             } else {
@@ -110,20 +103,6 @@ const SharedRepositories: React.FC<Props> = props => {
                         role: sharedElement.role,
                         onClick: () => {
                             unshare(sharedElement.repositoryId, sharedElement.repositoryName || "Project")
-                        }
-                    }
-                )
-            } else {
-                console.log(sharedElement)
-                opts.push(
-                    {
-                        repoName: sharedElement.teamName || "unknown Team",
-                        targetId: sharedElement.teamId,
-                        artifactName: sharedElement.artifactName || "unknown Artifact",
-                        artifactId: sharedElement.artifactId,
-                        role: sharedElement.role,
-                        onClick: () => {
-                            unshare(sharedElement.teamId, sharedElement.teamId || "Team")
                         }
                     }
                 )

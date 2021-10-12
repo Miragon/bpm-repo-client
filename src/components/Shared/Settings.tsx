@@ -11,7 +11,7 @@ import {
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY
 } from "../../constants/Constants";
-import {IconButton, Typography} from "@material-ui/core";
+import {IconButton} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SettingsTextField from "./Form/SettingsTextField";
 import SimpleButton from "./Form/SimpleButton";
@@ -31,21 +31,13 @@ const useStyles = makeStyles(() => ({
     deleteSection: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center"
+        justifyContent: "flex-end"
     },
-    deleteButton: {
-        border: "1px solid lightgrey",
-        backgroundColor: "white",
-        color: "red",
-        transition: "background-color .3s",
-        borderRadius: "4px",
-        width: "150px",
-        "&:hover": {
-            backgroundColor: "red",
-            color: "white"
-        }
-    },
+    applySection: {
+        display: "flex",
+        justifyContent: "flex-end"
+    }
+
 
 }));
 
@@ -103,6 +95,13 @@ const Settings: React.FC<Props> = props => {
     return (
         <>
 
+            <div className={classes.deleteSection}>
+                <IconButton onClick={deleteEntity}>
+                    <DeleteIcon />
+                </IconButton>
+            </div>
+
+            <div  className={classes.spacer} />
 
             <SettingsTextField
                 label={t("properties.title")}
@@ -118,22 +117,12 @@ const Settings: React.FC<Props> = props => {
                 multiline
                 minRows={4} />
 
-            <div className={classes.spacer} />
-
-            <div className={classes.deleteSection}>
-                <Typography variant="h5">
-                    {t("repository.delete")}
-                </Typography>
-                <IconButton className={classes.deleteButton} onClick={deleteEntity}>
-                    <DeleteIcon />
-                </IconButton>
-            </div>
 
             <div  className={classes.spacer} />
             <div  className={classes.spacer} />
 
-            <div>
-                <SimpleButton title={"Apply"} onClick={applyChanges} fullWidth={true}/>
+            <div className={classes.applySection}>
+                <SimpleButton title={"Apply"} onClick={applyChanges} />
             </div>
 
 

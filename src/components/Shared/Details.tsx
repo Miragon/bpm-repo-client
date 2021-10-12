@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/styles";
 import theme from "../../theme";
-import {RepositoryTO, TeamTO} from "../../api";
+import {RepositoryTO} from "../../api";
 import React from "react";
 import Section from "../../components/Layout/Section";
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 interface Props {
-    object: TeamTO | RepositoryTO;
+    object: RepositoryTO;
 }
 
 

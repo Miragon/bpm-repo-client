@@ -6,7 +6,12 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import PathStructure, {CrumbElement} from "../../components/Layout/PathStructure";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import {SHARED_ARTIFACTS, SYNC_STATUS_ACTIVE_ENTITY, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
+import {
+    ACTIVE_REPO,
+    SHARED_ARTIFACTS,
+    SYNC_STATUS_ACTIVE_ENTITY,
+    SYNC_STATUS_ARTIFACT
+} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import Details from "../../components/Shared/Details";
@@ -41,6 +46,7 @@ const Repository: React.FC = (() => {
             if(Math.floor(response.status / 100) === 2){
                 setRepository(response.data)
                 dispatch({ type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true });
+                dispatch({type: ACTIVE_REPO, activeRepo: response.data})
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => getRepo())
             }

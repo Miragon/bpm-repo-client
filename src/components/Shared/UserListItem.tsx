@@ -8,14 +8,17 @@ import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {DropdownButtonItem} from "./Form/DropdownButton";
 import PopupSettings from "./Form/PopupSettings";
-import {AssignmentTORoleEnum, TeamAssignmentTORoleEnum} from "../../api";
+import {AssignmentTORoleEnum} from "../../api";
+
+
+
 
 interface Props {
     assignmentTargetId: string;
     assignmentTargetEntity: "team" | "repository";
     userId: string;
     username: string;
-    role: TeamAssignmentTORoleEnum | AssignmentTORoleEnum;
+    role: AssignmentTORoleEnum;
     hasAdminPermissions: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateAssignmentMethod: (targetId: string, userId: string, role: any) => Promise<AxiosResponse>;
@@ -66,7 +69,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.OWNER"),
             type: "button",
             onClick: () => {
-                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Owner : TeamAssignmentTORoleEnum.Owner);
+                changeRole(AssignmentTORoleEnum.Owner)
+                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Owner : TeamAssignmentTORoleEnum.Owner);
             }
         },
         {
@@ -74,7 +78,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.ADMIN"),
             type: "button",
             onClick: () => {
-                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Admin : TeamAssignmentTORoleEnum.Admin);
+                changeRole(AssignmentTORoleEnum.Admin)
+                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Admin : TeamAssignmentTORoleEnum.Admin);
             }
         },
         {
@@ -82,7 +87,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.MEMBER"),
             type: "button",
             onClick: () => {
-                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Member : TeamAssignmentTORoleEnum.Member);
+                changeRole(AssignmentTORoleEnum.Member)
+                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Member : TeamAssignmentTORoleEnum.Member);
             }
         },
         {
@@ -90,7 +96,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.VIEWER"),
             type: "button",
             onClick: () => {
-                changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Viewer : TeamAssignmentTORoleEnum.Viewer);
+                changeRole(AssignmentTORoleEnum.Viewer)
+                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Viewer : TeamAssignmentTORoleEnum.Viewer);
             }
         },
         {

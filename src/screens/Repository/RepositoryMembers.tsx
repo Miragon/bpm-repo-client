@@ -14,9 +14,17 @@ import {
     getMultipleUsers,
     updateUserAssignment
 } from "../../store/actions";
-import AddUserSearchBar from "../Team/AddUserSearchBar";
 import UserListItem from "../../components/Shared/UserListItem";
+import AddUserSearchBar from "./AddUserSearchBar";
+import {makeStyles} from "@material-ui/core/styles";
 
+
+const useStyles = makeStyles(() => ({
+    list: {
+        backgroundColor: "white"
+    },
+
+}));
 
 interface Props {
     targetId: string;
@@ -25,6 +33,7 @@ interface Props {
 const RepositoryMembers: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
+    const classes = useStyles();
 
     const syncStatus = useSelector((state: RootState) => state.dataSynced.assignmentSynced);
     const currentUser = useSelector((state: RootState) => state.user.currentUserInfo);
@@ -103,7 +112,7 @@ const RepositoryMembers: React.FC<Props> = props => {
                         targetId={props.targetId}
                         createAssignmentMethod={createUserAssignment}/>
                 )}
-                <Paper>
+                <Paper className={classes.list}>
 
                     {users?.map(user => (
                         <UserListItem

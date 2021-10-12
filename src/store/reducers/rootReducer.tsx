@@ -5,7 +5,6 @@ import dataSyncedReducer from "./dataSyncedReducer";
 import repoReducer from "./repositoriesReducer";
 import milestonesReducer from "./milestonesReducer";
 import deploymentReducer from "./deploymentReducer";
-import teamReducer from "./teamReducer";
 
 export const rootReducer = combineReducers({
     repos: repoReducer,
@@ -14,7 +13,6 @@ export const rootReducer = combineReducers({
     milestones: milestonesReducer,
     user: usersReducer,
     deployment: deploymentReducer,
-    team: teamReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

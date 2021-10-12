@@ -15,14 +15,14 @@ export const getSingleRepository = async (id: string): Promise<AxiosResponse<Rep
     const response = await repositoryController.getSingleRepository(id, config);
     return response
 }
-
+/*
 export const getAllRepositoriesForTeam = async(teamId: string): Promise<AxiosResponse<Array<RepositoryTO>>> => {
     const repositoryController = new RepositoryApi();
     const config = helpers.getClientConfig();
     const response = await repositoryController.getAllRepositoriesForTeam(teamId, config);
     return response
 }
-
+*/
 
 
 export const createRepository = async (name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {

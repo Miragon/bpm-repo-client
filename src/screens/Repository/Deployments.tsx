@@ -34,11 +34,12 @@ const Deployments: React.FC<Props> = props => {
     const fetchDeployments = useCallback(() => {
         getAllDeploymentsFromRepository(props.repositoryId).then(response => {
             if(Math.floor(response.status / 100) === 2){
-
                 setDeployments(response.data.sort(helpers.compareTimestamp))
-                console.log("DeploymentVersions : ")
                 const deploymentIds = response.data.map(deployment => deployment.id)
-                fetchMilestones(deploymentIds);
+                if(deploymentIds.length > 0){
+                    console.log(deploymentIds)
+                    fetchMilestones(deploymentIds);
+                } 
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchDeployments())
             }
@@ -73,6 +74,13 @@ const Deployments: React.FC<Props> = props => {
                     artifact={getArtifactFromList(deployment.artifactId)} />
             )
             )}
+            
+            {
+                deployments.length === 0 && 
+                    <div>
+                        {t("deployment.notAvailable")}
+                    </div>
+            }
         </>
     )
 }

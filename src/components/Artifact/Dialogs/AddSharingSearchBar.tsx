@@ -9,9 +9,9 @@ import {Add} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import theme from "../../../theme";
-import {RepositoryTO, ShareWithRepositoryTORoleEnum, ShareWithTeamTORoleEnum, TeamTO} from "../../../api";
 import helpers from "../../../util/helperFunctions";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
+import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../api";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -40,7 +40,7 @@ interface Props {
     searchMethod: (input: string) => Promise<AxiosResponse>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     shareMethod: (artifactId: string, teamOrRepoId: string, role: any) => Promise<AxiosResponse>;
-    roleForNewAssignments: ShareWithTeamTORoleEnum | ShareWithRepositoryTORoleEnum;
+    roleForNewAssignments: ShareWithRepositoryTORoleEnum;
 }
 
 let timeout: NodeJS.Timeout | undefined;
@@ -52,9 +52,9 @@ const AddSharingSearchBar: React.FC<Props> = props => {
 
     const [elementName, setElementName] = useState("");
     const [open, setOpen] = React.useState(false);
-    const [options, setOptions] = React.useState<RepositoryTO[] | TeamTO[]>([]);
+    const [options, setOptions] = React.useState<RepositoryTO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [searchedElements, setSearchedElements] = useState<Array<RepositoryTO | TeamTO>>([]);
+    const [searchedElements, setSearchedElements] = useState<Array<RepositoryTO>>([]);
 
 
     useEffect(() => {
@@ -95,7 +95,7 @@ const AddSharingSearchBar: React.FC<Props> = props => {
     const fetchSuggestion = useCallback((input: string) => {
         props.searchMethod(input).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                setSearchedElements(response.data.filter((to: RepositoryTO | TeamTO) => to.id !== props.repositoryId))
+                setSearchedElements(response.data.filter((to: RepositoryTO) => to.id !== props.repositoryId))
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchSuggestion(input))
             }

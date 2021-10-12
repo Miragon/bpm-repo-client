@@ -4,6 +4,4 @@ export * from "./milestoneAction";
 export * from "./assignmentAction";
 export * from "./repositoryAction";
 export * from "./deploymentAction";
-export * from "./errorAction";
 export * from "./fileTypesAction";
-export * from "./menuAction";

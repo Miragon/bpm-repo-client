@@ -3,11 +3,8 @@ import {
     ArtifactTO,
     ShareApi,
     SharedRepositoryTO,
-    SharedTeamTO,
     ShareWithRepositoryTO,
     ShareWithRepositoryTORoleEnum,
-    ShareWithTeamTO,
-    ShareWithTeamTORoleEnum
 } from "../../api";
 import {AxiosResponse} from "axios";
 
@@ -32,12 +29,7 @@ export const getAllSharedArtifactsByType = async (type: string): Promise<AxiosRe
     return response;
 }
 
-export const getAllArtifactsSharedWithTeam = async (teamId: string): Promise<AxiosResponse<Array<ArtifactTO>>> => {
-    const shareController = new ShareApi();
-    const config = helpers.getClientConfig();
-    const response = await shareController.getSharedWithTeamArtifacts(teamId, config);
-    return response;
-}
+
 
 
 export const unshareWithRepo = async (artifactId: string, repositoryId: string): Promise<AxiosResponse<void>> => {
@@ -60,15 +52,7 @@ export const shareWithRepo = async (artifactId: string, repositoryId: string, ro
     return response
 }
 
-export const shareWithTeam = async (artifactId: string, teamId: string, role: ShareWithTeamTORoleEnum): Promise<AxiosResponse<ShareWithTeamTO>> => {
-    const shareController = new ShareApi();
-    const config = helpers.getClientConfig();
-    const shareWithTeamTO: ShareWithTeamTO = {
-        artifactId, teamId, role
-    }
-    const response = await shareController.shareWithTeam(shareWithTeamTO, config);
-    return response
-}
+
 
 
 export const unshareWithTeam = async (artifactId: string, teamId: string): Promise<AxiosResponse<void>> => {
@@ -87,12 +71,7 @@ export const getSharedRepos = async (artifactId: string): Promise<AxiosResponse<
     return response;
 }
 
-export const getSharedTeams = async (artifactId: string): Promise<AxiosResponse<SharedTeamTO[]>> => {
-    const shareController = new ShareApi();
-    const config = helpers.getClientConfig();
-    const response = await shareController.getSharedTeams(artifactId, config);
-    return response;
-}
+
 
 export const updateShareWithRepo = async (artifactId: string, repositoryId: string, role: ShareWithRepositoryTORoleEnum): Promise<AxiosResponse<ShareWithRepositoryTO>> => {
     const shareController = new ShareApi();
@@ -104,15 +83,7 @@ export const updateShareWithRepo = async (artifactId: string, repositoryId: stri
     return response;
 }
 
-export const updateShareWithTeam = async (artifactId: string, teamId: string, role: ShareWithTeamTORoleEnum): Promise<AxiosResponse<ShareWithTeamTO>> => {
-    const shareController = new ShareApi();
-    const config = helpers.getClientConfig();
-    const shareWithTeamTO: ShareWithTeamTO = {
-        artifactId, teamId, role
-    }
-    const response = await shareController.updateShareWithTeam(shareWithTeamTO, config);
-    return response;
-}
+
 
 export const getSharedArtifactsFromRepositoryByType= async(repositoryId: string, type: string): Promise<AxiosResponse<Array<ArtifactTO>>> => {
     const shareController = new ShareApi();

@@ -33,10 +33,10 @@ const CreateArtifactDialog: React.FC<Props> = props => {
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [repoId, setRepoId] = useState<string>("");
+    const [repoId, setRepoId] = useState<string>(props.repo?.id ? props.repo.id : "");
 
     useEffect(() => {
-        setRepoId(props.repo?.id || "");
+        setRepoId(props.repo?.id ? props.repo.id : "");
     }, [props.repo]);
 
     const allRepos: Array<RepositoryTO> = useSelector(
