@@ -87,7 +87,7 @@ const CreateVersionDialog: React.FC<Props> = props => {
                     label={t("properties.comment")}
                     value={comment}
                     multiline
-                    rows={2}
+                    minRows={2}
                     rowsMax={2}
                     onChanged={setComment} />
             </SettingsForm>

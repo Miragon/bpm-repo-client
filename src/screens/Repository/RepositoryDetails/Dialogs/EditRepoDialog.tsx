@@ -128,7 +128,7 @@ const EditRepoDialog: React.FC<Props> = props => {
                 value={description}
                 onChanged={setDescription}
                 multiline
-                rows={4} />
+                minRows={4} />
 
         </PopupDialog>
     );

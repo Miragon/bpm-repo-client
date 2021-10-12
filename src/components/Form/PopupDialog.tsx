@@ -1,4 +1,4 @@
-import {fade, makeStyles, Theme} from "@material-ui/core";
+import {alpha, makeStyles, Theme} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: "center"
     },
     disabledButton: {
-        color: `${fade(theme.palette.primary.contrastText, 0.6)}!important`
+        color: `${alpha(theme.palette.primary.contrastText, 0.6)}!important`
     },
     button: {
         margin: "4px 8px",
@@ -102,8 +102,7 @@ const PopupDialog: React.FC<Props> = props => {
                 className: clsx(classes.paper, props.paperClassName),
                 elevation: 16
             }}
-            open={props.open}
-            disableBackdropClick>
+            open={props.open} >
 
             <DialogTitle
                 disableTypography

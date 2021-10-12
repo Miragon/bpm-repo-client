@@ -1,8 +1,9 @@
 import { blue } from "@material-ui/core/colors";
-import {createMuiTheme, responsiveFontSizes} from "@material-ui/core/styles";
+import {responsiveFontSizes} from "@material-ui/core/styles";
+import {createTheme} from "@material-ui/core";
 
 const theme = responsiveFontSizes(
-    createMuiTheme({
+    createTheme({
         overrides: {
             MuiTooltip: {
                 tooltip: {
