@@ -4,13 +4,14 @@ import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {ArtifactTypeTO} from "../../api";
 import {createRepository} from "../../store/actions";
-import {SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
+import {SYNC_STATUS_REPOSITORY, SYNC_STATUS_TEAM} from "../../constants/Constants";
 import DropdownButton, {DropdownButtonItem} from "./Form/DropdownButton";
 import {RootState} from "../../store/reducers/rootReducer";
 import ArtifactSearchBar from "../../screens/Overview/ArtifactSearchBar";
 import CreateTitleDescDialog from "./Dialogs/CreateTitleDescDialog";
 import CreateArtifactDialog from "./Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "./Dialogs/UploadArtifactDialog";
+import {createTeam} from "../../store/actions/teamAction";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -34,6 +35,7 @@ const HeaderContainer: React.FC = (() => {
     const [createArtifactOpen, setCreateArtifactOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("BPMN");
     const [artifactOptions, setArtifactOptions] = useState<DropdownButtonItem[]>([])
+    const [createTeamOpen, setCreateTeamOpen] = useState(false);
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
 
@@ -47,15 +49,14 @@ const HeaderContainer: React.FC = (() => {
             type: "button",
             onClick: () => setCreateRepoOpen(true)
         });
-        //TODO: wieder aufnehmen
-        /*
+
         opts.push({
             id: "createTeam",
             label: "team.create",
             type: "button",
             onClick: () => setCreateTeamOpen(true)
         });
-        */
+
         opts.push({
             id: "divider1",
             type: "divider",
@@ -109,6 +110,13 @@ const HeaderContainer: React.FC = (() => {
                 createMethod={createRepository}
                 dataSyncedType={SYNC_STATUS_REPOSITORY}/>
 
+            <CreateTitleDescDialog
+                open={createTeamOpen}
+                onCancelled={() => setCreateTeamOpen(false)}
+                successMessage={t("team.created")}
+                title={t("team.create")}
+                createMethod={createTeam}
+                dataSyncedType={SYNC_STATUS_TEAM}/>
 
 
             <CreateArtifactDialog

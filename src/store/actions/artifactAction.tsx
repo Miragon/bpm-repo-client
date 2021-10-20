@@ -22,12 +22,7 @@ export const fetchRecentArtifacts = async (): Promise<AxiosResponse<ArtifactTO[]
 export const createArtifact = async (repoId: string, name: string, description: string, fileType: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
-    const newArtifactTO: NewArtifactTO = {
-        name: name,
-        description: description,
-        fileType: fileType,
-        svgPreview: ""
-    };
+    const newArtifactTO: NewArtifactTO = {name, description, fileType};
     const response = await artifactController.createArtifact(repoId, newArtifactTO, config)
     return response
 }

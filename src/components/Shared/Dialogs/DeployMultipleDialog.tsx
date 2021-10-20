@@ -120,7 +120,6 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             target: target,
             repositoryId: props.repoId,
             artifactId: artifact,
-            // TODO: Backend muss latest akzeptieren
             milestoneId: "latest"
         }));
         deployMultiple(deployments).then(response => {

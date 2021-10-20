@@ -9,8 +9,7 @@ import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import {COLOR_LINK} from "../../constants/Constants";
 import {openFileInTool} from "../../util/Redirections";
-import {CloudDownload} from "@material-ui/icons";
-
+import DownloadIcon from "@mui/icons-material/Download";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -83,6 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         textTransform: "none"
     },
     icon: {
+        marginRight: "10px",
         cursor: "pointer"
     }
 }))
@@ -163,7 +163,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                         <h2>
                             {props.deployment.target}
                         </h2>
-                        <CloudDownload className={classes.icon} onClick={download}/>
+                        <DownloadIcon className={classes.icon} onClick={download}/>
 
 
 

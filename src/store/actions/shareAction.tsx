@@ -2,11 +2,12 @@ import helpers from "../../util/helperFunctions";
 import {
     ArtifactTO,
     ShareApi,
-    SharedRepositoryTO,
+    SharedRepositoryTO, SharedTeamTO,
     ShareWithRepositoryTO,
-    ShareWithRepositoryTORoleEnum,
+    ShareWithRepositoryTORoleEnum, ShareWithTeamTO, ShareWithTeamTORoleEnum,
 } from "../../api";
 import {AxiosResponse} from "axios";
+import {List} from "@mui/material";
 
 export const getSharedArtifacts = async(repositoryId: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const shareController = new ShareApi();
@@ -52,9 +53,23 @@ export const shareWithRepo = async (artifactId: string, repositoryId: string, ro
     return response
 }
 
+export const shareWithTeam = async(artifactId: string, teamId: string, role: ShareWithTeamTORoleEnum): Promise<AxiosResponse<ShareWithTeamTO>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const shareWithTeamTO: ShareWithTeamTO = {
+        artifactId, teamId, role
+    }
+    const response = await shareController.shareWithTeam(shareWithTeamTO, config);
+    return response;
+}
 
 
-
+export const getSharedTeams = async(artifactId: string): Promise<AxiosResponse<Array<SharedTeamTO>>> => {
+    const shareController = new ShareApi();
+    const config = helpers.getClientConfig();
+    const response = await shareController.getSharedTeams(artifactId, config);
+    return response;
+}
 export const unshareWithTeam = async (artifactId: string, teamId: string): Promise<AxiosResponse<void>> => {
     const shareController = new ShareApi();
     const config = helpers.getClientConfig();

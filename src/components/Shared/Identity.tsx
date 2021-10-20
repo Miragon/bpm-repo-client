@@ -1,13 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import {MenuItem, Select} from "@material-ui/core";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import PersonIcon from "@material-ui/icons/Person";
 import {useHistory} from "react-router-dom";
 import theme from "../../theme";
-
+import {getAllTeams} from "../../store/actions/teamAction";
+import {SYNC_STATUS_TEAM, TEAMS} from "../../constants/Constants";
+import helpers from "../../util/helperFunctions";
+import {TeamTO} from "../../api";
+import {useTranslation} from "react-i18next";
+import GroupIcon from "@mui/icons-material/Group";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -40,6 +45,9 @@ const useStyles = makeStyles(() => ({
 const Identity: React.FC = (() => {
     const classes = useStyles();
     const history = useHistory();
+    const dispatch = useDispatch();
+    const { t } = useTranslation("common");
+
 
 
     const currentUser = useSelector((state: RootState) => state.user.currentUserInfo)
@@ -47,18 +55,30 @@ const Identity: React.FC = (() => {
 
     const [activeIdentityName, setActiveIdentityName] = useState("");
     const [activeIdentityId, setActiveIdentityId] = useState("");
+    const [teams, setTeams] = useState<Array<TeamTO>>([]);
 
-
+    const fetchTeams = useCallback(() => {
+        getAllTeams().then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({ type: TEAMS, teams: response.data });
+                setTeams(response.data)
+                dispatch({ type: SYNC_STATUS_TEAM, dataSynced: true });
+            } else {
+                helpers.makeErrorToast(t(response.data.toString()), () => fetchTeams())
+            }
+        }, error => {
+            helpers.makeErrorToast(t(error.response.data), () => fetchTeams())
+        })
+    }, [dispatch, t]);
 
 
     useEffect(() => {
         if(currentUser){
-            //TODO: Uncomment the fetchTeams function as soon as the team-function returns
-            //fetchTeams()
+            fetchTeams()
             setActiveIdentityId(currentUser.id)
             setActiveIdentityName(currentUser.username)
         }
-    }, [currentUser])
+    }, [currentUser, fetchTeams])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const changeIdentity = (event: any) => {
@@ -70,10 +90,10 @@ const Identity: React.FC = (() => {
         <div className={classes.container}>
             <FormControl>
                 <Select
-                    disabled
+
                     id="identity"
                     value={activeIdentityId}
-                    onChange={event => changeIdentity}>
+                    onChange={event => changeIdentity(event)}>
                     <MenuItem value={activeIdentityId}>
                         <div className={classes.iconAndText}>
                             <div className={classes.icon}>
@@ -84,8 +104,20 @@ const Identity: React.FC = (() => {
                             </div>
                         </div>
                     </MenuItem>
-
-
+                    {
+                        teams?.map(team => (
+                            <MenuItem value={team.id} key={team.id}>
+                                <div className={classes.iconAndText}>
+                                    <div className={classes.icon}>
+                                        <GroupIcon/>
+                                    </div>
+                                    <div>
+                                        {team.name}
+                                    </div>
+                                </div>
+                            </MenuItem>
+                        ))
+                    }
                 </Select>
             </FormControl>
 

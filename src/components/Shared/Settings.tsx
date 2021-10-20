@@ -62,7 +62,7 @@ const Settings: React.FC<Props> = props => {
     const applyChanges = useCallback(async () => {
         props.updateEntityMethod(props.targetId, title, description).then(response => {
             if(Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("repository.updated"))
+                helpers.makeSuccessToast(t("data.updated"))
                 dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false});
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())

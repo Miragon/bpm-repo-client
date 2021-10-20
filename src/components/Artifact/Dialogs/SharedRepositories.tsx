@@ -60,6 +60,7 @@ const SharedRepositories: React.FC<Props> = props => {
 
         props.getSharedMethod(props.artifact.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
+
                 setShareTarget(response.data)
                 dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: true });
             } else {

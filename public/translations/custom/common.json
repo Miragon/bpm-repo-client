@@ -230,6 +230,9 @@
         "saved": "Gespeichert"
 
     },
+    "data": {
+        "updated": "Informationen aktualisiert"
+    },
     "exception": {
         "changeOwnRole": "Sie können Ihre eigene Rolle nicht ändern",
         "authFailed": "Autorisierung fehlgeschlagen",
@@ -240,6 +243,9 @@
         "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet",
         "noAssignmentOrShareFound": "Keine direkte oder indirekte Zugriffserlaubnis",
         "emptyTitle": "Der Titel darf nicht leer sein",
-        "alreadyDeployed": "Diese Datei wurde bereits im angegebene Ziel veröffentlicht"
+        "alreadyDeployed": "Diese Datei wurde bereits im angegebene Ziel veröffentlicht",
+        "artifactNotFound":  "Datei nicht gefunden",
+        "milestoneNotFound": "Meilenstein nicht gefunden",
+        "cantShareWithParentRepo": "Die Datei befindet sich bereits in diesem Projekt"
     }
 }

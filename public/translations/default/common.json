@@ -234,6 +234,9 @@
     "copied": "Artifact copied",
     "saved": "Saved"
   },
+  "data": {
+    "updated": "Data updated"
+  },
   "exception": {
     "changeOwnRole": "You can't change your own role",
     "authFailed": "Authorization failed",
@@ -244,8 +247,9 @@
     "locked": "This file is currently being edited by another user",
     "noAssignmentOrShareFound": "No direct or indirect access rights",
     "emptyTitle": "Title must not be empty",
-    "alreadyDeployed": "This file has already been deployed to the provided target"
-
-
+    "alreadyDeployed": "This file has already been deployed to the provided target",
+    "artifactNotFound":  "File not found",
+    "milestoneNotFound": "Milestone not found",
+    "cantShareWithParentRepo": "The file already belongs to this project"
   }
 }

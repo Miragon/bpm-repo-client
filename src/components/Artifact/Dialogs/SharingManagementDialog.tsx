@@ -11,7 +11,14 @@ import {getManageableRepos, searchRepos} from "../../../store/actions";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
-import {getSharedRepos, shareWithRepo, unshareWithRepo, updateShareWithRepo} from "../../../store/actions/shareAction";
+import {
+    getSharedRepos, getSharedTeams,
+    shareWithRepo,
+    shareWithTeam,
+    unshareWithRepo,
+    updateShareWithRepo
+} from "../../../store/actions/shareAction";
+import {searchTeam} from "../../../store/actions/teamAction";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,17 +42,12 @@ const SharingManagementDialog: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [openedTab, setOpenedTab] = useState<string>("0");
+    const [openedTab, setOpenedTab] = useState<string>("team");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [manageableRepos, setManageableRepos] = useState<RepositoryTO[]>([]);
 
 
-
-    //TODO: Sollten Dateien auch mit Repositories geteilt werden können, die dem nutzer nicht
-    // direkt zugewiesen sind?
-    // GetManageable verwenden, um die möglichen Aktionen des users auf eigene Repos zu beschränken
-
-
+    //TODO:  GetManageable verwenden, um die möglichen Aktionen des users auf eigene Repos zu beschränken
     const getManageable = useCallback(async () => {
         getManageableRepos().then(response => {
             if (Math.floor(response.status / 100) === 2) {
@@ -60,7 +62,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
 
 
-    const handleChangeTab = (event: React.ChangeEvent, newValue: string) => {
+    const handleChangeTab = (event: any, newValue: string) => {
         setOpenedTab(newValue)
         dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
 
@@ -80,12 +82,12 @@ const SharingManagementDialog: React.FC<Props> = props => {
                 <>
                     <TabContext value={openedTab} >
 
-                        <TabList onChange={event => handleChangeTab} >
-                            <Tab label={t("repository.repositories")} value="0"  className={classes.tab}/>
-                            <Tab label={t("team.teams")} value="1" className={classes.tab}/>
+                        <TabList onChange={handleChangeTab} >
+                            <Tab label={t("repository.repositories")} value="repository" className={classes.tab}/>
+                            <Tab label={t("team.teams")} value="team" className={classes.tab}/>
                         </TabList>
 
-                        <TabPanel value="0">
+                        <TabPanel value="repository">
                             <AddSharingSearchBar
                                 entity="repository"
                                 repositoryId={props.artifact.repositoryId}
@@ -97,6 +99,22 @@ const SharingManagementDialog: React.FC<Props> = props => {
                                 entity={"repository"}
                                 artifact={props.artifact}
                                 getSharedMethod={getSharedRepos}
+                                unshareMethod={unshareWithRepo}
+                                updateMethod={updateShareWithRepo}/>
+                        </TabPanel>
+
+                        <TabPanel value="team">
+                            <AddSharingSearchBar
+                                entity="repository"
+                                repositoryId={props.artifact.repositoryId}
+                                artifactId={props.artifact.id}
+                                roleForNewAssignments={ShareWithRepositoryTORoleEnum.Viewer}
+                                searchMethod={searchTeam}
+                                shareMethod={shareWithTeam}/>
+                            <SharedRepositories
+                                entity={"repository"}
+                                artifact={props.artifact}
+                                getSharedMethod={getSharedTeams}
                                 unshareMethod={unshareWithRepo}
                                 updateMethod={updateShareWithRepo}/>
                         </TabPanel>

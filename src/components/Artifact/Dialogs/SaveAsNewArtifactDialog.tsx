@@ -12,7 +12,6 @@ import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import SettingsForm from "../../Shared/Form/SettingsForm";
 import SettingsTextField from "../../Shared/Form/SettingsTextField";
-import {ArtifactMilestoneUploadTOSaveTypeEnum} from "../../../api";
 
 interface Props {
     open: boolean;
@@ -36,17 +35,17 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async () => {
         createArtifact(props.repoId, title, description, props.type).then(response => {
             if(Math.floor(response.status / 100) === 2){
-                createMilestone(response.data.id, props.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone).then(response => {
+                createMilestone(response.data.id, props.file).then(response => {
                     if(Math.floor(response.status / 100) === 2){
                         dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false });
                         dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
                         dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
                         dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
                     } else {
-                        helpers.makeErrorToast(t(response.data.toString()), () => createMilestone(response.data.id, props.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
+                        helpers.makeErrorToast(t(response.data.toString()), () => createMilestone(response.data.id, props.file))
                     }
                 }, error => {
-                    helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, props.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
+                    helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, props.file))
                 })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => onCreate())

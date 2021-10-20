@@ -102,17 +102,6 @@ const ArtifactDetails: React.FC<Props> = (props => {
         applyFilters()
     }
 
-    //TODO: filteredAndSortedArtifacts ist Alex's vorschlag, um die Sortierfunktion zu vereinfachen
-    /*
-     const filteredAndSortedArtifacts = useMemo(() => {
-     const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
-     switch(sortValue) {
-     case "created": return filtered.sort(helpers.compareCreated);
-     case "lastEdited": return filtered.sort(helpers.compareEdited);
-     case "name": return filtered.sort(helpers.compareName);
-     }
-     }, [activeArtifacts, displayedFileTypes, sortValue]);
-     */
 
     const applyFilters = useCallback(() => {
         const filtered = props.artifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))

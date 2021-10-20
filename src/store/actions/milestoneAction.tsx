@@ -3,17 +3,16 @@ import {
     ArtifactMilestoneTO,
     ArtifactMilestoneUpdateTO,
     ArtifactMilestoneUploadTO,
-    ArtifactMilestoneUploadTOSaveTypeEnum
 } from "../../api/api";
 
 import helpers from "../../util/helperFunctions";
 import {AxiosResponse} from "axios";
 
 
-export const createMilestone = async (artifactId: string, file: string, saveType: ArtifactMilestoneUploadTOSaveTypeEnum, comment?: string): Promise<AxiosResponse<ArtifactMilestoneTO>> => {
+export const createMilestone = async (artifactId: string, file: string, comment?: string): Promise<AxiosResponse<ArtifactMilestoneTO>> => {
     const milestoneController = new api.MilestoneApi();
     const config = helpers.getClientConfig();
-    const artifactMilestoneUploadTO: ArtifactMilestoneUploadTO = {file, comment, saveType};
+    const artifactMilestoneUploadTO: ArtifactMilestoneUploadTO = {file, comment};
     const response = await milestoneController.createMilestone(artifactId, artifactMilestoneUploadTO, config);
     return response
 }
