@@ -10,7 +10,9 @@ import {
     ACTIVE_REPO,
     SHARED_ARTIFACTS,
     SYNC_STATUS_ACTIVE_ENTITY,
-    SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE, SYNC_STATUS_RECENT
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_FAVORITE,
+    SYNC_STATUS_RECENT
 } from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";

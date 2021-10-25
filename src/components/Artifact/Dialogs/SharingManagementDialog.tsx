@@ -1,26 +1,13 @@
 import React, {useCallback, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useDispatch} from "react-redux";
 import AddSharingSearchBar from "./AddSharingSearchBar";
 import SharedRepositories from "./SharedRepositories";
-import {Tab} from "@material-ui/core";
-import {TabContext, TabList, TabPanel} from "@material-ui/lab";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {ArtifactTO, RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../api";
+import {ArtifactTO, ShareWithRepositoryTORoleEnum} from "../../../api";
 import {getManageableRepos, searchRepos} from "../../../store/actions";
-import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import {getSharedRepos, shareWithRepo, unshareWithRepo, updateShareWithRepo} from "../../../store/actions/shareAction";
 
-
-const useStyles = makeStyles((theme: Theme) => ({
-
-    tab: {
-        flexGrow: 1,
-    }
-
-}));
 
 
 interface Props {
@@ -30,14 +17,12 @@ interface Props {
 }
 
 const SharingManagementDialog: React.FC<Props> = props => {
-    const dispatch = useDispatch();
-    const classes = useStyles();
     const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
-    const [openedTab, setOpenedTab] = useState<string>("0");
+    //const [openedTab, setOpenedTab] = useState<string>("0");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [manageableRepos, setManageableRepos] = useState<RepositoryTO[]>([]);
+    //const [manageableRepos, setManageableRepos] = useState<RepositoryTO[]>([]);
 
 
 
@@ -49,7 +34,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
     const getManageable = useCallback(async () => {
         getManageableRepos().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                setManageableRepos(response.data)
+                //setManageableRepos(response.data)
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => getManageable())
             }
@@ -60,11 +45,6 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
 
 
-    const handleChangeTab = (event: React.ChangeEvent, newValue: string) => {
-        setOpenedTab(newValue)
-        dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
-
-    }
 
     return (
         <PopupDialog
@@ -107,6 +87,23 @@ export default SharingManagementDialog;
 //TODO Add this tab when Teams return
 
 /*
+
+const useStyles = makeStyles((theme: Theme) => ({
+
+    tab: {
+        flexGrow: 1,
+    }
+
+}));
+
+    const handleChangeTab = (event: React.ChangeEvent, newValue: string) => {
+        //setOpenedTab(newValue)
+        dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
+
+    }
+
+
+
                     <TabContext value={openedTab} >
 
                         <TabList onChange={event => handleChangeTab} >

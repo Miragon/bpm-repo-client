@@ -1,9 +1,5 @@
 import * as api from "../../api/api";
-import {
-    ArtifactMilestoneTO,
-    ArtifactMilestoneUpdateTO,
-    ArtifactMilestoneUploadTO,
-} from "../../api/api";
+import {ArtifactMilestoneTO, ArtifactMilestoneUpdateTO, ArtifactMilestoneUploadTO} from "../../api/api";
 
 import helpers from "../../util/helperFunctions";
 import {AxiosResponse} from "axios";

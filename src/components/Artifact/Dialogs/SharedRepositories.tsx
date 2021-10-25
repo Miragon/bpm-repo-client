@@ -1,11 +1,10 @@
 import {Icon, IconButton, List, ListItem, Paper} from "@material-ui/core";
 import React, {useCallback, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import {ArtifactTO, SharedRepositoryTO, SharedRepositoryTORoleEnum, ShareWithRepositoryTORoleEnum,} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import helpers from "../../../util/helperFunctions";
 
@@ -49,8 +48,6 @@ const SharedRepositories: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
-
-    const sharedSynced: boolean = useSelector((state: RootState) => state.dataSynced.sharedSynced);
 
     const [shareTarget, setShareTarget] = useState<Array<SharedRepositoryTO>>([]);
     const [options, setOptions] = useState<Array<SharedListItem>>([])

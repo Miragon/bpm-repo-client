@@ -11,8 +11,6 @@ import PopupSettings from "./Form/PopupSettings";
 import {AssignmentTORoleEnum} from "../../api";
 
 
-
-
 interface Props {
     assignmentTargetId: string;
     assignmentTargetEntity: "team" | "repository";
