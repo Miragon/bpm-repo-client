@@ -26,7 +26,7 @@ const Deployments: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchMilestones(deploymentIds))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchMilestones(deploymentIds))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchMilestones(deploymentIds))
         })
     }, [t])
 
@@ -44,7 +44,7 @@ const Deployments: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchDeployments())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchDeployments())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchDeployments())
 
         })
     }, [fetchMilestones, props.repositoryId, t])

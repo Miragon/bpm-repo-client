@@ -30,7 +30,7 @@ const SelectShareWithRepositoryRoleDropDown: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => updateRole(newRole))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => updateRole(newRole))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => updateRole(newRole))
         })
     }, [dispatch, props, t])
 

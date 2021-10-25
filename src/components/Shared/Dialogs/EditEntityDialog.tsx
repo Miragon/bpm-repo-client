@@ -84,7 +84,7 @@ const EditEntityDialog: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => applyChanges())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
         })
     }, [props, title, description, t, dispatch]);
 
@@ -96,12 +96,12 @@ const EditEntityDialog: React.FC<Props> = props => {
                     dispatch({type: SYNC_STATUS_RECENT, dataSynced: false});
                     dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
                     helpers.makeSuccessToast(t("repository.deleted"))
-                    history.push("/repository")
+                    history.push("/")
                 } else {
                     helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => deleteRepo())
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteRepo())
             })
         }
     }, [t, title, props, dispatch, history]);

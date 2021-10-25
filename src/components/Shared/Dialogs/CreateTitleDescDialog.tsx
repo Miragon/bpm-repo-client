@@ -41,7 +41,7 @@ const CreateTitleDescDialog: React.FC<Props> = props => {
                 helpers.makeErrorToast(response.data.toString(), () => onCreate())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => onCreate())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
         })
 
     }, [props, title, description, dispatch, onCancelled, t]);

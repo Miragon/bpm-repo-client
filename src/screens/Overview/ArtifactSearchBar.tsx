@@ -99,7 +99,7 @@ const ArtifactSearchBar: React.FC = () => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchArtifactSuggestion(input))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifactSuggestion(input))
 
         })
     }, [t]);

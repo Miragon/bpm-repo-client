@@ -10,7 +10,7 @@ import {
     ACTIVE_REPO,
     SHARED_ARTIFACTS,
     SYNC_STATUS_ACTIVE_ENTITY,
-    SYNC_STATUS_ARTIFACT
+    SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE, SYNC_STATUS_RECENT
 } from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
@@ -51,7 +51,7 @@ const Repository: React.FC = (() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => getRepo())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getRepo())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getRepo())
         })
     }, [dispatch, repoId, t]);
 
@@ -65,7 +65,7 @@ const Repository: React.FC = (() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchArtifacts())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifacts())
         })
     }, [repoId, dispatch, t])
 
@@ -78,7 +78,7 @@ const Repository: React.FC = (() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchSharedArtifacts(repoId))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchSharedArtifacts(repoId))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSharedArtifacts(repoId))
         })
     }, [dispatch, t])
 
@@ -114,7 +114,10 @@ const Repository: React.FC = (() => {
         onClick: () => {
             setArtifacts([]);
             setSharedArtifacts([]);
-            history.push("/repository")
+            dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
+            dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+            dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false})
+            history.push("/")
         }
     }
     const element2: CrumbElement = {

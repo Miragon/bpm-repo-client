@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {ArtifactMilestoneUploadTOSaveTypeEnum, RepositoryTO} from "../../../api";
+import {RepositoryTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {createArtifact} from "../../../store/actions";
 import {
@@ -47,7 +47,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
         createArtifact(repoId, title, description, props.type)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    createMilestone(response.data.id, "", ArtifactMilestoneUploadTOSaveTypeEnum.Milestone)
+                    createMilestone(response.data.id, "")
                         .then(response2 => {
                             if (Math.floor(response2.status / 100) === 2) {
                                 dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
@@ -59,16 +59,16 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                                 helpers.makeSuccessToast(t("artifact.created"));
                                 props.onCancelled();
                             } else {
-                                helpers.makeErrorToast(response2.data.toString(), () => createMilestone(response.data.id, "", ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
+                                helpers.makeErrorToast(response2.data.toString(), () => createMilestone(response.data.id, ""))
                             }
                         }, error => {
-                            helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, "", ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
+                            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => createMilestone(response.data.id, ""))
                         })
                 } else {
                     helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => onCreate())
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
 
             })
     }, [props, dispatch, repoId, title, description, t]);

@@ -16,7 +16,7 @@ const RecentArtifacts: React.FC = (() => {
     const [recentArtifacts, setRecentArtifacts] = useState<Array<ArtifactTO>>([])
 
     const repos: RepositoryTO[] = useSelector((state: RootState) => state.repos.repos);
-    const syncStatus: boolean = useSelector((state: RootState) => state.dataSynced.artifactSynced);
+    const recentSynced: boolean = useSelector((state: RootState) => state.dataSynced.recentSynced);
     const favoriteArtifacts: ArtifactTO[] = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
 
     const fetchRecent = useCallback(() => {
@@ -29,15 +29,15 @@ const RecentArtifacts: React.FC = (() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchRecent())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchRecent())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRecent())
         })
     }, [dispatch, t]);
 
     useEffect(() => {
-        if (!syncStatus) {
+        if (!recentSynced) {
             fetchRecent();
         }
-    }, [fetchRecent, syncStatus]);
+    }, [fetchRecent, recentSynced]);
 
     return (
         <Section title="category.recent">

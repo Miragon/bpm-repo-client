@@ -52,7 +52,7 @@ const RepoAndTeamContainer: React.FC = (() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchRepos())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchRepos())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRepos())
         })
     }, [dispatch, t]);
 

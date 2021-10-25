@@ -5,6 +5,7 @@ import {RootState} from "../../store/reducers/rootReducer";
 import Section from "../Layout/Section";
 import {ErrorBoundary} from "../Exception/ErrorBoundary";
 import ArtifactListWithMilestones from "./ArtifactListWithMilestones";
+import {useParams} from "react-router";
 
 
 interface Props {
@@ -12,6 +13,9 @@ interface Props {
 }
 
 const SharedArtifacts: React.FC<Props> = (props => {
+
+    const { repoId } = useParams<{ repoId: string }>();
+
 
     const sharedArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.sharedArtifacts);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
@@ -22,6 +26,7 @@ const SharedArtifacts: React.FC<Props> = (props => {
         <Section title="category.shared">
             <ErrorBoundary>
                 <ArtifactListWithMilestones
+                    repoId={repoId}
                     artifacts={sharedArtifacts}
                     repositories={repos}
                     fallback="share.na"

@@ -42,13 +42,14 @@ const EditArtifactDialog: React.FC<Props> = props => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false })
                 helpers.makeSuccessToast(t("artifact.changed"))
+                props.onCancelled();
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => applyChanges())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
         })
-    }, [title, description, props.artifact, dispatch, t]);
+    }, [props, title, description, t, dispatch]);
 
     return (
         <PopupDialog

@@ -54,7 +54,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => getManageable())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getManageable())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getManageable())
         })
     }, [t])
 
@@ -78,6 +78,35 @@ const SharingManagementDialog: React.FC<Props> = props => {
             
             {props.artifact && (
                 <>
+
+                    <AddSharingSearchBar
+                        entity="repository"
+                        repositoryId={props.artifact.repositoryId}
+                        artifactId={props.artifact.id}
+                        roleForNewAssignments={ShareWithRepositoryTORoleEnum.Viewer}
+                        searchMethod={searchRepos}
+                        shareMethod={shareWithRepo}/>
+                    <SharedRepositories
+                        entity={"repository"}
+                        artifact={props.artifact}
+                        getSharedMethod={getSharedRepos}
+                        unshareMethod={unshareWithRepo}
+                        updateMethod={updateShareWithRepo}/>
+
+
+                </>
+            )}
+
+        </PopupDialog>
+    );
+};
+export default SharingManagementDialog;
+
+
+
+//TODO Add this tab when Teams return
+
+/*
                     <TabContext value={openedTab} >
 
                         <TabList onChange={event => handleChangeTab} >
@@ -86,7 +115,7 @@ const SharingManagementDialog: React.FC<Props> = props => {
                         </TabList>
 
                         <TabPanel value="0">
-                            <AddSharingSearchBar
+                                                    <AddSharingSearchBar
                                 entity="repository"
                                 repositoryId={props.artifact.repositoryId}
                                 artifactId={props.artifact.id}
@@ -104,20 +133,9 @@ const SharingManagementDialog: React.FC<Props> = props => {
 
 
                     </TabContext>
-
-                </>
-            )}
-
-        </PopupDialog>
-    );
-};
-export default SharingManagementDialog;
+                        
 
 
-
-//TODO Add this tab when Teams return
-
-/*
                         <TabPanel value="1">
                             <AddSharingSearchBar
                                 entity="team"

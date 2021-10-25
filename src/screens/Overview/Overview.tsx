@@ -7,15 +7,20 @@ import RecentArtifacts from "./RecentArtifacts";
 import RepoAndTeamContainer from "./RepoAndTeamContainer";
 import HeaderContainer from "../../components/Shared/HeaderContainer";
 import {useHistory} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 
 
 const Overview: React.FC = (() => {
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const path: Array<CrumbElement> = [{
         name: "path.overview",
         onClick: () => {
-            history.push("/repository")
+            dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
+            dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false})
+            history.push("/")
         }
     }];
 

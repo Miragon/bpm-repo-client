@@ -43,7 +43,7 @@ const UserListItem: React.FC<Props> = props => {
                     helpers.makeErrorToast(response.data.toString(), () => changeRole(role))
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => changeRole(role))
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => changeRole(role))
             })
     }, [dispatch, props, t]);
 
@@ -58,7 +58,7 @@ const UserListItem: React.FC<Props> = props => {
                     helpers.makeErrorToast(t("error.unknown"), () => removeUser())
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => removeUser())
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => removeUser())
             })
 
     }, [dispatch, props, t]);

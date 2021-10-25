@@ -2,7 +2,7 @@ import {makeStyles} from "@material-ui/styles";
 import React, {useCallback, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
-import {ArtifactMilestoneUploadTOSaveTypeEnum, ArtifactTO} from "../../../api";
+import {ArtifactTO} from "../../../api";
 import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_MILESTONE,
@@ -45,7 +45,7 @@ const CreateMilestoneDialog: React.FC<Props> = props => {
 
         getLatestMilestone(artifact.id).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                createMilestone(artifact.id, response.data.file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone, comment).then(response2 => {
+                createMilestone(artifact.id, response.data.file, comment).then(response2 => {
                     if (Math.floor(response2.status / 100) === 2) {
                         dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
                         dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
@@ -57,14 +57,14 @@ const CreateMilestoneDialog: React.FC<Props> = props => {
                         helpers.makeErrorToast(response2.data.toString(), () => getLatestMilestone(artifact.id))
                     }
                 }, error => {
-                    helpers.makeErrorToast(t(error.response.data), () => getLatestMilestone(artifact.id))
+                    helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getLatestMilestone(artifact.id))
 
                 })
             } else {
                 helpers.makeErrorToast(response.data.toString(), () => getLatestMilestone(artifact.id))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getLatestMilestone(artifact.id))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getLatestMilestone(artifact.id))
         })
 
     }, [artifact, comment, dispatch, onCancelled, t])

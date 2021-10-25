@@ -28,7 +28,7 @@ const FavoriteArtifacts: React.FC = observer(() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchFavorite())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
         })
 
     }, [dispatch, t]);

@@ -56,12 +56,6 @@ export interface ArtifactMilestoneTO {
      * @type {string}
      * @memberof ArtifactMilestoneTO
      */
-    saveType: ArtifactMilestoneTOSaveTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactMilestoneTO
-     */
     updatedDate: string;
     /**
      * 
@@ -88,16 +82,6 @@ export interface ArtifactMilestoneTO {
      */
     deployments: Array<DeploymentTO>;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ArtifactMilestoneTOSaveTypeEnum {
-    Milestone = 'MILESTONE',
-    Autosave = 'AUTOSAVE'
-}
-
 /**
  * Client created Object for updating accessible properties of a version
  * @export
@@ -141,35 +125,6 @@ export interface ArtifactMilestoneUploadTO {
      * @memberof ArtifactMilestoneUploadTO
      */
     file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactMilestoneUploadTO
-     */
-    saveType?: ArtifactMilestoneUploadTOSaveTypeEnum;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ArtifactMilestoneUploadTOSaveTypeEnum {
-    Milestone = 'MILESTONE',
-    Autosave = 'AUTOSAVE'
-}
-
-/**
- * Transports an svg image as preview for an artifact
- * @export
- * @interface ArtifactSVGUploadTO
- */
-export interface ArtifactSVGUploadTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactSVGUploadTO
-     */
-    svgPreview: string;
 }
 /**
  * Containing metadata for an artifact
@@ -213,12 +168,6 @@ export interface ArtifactTO {
      * @memberof ArtifactTO
      */
     updatedDate: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactTO
-     */
-    svgPreview?: string;
     /**
      * 
      * @type {string}
@@ -293,12 +242,6 @@ export interface ArtifactUpdateTO {
      * @memberof ArtifactUpdateTO
      */
     fileType?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArtifactUpdateTO
-     */
-    svgPreview?: string;
 }
 /**
  * Containing information about a user-repository relation
@@ -435,12 +378,6 @@ export interface NewArtifactTO {
      * @memberof NewArtifactTO
      */
     fileType: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NewArtifactTO
-     */
-    svgPreview?: string;
 }
 /**
  * Client created object containing the deployment target and artifact(-version) id(-s) for creating a new deployment
@@ -528,12 +465,6 @@ export interface RepositoryTO {
      * @memberof RepositoryTO
      */
     assignedUsers: number;
-    /**
-     * 
-     * @type {Array<ArtifactTO>}
-     * @memberof RepositoryTO
-     */
-    sharedArtifacts: Array<ArtifactTO>;
 }
 /**
  * 
@@ -759,14 +690,17 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          * @summary Copy file to other repository
          * @param {string} repositoryId 
          * @param {string} artifactId 
+         * @param {ArtifactUpdateTO} artifactUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        copyToRepository: async (repositoryId: string, artifactId: string, options: any = {}): Promise<RequestArgs> => {
+        copyToRepository: async (repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
             assertParamExists('copyToRepository', 'repositoryId', repositoryId)
             // verify required parameter 'artifactId' is not null or undefined
             assertParamExists('copyToRepository', 'artifactId', artifactId)
+            // verify required parameter 'artifactUpdateTO' is not null or undefined
+            assertParamExists('copyToRepository', 'artifactUpdateTO', artifactUpdateTO)
             const localVarPath = `/api/artifact/copy/{repositoryId}/{artifactId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
@@ -783,9 +717,12 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactUpdateTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1238,46 +1175,6 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @summary Update the preview svg of an artifact
-         * @param {string} artifactId 
-         * @param {ArtifactSVGUploadTO} artifactSVGUploadTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePreviewSVG: async (artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('updatePreviewSVG', 'artifactId', artifactId)
-            // verify required parameter 'artifactSVGUploadTO' is not null or undefined
-            assertParamExists('updatePreviewSVG', 'artifactSVGUploadTO', artifactSVGUploadTO)
-            const localVarPath = `/api/artifact/previewSVG/{artifactId}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactSVGUploadTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -1293,11 +1190,12 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @summary Copy file to other repository
          * @param {string} repositoryId 
          * @param {string} artifactId 
+         * @param {ArtifactUpdateTO} artifactUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async copyToRepository(repositoryId: string, artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.copyToRepository(repositoryId, artifactId, options);
+        async copyToRepository(repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.copyToRepository(repositoryId, artifactId, artifactUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1443,18 +1341,6 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateArtifact(artifactId, artifactUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
-        /**
-         * 
-         * @summary Update the preview svg of an artifact
-         * @param {string} artifactId 
-         * @param {ArtifactSVGUploadTO} artifactSVGUploadTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePreviewSVG(artifactId, artifactSVGUploadTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
     }
 };
 
@@ -1470,11 +1356,12 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @summary Copy file to other repository
          * @param {string} repositoryId 
          * @param {string} artifactId 
+         * @param {ArtifactUpdateTO} artifactUpdateTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        copyToRepository(repositoryId: string, artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.copyToRepository(repositoryId, artifactId, options).then((request) => request(axios, basePath));
+        copyToRepository(repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): AxiosPromise<ArtifactTO> {
+            return localVarFp.copyToRepository(repositoryId, artifactId, artifactUpdateTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1606,17 +1493,6 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
         updateArtifact(artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): AxiosPromise<ArtifactTO> {
             return localVarFp.updateArtifact(artifactId, artifactUpdateTO, options).then((request) => request(axios, basePath));
         },
-        /**
-         * 
-         * @summary Update the preview svg of an artifact
-         * @param {string} artifactId 
-         * @param {ArtifactSVGUploadTO} artifactSVGUploadTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.updatePreviewSVG(artifactId, artifactSVGUploadTO, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -1632,12 +1508,13 @@ export class ArtifactApi extends BaseAPI {
      * @summary Copy file to other repository
      * @param {string} repositoryId 
      * @param {string} artifactId 
+     * @param {ArtifactUpdateTO} artifactUpdateTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArtifactApi
      */
-    public copyToRepository(repositoryId: string, artifactId: string, options?: any) {
-        return ArtifactApiFp(this.configuration).copyToRepository(repositoryId, artifactId, options).then((request) => request(this.axios, this.basePath));
+    public copyToRepository(repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any) {
+        return ArtifactApiFp(this.configuration).copyToRepository(repositoryId, artifactId, artifactUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1794,19 +1671,6 @@ export class ArtifactApi extends BaseAPI {
      */
     public updateArtifact(artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any) {
         return ArtifactApiFp(this.configuration).updateArtifact(artifactId, artifactUpdateTO, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Update the preview svg of an artifact
-     * @param {string} artifactId 
-     * @param {ArtifactSVGUploadTO} artifactSVGUploadTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ArtifactApi
-     */
-    public updatePreviewSVG(artifactId: string, artifactSVGUploadTO: ArtifactSVGUploadTO, options?: any) {
-        return ArtifactApiFp(this.configuration).updatePreviewSVG(artifactId, artifactSVGUploadTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

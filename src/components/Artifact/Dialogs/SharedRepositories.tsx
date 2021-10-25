@@ -66,7 +66,7 @@ const SharedRepositories: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => getShared())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getShared())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getShared())
         })
     }, [dispatch, props, t])
 
@@ -79,16 +79,14 @@ const SharedRepositories: React.FC<Props> = props => {
                 helpers.makeErrorToast(t("share.failed"), () => unshare(repoId, targetName))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => unshare(repoId, targetName))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => unshare(repoId, targetName))
         })
     }, [dispatch, props, t])
 
 
     useEffect(() => {
-        if (!sharedSynced) {
-            getShared()
-        }
-    }, [getShared, sharedSynced])
+        getShared()
+    }, [getShared])
 
     useEffect(() => {
         const opts: SharedListItem[] = [];

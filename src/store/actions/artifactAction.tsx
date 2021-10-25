@@ -23,10 +23,9 @@ export const createArtifact = async (repoId: string, name: string, description: 
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const newArtifactTO: NewArtifactTO = {
-        name: name,
-        description: description,
-        fileType: fileType,
-        svgPreview: ""
+        name,
+        description,
+        fileType,
     };
     const response = await artifactController.createArtifact(repoId, newArtifactTO, config)
     return response
@@ -69,10 +68,13 @@ export const addToFavorites = async (artifactId: string): Promise<AxiosResponse<
 }
 
 
-export const copyToRepo = async (repositoryId: string, artifactId: string): Promise<AxiosResponse<ArtifactTO>> => {
+export const copyToRepo = async (repositoryId: string, artifactId: string, name: string, description: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
+    const artifactUpdateTO: ArtifactUpdateTO = {
+        name, description
+    }
     const config = helpers.getClientConfig();
-    const response = await artifactController.copyToRepository(repositoryId, artifactId, config);
+    const response = await artifactController.copyToRepository(repositoryId, artifactId, artifactUpdateTO, config);
     return response;
 }
 

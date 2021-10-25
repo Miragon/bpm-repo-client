@@ -50,7 +50,7 @@ const DeploymentListItem: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getMilestones(artifactId))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getMilestones(artifactId))
         })
     }, [dispatch, t])
 

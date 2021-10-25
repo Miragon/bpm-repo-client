@@ -44,7 +44,7 @@ const DeployMilestoneDialog: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => deploy())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => deploy())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deploy())
         })
     }, [target, props, dispatch, t]);
 

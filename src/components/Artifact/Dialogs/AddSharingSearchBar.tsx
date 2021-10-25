@@ -100,7 +100,7 @@ const AddSharingSearchBar: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchSuggestion(input))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSuggestion(input))
         })
     }, [props, t]);
 

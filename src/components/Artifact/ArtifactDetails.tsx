@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
 import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
-import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
+import {FAVORITE_ARTIFACTS, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import helpers from "../../util/helperFunctions";
 import {fetchFavoriteArtifacts} from "../../store/actions";
 import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
@@ -72,12 +72,12 @@ const ArtifactDetails: React.FC<Props> = (props => {
         fetchFavoriteArtifacts().then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
-                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: true })
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true })
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchFavorite())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
         })
 
     }, [dispatch, t]);
@@ -215,6 +215,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
 
             <div className={classes.container}>
                 <ArtifactListWithMilestones
+                    repoId={repoId}
                     artifacts={filteredArtifacts}
                     repositories={repos}
                     favorites={favoriteArtifacts} />

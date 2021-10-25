@@ -105,7 +105,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchUserSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchUserSuggestion(input))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchUserSuggestion(input))
         })
 
     }, [t]);
@@ -139,7 +139,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
                     helpers.makeErrorToast(response.data.toString(), () => addUser())
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => addUser)
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => addUser)
             })
         }
     }

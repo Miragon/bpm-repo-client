@@ -33,6 +33,8 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 repoSynced: action.dataSynced
             };
 
+
+
         case SYNC_STATUS_ACTIVE_ENTITY:
             return {
                 ...state,

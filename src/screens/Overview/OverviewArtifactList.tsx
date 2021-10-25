@@ -47,7 +47,7 @@ const OverviewArtifactList: React.FC<Props> = (props: Props) => {
                 helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => onFavorite(artifact))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => onFavorite(artifact))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onFavorite(artifact))
         })
     }, [dispatch, t]);
 
@@ -61,7 +61,7 @@ const OverviewArtifactList: React.FC<Props> = (props: Props) => {
             }
 
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => onDownload(artifact))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onDownload(artifact))
         })
     }, [t]);
 
@@ -76,7 +76,7 @@ const OverviewArtifactList: React.FC<Props> = (props: Props) => {
                     helpers.makeErrorToast(t(response.statusText), () => onDelete(artifact));
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => onDelete(artifact))
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onDelete(artifact))
             })
         }
     }, [dispatch, t]);

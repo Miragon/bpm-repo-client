@@ -61,7 +61,7 @@ const RepositoryMembers: React.FC<Props> = props => {
                 helpers.makeErrorToast(t(response.data.toString()), () => getAllAssignedUsers(repoId))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getAllAssignedUsers(repoId))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getAllAssignedUsers(repoId))
         })
     }, [dispatch, props, t])
 

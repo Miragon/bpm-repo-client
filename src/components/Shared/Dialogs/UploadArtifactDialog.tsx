@@ -7,7 +7,7 @@ import PopupDialog from "../Form/PopupDialog";
 import {SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
-import {ArtifactMilestoneUploadTOSaveTypeEnum, ArtifactTypeTO, RepositoryTO} from "../../../api";
+import {ArtifactTypeTO, RepositoryTO} from "../../../api";
 import {useTranslation} from "react-i18next";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {createArtifact} from "../../../store/actions";
@@ -62,7 +62,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
         createArtifact(repoId, title, description, uploadedFileType)
             .then(response => {
                 if(Math.floor(response.status / 100) === 2){
-                    createMilestone(response.data.id, file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone)
+                    createMilestone(response.data.id, file)
                         .then(response2 => {
                             if(Math.floor(response2.status / 100) === 2){
                                 dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
@@ -70,16 +70,16 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                                 helpers.makeSuccessToast(t("artifact.created"))
                                 props.onCancelled()
                             } else{
-                                helpers.makeErrorToast(t(response2.data.toString()), () => createMilestone(response.data.id, file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
+                                helpers.makeErrorToast(t(response2.data.toString()), () => createMilestone(response.data.id, file))
                             }
                         }, error => {
-                            helpers.makeErrorToast(t(error.response.data), () => createMilestone(response.data.id, file, ArtifactMilestoneUploadTOSaveTypeEnum.Milestone))
+                            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => createMilestone(response.data.id, file))
                         })
                 } else {
                     helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
                 }
             }, error => {
-                helpers.makeErrorToast(t(error.response.data), () => onCreate())
+                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
             })
     }, [repoId, title, description, uploadedFileType, file, dispatch, t, props]);
 

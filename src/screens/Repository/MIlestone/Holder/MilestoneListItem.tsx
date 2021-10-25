@@ -132,7 +132,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 helpers.makeErrorToast(t(response.data.toString()), () => getTargets())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => getTargets())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
         })
     }, [dispatch, t])
 
