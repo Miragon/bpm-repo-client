@@ -1,15 +1,14 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { makeStyles } from "@material-ui/styles";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { ArtifactTO, RepositoryTO } from "../../api";
-import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
-import { ARTIFACTQUERY_EXECUTED, SEARCHED_ARTIFACTS } from "../../constants/Constants";
-import { searchArtifact } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {makeStyles} from "@material-ui/styles";
+import React, {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
+import {ArtifactTO, RepositoryTO} from "../../api";
+import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
+import {searchArtifact} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
 
@@ -34,20 +33,17 @@ const useStyles = makeStyles(() => ({
 let timeout: NodeJS.Timeout | undefined;
 
 const ArtifactSearchBar: React.FC = () => {
-    const dispatch = useDispatch();
     const classes = useStyles();
     const { t } = useTranslation("common");
 
 
-    const searchedArtifacts: Array<ArtifactTO> = useSelector(
-        (state: RootState) => state.artifacts.searchedArtifacts
-    );
+
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
-    const foundDiagrams: number = useSelector((state: RootState) => state.resultsCount.artifactResultsCount);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
 
 
-    const [artifact, setArtifact] = useState("");
+    const [artifact, setArtifact] = useState<string>("");
+    const [returnedArtifacts, setReturnedArtifacts] = useState<ArtifactTO[]>([]);
     const [open, setOpen] = useState(false);
     const [results, setResults] = useState<ArtifactTO[]>([]);
     const [displayResult, setDisplayResult] = useState<boolean>(false);
@@ -58,18 +54,18 @@ const ArtifactSearchBar: React.FC = () => {
             setResults([]);
         }
         if (open) {
-            setResults(searchedArtifacts);
+            setResults(returnedArtifacts);
         }
-    }, [open, searchedArtifacts, artifact, displayResult]);
+    }, [open, returnedArtifacts, artifact, displayResult]);
 
     useEffect(() => {
-        if (searchedArtifacts.length > 0) {
+        if (returnedArtifacts.length > 0) {
             setLoading(false);
         }
-        if (foundDiagrams === 0) {
+        if (returnedArtifacts.length === 0) {
             setLoading(false);
         }
-    }, [searchedArtifacts, foundDiagrams]);
+    }, [returnedArtifacts, returnedArtifacts.length]);
 
     useEffect(() => {
         if (artifact === "") {
@@ -98,19 +94,15 @@ const ArtifactSearchBar: React.FC = () => {
     const fetchArtifactSuggestion = useCallback((input: string) => {
         searchArtifact(input).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SEARCHED_ARTIFACTS, searchedArtifacts: response.data });
-                dispatch({
-                    type: ARTIFACTQUERY_EXECUTED,
-                    artifactResultsCount: response.data.length
-                })
+                setReturnedArtifacts(response.data)
             } else {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchArtifactSuggestion(input))
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifactSuggestion(input))
 
         })
-    }, [dispatch, t]);
+    }, [t]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateState = (event: any) => {
@@ -162,7 +154,7 @@ const ArtifactSearchBar: React.FC = () => {
                         <div className={classes.resultsContainer}>
                             <OverviewArtifactList
                                 fallback="search.noResults"
-                                artifacts={searchedArtifacts}
+                                artifacts={returnedArtifacts}
                                 repositories={repos}
                                 favorites={favoriteArtifacts} />
                         </div>

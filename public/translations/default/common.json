@@ -57,7 +57,9 @@
     "deployedMultiple": "Deployed {{deployedMilestones}} Milestones",
     "adminPermissionsRequired": "You need admin permissions to deploy artifacts",
     "dialogHeader": "Deploy Milestone {{milestoneNumber}}",
-    "history": "All Deployments"
+    "history": "All Deployments",
+    "notAvailable": "No deployments available"
+
   },
   "user": {
     "user": "User",
@@ -163,8 +165,8 @@
     "type": {
       "BPMN": "BPMN",
       "DMN": "DMN",
-      "FORM": "Form",
-      "CONFIGURATION": "Configuration"
+      "FORM": "Formular",
+      "CONFIGURATION": "Konfiguration"
     }
   },
   "duration": {

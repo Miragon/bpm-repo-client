@@ -1,11 +1,12 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import i18next from "i18next";
-import React, { useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import React, {useMemo} from "react";
+import {useTranslation} from "react-i18next";
 import Flag from "react-world-flags";
-import DropdownButton, { DropdownButtonItem } from "../Form/DropdownButton";
 import MenuBar from "./MenuBar";
+import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
+import Identity from "../Shared/Identity";
 
 const useStyles = makeStyles((theme: Theme) => ({
     menu: {
@@ -32,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     languageSelector: {
         minWidth: "200px"
+    },
+    languageAndIdentity: {
+        display: "flex",
+        flexDirection: "row",
+        gap: "20px"
     }
 }));
 
@@ -71,11 +77,14 @@ const Menu: React.FC = () => {
                         DigitalWF-Modellverwaltung
                     </Typography>
                 </div>
-                <DropdownButton
-                    className={classes.languageSelector}
-                    type="default"
-                    title={t("language.select")}
-                    options={options} />
+                <div className={classes.languageAndIdentity}>
+                    <DropdownButton
+                        className={classes.languageSelector}
+                        type="default"
+                        title={t("language.select")}
+                        options={options} />
+                    <Identity />
+                </div>
             </div>
         </MenuBar>
     );

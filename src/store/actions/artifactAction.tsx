@@ -23,10 +23,9 @@ export const createArtifact = async (repoId: string, name: string, description: 
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
     const newArtifactTO: NewArtifactTO = {
-        name: name,
-        description: description,
-        fileType: fileType,
-        svgPreview: ""
+        name,
+        description,
+        fileType,
     };
     const response = await artifactController.createArtifact(repoId, newArtifactTO, config)
     return response
@@ -53,14 +52,6 @@ export const fetchArtifactsFromRepo = async (repoId: string): Promise<AxiosRespo
 }
 
 
-export const uploadArtifact = async (repoId: string, name: string, description: string, fileType: string): Promise<AxiosResponse<ArtifactTO>> => {
-    const artifactController = new ArtifactApi();
-    const config = helpers.getClientConfig();
-    const newArtifact: NewArtifactTO = {name, description, fileType};
-    const response = await artifactController.createArtifact(repoId, newArtifact, config);
-    return response;
-}
-
 export const searchArtifact = async (typedTitle: string): Promise<AxiosResponse<ArtifactTO[]>> => {
     const artifactController = new ArtifactApi();
     const config = helpers.getClientConfig();
@@ -77,10 +68,13 @@ export const addToFavorites = async (artifactId: string): Promise<AxiosResponse<
 }
 
 
-export const copyToRepo = async (repositoryId: string, artifactId: string): Promise<AxiosResponse<ArtifactTO>> => {
+export const copyToRepo = async (repositoryId: string, artifactId: string, name: string, description: string): Promise<AxiosResponse<ArtifactTO>> => {
     const artifactController = new ArtifactApi();
+    const artifactUpdateTO: ArtifactUpdateTO = {
+        name, description
+    }
     const config = helpers.getClientConfig();
-    const response = await artifactController.copyToRepository(repositoryId, artifactId, config);
+    const response = await artifactController.copyToRepository(repositoryId, artifactId, artifactUpdateTO, config);
     return response;
 }
 

@@ -1,26 +1,46 @@
-import { Breadcrumbs, Link } from "@material-ui/core";
+import {Breadcrumbs} from "@material-ui/core";
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import {makeStyles} from "@material-ui/core/styles";
+import theme from "../../theme";
+
+const useStyles = makeStyles(() => ({
+    link: {
+        cursor: "pointer",
+        color: theme.palette.primary.main,
+        fontWeight: "lighter",
+        "&:hover": {
+            color: theme.palette.primary.light,
+            textDecoration: "underline",
+        }
+    }
+})
+)
 
 interface Props {
-    structure: Array<{ name: string, link: string }>;
+    structure: Array<CrumbElement>;
 }
 
+export interface CrumbElement {
+    name: string;
+    onClick: () => void;
+}
+
+
 const PathStructure: React.FC<Props> = props => {
-    const history = useHistory();
+    const classes = useStyles();
     const { t } = useTranslation("common");
+
 
     return (
         <Breadcrumbs separator="›">
             {props.structure.map(crumb => (
-                <Link
-                    href="#"
+                <div className={classes.link}
                     key={crumb.name}
                     color="inherit"
-                    onClick={() => history.push(crumb.link)}>
+                    onClick={crumb.onClick}>
                     {t(crumb.name)}
-                </Link>
+                </div>
             ))}
         </Breadcrumbs>
     );

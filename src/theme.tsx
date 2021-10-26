@@ -1,6 +1,5 @@
-import { blue } from "@material-ui/core/colors";
-import {responsiveFontSizes} from "@material-ui/core/styles";
-import {createTheme} from "@material-ui/core";
+import {blue} from "@material-ui/core/colors";
+import {createTheme, responsiveFontSizes} from "@material-ui/core/styles";
 
 const theme = responsiveFontSizes(
     createTheme({

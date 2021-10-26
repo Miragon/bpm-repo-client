@@ -64,22 +64,22 @@
         }
     },
     "milestone": {
-        "create": "Meilenstein erstellen",
-        "created": "Meilenstein erstellt",
-        "deploy": "Meilenstein veröffentlichen",
-        "deployMultiple": "Meilenstein veröffentlichen",
-        "downloading": "Meilenstein wird heruntergeladen",
-        "deployed": "Meilenstein veröffentlicht",
-        "dialogHeader": "Neuen Meilenstein von {{artifactName}} erstellen",
-        "edit": "Meilenstein bearbeiten",
-        "download": "Meilenstein herunterladen",
-        "delete": "Meilenstein löschen",
+        "create": "Milestone erstellen",
+        "created": "Milestone erstellt",
+        "deploy": "Milestone veröffentlichen",
+        "deployMultiple": "Milestoneen veröffentlichen",
+        "downloading": "Milestone wird heruntergeladen",
+        "deployed": "Milestone veröffentlicht",
+        "dialogHeader": "Neue Milestone von {{artifactName}} erstellen",
+        "edit": "Milestone bearbeiten",
+        "download": "Milestone herunterladen",
+        "delete": "Milestone löschen",
         "openLatest": "Aktuellen Meilenstein öffnen",
-        "milestone": "Meilenstein",
+        "milestone": "Milestone",
         "MILESTONE": "Meilenstein",
         "deploymentHistory": "Veröffentlichungen",
         "saveAsNewArtifact": "Als neue Datei speichern",
-        "saveVersionXAsNewArtifact": "Meilenstein {{milestone}} als neue Datei speichern"
+        "saveMilestoneXAsNewArtifact": "Milestone {{milestone}} als neue Datei speichern"
     },
     "form": {
         "create": "Formular erstellen"
@@ -90,7 +90,7 @@
     "assignment": {
         "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
         "added": "{{username}} zum Projekt hinzugefügt",
-        "removed": "{{username}} vom Projekt entfernt",
+        "removed": "{{username}} entfernt",
         "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
     },
     "deployment": {
@@ -102,8 +102,9 @@
         "deploymentDuration": "{{duration}} veröffentlicht",
         "deployedMultiple": "{{deployedMilestones}} Milestoneen veröffentlicht",
         "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
-        "dialogHeader": "Meilenstein {{milestoneNumber}} veröffentlichen",
-        "history": "Alle Veröffentlichungen"
+        "dialogHeader": "Milestone {{milestoneNumber}} veröffentlichen",
+        "history": "Alle Veröffentlichungen",
+        "notAvailable": "Es wurden noch keine Dateien veröffentlicht"
     },
     "user": {
         "user": "Benutzer",
@@ -113,7 +114,7 @@
         "ADMIN": "Administrator",
         "MEMBER": "Mitglied",
         "VIEWER": "Gast",
-        "remove": "Von Projekt entfernen"
+        "remove": "Benutzer entfernen"
     },
     "category": {
         "favorite": "Favoriten",
@@ -136,7 +137,7 @@
     "properties": {
         "title": "Titel",
         "filename": "Name",
-        "version": "Version",
+        "milestone": "Milestone",
         "description": "Beschreibung",
         "comment": "Kommentar",
         "date": "Datum",

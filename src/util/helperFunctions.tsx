@@ -1,8 +1,8 @@
-import { DateTime } from "luxon";
-import React, { ReactText } from "react";
-import { TFunction } from "react-i18next";
-import { toast } from "react-toastify";
-import { ArtifactTO, ArtifactVersionTO, RepositoryTO } from "../api";
+import {DateTime} from "luxon";
+import React, {ReactText} from "react";
+import {TFunction} from "react-i18next";
+import {toast} from "react-toastify";
+import {ArtifactMilestoneTO, ArtifactTO, DeploymentTO, RepositoryTO} from "../api";
 import Toast from "../components/Layout/Toast";
 import theme from "../theme";
 
@@ -39,7 +39,7 @@ const helpers = {
             }
         } else {
             if (date) {
-                const americanDate = `${date.substring(5, 7)}.${date.substring(8, 10)}.${date.substring(0, 4)}`
+                const americanDate = `${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}`
                 const time = date.split("T")[1].substring(0, 5);
                 return `${americanDate} | ${time}`;
             }
@@ -52,13 +52,25 @@ const helpers = {
         return assignedRepo ? assignedRepo.name : "";
     },
 
-    download: ((artifactVersion: ArtifactVersionTO): void => {
-        const filePath = `/api/version/${artifactVersion.artifactId}/${artifactVersion.id}/download`
+    download: ((artifactMilestone: ArtifactMilestoneTO): void => {
+        const filePath = `/api/milestone/${artifactMilestone.artifactId}/${artifactMilestone.id}/download`
         const link = document.createElement("a");
         link.href = filePath;
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
         link.click();
     }),
+
+    compareTimestamp: (a: DeploymentTO, b: DeploymentTO): number => {
+        const c = new Date(a.timestamp)
+        const d = new Date(b.timestamp)
+        if(c < d) {
+            return 1;
+        }
+        if(c > d) {
+            return -1;
+        }
+        return 0;
+    },
 
     compareCreated: (a: ArtifactTO, b: ArtifactTO): number => {
         const c = new Date(a.createdDate)
@@ -157,6 +169,7 @@ const helpers = {
         return parsed.toLocaleString(DateTime.DATE_SHORT);
 
     }
+
 };
 
 

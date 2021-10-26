@@ -9,3 +9,11 @@ export const searchUsers = async (typedName: string): Promise<AxiosResponse<User
     const response = await userController.searchUsers(typedName, config);
     return response;
 }
+
+
+export const getMultipleUsers = async(userIds: Array<string>): Promise<AxiosResponse<UserInfoTO[]>> => {
+    const userController = new api.UserApi();
+    const config = helpers.getClientConfig();
+    const response = await userController.getMultipleUsers(userIds, config);
+    return response;
+}

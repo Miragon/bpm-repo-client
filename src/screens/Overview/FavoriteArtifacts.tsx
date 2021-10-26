@@ -1,13 +1,13 @@
-import { observer } from "mobx-react";
-import React, { useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { ArtifactTO, RepositoryTO } from "../../api";
-import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import {observer} from "mobx-react";
+import React, {useCallback, useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {ArtifactTO, RepositoryTO} from "../../api";
+import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import Section from "../../components/Layout/Section";
-import { FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE } from "../../constants/Constants";
-import { fetchFavoriteArtifacts } from "../../store/actions";
-import { RootState } from "../../store/reducers/rootReducer";
+import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
+import {fetchFavoriteArtifacts} from "../../store/actions";
+import {RootState} from "../../store/reducers/rootReducer";
 import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
 
@@ -28,7 +28,7 @@ const FavoriteArtifacts: React.FC = observer(() => {
                 helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
         }, error => {
-            helpers.makeErrorToast(t(error.response.data), () => fetchFavorite())
+            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
         })
 
     }, [dispatch, t]);
@@ -41,7 +41,7 @@ const FavoriteArtifacts: React.FC = observer(() => {
 
 
     return (
-        <Section title="category.favorite">
+        <Section title="category.favorite" key={"favorite"}>
             <ErrorBoundary>
                 <OverviewArtifactList
                     artifacts={favoriteArtifacts}
