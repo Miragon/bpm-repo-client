@@ -101,4 +101,3 @@ If you experience any bugs or have questions concerning the usage or further dev
 ```
 
 For the full license text, see the LICENSE file above.
-Remember that the bpmn.io license still applies, i.e. you must not remove the icon displayed in the bottom-right corner.
