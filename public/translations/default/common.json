@@ -106,10 +106,10 @@
     "integration": "Integration blocks"
   },
   "registration": {
-    "signup": "Sign up for Miragon Cloud Services",
-    "firstTime": "This is the first time you are trying to access Miragon Cloud Services.",
-    "accountRequired": "To use this service you need an account.\n To create a new account, click the button below and accept the terms and conditions.",
-    "agree": "I agree to the terms of service",
+    "signup": "Sign up",
+    "firstTime": "This is the first time you are trying to access the application",
+    "accountRequired": "To use this service you need an account.\n To create a new account, click the button below.",
+    "agree": " ",
     "create": "Create a new User Profile"
   },
   "language": {
