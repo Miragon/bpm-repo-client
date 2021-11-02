@@ -17,7 +17,6 @@ import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
 import SettingsTextField from "../Form/SettingsTextField";
-import {createMilestone} from "../../../store/actions/milestoneAction";
 
 interface Props {
     open: boolean;
@@ -47,23 +46,14 @@ const CreateArtifactDialog: React.FC<Props> = props => {
         createArtifact(repoId, title, description, props.type)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    createMilestone(response.data.id, "")
-                        .then(response2 => {
-                            if (Math.floor(response2.status / 100) === 2) {
-                                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
-                                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
-                                dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false })
-                                dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
-                                setTitle("");
-                                setDescription("");
-                                helpers.makeSuccessToast(t("artifact.created"));
-                                props.onCancelled();
-                            } else {
-                                helpers.makeErrorToast(response2.data.toString(), () => createMilestone(response.data.id, ""))
-                            }
-                        }, error => {
-                            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => createMilestone(response.data.id, ""))
-                        })
+                    dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false })
+                    dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
+                    setTitle("");
+                    setDescription("");
+                    helpers.makeSuccessToast(t("artifact.created"));
+                    props.onCancelled();
                 } else {
                     helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
                 }
