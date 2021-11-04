@@ -1,71 +1,53 @@
 import {NewRepositoryTO, RepositoryApi, RepositoryTO, RepositoryUpdateTO} from "../../api";
-import helpers from "../../util/helperFunctions";
 import {AxiosResponse} from "axios";
+import {getClientConfig} from "../../api/config";
 
 export const fetchRepositories = async (): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
-    const response = await repositoryController.getAllRepositories(config);
-    return response;
+    const config = getClientConfig();
+    return await repositoryController.getAllRepositories(config);
 }
 
 export const getSingleRepository = async (id: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
-    const response = await repositoryController.getSingleRepository(id, config);
-    return response
+    const config = getClientConfig();
+    return await repositoryController.getSingleRepository(id, config)
 }
-/*
-export const getAllRepositoriesForTeam = async(teamId: string): Promise<AxiosResponse<Array<RepositoryTO>>> => {
-    const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
-    const response = await repositoryController.getAllRepositoriesForTeam(teamId, config);
-    return response
-}
-*/
-
 
 export const createRepository = async (name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
+    const config = getClientConfig();
     const newRepositoryTO: NewRepositoryTO = {
         name,
         description
     };
-    const response = await repositoryController.createRepository(newRepositoryTO, config);
-    return response;
+    return await repositoryController.createRepository(newRepositoryTO, config);
 }
 
 export const updateRepository = async (id: string, name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
+    const config = getClientConfig();
     const repositoryUpdateTO: RepositoryUpdateTO = {
         name,
         description
     };
-    const response = await repositoryController.updateRepository(id, repositoryUpdateTO, config);
-    return response;
+    return await repositoryController.updateRepository(id, repositoryUpdateTO, config);
 }
 
 export const deleteRepository = async (id: string): Promise<AxiosResponse<void>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
-    const response = await repositoryController.deleteRepository(id, config);
-    return response;
+    const config = getClientConfig();
+    return await repositoryController.deleteRepository(id, config);
 }
-
 
 export const getManageableRepos = async (): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
-    const response = await repositoryController.getManageableRepositories(config);
-    return response;
+    const config = getClientConfig();
+    return await repositoryController.getManageableRepositories(config);
 }
-
 
 export const searchRepos = async (typedName: string): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
-    const config = helpers.getClientConfig();
-    const response = await repositoryController.searchRepositories(typedName, config);
-    return response;
+    const config = getClientConfig();
+    return await repositoryController.searchRepositories(typedName, config);
 }

@@ -6,9 +6,9 @@ import {ToastContainer} from "react-toastify";
 import {ArtifactApi, UserApi} from "../../api";
 import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
-import helpers from "../../util/helperFunctions";
 import Menu from "./Menu";
 import Router from "./Router";
+import {getClientConfig} from "../../api/config";
 
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
@@ -36,12 +36,12 @@ const Layout: React.FC = () => {
     const [fileConfigFetched, setFileConfigFetched] = useState(false);
 
     useEffect(() => {
-        const config = helpers.getClientConfig();
+        const config = getClientConfig();
         new UserApi().getUserInfo(config)
             .then(response => {
                 if (response.data) {
                     setUserDoesExist(true);
-                    dispatch({ type: CURRENT_USER_INFO, currentUserInfo: response.data });
+                    dispatch({type: CURRENT_USER_INFO, currentUserInfo: response.data});
                 } else {
                     setUserDoesExist(false);
                 }
@@ -51,10 +51,10 @@ const Layout: React.FC = () => {
 
     useEffect(() => {
         if (!fileConfigFetched) {
-            const config = helpers.getClientConfig();
+            const config = getClientConfig();
             new ArtifactApi().getAllFileTypes(config).then(response => {
                 if (response.data) {
-                    dispatch({ type: FILETYPES, fileTypes: response.data });
+                    dispatch({type: FILETYPES, fileTypes: response.data});
                     setFileConfigFetched(true);
                 }
             })
@@ -67,16 +67,16 @@ const Layout: React.FC = () => {
     }
 
     if (!userDoesExist) {
-        return <RegisterNewUserScreen />;
+        return <RegisterNewUserScreen/>;
     }
 
     return (
         <>
-            <Menu />
+            <Menu/>
             <div className={classes.contentWrapper}>
                 <div className={classes.content}>
-                    <Router />
-                    <ToastContainer />
+                    <Router/>
+                    <ToastContainer/>
                 </div>
             </div>
         </>

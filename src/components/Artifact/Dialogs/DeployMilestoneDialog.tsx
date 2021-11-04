@@ -5,9 +5,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {deployMilestone} from "../../../store/actions";
 import {SYNC_STATUS_MILESTONE} from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import SettingsSelect from "../../Shared/Form/SettingsSelect";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 
 interface Props {
@@ -36,15 +36,15 @@ const DeployMilestoneDialog: React.FC<Props> = props => {
 
     const deploy = useCallback(async () => {
         deployMilestone(target, props.repositoryId, props.artifactId, props.milestoneId).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false})
-                helpers.makeSuccessToast(t("milestone.deployed"))
-                props.onCancelled()
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => deploy())
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => deploy())
+                return;
             }
+            dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false})
+            makeSuccessToast(t("milestone.deployed"))
+            props.onCancelled()
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deploy())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deploy())
         })
     }, [target, props, dispatch, t]);
 
@@ -57,7 +57,7 @@ const DeployMilestoneDialog: React.FC<Props> = props => {
             firstTitle={t("dialog.applyChanges")}
             onFirst={deploy}
             secondTitle={t("dialog.cancel")}
-            onSecond={props.onCancelled} >
+            onSecond={props.onCancelled}>
 
             <SettingsSelect
                 disabled={false}

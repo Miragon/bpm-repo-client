@@ -5,11 +5,10 @@ import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
-import helpers from "../../util/helperFunctions";
 import {DropdownButtonItem} from "./Form/DropdownButton";
 import PopupSettings from "./Form/PopupSettings";
 import {AssignmentTORoleEnum} from "../../api";
-
+import {makeErrorToast, makeSuccessToast} from "../../util/toastUtils";
 
 interface Props {
     assignmentTargetId: string;
@@ -23,7 +22,6 @@ interface Props {
     deleteAssignmentMethod: (targetId: string, userId: string) => Promise<AxiosResponse>;
 }
 
-
 const UserListItem: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
@@ -35,13 +33,13 @@ const UserListItem: React.FC<Props> = props => {
     const changeRole = useCallback(role => {
         props.updateAssignmentMethod(props.assignmentTargetId, props.userId, role)
             .then(response => {
-                if(Math.floor(response.status / 100) === 2){
-                    dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
-                } else{
-                    helpers.makeErrorToast(response.data.toString(), () => changeRole(role))
+                if (Math.floor(response.status / 100) === 2) {
+                    dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false});
+                } else {
+                    makeErrorToast(response.data.toString(), () => changeRole(role))
                 }
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => changeRole(role))
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => changeRole(role))
             })
     }, [dispatch, props, t]);
 
@@ -49,14 +47,14 @@ const UserListItem: React.FC<Props> = props => {
     const removeUser = useCallback(() => {
         props.deleteAssignmentMethod(props.assignmentTargetId, props.userId)
             .then(response => {
-                if(Math.floor(response.status / 100) === 2){
-                    helpers.makeSuccessToast(t("assignment.removed", {username: props.username}))
-                    dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
+                if (Math.floor(response.status / 100) === 2) {
+                    makeSuccessToast(t("assignment.removed", {username: props.username}))
+                    dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false});
                 } else {
-                    helpers.makeErrorToast(t("error.unknown"), () => removeUser())
+                    makeErrorToast(t("error.unknown"), () => removeUser())
                 }
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => removeUser())
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => removeUser())
             })
 
     }, [dispatch, props, t]);
@@ -120,21 +118,21 @@ const UserListItem: React.FC<Props> = props => {
             <ListItem>
                 <ListItemText
                     primary={props.username}
-                    secondary={t(`user.${props.role}`)} />
+                    secondary={t(`user.${props.role}`)}/>
                 {props.hasAdminPermissions && (
                     <ListItemSecondaryAction>
                         <IconButton ref={ref} edge="end" onClick={() => setOpen(true)}>
-                            <Settings />
+                            <Settings/>
                         </IconButton>
                     </ListItemSecondaryAction>
                 )}
             </ListItem>
-            <Divider />
+            <Divider/>
             <PopupSettings
                 open={open}
                 reference={ref.current}
                 onCancel={() => setOpen(false)}
-                options={options} />
+                options={options}/>
         </>
     );
 };

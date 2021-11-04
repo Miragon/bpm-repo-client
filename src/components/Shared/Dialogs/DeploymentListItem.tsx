@@ -15,7 +15,7 @@ import {useTranslation} from "react-i18next";
 import {ArtifactMilestoneTO} from "../../../api";
 import {getAllMilestones} from "../../../store/actions";
 import {DEPLOYMENT_MILESTONES} from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
+import {makeErrorToast} from "../../../util/toastUtils";
 
 
 const useStyles = makeStyles(() => ({
@@ -43,14 +43,14 @@ const DeploymentListItem: React.FC<Props> = props => {
 
     const getMilestones = useCallback(async (artifactId: string) => {
         getAllMilestones(artifactId).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({type: DEPLOYMENT_MILESTONES, deploymentMilestones: response.data})
                 setMilestones(response.data)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId))
+                makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getMilestones(artifactId))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getMilestones(artifactId))
         })
     }, [dispatch, t])
 
@@ -63,14 +63,11 @@ const DeploymentListItem: React.FC<Props> = props => {
         props.onChangeMilestone(props.artifactId, milestoneId)
     }
 
-
     //TODO: Fetching all Milestones, including all files, will become very expensive => write new endpoint that returns only MilestoneIds and MileStones
-
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         changeMilestone(event.target.value as string);
         setSelectedMilestone(event.target.value as string)
     };
-
 
     return (
         <>
@@ -80,7 +77,7 @@ const DeploymentListItem: React.FC<Props> = props => {
                     secondary={"sadas"}/>
 
                 <ListItemSecondaryAction>
-                    <FormControl >
+                    <FormControl>
                         <InputLabel id="milestoneSelector">{t("milestone.milestone")}</InputLabel>
                         <Select
                             required
@@ -88,7 +85,7 @@ const DeploymentListItem: React.FC<Props> = props => {
                             labelId="milestoneSelector"
                             id="selector"
                             value={selectedMilestone}
-                            onChange={handleChange} >
+                            onChange={handleChange}>
                             {milestones.map(milestone => (
                                 <MenuItem key={milestone.id} value={milestone.id}>{milestone.milestone}</MenuItem>
                             ))}
@@ -98,7 +95,7 @@ const DeploymentListItem: React.FC<Props> = props => {
 
                 </ListItemSecondaryAction>
             </ListItem>
-            <Divider />
+            <Divider/>
         </>
     );
 }

@@ -7,14 +7,14 @@ import {useParams} from "react-router";
 import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../api";
 import {RootState} from "../../store/reducers/rootReducer";
 import {FAVORITE_ARTIFACTS, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
-import helpers from "../../util/helperFunctions";
 import {fetchFavoriteArtifacts} from "../../store/actions";
 import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
 import SimpleButton from "../Shared/Form/SimpleButton";
 import ArtifactManagementContainer from "../Shared/Buttons/ArtifactManagementContainer";
 import DeployMultipleDialog from "../Shared/Dialogs/DeployMultipleDialog";
 import ArtifactListWithMilestones from "./ArtifactListWithMilestones";
-
+import {makeErrorToast} from "../../util/toastUtils";
+import {compareCreated, compareEdited, compareName} from "../../util/compareUtils";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -53,9 +53,9 @@ interface Props {
 const ArtifactDetails: React.FC<Props> = (props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
-    const { repoId } = useParams<{ repoId: string }>();
+    const {repoId} = useParams<{ repoId: string }>();
     const favoriteSynced: boolean = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
@@ -67,21 +67,19 @@ const ArtifactDetails: React.FC<Props> = (props => {
     const [sortValue, setSortValue] = useState<string>("lastEdited");
 
 
-
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
-                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true })
+                dispatch({type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data});
+                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: true})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
+                makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
         })
 
     }, [dispatch, t]);
-
 
 
     useEffect(() => {
@@ -102,18 +100,6 @@ const ArtifactDetails: React.FC<Props> = (props => {
         applyFilters()
     }
 
-    //TODO: filteredAndSortedArtifacts ist Alex's vorschlag, um die Sortierfunktion zu vereinfachen
-    /*
-     const filteredAndSortedArtifacts = useMemo(() => {
-     const filtered = activeArtifacts.filter(artifact => displayedFileTypes.indexOf(artifact.fileType) !== -1);
-     switch(sortValue) {
-     case "created": return filtered.sort(helpers.compareCreated);
-     case "lastEdited": return filtered.sort(helpers.compareEdited);
-     case "name": return filtered.sort(helpers.compareName);
-     }
-     }, [activeArtifacts, displayedFileTypes, sortValue]);
-     */
-
     const applyFilters = useCallback(() => {
         const filtered = props.artifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
         sort(sortValue, filtered)
@@ -127,15 +113,15 @@ const ArtifactDetails: React.FC<Props> = (props => {
         switch (value) {
             case "created":
                 setSortValue("created")
-                setFilteredArtifacts(artifacts.sort(helpers.compareCreated));
+                setFilteredArtifacts(artifacts.sort(compareCreated));
                 return;
             case "lastEdited":
                 setSortValue("lastEdited")
-                setFilteredArtifacts(artifacts.sort(helpers.compareEdited));
+                setFilteredArtifacts(artifacts.sort(compareEdited));
                 return;
             case "name":
                 setSortValue("name")
-                setFilteredArtifacts(artifacts.sort(helpers.compareName));
+                setFilteredArtifacts(artifacts.sort(compareName));
                 return;
         }
     };
@@ -191,24 +177,21 @@ const ArtifactDetails: React.FC<Props> = (props => {
                         title={t("filter.filter")}
                         options={filterOptions}
                         type={"checkbox"}
-                        selectedFilterOptions={displayedFileTypes} />
+                        selectedFilterOptions={displayedFileTypes}/>
                     <DropdownButton
                         className={classes.dropdownButton}
                         title={t("sort.sort")}
                         options={sortOptions}
                         type={"radio"}
-                        defaultSortValue={"lastEdited"} />
+                        defaultSortValue={"lastEdited"}/>
                 </div>
                 <div className={classes.buttonGroup}>
                     <SimpleButton
                         className={classes.button}
                         title={t("deployment.multiple")}
-                        onClick={() => setDeployMultipleOpen(true)} />
-                    {props.view === "team" ?
-                        <></>
-                        :
-                        <ArtifactManagementContainer />
-
+                        onClick={() => setDeployMultipleOpen(true)}/>
+                    {
+                        props.view === "team" ? <></> : <ArtifactManagementContainer/>
                     }
                 </div>
             </div>
@@ -218,14 +201,14 @@ const ArtifactDetails: React.FC<Props> = (props => {
                     repoId={repoId}
                     artifacts={filteredArtifacts}
                     repositories={repos}
-                    favorites={favoriteArtifacts} />
+                    favorites={favoriteArtifacts}/>
             </div>
 
             <DeployMultipleDialog
                 artifacts={props.artifacts}
                 open={deployMultipleOpen}
                 onCancelled={() => setDeployMultipleOpen(false)}
-                repoId={repoId} />
+                repoId={repoId}/>
         </>
     );
 });

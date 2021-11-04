@@ -1,17 +1,17 @@
 import React, {useCallback, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {createArtifact, createMilestone} from "../../../store/actions";
+import {createArtifact} from "../../../store/actions";
 import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_MILESTONE,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY
 } from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import SettingsForm from "../../Shared/Form/SettingsForm";
 import SettingsTextField from "../../Shared/Form/SettingsTextField";
+import {makeErrorToast} from "../../../util/toastUtils";
 
 interface Props {
     open: boolean;
@@ -33,26 +33,17 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
     const [description, setDescription] = useState("");
 
     const onCreate = useCallback(async () => {
-        createArtifact(props.repoId, title, description, props.type).then(response => {
-            if(Math.floor(response.status / 100) === 2){
-                createMilestone(response.data.id, props.file).then(response => {
-                    if(Math.floor(response.status / 100) === 2){
-                        dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false });
-                        dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
-                        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
-                        dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
-                    } else {
-                        helpers.makeErrorToast(t(response.data.toString()), () => createMilestone(response.data.id, props.file))
-                    }
-                }, error => {
-                    helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => createMilestone(response.data.id, props.file))
-                })
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
-            }
-        }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
-        })
+
+        const response = await createArtifact(props.repoId, title, description, props.type, props.file);
+        if (Math.floor(response.status / 100) !== 2) {
+            makeErrorToast(t(response.data.toString()), () => onCreate())
+            return;
+        }
+
+        dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
+        dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
+        dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+        dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
 
     }, [props.repoId, props.type, props.file, title, description, dispatch, t]);
 
@@ -66,7 +57,7 @@ const SaveAsNewArtifactDialog: React.FC<Props> = props => {
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.create")}
-            onFirst={onCreate} >
+            onFirst={onCreate}>
 
             <SettingsForm large>
 

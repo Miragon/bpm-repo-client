@@ -9,9 +9,8 @@ import {Add} from "@material-ui/icons";
 import theme from "../../../theme";
 import {ArtifactTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
-import helpers from "../../../util/helperFunctions";
 import {ErrorBoundary} from "../../Exception/ErrorBoundary";
-
+import {makeErrorToast} from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -34,13 +33,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-
 interface Props {
     repoId: string;
     addArtifact: (artifact: ArtifactTO | undefined) => void;
     addedArtifacts: ArtifactTO[];
 }
-
 
 const AddDeploymentSearchBar: React.FC<Props> = props => {
     const classes = useStyles();
@@ -62,12 +59,12 @@ const AddDeploymentSearchBar: React.FC<Props> = props => {
 
     const onChange = (input: string) => {
         setSearchString(input)
-        if(input !== ""){
+        if (input !== "") {
             const filtered = activeArtifacts.filter(activeArtifact => activeArtifact.name.toLowerCase().startsWith(input.toLowerCase()))
             setOptions(filtered)
             setOpen(true);
         }
-        if(input === ""){
+        if (input === "") {
             setOptions(activeArtifacts)
             setOpen(false)
         }
@@ -82,12 +79,13 @@ const AddDeploymentSearchBar: React.FC<Props> = props => {
 
 
     const onAdd = () => {
-        if(!artifact && !props.addedArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase())){
+        if (!artifact && !props.addedArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase())) {
             const matchingArtifact = activeArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase());
-            matchingArtifact? props.addArtifact(matchingArtifact) : helpers.makeErrorToast(t("artifact.notFound"), () => onAdd());
+            matchingArtifact ? props.addArtifact(matchingArtifact) : makeErrorToast(t("artifact.notFound"), () => onAdd());
             matchingArtifact && setSearchString("");
             return;
         }
+        
         props.addedArtifacts.find(artifact => artifact.name.toLowerCase() === searchString.toLowerCase()) ? console.log("artifact already added to list") : props.addArtifact(artifact);
         setArtifact(undefined)
         setSearchString("");
@@ -99,7 +97,7 @@ const AddDeploymentSearchBar: React.FC<Props> = props => {
                     size="small"
                     id="ArtifactSearchBar"
                     freeSolo
-                    style={{ width: "100%" }}
+                    style={{width: "100%"}}
                     open={open}
                     onOpen={() => {
                         setOpen(false);
@@ -126,12 +124,14 @@ const AddDeploymentSearchBar: React.FC<Props> = props => {
                                         {params.InputProps.endAdornment}
                                     </>
                                 ),
-                            }} />
-                    )} />
+                            }}/>
+                    )}/>
             </ErrorBoundary>
             <ListItemSecondaryAction>
-                <IconButton className={classes.addButton} edge="end" onClick={() => {onAdd()}}>
-                    <Add />
+                <IconButton className={classes.addButton} edge="end" onClick={() => {
+                    onAdd()
+                }}>
+                    <Add/>
                 </IconButton>
             </ListItemSecondaryAction>
         </ListItem>

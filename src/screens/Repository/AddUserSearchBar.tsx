@@ -10,9 +10,9 @@ import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import {AssignmentTORoleEnum, UserInfoTO} from "../../api";
 import theme from "../../theme";
-import helpers from "../../util/helperFunctions";
 import {searchUsers} from "../../store/actions";
 import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
+import {makeErrorToast, makeSuccessToast} from "../../util/toastUtils";
 
 
 const useStyles = makeStyles(() => ({
@@ -99,13 +99,13 @@ const AddUserSearchBar: React.FC<Props> = props => {
 
     const fetchUserSuggestion = useCallback((input: string) => {
         searchUsers(input).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
+            if (Math.floor(response.status / 100) === 2) {
                 setSearchedUsers(response.data)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchUserSuggestion(input))
+                makeErrorToast(t(response.data.toString()), () => fetchUserSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchUserSuggestion(input))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchUserSuggestion(input))
         })
 
     }, [t]);
@@ -125,21 +125,21 @@ const AddUserSearchBar: React.FC<Props> = props => {
     const addUser = () => {
         const object = getObjectByName(username);
         if (object) {
-            if(isUserAlreadyAssigned(username)){
-                helpers.makeErrorToast(t("assignment.alreadyPresent", username), () => addUser())
+            if (isUserAlreadyAssigned(username)) {
+                makeErrorToast(t("assignment.alreadyPresent", username), () => addUser())
                 return;
             }
             const role = AssignmentTORoleEnum.Member
             props.createAssignmentMethod(props.targetId, object.id, role).then(response => {
                 setUsername("");
-                if(Math.floor(response.status / 100) === 2){
+                if (Math.floor(response.status / 100) === 2) {
                     dispatch({type: SYNC_STATUS_ASSIGNMENT, assignmentSynced: false})
-                    helpers.makeSuccessToast(t("assignment.added", username))
+                    makeSuccessToast(t("assignment.added", username))
                 } else {
-                    helpers.makeErrorToast(response.data.toString(), () => addUser())
+                    makeErrorToast(response.data.toString(), () => addUser())
                 }
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => addUser)
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => addUser)
             })
         }
     }
@@ -150,7 +150,7 @@ const AddUserSearchBar: React.FC<Props> = props => {
     };
 
     return (
-        <ListItem className={classes.listItem} >
+        <ListItem className={classes.listItem}>
             <Autocomplete
                 id="UserSearchBar"
                 freeSolo
@@ -171,15 +171,15 @@ const AddUserSearchBar: React.FC<Props> = props => {
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),
-                        }} />
-                )} />
+                        }}/>
+                )}/>
             <ListItemSecondaryAction>
                 <IconButton className={classes.addButton} edge="end" onClick={() => addUser()}>
-                    <Add />
+                    <Add/>
                 </IconButton>
             </ListItemSecondaryAction>
         </ListItem>

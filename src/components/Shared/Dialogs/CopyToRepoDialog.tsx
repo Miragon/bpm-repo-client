@@ -5,13 +5,13 @@ import {useDispatch, useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import {copyToRepo, fetchRepositories} from "../../../store/actions";
 import {RootState} from "../../../store/reducers/rootReducer";
-import helpers from "../../../util/helperFunctions";
 import {REPOSITORIES, SYNC_STATUS_ARTIFACT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
 import {ArtifactTO, RepositoryTO} from "../../../api";
 import SettingsTextField from "../Form/SettingsTextField";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 interface Props {
     repoId: string;
@@ -22,7 +22,7 @@ interface Props {
 
 const CopyToRepoDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [repoId, setRepoId] = useState<string>(props.repoId);
@@ -47,28 +47,29 @@ const CopyToRepoDialog: React.FC<Props> = props => {
 
         copyToRepo(repoId, props.artifact.id, title, description).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("action.copied"))
+                makeSuccessToast(t("action.copied"))
                 setRepoId("")
                 props.onCancelled();
                 dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => onCopy())
+                makeErrorToast(t(response.data.toString()), () => onCopy())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCopy())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCopy())
         })
     }, [props, repoId, title, description, t, dispatch]);
 
     const fetchRepos = useCallback(() => {
         fetchRepositories().then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: REPOSITORIES, repos: response.data });
-                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchRepos())
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => fetchRepos());
+                return;
             }
+            
+            dispatch({type: REPOSITORIES, repos: response.data});
+            dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: true});
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRepos())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRepos())
         })
     }, [dispatch, t]);
 
@@ -83,7 +84,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("artifact.copy", { artifactName: props.artifact?.name })}
+            title={t("artifact.copy", {artifactName: props.artifact?.name})}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.copy")}
@@ -108,7 +109,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
                 <SettingsTextField
                     label={t("properties.title")}
                     value={title}
-                    onChanged={setTitle} />
+                    onChanged={setTitle}/>
 
                 <SettingsTextField
                     label={t("properties.description")}
@@ -116,7 +117,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
                     multiline
                     minRows={3}
                     maxRows={3}
-                    onChanged={setDescription} />
+                    onChanged={setDescription}/>
 
             </SettingsForm>
         </PopupDialog>

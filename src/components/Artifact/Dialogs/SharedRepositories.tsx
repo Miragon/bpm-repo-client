@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import {ArtifactTO, SharedRepositoryTO, SharedRepositoryTORoleEnum, ShareWithRepositoryTORoleEnum,} from "../../../api";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
 
@@ -15,12 +15,9 @@ const useStyles = makeStyles(() => ({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-    leftPanel: {
-    },
-    middlePanel: {
-    },
-    rightPanel: {
-    },
+    leftPanel: {},
+    middlePanel: {},
+    rightPanel: {},
     removeIcon: {
         color: "grey",
     }
@@ -47,7 +44,7 @@ interface Props {
 const SharedRepositories: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const [shareTarget, setShareTarget] = useState<Array<SharedRepositoryTO>>([]);
     const [options, setOptions] = useState<Array<SharedListItem>>([])
@@ -56,27 +53,27 @@ const SharedRepositories: React.FC<Props> = props => {
     const getShared = useCallback(async () => {
 
         props.getSharedMethod(props.artifact.id).then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                setShareTarget(response.data)
-                dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: true });
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getShared())
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => getShared())
+                return;
             }
+            setShareTarget(response.data)
+            dispatch({type: SYNC_STATUS_SHARED, sharedSynced: true});
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getShared())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getShared())
         })
     }, [dispatch, props, t])
 
     const unshare = useCallback((repoId: string, targetName: string) => {
         props.unshareMethod(props.artifact.id, repoId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false })
-                helpers.makeSuccessToast(t("share.removed", {targetName}))
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
+                makeSuccessToast(t("share.removed", {targetName}))
             } else {
-                helpers.makeErrorToast(t("share.failed"), () => unshare(repoId, targetName))
+                makeErrorToast(t("share.failed"), () => unshare(repoId, targetName))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => unshare(repoId, targetName))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => unshare(repoId, targetName))
         })
     }, [dispatch, props, t])
 
@@ -103,17 +100,13 @@ const SharedRepositories: React.FC<Props> = props => {
                 )
             }
         })
-
-
         setOptions(opts)
     }, [props.artifact, shareTarget, unshare])
-
 
 
     return (
         <List>
             <Paper>
-
                 {options.map(option => (
                     <ListItem className={classes.listItem} button key={option.repoName}>
                         <div className={classes.leftPanel}>
@@ -138,10 +131,3 @@ const SharedRepositories: React.FC<Props> = props => {
 };
 
 export default SharedRepositories;
-
-//TODO SelectRoleDropdown can be used if roles for Sharing are implemented (The authentication methods in backend are not adjusted to sharing with roles!)
-/*
-                        <SelectRoleDropdown
-                            option={option}
-                            updateMethod={props.updateMethod}/>
- */

@@ -7,23 +7,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from "react-router-dom";
 import {ToastContainer} from "react-toastify";
 import {UserApi} from "../api/api";
-import helpers from "../util/helperFunctions";
 import {useTranslation} from "react-i18next";
-/*
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright © "}
-            <Link color="inherit" href="https://flowsquad.io">
-                FlowSquad GmbH
-            </Link>
-            {", "}
-            {new Date().getFullYear()}
-            .
-        </Typography>
-    );
-}
-*/
+import {getClientConfig} from "../api/config";
+import {makeErrorToast} from "../util/toastUtils";
+
 const useStyles = makeStyles(theme => ({
     createUserProfilePage: {
         display: "flex",
@@ -74,21 +61,18 @@ const RegisterNewUserScreen: React.FC = () => {
     const history = useHistory();
     const {t} = useTranslation("common");
 
-
     const [userController] = useState<UserApi>(new UserApi());
-    //const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
-
 
     /**
      * Persist a new User-profile in the FlowRepo-backend
      */
     const handleCreateUserProfile = useCallback(async (): Promise<void> => {
         try {
-            const config = helpers.getClientConfig();
+            const config = getClientConfig();
             await userController.createUser(config);
             history.push("/");
         } catch (response) {
-            helpers.makeErrorToast("Could not persist the new User", () => handleCreateUserProfile());
+            makeErrorToast("Could not persist the new User", () => handleCreateUserProfile());
         }
     }, [history, userController]);
 
@@ -96,7 +80,7 @@ const RegisterNewUserScreen: React.FC = () => {
         <div className={classes.createUserProfilePage}>
             <div className={classes.createUserProfileContent}>
                 <Avatar className={classes.avatar}>
-                    <LockIcon />
+                    <LockIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     {t("registration.signup")}
@@ -104,12 +88,11 @@ const RegisterNewUserScreen: React.FC = () => {
 
                 <p className={classes.infoText}>
                     {t("registration.firstTime")}
-                    <br />
+                    <br/>
                     {t("registration.accountRequired")}
                 </p>
 
                 <form className={classes.form} noValidate>
-
 
 
                     <Button
@@ -125,23 +108,9 @@ const RegisterNewUserScreen: React.FC = () => {
                     </Button>
                 </form>
             </div>
-            <ToastContainer />
+            <ToastContainer/>
         </div>
     );
 };
 
 export default RegisterNewUserScreen;
-
-
-/* Accept AGBs:
-                    <FormControlLabel
-                        className={classes.confirmationCheckbox}
-                        control={(
-                            <Checkbox
-                                checked={!isButtonDisabled}
-                                onClick={() => setButtonDisabled(!isButtonDisabled)}
-                                value="allowExtraEmails"
-                                color="primary" />
-                        )}
-                        label= {t("registration.agree")}/>
- */

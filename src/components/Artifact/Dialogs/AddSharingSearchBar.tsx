@@ -9,9 +9,9 @@ import {Add} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 import {AxiosResponse} from "axios";
 import theme from "../../../theme";
-import helpers from "../../../util/helperFunctions";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../api";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -94,40 +94,38 @@ const AddSharingSearchBar: React.FC<Props> = props => {
 
     const fetchSuggestion = useCallback((input: string) => {
         props.searchMethod(input).then(response => {
-            if(Math.floor(response.status / 100) === 2){
-                setSearchedElements(response.data.filter((to: RepositoryTO) => to.id !== props.repositoryId))
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchSuggestion(input))
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => fetchSuggestion(input));
+                return;
             }
+
+            setSearchedElements(response.data.filter((to: RepositoryTO) => to.id !== props.repositoryId));
+
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSuggestion(input))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSuggestion(input))
         })
     }, [props, t]);
-
 
     const getElementByName = useCallback((elementName: string) => {
         return searchedElements.find(element => element.name.toLowerCase() === elementName.toLowerCase());
     }, [searchedElements]);
 
     const add = useCallback(() => {
-        try {
-            const element = getElementByName(elementName);
-            const elementId = element ? element.id : "";
-            if (element) {
-                props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments).then(response => {
-                    if(Math.floor(response.status / 100) === 2){
-                        dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
-                        helpers.makeSuccessToast(t("share.successful"))
-                    } else {
-                        helpers.makeErrorToast(t(response.data.toString()), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments))
-                    }
-                });
-            } else {
-                helpers.makeErrorToast(t("share.targetNotFound"), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments))
-            }
-        } catch (err) {
-            console.log(err)
+        const element = getElementByName(elementName);
+        const elementId = element ? element.id : "";
+        if (!element) {
+            makeErrorToast(t("share.targetNotFound"), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments))
+            return;
         }
+
+        props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments).then(response => {
+            if (Math.floor(response.status / 100) === 2) {
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
+                makeSuccessToast(t("share.successful"))
+            } else {
+                makeErrorToast(t(response.data.toString()), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments))
+            }
+        });
     }, [getElementByName, elementName, props, dispatch, t]);
 
     // eslint-disable-next-line
@@ -140,7 +138,7 @@ const AddSharingSearchBar: React.FC<Props> = props => {
             <Autocomplete
                 id="UserSearchBar"
                 freeSolo
-                style={{ width: 500 }}
+                style={{width: 500}}
                 open={open}
                 onOpen={() => {
                     setOpen(true);
@@ -163,15 +161,15 @@ const AddSharingSearchBar: React.FC<Props> = props => {
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),
-                        }} />
-                )} />
+                        }}/>
+                )}/>
             <ListItemSecondaryAction>
                 <IconButton className={classes.addButton} edge="end" onClick={() => add()}>
-                    <Add />
+                    <Add/>
                 </IconButton>
             </ListItemSecondaryAction>
         </ListItem>

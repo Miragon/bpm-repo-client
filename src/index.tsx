@@ -18,28 +18,23 @@ fetch("/repository/translations/default/common.json", {
     function (res) {
         return res.json()
     }).then(function (data) {
-    fetchCustom(data)
-}).catch(
-    function (err) {
-        console.log(err)
-    }
-)
+    fetchCustom(data);
+});
 
-const fetchCustom = async (defaultPackage: JSON) => {
+const fetchCustom = async (defaultLanguage: JSON) => {
     const result = await fetch("/repository/translations/custom/common.json", {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
     });
-    initI18(defaultPackage, await result.json());
+    initI18(defaultLanguage, await result.json());
 };
 
 const initI18 = (defaultPackage: JSON, customPackage: JSON) => {
-    i18next
-        .use(initReactI18next)
+    i18next.use(initReactI18next)
         .init({
-            interpolation: { escapeValue: false },
+            interpolation: {escapeValue: false},
             lng: language ?? "default",
             resources: {
                 default: {
@@ -57,7 +52,7 @@ ReactDOM.render((
         <HashRouter>
             <Suspense fallback="Loading...">
                 <I18nextProvider i18n={i18next}>
-                    <App />
+                    <App/>
                 </I18nextProvider>
             </Suspense>
         </HashRouter>

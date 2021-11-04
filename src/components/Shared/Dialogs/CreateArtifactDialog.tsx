@@ -12,11 +12,11 @@ import {
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY
 } from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
 import SettingsTextField from "../Form/SettingsTextField";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 interface Props {
     open: boolean;
@@ -27,7 +27,7 @@ interface Props {
 
 const CreateArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>("");
@@ -46,19 +46,19 @@ const CreateArtifactDialog: React.FC<Props> = props => {
         createArtifact(repoId, title, description, props.type)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
-                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
-                    dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false })
-                    dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
+                    dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
+                    dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
+                    dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
+                    dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
                     setTitle("");
                     setDescription("");
-                    helpers.makeSuccessToast(t("artifact.created"));
+                    makeSuccessToast(t("artifact.created"));
                     props.onCancelled();
                 } else {
-                    helpers.makeErrorToast(t(response.data.toString()), () => onCreate())
+                    makeErrorToast(t(response.data.toString()), () => onCreate())
                 }
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
 
             })
     }, [props, dispatch, repoId, title, description, t]);
@@ -103,7 +103,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                 <SettingsTextField
                     label={t("properties.title")}
                     value={title}
-                    onChanged={setTitle} />
+                    onChanged={setTitle}/>
 
                 <SettingsTextField
                     label={t("properties.description")}
@@ -111,7 +111,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                     multiline
                     minRows={3}
                     maxRows={3}
-                    onChanged={setDescription} />
+                    onChanged={setDescription}/>
 
             </SettingsForm>
         </PopupDialog>

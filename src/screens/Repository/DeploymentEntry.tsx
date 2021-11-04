@@ -5,11 +5,11 @@ import React, {useMemo} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/reducers/rootReducer";
 import {Link} from "@material-ui/core";
-import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import {COLOR_LINK} from "../../constants/Constants";
 import {openFileInTool} from "../../util/Redirections";
 import {CloudDownload} from "@material-ui/icons";
+import {formatTimeSince} from "../../util/formatUtils";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -96,7 +96,7 @@ interface Props {
 
 const DeploymentEntry: React.FC<Props> = props => {
     const classes = useStyles();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
@@ -141,7 +141,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                         }
                         <div className={classes.subtitle}>
                             <span className={classes.subtitleText}>
-                                {t("deployment.milestone",{milestoneNumber: props.milestone?.milestone})}
+                                {t("deployment.milestone", {milestoneNumber: props.milestone?.milestone})}
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
@@ -149,7 +149,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
-                                {t("deployment.deploymentDuration", { duration: helpers.formatTimeSince(props.deployment.timestamp, t) })}
+                                {t("deployment.deploymentDuration", {duration: formatTimeSince(props.deployment.timestamp, t)})}
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
@@ -164,7 +164,6 @@ const DeploymentEntry: React.FC<Props> = props => {
                             {props.deployment.target}
                         </h2>
                         <CloudDownload className={classes.icon} onClick={download}/>
-
 
 
                     </div>

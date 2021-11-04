@@ -2,7 +2,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {RootState} from "../../store/reducers/rootReducer";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import helpers from "../../util/helperFunctions";
 import {AssignmentTO, AssignmentTORoleEnum, UserInfoTO} from "../../api";
 import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
 import {List, Paper} from "@material-ui/core";
@@ -17,6 +16,7 @@ import {
 import UserListItem from "../../components/Shared/UserListItem";
 import AddUserSearchBar from "./AddUserSearchBar";
 import {makeStyles} from "@material-ui/core/styles";
+import {makeErrorToast} from "../../util/toastUtils";
 
 
 const useStyles = makeStyles(() => ({
@@ -44,24 +44,24 @@ const RepositoryMembers: React.FC<Props> = props => {
 
     const getAllAssignedUsers = useCallback(async (repoId: string) => {
         fetchAssignedUsers(props.targetId).then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 setUserAssignments(response.data)
                 const userIds: Array<string> = response.data.map(userAssignment => userAssignment.userId)
 
                 userIds.length > 0 && getMultipleUsers(userIds).then(response => {
-                    if(Math.floor(response.status / 100) === 2){
+                    if (Math.floor(response.status / 100) === 2) {
                         //put the assigned users in the state
                         setUsers(response.data)
-                        dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: true });
-                    } else{
-                        helpers.makeErrorToast(t(response.data.toString()), () => getAllAssignedUsers(repoId))
+                        dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: true});
+                    } else {
+                        makeErrorToast(t(response.data.toString()), () => getAllAssignedUsers(repoId))
                     }
                 })
-            } else{
-                helpers.makeErrorToast(t(response.data.toString()), () => getAllAssignedUsers(repoId))
+            } else {
+                makeErrorToast(t(response.data.toString()), () => getAllAssignedUsers(repoId))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getAllAssignedUsers(repoId))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getAllAssignedUsers(repoId))
         })
     }, [dispatch, props, t])
 
@@ -70,7 +70,7 @@ const RepositoryMembers: React.FC<Props> = props => {
     }, [dispatch, getAllAssignedUsers, props.targetId]);
 
     useEffect(() => {
-        if(!syncStatus){
+        if (!syncStatus) {
             getAllAssignedUsers(props.targetId)
         }
     }, [dispatch, getAllAssignedUsers, props.targetId, syncStatus]);
@@ -83,25 +83,19 @@ const RepositoryMembers: React.FC<Props> = props => {
             }
             return false;
         } catch (err) {
-            helpers.makeErrorToast(t("role.notFound"), () => console.log("could not retry"))
+            makeErrorToast(t("role.notFound"), () => console.log("could not retry"))
             return false;
         }
     }, [userAssignments, currentUser.id, t]);
 
     const getUserRole = (userId: string): AssignmentTORoleEnum => {
-        const x =  userAssignments.find(ass => ass.userId === userId)
-        if(x){
+        const x = userAssignments.find(ass => ass.userId === userId)
+        if (x) {
             return x.role
         } else {
             return AssignmentTORoleEnum.Viewer
         }
     }
-
-
-    //TODO: Hier müssen zusätzlich alle zugeordneten Teams mitgegeben werden
-
-
-    //TODO: AddUserSearchBar durch AddUserOrTeamSearchBar ersetzen und dort zusätzlich Team funktionalität einbinden
 
     return (
         <>
@@ -124,7 +118,7 @@ const RepositoryMembers: React.FC<Props> = props => {
                             role={getUserRole(user.id)}
                             hasAdminPermissions={checkForAdminPermissions}
                             updateAssignmentMethod={updateUserAssignment}
-                            deleteAssignmentMethod={deleteAssignment} />
+                            deleteAssignmentMethod={deleteAssignment}/>
 
                     ))}
                 </Paper>

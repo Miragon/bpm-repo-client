@@ -4,7 +4,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {IconButton, Typography} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {useTranslation} from "react-i18next";
-import helpers from "../../../util/helperFunctions";
 import {
     SYNC_STATUS_ACTIVE_ENTITY,
     SYNC_STATUS_FAVORITE,
@@ -15,11 +14,12 @@ import PopupDialog from "../Form/PopupDialog";
 import SettingsTextField from "../Form/SettingsTextField";
 import {AxiosResponse} from "axios";
 import {useHistory} from "react-router-dom";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 
 /**
-Component shows a Popup Menu which lets the user change properties of a Repository or Team or delete it, depending from which screen this dialog is opened
-**/
+ Component shows a Popup Menu which lets the user change properties of a Repository or Team or delete it, depending from which screen this dialog is opened
+ **/
 
 const useStyles = makeStyles(() => ({
     line: {
@@ -76,32 +76,32 @@ const EditEntityDialog: React.FC<Props> = props => {
 
     const applyChanges = useCallback(async () => {
         props.updateEntityMethod(props.targetId, title, description).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("repository.updated"))
+            if (Math.floor(response.status / 100) === 2) {
+                makeSuccessToast(t("repository.updated"))
                 dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false});
                 props.onCancelled()
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
+                makeErrorToast(t(response.data.toString()), () => applyChanges())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
         })
     }, [props, title, description, t, dispatch]);
 
     const deleteRepo = useCallback(() => {
         if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
             props.deleteEntityMethod(props.targetId).then(response => {
-                if(Math.floor(response.status / 100) === 2) {
-                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                if (Math.floor(response.status / 100) === 2) {
+                    dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
                     dispatch({type: SYNC_STATUS_RECENT, dataSynced: false});
                     dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
-                    helpers.makeSuccessToast(t("repository.deleted"))
+                    makeSuccessToast(t("repository.deleted"))
                     history.push("/")
                 } else {
-                    helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
+                    makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
                 }
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteRepo())
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteRepo())
             })
         }
     }, [t, title, props, dispatch, history]);
@@ -121,25 +121,25 @@ const EditEntityDialog: React.FC<Props> = props => {
                     {t("repository.delete")}
                 </Typography>
                 <IconButton className={classes.deleteButton} onClick={deleteRepo}>
-                    <DeleteIcon />
+                    <DeleteIcon/>
                 </IconButton>
             </div>
 
-            <div className={classes.spacer} />
+            <div className={classes.spacer}/>
 
             <SettingsTextField
                 label={t("properties.title")}
                 value={title}
-                onChanged={setTitle} />
+                onChanged={setTitle}/>
 
-            <div className={classes.spacer} />
+            <div className={classes.spacer}/>
 
             <SettingsTextField
                 label={t("properties.description")}
                 value={description}
                 onChanged={setDescription}
                 multiline
-                minRows={4} />
+                minRows={4}/>
 
         </PopupDialog>
     );

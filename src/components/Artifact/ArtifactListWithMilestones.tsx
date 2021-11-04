@@ -6,7 +6,6 @@ import ArtifactEntry from "../../components/Artifact/ArtifactEntry";
 import {SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import {addToFavorites, deleteArtifact, getLatestMilestone} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
-import helpers from "../../util/helperFunctions";
 import {openFileInTool} from "../../util/Redirections";
 import MilestoneList from "./MilestoneList";
 import {DropdownButtonItem} from "../../components/Shared/Form/DropdownButton";
@@ -15,6 +14,8 @@ import EditArtifactDialog from "../../components/Artifact/Dialogs/EditArtifactDi
 import CreateMilestoneDialog from "../../components/Artifact/Dialogs/CreateMilestoneDialog";
 import CopyToRepoDialog from "../../components/Shared/Dialogs/CopyToRepoDialog";
 import SharingManagementDialog from "../../components/Artifact/Dialogs/SharingManagementDialog";
+import {makeErrorToast, makeSuccessToast} from "../../util/toastUtils";
+import {download} from "../../util/downloadUtils";
 
 interface Props {
     repoId: string;
@@ -26,7 +27,7 @@ interface Props {
 
 const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const {
         fallback,
@@ -50,47 +51,50 @@ const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
 
     const onFavorite = useCallback(async (artifact: ArtifactTO) => {
         addToFavorites(artifact.id).then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
-                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: false });
-            } else {
-                helpers.makeErrorToast(t("artifact.couldNotSetStarred"), () => onFavorite(artifact))
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t("artifact.couldNotSetStarred"), () => onFavorite(artifact));
+                return;
             }
+
+            dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
+            dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
+
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onFavorite(artifact))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onFavorite(artifact))
         })
 
     }, [dispatch, t]);
 
     const onDownload = useCallback(async (artifact: ArtifactTO) => {
         getLatestMilestone(artifact.id).then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                helpers.download(response.data)
-                helpers.makeSuccessToast(t("download.started"))
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => onDownload(artifact))
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => onDownload(artifact));
+                return;
             }
 
+            download(response.data)
+            makeSuccessToast(t("download.started"))
+
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onDownload(artifact))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onDownload(artifact))
         })
     }, [t]);
 
 
-
-
     const onDelete = useCallback(async (artifact: ArtifactTO) => {
         // eslint-disable-next-line no-restricted-globals
-        if (confirm(t("artifact.confirmDelete", { artifactName: artifact.name }))) {
+        if (confirm(t("artifact.confirmDelete", {artifactName: artifact.name}))) {
             deleteArtifact(artifact.id).then(response => {
-                if (Math.floor(response.status / 100) === 2) {
-                    helpers.makeSuccessToast(t("artifact.deleted"));
-                    dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
-                } else {
-                    helpers.makeErrorToast(t(response.statusText), () => onDelete(artifact));
+                if (Math.floor(response.status / 100) !== 2) {
+                    makeErrorToast(t(response.statusText), () => onDelete(artifact));
+                    return;
                 }
+
+                makeSuccessToast(t("artifact.deleted"));
+                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
+
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onDelete(artifact))
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onDelete(artifact))
             })
         }
     }, [dispatch, t]);
@@ -115,6 +119,11 @@ const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
     const onCopy = useCallback((artifact: ArtifactTO) => {
         setCopyArtifact(artifact);
     }, []);
+
+    const getRepoName = (repoId: string, repos: Array<RepositoryTO>): string => {
+        const assignedRepo = repos.find(repo => repo.id === repoId);
+        return assignedRepo ? assignedRepo.name : "";
+    }
 
     const options: DropdownButtonItem[] = useMemo(() => [
         {
@@ -187,9 +196,9 @@ const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
                         // If menu is already open for the same element, close it
                         onMenuClicked={data => setMenu(cur => cur?.artifact.id === data.artifact.id ? undefined : data)}
                         onFavorite={onFavorite}
-                        favorite={helpers.isFavorite(artifact.id, favorites.map(artifact => artifact.id))}
-                        repository={helpers.getRepoName(artifact.repositoryId, repositories)}>
-                        <MilestoneList artifact={artifact} />
+                        favorite={favorites.map(artifact => artifact.id).includes(artifact.id)}
+                        repository={getRepoName(artifact.repositoryId, repositories)}>
+                        <MilestoneList artifact={artifact}/>
                     </ArtifactEntry>
                 ))}
                 {artifacts.length === 0 && (
@@ -202,29 +211,29 @@ const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
                 open={!!menu}
                 reference={menu?.target || null}
                 onCancel={() => setMenu(undefined)}
-                options={options} />
+                options={options}/>
 
             <EditArtifactDialog
                 open={!!editArtifact}
                 onCancelled={() => setEditArtifact(undefined)}
-                artifact={editArtifact} />
+                artifact={editArtifact}/>
 
             <CreateMilestoneDialog
                 open={!!createMilestoneArtifact}
                 onCancelled={() => setCreateMilestoneArtifact(undefined)}
                 onCreated={() => setCreateMilestoneArtifact(undefined)}
-                artifact={createMilestoneArtifact} />
+                artifact={createMilestoneArtifact}/>
 
             <CopyToRepoDialog
                 repoId={props.repoId}
                 open={!!copyArtifact}
                 onCancelled={() => setCopyArtifact(undefined)}
-                artifact={copyArtifact} />
+                artifact={copyArtifact}/>
 
             <SharingManagementDialog
                 open={!!shareArtifact}
                 artifact={shareArtifact}
-                onCancelled={() => setShareArtifact(undefined)} />
+                onCancelled={() => setShareArtifact(undefined)}/>
 
         </div>
     );

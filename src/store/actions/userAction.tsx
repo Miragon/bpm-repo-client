@@ -1,19 +1,16 @@
 import * as api from "../../api/api";
-import {UserInfoTO} from "../../api/api";
-import helpers from "../../util/helperFunctions";
+import {UserInfoTO} from "../../api";
 import {AxiosResponse} from "axios";
+import {getClientConfig} from "../../api/config";
 
 export const searchUsers = async (typedName: string): Promise<AxiosResponse<UserInfoTO[]>> => {
     const userController = new api.UserApi();
-    const config = helpers.getClientConfig();
-    const response = await userController.searchUsers(typedName, config);
-    return response;
+    const config = getClientConfig();
+    return await userController.searchUsers(typedName, config);
 }
 
-
-export const getMultipleUsers = async(userIds: Array<string>): Promise<AxiosResponse<UserInfoTO[]>> => {
+export const getMultipleUsers = async (userIds: Array<string>): Promise<AxiosResponse<UserInfoTO[]>> => {
     const userController = new api.UserApi();
-    const config = helpers.getClientConfig();
-    const response = await userController.getMultipleUsers(userIds, config);
-    return response;
+    const config = getClientConfig();
+    return await userController.getMultipleUsers(userIds, config);
 }

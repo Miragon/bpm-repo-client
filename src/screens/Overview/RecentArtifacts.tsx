@@ -6,12 +6,12 @@ import Section from "../../components/Layout/Section";
 import {RECENT_ARTIFACTS, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
 import {fetchRecentArtifacts} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
-import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
+import {makeErrorToast} from "../../util/toastUtils";
 
 const RecentArtifacts: React.FC = (() => {
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const [recentArtifacts, setRecentArtifacts] = useState<Array<ArtifactTO>>([])
 
@@ -23,13 +23,13 @@ const RecentArtifacts: React.FC = (() => {
         fetchRecentArtifacts().then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 setRecentArtifacts(response.data)
-                dispatch({ type: RECENT_ARTIFACTS, recentArtifacts: response.data });
-                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true })
+                dispatch({type: RECENT_ARTIFACTS, recentArtifacts: response.data});
+                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: true})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchRecent())
+                makeErrorToast(t(response.data.toString()), () => fetchRecent())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRecent())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRecent())
         })
     }, [dispatch, t]);
 
@@ -44,7 +44,7 @@ const RecentArtifacts: React.FC = (() => {
             <OverviewArtifactList
                 artifacts={recentArtifacts}
                 repositories={repos}
-                favorites={favoriteArtifacts} />
+                favorites={favoriteArtifacts}/>
         </Section>
     );
 });

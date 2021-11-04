@@ -8,12 +8,12 @@ import Section from "../../components/Layout/Section";
 import {FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE} from "../../constants/Constants";
 import {fetchFavoriteArtifacts} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
-import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
+import {makeErrorToast} from "../../util/toastUtils";
 
 const FavoriteArtifacts: React.FC = observer(() => {
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
@@ -22,13 +22,13 @@ const FavoriteArtifacts: React.FC = observer(() => {
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
-                dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: true })
+                dispatch({type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data});
+                dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: true})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchFavorite())
+                makeErrorToast(t(response.data.toString()), () => fetchFavorite())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
         })
 
     }, [dispatch, t]);
@@ -46,7 +46,7 @@ const FavoriteArtifacts: React.FC = observer(() => {
                 <OverviewArtifactList
                     artifacts={favoriteArtifacts}
                     repositories={repos}
-                    favorites={favoriteArtifacts} />
+                    favorites={favoriteArtifacts}/>
             </ErrorBoundary>
         </Section>
     );

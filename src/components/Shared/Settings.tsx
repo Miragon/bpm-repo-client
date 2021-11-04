@@ -4,7 +4,6 @@ import {useDispatch} from "react-redux";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useState} from "react";
-import helpers from "../../util/helperFunctions";
 import {
     SYNC_STATUS_ACTIVE_ENTITY,
     SYNC_STATUS_FAVORITE,
@@ -15,6 +14,7 @@ import {IconButton} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SettingsTextField from "./Form/SettingsTextField";
 import SimpleButton from "./Form/SimpleButton";
+import {makeErrorToast, makeSuccessToast} from "../../util/toastUtils";
 
 
 const useStyles = makeStyles(() => ({
@@ -37,8 +37,6 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         justifyContent: "flex-end"
     }
-
-
 }));
 
 interface Props {
@@ -48,7 +46,6 @@ interface Props {
     updateEntityMethod: (targetId: string, target: string, description: string) => Promise<AxiosResponse>;
     deleteEntityMethod: (targetId: string) => Promise<AxiosResponse>;
 }
-
 
 const Settings: React.FC<Props> = props => {
     const dispatch = useDispatch();
@@ -61,71 +58,65 @@ const Settings: React.FC<Props> = props => {
 
     const applyChanges = useCallback(async () => {
         props.updateEntityMethod(props.targetId, title, description).then(response => {
-            if(Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("repository.updated"))
+            if (Math.floor(response.status / 100) === 2) {
+                makeSuccessToast(t("repository.updated"))
                 dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false});
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
+                makeErrorToast(t(response.data.toString()), () => applyChanges())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
         })
     }, [props, title, description, t, dispatch]);
 
     const deleteEntity = useCallback(() => {
         if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
             props.deleteEntityMethod(props.targetId).then(response => {
-                if(Math.floor(response.status / 100) === 2) {
-                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                if (Math.floor(response.status / 100) === 2) {
+                    dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
                     dispatch({type: SYNC_STATUS_RECENT, dataSynced: false});
                     dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
-                    helpers.makeSuccessToast(t("repository.deleted"))
+                    makeSuccessToast(t("repository.deleted"))
                     history.push("/")
                 } else {
-                    helpers.makeErrorToast(t("repository.couldNotDelete"), () => deleteEntity())
+                    makeErrorToast(t("repository.couldNotDelete"), () => deleteEntity())
                 }
             }, error => {
-                helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteEntity())
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteEntity())
             })
         }
     }, [t, title, props, dispatch, history]);
 
-
-
     return (
         <>
-
             <div className={classes.deleteSection}>
                 <IconButton onClick={deleteEntity}>
-                    <DeleteIcon />
+                    <DeleteIcon/>
                 </IconButton>
             </div>
 
-            <div  className={classes.spacer} />
+            <div className={classes.spacer}/>
 
             <SettingsTextField
                 label={t("properties.title")}
                 value={title}
-                onChanged={setTitle} />
+                onChanged={setTitle}/>
 
-            <div className={classes.spacer} />
+            <div className={classes.spacer}/>
 
             <SettingsTextField
                 label={t("properties.description")}
                 value={description}
                 onChanged={setDescription}
                 multiline
-                minRows={4} />
+                minRows={4}/>
 
-
-            <div  className={classes.spacer} />
-            <div  className={classes.spacer} />
+            <div className={classes.spacer}/>
+            <div className={classes.spacer}/>
 
             <div className={classes.applySection}>
-                <SimpleButton title={"Apply"} onClick={applyChanges} />
+                <SimpleButton title={"Apply"} onClick={applyChanges}/>
             </div>
-
-
         </>
     )
 }

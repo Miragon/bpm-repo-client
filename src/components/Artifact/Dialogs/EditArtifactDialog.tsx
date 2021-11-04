@@ -4,9 +4,9 @@ import {useDispatch} from "react-redux";
 import {ArtifactTO} from "../../../api";
 import {updateArtifact} from "../../../store/actions";
 import {SYNC_STATUS_ARTIFACT} from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import SettingsTextField from "../../Shared/Form/SettingsTextField";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 
 interface Props {
@@ -17,19 +17,19 @@ interface Props {
 
 const EditArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
-
+    const {t} = useTranslation("common");
+    const {artifact} = props;
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>(props.artifact?.name || "");
     const [description, setDescription] = useState<string>(props.artifact?.description || "");
 
     useEffect(() => {
-        props.artifact && setTitle(props.artifact.name)
-        props.artifact && setDescription(props.artifact.description)
-    }, [props.artifact])
+        artifact && setTitle(artifact.name)
+        artifact && setDescription(artifact.description)
+    }, [artifact])
 
     const applyChanges = useCallback(async () => {
-        if (!props.artifact) {
+        if (!artifact) {
             return;
         }
 
@@ -38,18 +38,19 @@ const EditArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        updateArtifact(title, description, props.artifact.id).then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false })
-                helpers.makeSuccessToast(t("artifact.changed"))
-                props.onCancelled();
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => applyChanges())
+        updateArtifact(title, description, artifact.id).then(response => {
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => applyChanges());
+                return;
             }
+            dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
+            makeSuccessToast(t("artifact.changed"))
+            props.onCancelled();
+
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
         })
-    }, [props, title, description, t, dispatch]);
+    }, [artifact, props, title, description, t, dispatch]);
 
     return (
         <PopupDialog

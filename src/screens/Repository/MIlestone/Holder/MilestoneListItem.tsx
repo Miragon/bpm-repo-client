@@ -9,13 +9,14 @@ import {ArtifactTypeTO, DeploymentTO} from "../../../../api";
 import {RootState} from "../../../../store/reducers/rootReducer";
 import {fetchTargets} from "../../../../store/actions";
 import {openFileInTool} from "../../../../util/Redirections";
-import helpers from "../../../../util/helperFunctions";
 import {TARGETS} from "../../../../constants/Constants";
 import {DropdownButtonItem} from "../../../../components/Shared/Form/DropdownButton";
 import PopupSettings from "../../../../components/Shared/Form/PopupSettings";
 import DeployMilestoneDialog from "../../../../components/Artifact/Dialogs/DeployMilestoneDialog";
 import DeploymentHistory from "../../../../components/Artifact/Dialogs/DeploymentHistory";
 import SaveAsNewArtifactDialog from "../../../../components/Artifact/Dialogs/SaveAsNewArtifactDialog";
+import {makeErrorToast} from "../../../../util/toastUtils";
+import {reformatDate} from "../../../../util/formatUtils";
 
 const useStyles = makeStyles(() => ({
 
@@ -123,16 +124,16 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
         event.stopPropagation();
         setHistoryOpen(true);
     }
-    
+
     const getTargets = useCallback(async () => {
         fetchTargets().then(response => {
-            if(Math.floor(response.status / 100) === 2) {
+            if (Math.floor(response.status / 100) === 2) {
                 dispatch({type: TARGETS, targets: response.data})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getTargets())
+                makeErrorToast(t(response.data.toString()), () => getTargets())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
         })
     }, [dispatch, t])
 
@@ -144,7 +145,6 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
             onClick: () => {
                 getTargets()
                 setDeployMilestoneOpen(true);
-
             }
         },
         {
@@ -166,7 +166,6 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
             onClick: () => {
                 setHistoryOpen(true);
             }
-
         },
         {
             id: "SaveAsNewArtifact",
@@ -175,14 +174,13 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
             onClick: () => {
                 setSaveDialogOpen(true);
             }
-
         },
     ];
 
-    //                <ListItemText primary={props.comment ? props.comment : <i>No comment available</i>} />
     return (
         <>
-            <ListItem className={classes.listItem} onClick={() => openFileInTool(fileTypes, props.type, props.repoId, props.artifactId, t("error.missingTool", props.type), props.milestone)}>
+            <ListItem className={classes.listItem}
+                onClick={() => openFileInTool(fileTypes, props.type, props.repoId, props.artifactId, t("error.missingTool", props.type), props.milestone)}>
                 <div className={classes.leftPanel}>
                     <Chip label={props.milestone} color={"primary"}/>
                 </div>
@@ -214,18 +212,18 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                             :
                             <div>
 
-                            </div>}
+                            </div>
+                        }
                     </div>
 
                     <div className={classes.rightPanel}>
                         <div className={classes.date}>
-                            {helpers.reformatDate(props.updatedDate)}
+                            {reformatDate(props.updatedDate)}
                         </div>
-                        <IconButton size={"small"} ref={ref} onClick={event =>
-                        {
+                        <IconButton size={"small"} ref={ref} onClick={event => {
                             event.stopPropagation()
                             setSettingsOpen(true)
-                        }} >
+                        }}>
                             <MoreVert className={classes.icons}/>
                         </IconButton>
                     </div>
@@ -236,7 +234,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 open={settingsOpen}
                 reference={ref.current}
                 onCancel={() => setSettingsOpen(false)}
-                options={options} />
+                options={options}/>
 
             <DeployMilestoneDialog
                 open={deployMilestoneOpen}
@@ -244,7 +242,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 repositoryId={props.repoId}
                 artifactId={props.artifactId}
                 milestoneId={props.id}
-                milestoneNumber={props.milestone} />
+                milestoneNumber={props.milestone}/>
 
             <DeploymentHistory
                 milestoneId={props.id}
@@ -253,7 +251,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 milestone={props.milestone}
                 open={historyOpen}
                 onCancelled={() => setHistoryOpen(false)}
-                deployments={props.deployments} />
+                deployments={props.deployments}/>
 
             <SaveAsNewArtifactDialog
                 open={saveDialogOpen}

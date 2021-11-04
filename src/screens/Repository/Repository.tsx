@@ -14,7 +14,6 @@ import {
     SYNC_STATUS_FAVORITE,
     SYNC_STATUS_RECENT
 } from "../../constants/Constants";
-import helpers from "../../util/helperFunctions";
 import {useTranslation} from "react-i18next";
 import Details from "../../components/Shared/Details";
 import ArtifactDetails from "../../components/Artifact/ArtifactDetails";
@@ -26,13 +25,14 @@ import RepositoryMembers from "./RepositoryMembers";
 import {getSharedArtifacts} from "../../store/actions/shareAction";
 import {useHistory} from "react-router-dom";
 import Deployments from "./Deployments";
+import {makeErrorToast} from "../../util/toastUtils";
 
 const Repository: React.FC = (() => {
     const dispatch = useDispatch();
     const {t} = useTranslation("common");
     const history = useHistory();
 
-    const { repoId } = useParams<{ repoId: string }>();
+    const {repoId} = useParams<{ repoId: string }>();
     const activeEntitySynced: boolean = useSelector((state: RootState) => state.dataSynced.activeEntitySynced);
     const artifactSynced: boolean = useSelector((state: RootState) => state.dataSynced.artifactSynced);
 
@@ -42,18 +42,17 @@ const Repository: React.FC = (() => {
     const [openedTab, setOpenedTab] = useState<string>("artifacts");
 
 
-
     const getRepo = useCallback(() => {
         getSingleRepository(repoId).then(response => {
-            if(Math.floor(response.status / 100) === 2){
+            if (Math.floor(response.status / 100) === 2) {
                 setRepository(response.data)
-                dispatch({ type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true });
-                dispatch({type: ACTIVE_REPO, activeRepo: response.data})
+                dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: true});
+                dispatch({type: ACTIVE_REPO, activeRepo: response.data});
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getRepo())
+                makeErrorToast(t(response.data.toString()), () => getRepo());
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getRepo())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getRepo());
         })
     }, [dispatch, repoId, t]);
 
@@ -61,13 +60,13 @@ const Repository: React.FC = (() => {
     const fetchArtifacts = useCallback(async () => {
         fetchArtifactsFromRepo(repoId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                setArtifacts(response.data)
-                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
+                setArtifacts(response.data);
+                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: true});
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
+                makeErrorToast(t(response.data.toString()), () => fetchArtifacts())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifacts())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifacts())
         })
     }, [repoId, dispatch, t])
 
@@ -75,23 +74,23 @@ const Repository: React.FC = (() => {
         getSharedArtifacts(repoId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
                 setSharedArtifacts(response.data)
-                dispatch({ type: SHARED_ARTIFACTS, sharedArtifacts: response.data })
+                dispatch({type: SHARED_ARTIFACTS, sharedArtifacts: response.data})
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchSharedArtifacts(repoId))
+                makeErrorToast(t(response.data.toString()), () => fetchSharedArtifacts(repoId))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSharedArtifacts(repoId))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSharedArtifacts(repoId))
         })
     }, [dispatch, t])
 
     useEffect(() => {
-        if(!activeEntitySynced){
+        if (!activeEntitySynced) {
             getRepo();
         }
     }, [activeEntitySynced, getRepo])
 
     useEffect(() => {
-        if(!artifactSynced){
+        if (!artifactSynced) {
             fetchArtifacts();
         }
     }, [activeEntitySynced, artifactSynced, fetchArtifacts])
@@ -134,20 +133,18 @@ const Repository: React.FC = (() => {
             {(repository && repository.id === repoId) &&
                 <div>
                     <ErrorBoundary>
-                        <PathStructure structure={path} />
+                        <PathStructure structure={path}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
                         <Details object={repository}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
-
-                        <TabContext value={openedTab} >
-
+                        <TabContext value={openedTab}>
                             <TabList onChange={handleChangeTab}>
                                 <Tab label={t("artifact.artifacts")} value="artifacts" fullWidth={true}/>
-                                <Tab label={t("repository.members")} value="members" fullWidth={true} />
-                                <Tab label={t("deployment.deployments")} value="deployments" fullWidth={true} />
-                                <Tab label={t("repository.settings")} value="settings" fullWidth={true} />
+                                <Tab label={t("repository.members")} value="members" fullWidth={true}/>
+                                <Tab label={t("deployment.deployments")} value="deployments" fullWidth={true}/>
+                                <Tab label={t("repository.settings")} value="settings" fullWidth={true}/>
                             </TabList>
 
                             <TabPanel value={"artifacts"}>
@@ -162,11 +159,11 @@ const Repository: React.FC = (() => {
 
                             <TabPanel value={"members"}>
                                 <RepositoryMembers
-                                    targetId={repoId} />
+                                    targetId={repoId}/>
                             </TabPanel>
 
                             <TabPanel value={"deployments"}>
-                                <Deployments artifacts={artifacts} repositoryId={repoId} />
+                                <Deployments artifacts={artifacts} repositoryId={repoId}/>
                             </TabPanel>
 
                             <TabPanel value={"settings"}>
@@ -175,12 +172,10 @@ const Repository: React.FC = (() => {
                                     entityName={repository.name}
                                     entityDescription={repository.description}
                                     updateEntityMethod={updateRepository}
-                                    deleteEntityMethod={deleteRepository} />
+                                    deleteEntityMethod={deleteRepository}/>
 
                             </TabPanel>
-
                         </TabContext>
-
                     </ErrorBoundary>
 
 

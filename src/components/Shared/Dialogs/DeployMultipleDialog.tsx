@@ -8,11 +8,11 @@ import {ArtifactTO, NewDeploymentTO} from "../../../api";
 import {RootState} from "../../../store/reducers/rootReducer";
 import {deployMultiple, fetchTargets} from "../../../store/actions";
 import {SYNC_STATUS_MILESTONE, SYNC_STATUS_TARGETS, TARGETS} from "../../../constants/Constants";
-import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
 import SearchTextField from "../Form/SearchTextField";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},
@@ -61,7 +61,7 @@ interface Props {
 const DeployMultipleDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const targetsSynced: boolean = useSelector((state: RootState) => state.dataSynced.targetsSynced)
     const targets: Array<string> = useSelector((state: RootState) => state.deployment.targets)
@@ -83,14 +83,16 @@ const DeployMultipleDialog: React.FC<Props> = props => {
 
     const getTargets = useCallback(async () => {
         fetchTargets().then(response => {
-            if (Math.floor(response.status / 100) === 2) {
-                dispatch({ type: TARGETS, targets: response.data })
-                dispatch({ type: SYNC_STATUS_TARGETS, targetsSynced: true })
-            } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => getTargets())
+            if (Math.floor(response.status / 100) !== 2) {
+                makeErrorToast(t(response.data.toString()), () => getTargets());
+                return;
+
             }
+            dispatch({type: TARGETS, targets: response.data});
+            dispatch({type: SYNC_STATUS_TARGETS, targetsSynced: true});
+
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
         })
     }, [dispatch, t])
 
@@ -120,19 +122,19 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             target: target,
             repositoryId: props.repoId,
             artifactId: artifact,
-            // TODO: Backend muss latest akzeptieren
+            // TODO: check latest in backend
             milestoneId: "latest"
         }));
         deployMultiple(deployments).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.data.length }))
-                dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
+                makeSuccessToast(t("deployment.deployedMultiple", {deployedMilestones: response.data.length}))
+                dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
                 props.onCancelled()
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => deploy())
+                makeErrorToast(t(response.data.toString()), () => deploy())
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deploy())
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deploy())
         })
     }, [target, selectedArtifacts, dispatch, props, t])
 
@@ -169,7 +171,7 @@ const DeployMultipleDialog: React.FC<Props> = props => {
                         className={classes.searchField}
                         label="Dateien durchsuchen..."
                         search={search}
-                        onSearchChanged={setSearch} />
+                        onSearchChanged={setSearch}/>
                 </div>
                 <div className={classes.list}>
                     {filteredArtifacts.length === 0 && (
@@ -193,8 +195,8 @@ const DeployMultipleDialog: React.FC<Props> = props => {
                                     className={classes.checkbox}
                                     checked={selectedArtifacts.indexOf(artifact.id) !== -1}
                                     disabled={disabled}
-                                    onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)} />
-                            )} />
+                                    onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)}/>
+                            )}/>
                     ))}
                 </div>
             </div>

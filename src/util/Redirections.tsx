@@ -24,10 +24,3 @@ export const getRepositoryUrl = (repository: RepositoryTO): string => {
 };
 
 
-/*
-export const getTeamUrl = (team: TeamTO): string => {
-    return `/team/${team.id}`;
-}
-*/
-
-

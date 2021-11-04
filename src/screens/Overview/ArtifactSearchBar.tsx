@@ -9,8 +9,8 @@ import {ArtifactTO, RepositoryTO} from "../../api";
 import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
 import {searchArtifact} from "../../store/actions";
 import {RootState} from "../../store/reducers/rootReducer";
-import helpers from "../../util/helperFunctions";
 import OverviewArtifactList from "./OverviewArtifactList";
+import {makeErrorToast} from "../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     headerText: {
@@ -34,13 +34,10 @@ let timeout: NodeJS.Timeout | undefined;
 
 const ArtifactSearchBar: React.FC = () => {
     const classes = useStyles();
-    const { t } = useTranslation("common");
-
-
+    const {t} = useTranslation("common");
 
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
-
 
     const [artifact, setArtifact] = useState<string>("");
     const [returnedArtifacts, setReturnedArtifacts] = useState<ArtifactTO[]>([]);
@@ -96,10 +93,10 @@ const ArtifactSearchBar: React.FC = () => {
             if (Math.floor(response.status / 100) === 2) {
                 setReturnedArtifacts(response.data)
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
+                makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifactSuggestion(input))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifactSuggestion(input))
 
         })
     }, [t]);
@@ -120,7 +117,7 @@ const ArtifactSearchBar: React.FC = () => {
                         size="small"
                         id="ArtifactSearchBar"
                         freeSolo
-                        style={{ width: "100%" }}
+                        style={{width: "100%"}}
                         open={false}
                         onOpen={() => setOpen(false)}
                         onClose={() => setOpen(false)}
@@ -143,20 +140,20 @@ const ArtifactSearchBar: React.FC = () => {
                                             {loading && artifact !== "" && (
                                                 <CircularProgress
                                                     color="inherit"
-                                                    size={20} />
+                                                    size={20}/>
                                             )}
                                             {params.InputProps.endAdornment}
                                         </>
                                     ),
-                                }} />
-                        )} />
+                                }}/>
+                        )}/>
                     {displayResult && !loading && (
                         <div className={classes.resultsContainer}>
                             <OverviewArtifactList
                                 fallback="search.noResults"
                                 artifacts={returnedArtifacts}
                                 repositories={repos}
-                                favorites={favoriteArtifacts} />
+                                favorites={favoriteArtifacts}/>
                         </div>
                     )}
                 </ErrorBoundary>

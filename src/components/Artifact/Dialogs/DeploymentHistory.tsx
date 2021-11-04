@@ -3,8 +3,8 @@ import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {DeploymentTO} from "../../../api";
-import helpers from "../../../util/helperFunctions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
+import {reformatDate} from "../../../util/formatUtils";
 
 
 const useStyles = makeStyles(() => ({
@@ -26,11 +26,7 @@ interface Props {
 const DeploymentHistory: React.FC<Props> = props => {
     const classes = useStyles();
 
-
-
     const {t} = useTranslation("common");
-
-
     const [error, setError] = useState<string | undefined>(undefined);
 
     useEffect(() => {
@@ -38,15 +34,14 @@ const DeploymentHistory: React.FC<Props> = props => {
     }, [props.deployments])
 
     const compare = (a: DeploymentTO, b: DeploymentTO) => {
-        if(a.timestamp < b.timestamp) {
+        if (a.timestamp < b.timestamp) {
             return -1;
         }
-        if(a.timestamp > b.timestamp) {
+        if (a.timestamp > b.timestamp) {
             return 1;
         }
         return 0;
     }
-
 
 
     return (
@@ -85,10 +80,10 @@ const DeploymentHistory: React.FC<Props> = props => {
                     {props.deployments?.map(deployment => (
                         <TableRow
                             key={deployment.id}
-                            hover >
+                            hover>
                             <TableCell
                                 component="th"
-                                scope="row" >
+                                scope="row">
                                 {deployment.target}
                             </TableCell>
 
@@ -96,7 +91,7 @@ const DeploymentHistory: React.FC<Props> = props => {
                                 {deployment.user}
                             </TableCell>
                             <TableCell>
-                                {helpers.reformatDate(deployment.timestamp)}
+                                {reformatDate(deployment.timestamp)}
                             </TableCell>
                         </TableRow>
                     ))}

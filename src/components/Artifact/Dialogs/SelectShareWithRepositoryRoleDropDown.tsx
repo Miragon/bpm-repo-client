@@ -4,9 +4,9 @@ import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {AxiosResponse} from "axios";
 import {ShareWithRepositoryTORoleEnum, ShareWithTeamTORoleEnum} from "../../../api";
-import helpers from "../../../util/helperFunctions";
 import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
 import DropdownButton, {DropdownButtonItem} from "../../Shared/Form/DropdownButton";
+import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
 
 interface Props {
     option: SharedListItem;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const SelectShareWithRepositoryRoleDropDown: React.FC<Props> = props => {
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
     const dispatch = useDispatch();
 
 
@@ -24,13 +24,13 @@ const SelectShareWithRepositoryRoleDropDown: React.FC<Props> = props => {
 
         props.updateMethod(props.option.artifactId, props.option.targetId, newRole).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                helpers.makeSuccessToast(t("role.updated", {repoName: props.option.repoName, role: newRole}))
-                dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false });
+                makeSuccessToast(t("role.updated", {repoName: props.option.repoName, role: newRole}))
+                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false});
             } else {
-                helpers.makeErrorToast(t(response.data.toString()), () => updateRole(newRole))
+                makeErrorToast(t(response.data.toString()), () => updateRole(newRole))
             }
         }, error => {
-            helpers.makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => updateRole(newRole))
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => updateRole(newRole))
         })
     }, [dispatch, props, t])
 
@@ -64,7 +64,7 @@ const SelectShareWithRepositoryRoleDropDown: React.FC<Props> = props => {
 
     return (
         <>
-            <DropdownButton options={roles} title={props.option.role} type={"default"} />
+            <DropdownButton options={roles} title={props.option.role} type={"default"}/>
         </>
     );
 }
