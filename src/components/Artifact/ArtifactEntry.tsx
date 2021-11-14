@@ -117,7 +117,7 @@ interface Props {
 const ArtifactEntry: React.FC<Props> = props => {
     const classes = useStyles();
     const ref = useRef<HTMLButtonElement>(null);
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
 
@@ -139,7 +139,6 @@ const ArtifactEntry: React.FC<Props> = props => {
 
                     <div className={classes.textContainer}>
                         <Link
-                            href="#"
                             onClick={() => openFileInTool(fileTypes, props.artifact.fileType, props.artifact.repositoryId, props.artifact.id, t("error.missingTool", props.artifact.fileType))}
                             className={classes.title}>
                             {props.artifact.name}
@@ -158,7 +157,7 @@ const ArtifactEntry: React.FC<Props> = props => {
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
-                                {t("artifact.updatedDuration", { duration: helpers.formatTimeSince(props.artifact.updatedDate, t) })}
+                                {t("artifact.updatedDuration", {duration: helpers.formatTimeSince(props.artifact.updatedDate, t)})}
                             </span>
                         </div>
                     </div>
@@ -167,12 +166,12 @@ const ArtifactEntry: React.FC<Props> = props => {
                         {props.favorite && (
                             <Star
                                 className={classes.starActive}
-                                onClick={() => props.onFavorite(props.artifact)} />
+                                onClick={() => props.onFavorite(props.artifact)}/>
                         )}
                         {!props.favorite && (
                             <StarOutline
                                 className={classes.starInactive}
-                                onClick={() => props.onFavorite(props.artifact)} />
+                                onClick={() => props.onFavorite(props.artifact)}/>
                         )}
                         <IconButton
                             size={"small"}
@@ -183,15 +182,15 @@ const ArtifactEntry: React.FC<Props> = props => {
                                 target: event.currentTarget,
                                 isFavorite: props.favorite
                             })}>
-                            <MoreVert />
+                            <MoreVert/>
                         </IconButton>
                         {props.expandable && (
                             <IconButton
                                 size="small"
                                 ref={ref}
                                 onClick={() => setExpanded(cur => !cur)}>
-                                {!expanded && <KeyboardArrowDown />}
-                                {expanded && <KeyboardArrowUp />}
+                                {!expanded && <KeyboardArrowDown/>}
+                                {expanded && <KeyboardArrowUp/>}
                             </IconButton>
                         )}
                     </div>
