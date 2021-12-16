@@ -1,8 +1,8 @@
-import {ArtifactTO, DeploymentTO} from "../api";
+import { ArtifactTO, DeploymentTO } from "../api";
 
 export const compareTimestamp = (a: DeploymentTO, b: DeploymentTO): number => {
-    const c = new Date(a.timestamp)
-    const d = new Date(b.timestamp)
+    const c = new Date(a.timestamp);
+    const d = new Date(b.timestamp);
     if (c < d) {
         return 1;
     }
@@ -13,8 +13,8 @@ export const compareTimestamp = (a: DeploymentTO, b: DeploymentTO): number => {
 };
 
 export const compareCreated = (a: ArtifactTO, b: ArtifactTO): number => {
-    const c = new Date(a.createdDate)
-    const d = new Date(b.createdDate)
+    const c = new Date(a.createdDate);
+    const d = new Date(b.createdDate);
     if (c < d) {
         return 1;
     }
@@ -25,8 +25,8 @@ export const compareCreated = (a: ArtifactTO, b: ArtifactTO): number => {
 };
 
 export const compareEdited = (a: ArtifactTO, b: ArtifactTO): number => {
-    const c = new Date(a.updatedDate)
-    const d = new Date(b.updatedDate)
+    const c = new Date(a.updatedDate);
+    const d = new Date(b.updatedDate);
     if (c < d) {
         return 1;
     }

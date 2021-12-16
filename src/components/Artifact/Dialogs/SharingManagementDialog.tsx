@@ -1,12 +1,12 @@
-import React, {useCallback, useState} from "react";
-import {useTranslation} from "react-i18next";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import AddSharingSearchBar from "./AddSharingSearchBar";
 import SharedRepositories from "./SharedRepositories";
-import {ArtifactTO, ShareWithRepositoryTORoleEnum} from "../../../api";
-import {getManageableRepos, searchRepos} from "../../../store/actions";
+import { ArtifactTO, ShareWithRepositoryTORoleEnum } from "../../../api";
+import { getManageableRepos, searchRepos } from "../../../store/actions";
 import PopupDialog from "../../Shared/Form/PopupDialog";
-import {getSharedRepos, shareWithRepo, unshareWithRepo, updateShareWithRepo} from "../../../store/actions/shareAction";
-import {makeErrorToast} from "../../../util/toastUtils";
+import { getSharedRepos, shareWithRepo, unshareWithRepo, updateShareWithRepo } from "../../../store/actions/shareAction";
+import { makeErrorToast } from "../../../util/toastUtils";
 
 interface Props {
     open: boolean;
@@ -15,33 +15,30 @@ interface Props {
 }
 
 const SharingManagementDialog: React.FC<Props> = props => {
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
-
 
     const getManageable = useCallback(async () => {
         getManageableRepos().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                //setManageableRepos(response.data)
+                // setManageableRepos(response.data)
             } else {
-                makeErrorToast(t(response.data.toString()), () => getManageable())
+                makeErrorToast(t(response.data.toString()), () => getManageable());
             }
-        }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getManageable())
-        })
-    }, [t])
-
+        }, err => {
+            makeErrorToast(t(typeof err.response.data === "string" ? err.response.data : err.response.data.error), () => getManageable());
+        });
+    }, [t]);
 
     return (
         <PopupDialog
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("artifact.share", {artifactName: props.artifact?.name})}
+            title={t("artifact.share", { artifactName: props.artifact?.name })}
             firstTitle={t("dialog.close")}
             onFirst={() => props.onCancelled()}>
-
 
             {props.artifact && (
                 <>
@@ -52,14 +49,13 @@ const SharingManagementDialog: React.FC<Props> = props => {
                         artifactId={props.artifact.id}
                         roleForNewAssignments={ShareWithRepositoryTORoleEnum.Viewer}
                         searchMethod={searchRepos}
-                        shareMethod={shareWithRepo}/>
+                        shareMethod={shareWithRepo} />
                     <SharedRepositories
-                        entity={"repository"}
+                        entity="repository"
                         artifact={props.artifact}
                         getSharedMethod={getSharedRepos}
                         unshareMethod={unshareWithRepo}
-                        updateMethod={updateShareWithRepo}/>
-
+                        updateMethod={updateShareWithRepo} />
 
                 </>
             )}

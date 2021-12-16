@@ -1,4 +1,4 @@
-import {CaseReducer} from "@reduxjs/toolkit";
+import { CaseReducer } from "@reduxjs/toolkit";
 import {
     SYNC_STATUS_ACTIVE_ENTITY,
     SYNC_STATUS_ARTIFACT,
@@ -33,37 +33,35 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 repoSynced: action.dataSynced
             };
 
-
-
         case SYNC_STATUS_ACTIVE_ENTITY:
             return {
                 ...state,
                 activeEntitySynced: action.dataSynced
-            }
+            };
 
         case SYNC_STATUS_TEAM:
             return {
                 ...state,
                 teamSynced: action.dataSynced
-            }
+            };
 
         case SYNC_STATUS_TARGETS:
             return {
                 ...state,
                 targetsSynced: action.targetsSynced
-            }
+            };
 
         case SYNC_STATUS_RECENT:
             return {
                 ...state,
                 recentSynced: action.dataSynced
-            }
+            };
 
         case SYNC_STATUS_FAVORITE:
             return {
                 ...state,
                 favoriteSynced: action.dataSynced
-            }
+            };
 
         case SYNC_STATUS_ARTIFACT:
             return {
@@ -87,7 +85,7 @@ const reducer: CaseReducer = (state = initialState, action) => {
             return {
                 ...state,
                 sharedSynced: action.sharedSynced
-            }
+            };
     }
     return state;
 };

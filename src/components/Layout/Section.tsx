@@ -1,7 +1,7 @@
-import {IconButton} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import { IconButton } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import React from "react";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     title: string;
@@ -40,7 +40,7 @@ const Section: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     return (
-        <div className={classes.section} >
+        <div className={classes.section}>
             <div className={classes.header}>
                 <h1 className={classes.title}>{t(props.title)}</h1>
                 {props.actions && (

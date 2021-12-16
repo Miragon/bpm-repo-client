@@ -1,5 +1,5 @@
-import {CaseReducer} from "@reduxjs/toolkit";
-import {TARGETS} from "../../constants/Constants";
+import { CaseReducer } from "@reduxjs/toolkit";
+import { TARGETS } from "../../constants/Constants";
 
 const initialState = {
     targets: Array<string>(),
@@ -12,7 +12,6 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 targets: action.targets
             };
-
     }
     return state;
 };

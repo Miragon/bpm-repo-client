@@ -1,14 +1,14 @@
-import React, {useCallback, useRef, useState} from "react";
-import {Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
-import {Settings} from "@material-ui/icons";
-import {useDispatch} from "react-redux";
-import {useTranslation} from "react-i18next";
-import {AxiosResponse} from "axios";
-import {SYNC_STATUS_ASSIGNMENT} from "../../constants/Constants";
-import {DropdownButtonItem} from "./Form/DropdownButton";
+import React, { useCallback, useRef, useState } from "react";
+import { Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
+import { Settings } from "@material-ui/icons";
+import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { AxiosResponse } from "axios";
+import { SYNC_STATUS_ASSIGNMENT } from "../../constants/Constants";
+import { DropdownButtonItem } from "./Form/DropdownButton";
 import PopupSettings from "./Form/PopupSettings";
-import {AssignmentTORoleEnum} from "../../api";
-import {makeErrorToast, makeSuccessToast} from "../../util/toastUtils";
+import { AssignmentTORoleEnum } from "../../api";
+import { makeErrorToast, makeSuccessToast } from "../../util/toastUtils";
 
 interface Props {
     assignmentTargetId: string;
@@ -24,8 +24,7 @@ interface Props {
 
 const UserListItem: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
-
+    const { t } = useTranslation("common");
 
     const [open, setOpen] = useState<boolean>(false);
     const ref = useRef<HTMLButtonElement>(null);
@@ -34,29 +33,27 @@ const UserListItem: React.FC<Props> = props => {
         props.updateAssignmentMethod(props.assignmentTargetId, props.userId, role)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false});
+                    dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
                 } else {
-                    makeErrorToast(response.data.toString(), () => changeRole(role))
+                    makeErrorToast(response.data.toString(), () => changeRole(role));
                 }
             }, error => {
-                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => changeRole(role))
-            })
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => changeRole(role));
+            });
     }, [dispatch, props, t]);
-
 
     const removeUser = useCallback(() => {
         props.deleteAssignmentMethod(props.assignmentTargetId, props.userId)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    makeSuccessToast(t("assignment.removed", {username: props.username}))
-                    dispatch({type: SYNC_STATUS_ASSIGNMENT, dataSynced: false});
+                    makeSuccessToast(t("assignment.removed", { username: props.username }));
+                    dispatch({ type: SYNC_STATUS_ASSIGNMENT, dataSynced: false });
                 } else {
-                    makeErrorToast(t("error.unknown"), () => removeUser())
+                    makeErrorToast(t("error.unknown"), () => removeUser());
                 }
             }, error => {
-                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => removeUser())
-            })
-
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => removeUser());
+            });
     }, [dispatch, props, t]);
 
     const options: DropdownButtonItem[] = [
@@ -65,8 +62,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.OWNER"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentTORoleEnum.Owner)
-                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Owner : TeamAssignmentTORoleEnum.Owner);
+                changeRole(AssignmentTORoleEnum.Owner);
+                // changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Owner : TeamAssignmentTORoleEnum.Owner);
             }
         },
         {
@@ -74,8 +71,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.ADMIN"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentTORoleEnum.Admin)
-                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Admin : TeamAssignmentTORoleEnum.Admin);
+                changeRole(AssignmentTORoleEnum.Admin);
+                // changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Admin : TeamAssignmentTORoleEnum.Admin);
             }
         },
         {
@@ -83,8 +80,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.MEMBER"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentTORoleEnum.Member)
-                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Member : TeamAssignmentTORoleEnum.Member);
+                changeRole(AssignmentTORoleEnum.Member);
+                // changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Member : TeamAssignmentTORoleEnum.Member);
             }
         },
         {
@@ -92,8 +89,8 @@ const UserListItem: React.FC<Props> = props => {
             label: t("user.VIEWER"),
             type: "button",
             onClick: () => {
-                changeRole(AssignmentTORoleEnum.Viewer)
-                //changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Viewer : TeamAssignmentTORoleEnum.Viewer);
+                changeRole(AssignmentTORoleEnum.Viewer);
+                // changeRole((props.assignmentTargetEntity === "repository") ? AssignmentTORoleEnum.Viewer : TeamAssignmentTORoleEnum.Viewer);
             }
         },
         {
@@ -118,21 +115,21 @@ const UserListItem: React.FC<Props> = props => {
             <ListItem>
                 <ListItemText
                     primary={props.username}
-                    secondary={t(`user.${props.role}`)}/>
+                    secondary={t(`user.${props.role}`)} />
                 {props.hasAdminPermissions && (
                     <ListItemSecondaryAction>
                         <IconButton ref={ref} edge="end" onClick={() => setOpen(true)}>
-                            <Settings/>
+                            <Settings />
                         </IconButton>
                     </ListItemSecondaryAction>
                 )}
             </ListItem>
-            <Divider/>
+            <Divider />
             <PopupSettings
                 open={open}
                 reference={ref.current}
                 onCancel={() => setOpen(false)}
-                options={options}/>
+                options={options} />
         </>
     );
 };

@@ -11,11 +11,11 @@ import {
     Radio,
     RadioGroup
 } from "@material-ui/core";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {ArrowDropDown} from "@material-ui/icons";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { ArrowDropDown } from "@material-ui/icons";
 import clsx from "clsx";
-import React, {useRef, useState} from "react";
-import {useTranslation} from "react-i18next";
+import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface DropdownButtonItem {
     id: string;
@@ -30,7 +30,7 @@ export interface DropdownButtonItem {
 interface Props {
     testId?: string;
     title: string;
-    type: "default" | "radio" | "checkbox";
+    type?: "default" | "radio" | "checkbox";
     options: DropdownButtonItem[];
     onClick?: (id: string) => void;
     defaultSortValue?: string;
@@ -142,8 +142,8 @@ const DropdownButton: React.FC<Props> = props => {
                             <ClickAwayListener onClickAway={() => setOpen(false)}>
                                 <MenuList className={classes.list}>
 
-                                    {props.type === "default" &&
-                                    props.options.map(option => (
+                                    {props.type === "default"
+                                    && props.options.map(option => (
                                         <MenuItem
                                             key={option.id}
                                             disabled={option.disabled || option.type !== "button"}
@@ -163,41 +163,42 @@ const DropdownButton: React.FC<Props> = props => {
                                             {option.icon ? option.icon : null}
                                             {t(option.label)}
                                         </MenuItem>
-                                    ))
-                                    }
+                                    ))}
 
-                                    {props.type === "radio" &&
-                                        <RadioGroup
-                                            defaultValue={props.defaultSortValue || props.options[0].id}>
-                                            {props.options.map(option => (
-                                                <FormControlLabel
-                                                    key={option.id}
-                                                    className={clsx(
-                                                        classes.menuItem,
-                                                        option.type === "hint" && classes.menuItemHint,
-                                                        option.type === "divider" && classes.menuItemDivider
-                                                    )}
-                                                    value={option.id}
-                                                    label={option.label}
-                                                    control={
-                                                        <Radio
-                                                            size="small"
-                                                            className={classes.control}
-                                                            color={"primary"}
-                                                            onChange={() => {
-                                                                if (option.onClick) {
-                                                                    option.onClick();
-                                                                } else if (props.onClick) {
-                                                                    props.onClick(option.id);
-                                                                }
-                                                            }}
-                                                            value={option.id} />} />
-                                            ))}
-                                        </RadioGroup>
-                                    }
+                                    {props.type === "radio"
+                                        && (
+                                            <RadioGroup
+                                                defaultValue={props.defaultSortValue || props.options[0].id}>
+                                                {props.options.map(option => (
+                                                    <FormControlLabel
+                                                        key={option.id}
+                                                        className={clsx(
+                                                            classes.menuItem,
+                                                            option.type === "hint" && classes.menuItemHint,
+                                                            option.type === "divider" && classes.menuItemDivider
+                                                        )}
+                                                        value={option.id}
+                                                        label={option.label}
+                                                        control={(
+                                                            <Radio
+                                                                size="small"
+                                                                className={classes.control}
+                                                                color="primary"
+                                                                onChange={() => {
+                                                                    if (option.onClick) {
+                                                                        option.onClick();
+                                                                    } else if (props.onClick) {
+                                                                        props.onClick(option.id);
+                                                                    }
+                                                                }}
+                                                                value={option.id} />
+                                                        )} />
+                                                ))}
+                                            </RadioGroup>
+                                        )}
 
-                                    {props.type === "checkbox" &&
-                                    props.options.map(option => (
+                                    {props.type === "checkbox"
+                                    && props.options.map(option => (
                                         <FormControlLabel
                                             key={option.id}
                                             className={clsx(
@@ -205,11 +206,11 @@ const DropdownButton: React.FC<Props> = props => {
                                                 option.type === "hint" && classes.menuItemHint,
                                                 option.type === "divider" && classes.menuItemDivider
                                             )}
-                                            control={
+                                            control={(
                                                 <Checkbox
                                                     size="small"
                                                     checked={props.selectedFilterOptions?.includes(option.id) || false}
-                                                    color={"primary"}
+                                                    color="primary"
                                                     className={classes.control}
                                                     onChange={() => {
                                                         if (option.onClick) {
@@ -217,9 +218,9 @@ const DropdownButton: React.FC<Props> = props => {
                                                         } else if (props.onClick) {
                                                             props.onClick(option.id);
                                                         }
-                                                    }
-                                                    }
-                                                    value={option.id} />}
+                                                    }}
+                                                    value={option.id} />
+                                            )}
                                             label={t(option.label)} />
 
                                     ))}

@@ -1,4 +1,4 @@
-import {combineReducers} from "@reduxjs/toolkit";
+import { combineReducers } from "@reduxjs/toolkit";
 import usersReducer from "./usersReducer";
 import artifactReducer from "./artifactReducer";
 import dataSyncedReducer from "./dataSyncedReducer";

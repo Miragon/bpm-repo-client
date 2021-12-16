@@ -1,22 +1,22 @@
-import {Button, Chip, ListItem, Tooltip} from "@material-ui/core";
+import { Button, Chip, ListItem, Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import {MoreVert} from "@material-ui/icons";
-import React, {useCallback, useRef, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {useDispatch, useSelector} from "react-redux";
-import {useTranslation} from "react-i18next";
-import {ArtifactTypeTO, DeploymentTO} from "../../../../api";
-import {RootState} from "../../../../store/reducers/rootReducer";
-import {fetchTargets} from "../../../../store/actions";
-import {openFileInTool} from "../../../../util/Redirections";
-import {TARGETS} from "../../../../constants/Constants";
-import {DropdownButtonItem} from "../../../../components/Shared/Form/DropdownButton";
-import PopupSettings from "../../../../components/Shared/Form/PopupSettings";
-import DeployMilestoneDialog from "../../../../components/Artifact/Dialogs/DeployMilestoneDialog";
-import DeploymentHistory from "../../../../components/Artifact/Dialogs/DeploymentHistory";
-import SaveAsNewArtifactDialog from "../../../../components/Artifact/Dialogs/SaveAsNewArtifactDialog";
-import {makeErrorToast} from "../../../../util/toastUtils";
-import {reformatDate} from "../../../../util/formatUtils";
+import { MoreVert } from "@material-ui/icons";
+import React, { useCallback, useRef, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { ArtifactTypeTO, DeploymentTO } from "../../../api";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { fetchTargets } from "../../../store/actions";
+import { openFileInTool } from "../../../util/Redirections";
+import { TARGETS } from "../../../constants/Constants";
+import { DropdownButtonItem } from "../../../components/Shared/Form/DropdownButton";
+import PopupSettings from "../../../components/Shared/Form/PopupSettings";
+import DeployMilestoneDialog from "../../../components/Artifact/Dialogs/DeployMilestoneDialog";
+import DeploymentHistory from "../../../components/Artifact/Dialogs/DeploymentHistory";
+import SaveAsNewArtifactDialog from "../../../components/Artifact/Dialogs/SaveAsNewArtifactDialog";
+import { makeErrorToast } from "../../../util/toastUtils";
+import { reformatDate } from "../../../util/formatUtils";
 
 const useStyles = makeStyles(() => ({
 
@@ -89,8 +89,7 @@ const useStyles = makeStyles(() => ({
     date: {
         marginRight: "38px",
     }
-}),
-);
+}),);
 
 interface Props {
     artifactTitle: string;
@@ -105,13 +104,11 @@ interface Props {
     deployments: Array<DeploymentTO>
 }
 
-
 const MilestoneListItem: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const ref = useRef<HTMLButtonElement>(null);
-    const {t} = useTranslation("common");
-
+    const { t } = useTranslation("common");
 
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const [historyOpen, setHistoryOpen] = useState<boolean>(false);
@@ -123,19 +120,19 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
     const openDeploymentHistory = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         setHistoryOpen(true);
-    }
+    };
 
     const getTargets = useCallback(async () => {
         fetchTargets().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: TARGETS, targets: response.data})
+                dispatch({ type: TARGETS, targets: response.data });
             } else {
-                makeErrorToast(t(response.data.toString()), () => getTargets())
+                makeErrorToast(t(response.data.toString()), () => getTargets());
             }
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
-        })
-    }, [dispatch, t])
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets());
+        });
+    }, [dispatch, t]);
 
     const options: DropdownButtonItem[] = [
         {
@@ -143,7 +140,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
             label: t("milestone.deploy"),
             type: "button",
             onClick: () => {
-                getTargets()
+                getTargets();
                 setDeployMilestoneOpen(true);
             }
         },
@@ -152,7 +149,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
             label: t("milestone.download"),
             type: "button",
             onClick: () => {
-                const filePath = `/api/milestone/${props.artifactId}/${props.id}/download`
+                const filePath = `/api/milestone/${props.artifactId}/${props.id}/download`;
                 const link = document.createElement("a");
                 link.href = filePath;
                 link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
@@ -179,10 +176,11 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
 
     return (
         <>
-            <ListItem className={classes.listItem}
+            <ListItem
+                className={classes.listItem}
                 onClick={() => openFileInTool(fileTypes, props.type, props.repoId, props.artifactId, t("error.missingTool", props.type), props.milestone)}>
                 <div className={classes.leftPanel}>
-                    <Chip label={props.milestone} color={"primary"}/>
+                    <Chip label={props.milestone} color="primary" />
                 </div>
                 <div className={classes.content}>
                     <div className={classes.middlePanel}>
@@ -191,40 +189,39 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                                 {props.comment}
                             </div>
                         </Tooltip>
-                        {props.deployments.length > 0 ?
-                            <div>
-                                <Button
-                                    ref={ref}
-                                    color="primary"
-                                    className={classes.deployment}
-                                    onClick={event => openDeploymentHistory(event)}
-                                    variant="contained"
-                                    aria-multiline={false}
-                                    size={"small"}>
-                                    {props.deployments.length > 1 ?
-                                        `${props.deployments.length} ${t("deployment.deployments")}`
-                                        :
-                                        `${props.deployments[0].target}`
-                                    }
-                                </Button>
-                            </div>
+                        {props.deployments.length > 0
+                            ? (
+                                <div>
+                                    <Button
+                                        ref={ref}
+                                        color="primary"
+                                        className={classes.deployment}
+                                        onClick={event => openDeploymentHistory(event)}
+                                        variant="contained"
+                                        aria-multiline={false}
+                                        size="small">
+                                        {props.deployments.length > 1
+                                            ? `${props.deployments.length} ${t("deployment.deployments")}`
+                                            : `${props.deployments[0].target}`}
+                                    </Button>
+                                </div>
+                            )
 
-                            :
-                            <div>
-
-                            </div>
-                        }
+                            : <div />}
                     </div>
 
                     <div className={classes.rightPanel}>
                         <div className={classes.date}>
                             {reformatDate(props.updatedDate)}
                         </div>
-                        <IconButton size={"small"} ref={ref} onClick={event => {
-                            event.stopPropagation()
-                            setSettingsOpen(true)
-                        }}>
-                            <MoreVert className={classes.icons}/>
+                        <IconButton
+                            size="small"
+                            ref={ref}
+                            onClick={event => {
+                                event.stopPropagation();
+                                setSettingsOpen(true);
+                            }}>
+                            <MoreVert className={classes.icons} />
                         </IconButton>
                     </div>
                 </div>
@@ -234,7 +231,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 open={settingsOpen}
                 reference={ref.current}
                 onCancel={() => setSettingsOpen(false)}
-                options={options}/>
+                options={options} />
 
             <DeployMilestoneDialog
                 open={deployMilestoneOpen}
@@ -242,7 +239,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 repositoryId={props.repoId}
                 artifactId={props.artifactId}
                 milestoneId={props.id}
-                milestoneNumber={props.milestone}/>
+                milestoneNumber={props.milestone} />
 
             <DeploymentHistory
                 milestoneId={props.id}
@@ -251,7 +248,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 milestone={props.milestone}
                 open={historyOpen}
                 onCancelled={() => setHistoryOpen(false)}
-                deployments={props.deployments}/>
+                deployments={props.deployments} />
 
             <SaveAsNewArtifactDialog
                 open={saveDialogOpen}
@@ -260,9 +257,9 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
                 onCancelled={() => setSaveDialogOpen(false)}
                 type={props.type}
                 milestoneNo={props.milestone}
-                file={props.file}/>
+                file={props.file} />
         </>
     );
-})
+});
 
-export default MilestoneListItem
+export default MilestoneListItem;

@@ -1,13 +1,12 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useDispatch} from "react-redux";
-import {ArtifactTO} from "../../../api";
-import {updateArtifact} from "../../../store/actions";
-import {SYNC_STATUS_ARTIFACT} from "../../../constants/Constants";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { ArtifactTO } from "../../../api";
+import { updateArtifact } from "../../../store/actions";
+import { SYNC_STATUS_ARTIFACT } from "../../../constants/Constants";
 import PopupDialog from "../../Shared/Form/PopupDialog";
 import SettingsTextField from "../../Shared/Form/SettingsTextField";
-import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
-
+import { makeErrorToast, makeSuccessToast } from "../../../util/toastUtils";
 
 interface Props {
     open: boolean;
@@ -17,16 +16,16 @@ interface Props {
 
 const EditArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
-    const {artifact} = props;
+    const { t } = useTranslation("common");
+    const { artifact } = props;
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>(props.artifact?.name || "");
     const [description, setDescription] = useState<string>(props.artifact?.description || "");
 
     useEffect(() => {
-        artifact && setTitle(artifact.name)
-        artifact && setDescription(artifact.description)
-    }, [artifact])
+        artifact && setTitle(artifact.name);
+        artifact && setDescription(artifact.description);
+    }, [artifact]);
 
     const applyChanges = useCallback(async () => {
         if (!artifact) {
@@ -43,13 +42,12 @@ const EditArtifactDialog: React.FC<Props> = props => {
                 makeErrorToast(t(response.data.toString()), () => applyChanges());
                 return;
             }
-            dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
-            makeSuccessToast(t("artifact.changed"))
+            dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+            makeSuccessToast(t("artifact.changed"));
             props.onCancelled();
-
-        }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
-        })
+        }, err => {
+            makeErrorToast(t(typeof err.response.data === "string" ? err.response.data : err.response.data.error), () => applyChanges());
+        });
     }, [artifact, props, title, description, t, dispatch]);
 
     return (
@@ -65,14 +63,14 @@ const EditArtifactDialog: React.FC<Props> = props => {
             <SettingsTextField
                 label={t("properties.title")}
                 value={title}
-                onChanged={setTitle}/>
+                onChanged={setTitle} />
 
             <SettingsTextField
                 label={t("properties.description")}
                 value={description}
                 onChanged={setDescription}
                 multiline
-                minRows={4}/>
+                minRows={4} />
 
         </PopupDialog>
     );

@@ -1,9 +1,11 @@
-import React, {useCallback, useState} from "react";
-import {useDispatch} from "react-redux";
-import {makeStyles} from "@material-ui/core/styles";
-import {IconButton, Typography} from "@material-ui/core";
+import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
+import { IconButton, Typography } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { AxiosResponse } from "axios";
+import { useHistory } from "react-router-dom";
 import {
     SYNC_STATUS_ACTIVE_ENTITY,
     SYNC_STATUS_FAVORITE,
@@ -12,14 +14,11 @@ import {
 } from "../../../constants/Constants";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsTextField from "../Form/SettingsTextField";
-import {AxiosResponse} from "axios";
-import {useHistory} from "react-router-dom";
-import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
-
+import { makeErrorToast, makeSuccessToast } from "../../../util/toastUtils";
 
 /**
  Component shows a Popup Menu which lets the user change properties of a Repository or Team or delete it, depending from which screen this dialog is opened
- **/
+ * */
 
 const useStyles = makeStyles(() => ({
     line: {
@@ -63,12 +62,11 @@ interface Props {
     deleteEntityMethod: (targetId: string) => Promise<AxiosResponse>;
 }
 
-
 const EditEntityDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>(props.repoName);
@@ -77,32 +75,32 @@ const EditEntityDialog: React.FC<Props> = props => {
     const applyChanges = useCallback(async () => {
         props.updateEntityMethod(props.targetId, title, description).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                makeSuccessToast(t("repository.updated"))
-                dispatch({type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false});
-                props.onCancelled()
+                makeSuccessToast(t("repository.updated"));
+                dispatch({ type: SYNC_STATUS_ACTIVE_ENTITY, dataSynced: false });
+                props.onCancelled();
             } else {
-                makeErrorToast(t(response.data.toString()), () => applyChanges())
+                makeErrorToast(t(response.data.toString()), () => applyChanges());
             }
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges())
-        })
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => applyChanges());
+        });
     }, [props, title, description, t, dispatch]);
 
     const deleteRepo = useCallback(() => {
-        if (window.confirm(t("repository.confirmDelete", {repoName: title}))) {
+        if (window.confirm(t("repository.confirmDelete", { repoName: title }))) {
             props.deleteEntityMethod(props.targetId).then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
-                    dispatch({type: SYNC_STATUS_RECENT, dataSynced: false});
-                    dispatch({type: SYNC_STATUS_FAVORITE, dataSynced: false});
-                    makeSuccessToast(t("repository.deleted"))
-                    history.push("/")
+                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: false });
+                    makeSuccessToast(t("repository.deleted"));
+                    history.push("/");
                 } else {
-                    makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo())
+                    makeErrorToast(t("repository.couldNotDelete"), () => deleteRepo());
                 }
             }, error => {
-                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteRepo())
-            })
+                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deleteRepo());
+            });
         }
     }, [t, title, props, dispatch, history]);
 
@@ -121,25 +119,25 @@ const EditEntityDialog: React.FC<Props> = props => {
                     {t("repository.delete")}
                 </Typography>
                 <IconButton className={classes.deleteButton} onClick={deleteRepo}>
-                    <DeleteIcon/>
+                    <DeleteIcon />
                 </IconButton>
             </div>
 
-            <div className={classes.spacer}/>
+            <div className={classes.spacer} />
 
             <SettingsTextField
                 label={t("properties.title")}
                 value={title}
-                onChanged={setTitle}/>
+                onChanged={setTitle} />
 
-            <div className={classes.spacer}/>
+            <div className={classes.spacer} />
 
             <SettingsTextField
                 label={t("properties.description")}
                 value={description}
                 onChanged={setDescription}
                 multiline
-                minRows={4}/>
+                minRows={4} />
 
         </PopupDialog>
     );

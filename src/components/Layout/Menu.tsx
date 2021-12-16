@@ -1,11 +1,11 @@
-import {makeStyles, Theme} from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import i18next from "i18next";
-import React, {useMemo} from "react";
-import {useTranslation} from "react-i18next";
+import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import Flag from "react-world-flags";
 import MenuBar from "./MenuBar";
-import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
+import DropdownButton, { DropdownButtonItem } from "../Shared/Form/DropdownButton";
 import Identity from "../Shared/Identity";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const changeLanguage = (language: string) => {
-    window.localStorage.setItem("language", language)
+    window.localStorage.setItem("language", language);
     i18next.changeLanguage(language);
 };
 

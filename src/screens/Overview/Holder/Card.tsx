@@ -1,8 +1,8 @@
-import {Typography} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {DescriptionOutlined, PeopleOutline} from "@material-ui/icons";
+import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { DescriptionOutlined, PeopleOutline } from "@material-ui/icons";
 import React from "react";
-import {COLOR_LINK} from "../../../constants/Constants";
+import { COLOR_LINK } from "../../../constants/Constants";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -50,6 +50,9 @@ const Card: React.FC<Props> = props => {
 
     return (
         <div
+            tabIndex={0}
+            role="button"
+            onKeyDown={props.onClick}
             onClick={props.onClick}
             className={classes.root}
             title={props.title}>

@@ -10,7 +10,7 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-       // "airbnb-typescript",
+        "airbnb-typescript",
         "react-app"
     ],
     "rules": {
@@ -24,6 +24,7 @@
                 ]
             }
         ],
+        "max-len": "off",
         "import/no-named-as-default": 0,
         "@typescript-eslint/indent": [
             "error",
@@ -107,7 +108,9 @@
         "prefer-destructuring": "off",
         // Does not work with TS and arrow functions
         // https://github.com/yannickcr/eslint-plugin-react/issues/2353
-        "react/prop-types": "off",
+        "react/prop-types": 0,
+        "react/no-unused-prop-types":  0,
+        "react/no-array-index-key": 0,
         // Is this the way to go? I think both ways are acceptable, but should not be enforced...
         "react/destructuring-assignment": "off",
         // Deprecated rule
@@ -119,6 +122,7 @@
         "react-hooks/exhaustive-deps": "error",
         // Just more readable
         "arrow-body-style": "off",
+        // Does not bring any advantage
         "import/prefer-default-export": "off"
     }
 }

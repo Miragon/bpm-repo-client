@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
-import {MenuItem, Select} from "@material-ui/core";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/reducers/rootReducer";
+import { MenuItem, Select } from "@material-ui/core";
+import { useSelector } from "react-redux";
 import PersonIcon from "@material-ui/icons/Person";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { RootState } from "../../store/reducers/rootReducer";
 import theme from "../../theme";
-
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -35,36 +34,29 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-
-
 const Identity: React.FC = (() => {
     const classes = useStyles();
     const history = useHistory();
 
-
-    const currentUser = useSelector((state: RootState) => state.user.currentUserInfo)
-
+    const currentUser = useSelector((state: RootState) => state.user.currentUserInfo);
 
     const [activeIdentityName, setActiveIdentityName] = useState("");
     const [activeIdentityId, setActiveIdentityId] = useState("");
 
-
-
-
     useEffect(() => {
-        if(currentUser){
-            //TODO: Uncomment the fetchTeams function as soon as the team-function returns
-            //fetchTeams()
-            setActiveIdentityId(currentUser.id)
-            setActiveIdentityName(currentUser.username)
+        if (currentUser) {
+            // TODO: Uncomment the fetchTeams function as soon as the team-function returns
+            // fetchTeams()
+            setActiveIdentityId(currentUser.id);
+            setActiveIdentityName(currentUser.username);
         }
-    }, [currentUser])
+    }, [currentUser]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const changeIdentity = (event: any) => {
-        setActiveIdentityId(event.target.value)
-        history.push(`/team/${event.target.value}`)
-    }
+        setActiveIdentityId(event.target.value);
+        history.push(`/team/${event.target.value}`);
+    };
 
     return (
         <div className={classes.container}>
@@ -77,7 +69,7 @@ const Identity: React.FC = (() => {
                     <MenuItem value={activeIdentityId}>
                         <div className={classes.iconAndText}>
                             <div className={classes.icon}>
-                                <PersonIcon htmlColor={"white"}/>
+                                <PersonIcon htmlColor="white" />
                             </div>
                             <div className={classes.contrastText}>
                                 {activeIdentityName}
@@ -85,14 +77,11 @@ const Identity: React.FC = (() => {
                         </div>
                     </MenuItem>
 
-
                 </Select>
             </FormControl>
 
-
         </div>
-    )
-
-})
+    );
+});
 
 export default Identity;

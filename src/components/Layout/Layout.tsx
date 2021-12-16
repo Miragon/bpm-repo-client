@@ -1,14 +1,14 @@
-import {makeStyles} from "@material-ui/core";
-import {Theme} from "@material-ui/core/styles";
-import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {ToastContainer} from "react-toastify";
-import {ArtifactApi, UserApi} from "../../api";
-import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
+import { makeStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { ArtifactApi, UserApi } from "../../api";
+import { CURRENT_USER_INFO, FILETYPES } from "../../constants/Constants";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
 import Menu from "./Menu";
 import Router from "./Router";
-import {getClientConfig} from "../../api/config";
+import { getClientConfig } from "../../api/config";
 
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexGrow: 1,
         padding: "2rem 0",
         flexDirection: "column",
-        maxWidth: "960px",
+        maxWidth: "1200px",
         margin: "0 auto"
     }
 }));
@@ -41,7 +41,7 @@ const Layout: React.FC = () => {
             .then(response => {
                 if (response.data) {
                     setUserDoesExist(true);
-                    dispatch({type: CURRENT_USER_INFO, currentUserInfo: response.data});
+                    dispatch({ type: CURRENT_USER_INFO, currentUserInfo: response.data });
                 } else {
                     setUserDoesExist(false);
                 }
@@ -54,29 +54,28 @@ const Layout: React.FC = () => {
             const config = getClientConfig();
             new ArtifactApi().getAllFileTypes(config).then(response => {
                 if (response.data) {
-                    dispatch({type: FILETYPES, fileTypes: response.data});
+                    dispatch({ type: FILETYPES, fileTypes: response.data });
                     setFileConfigFetched(true);
                 }
-            })
-
+            });
         }
-    }, [dispatch, fileConfigFetched])
+    }, [dispatch, fileConfigFetched]);
 
     if (userDoesExist === undefined) {
         return null;
     }
 
     if (!userDoesExist) {
-        return <RegisterNewUserScreen/>;
+        return <RegisterNewUserScreen />;
     }
 
     return (
         <>
-            <Menu/>
+            <Menu />
             <div className={classes.contentWrapper}>
                 <div className={classes.content}>
-                    <Router/>
-                    <ToastContainer/>
+                    <Router />
+                    <ToastContainer />
                 </div>
             </div>
         </>
@@ -84,5 +83,3 @@ const Layout: React.FC = () => {
 };
 
 export default Layout;
-
-

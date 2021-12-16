@@ -1,9 +1,9 @@
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import clsx from "clsx";
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 interface Props {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,7 +34,7 @@ const SettingsSelect: React.FC<Props> = props => {
             variant="outlined"
             disabled={props.disabled}
             className={clsx(classes.root, props.className)}
-            required={props?.required} >
+            required={props?.required}>
 
             <InputLabel id={id}>
                 {props.label}

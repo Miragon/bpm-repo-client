@@ -1,13 +1,13 @@
-import {makeStyles} from "@material-ui/core/styles";
-import React, {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {ArtifactMilestoneTO, ArtifactTO} from "../../api";
-import {getAllMilestones} from "../../store/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/reducers/rootReducer";
-import {SYNC_STATUS_MILESTONE} from "../../constants/Constants";
-import MilestoneDetails from "../../screens/Repository/MIlestone/MilestoneDetails";
-import {makeErrorToast} from "../../util/toastUtils";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { ArtifactMilestoneTO, ArtifactTO } from "../../api";
+import { getAllMilestones } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
+import { SYNC_STATUS_MILESTONE } from "../../constants/Constants";
+import MilestoneDetails from "../../screens/MIlestone/MilestoneDetails";
+import { makeErrorToast } from "../../util/toastUtils";
 
 interface Props {
     artifact: ArtifactTO;
@@ -23,12 +23,12 @@ const useStyles = makeStyles(() => ({
         alignItems: "center",
         padding: "8px"
     }
-}))
+}));
 
 const MilestoneList: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const milestoneSynced = useSelector((state: RootState) => state.dataSynced.milestoneSynced);
     const [activeMilestones, setActiveMilestones] = useState<ArtifactMilestoneTO[]>([]);
@@ -36,15 +36,13 @@ const MilestoneList: React.FC<Props> = (props: Props) => {
     const getMilestones = useCallback(async (artifactId: string) => {
         const response = await getAllMilestones(artifactId);
         if (Math.floor(response.status / 100) !== 2) {
-
             makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId));
             return;
         }
         const sortedMilestones = response.data.sort(compare);
         setActiveMilestones(sortedMilestones);
-        dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: true})
-
-    }, [t, dispatch])
+        dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: true });
+    }, [t, dispatch]);
 
     useEffect(() => {
         getMilestones(props.artifact.id);
@@ -54,7 +52,7 @@ const MilestoneList: React.FC<Props> = (props: Props) => {
         if (!milestoneSynced) {
             getMilestones(props.artifact.id);
         }
-    }, [getMilestones, props.artifact, milestoneSynced])
+    }, [getMilestones, props.artifact, milestoneSynced]);
 
     const compare = (a: ArtifactMilestoneTO, b: ArtifactMilestoneTO) => {
         if (a.milestone < b.milestone) {
@@ -73,7 +71,7 @@ const MilestoneList: React.FC<Props> = (props: Props) => {
                 repoId={props.artifact.repositoryId}
                 fileType={props.artifact.fileType}
                 artifactMilestoneTOs={activeMilestones}
-                artifactTitle={props.artifact.name}/>
+                artifactTitle={props.artifact.name} />
         </div>
     );
 };

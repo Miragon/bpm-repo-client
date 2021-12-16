@@ -1,18 +1,18 @@
-import {NewRepositoryTO, RepositoryApi, RepositoryTO, RepositoryUpdateTO} from "../../api";
-import {AxiosResponse} from "axios";
-import {getClientConfig} from "../../api/config";
+import { AxiosResponse } from "axios";
+import { NewRepositoryTO, RepositoryApi, RepositoryTO, RepositoryUpdateTO } from "../../api";
+import { getClientConfig } from "../../api/config";
 
 export const fetchRepositories = async (): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
     const config = getClientConfig();
-    return await repositoryController.getAllRepositories(config);
-}
+    return repositoryController.getAllRepositories(config);
+};
 
 export const getSingleRepository = async (id: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
     const config = getClientConfig();
-    return await repositoryController.getSingleRepository(id, config)
-}
+    return repositoryController.getSingleRepository(id, config);
+};
 
 export const createRepository = async (name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
@@ -21,8 +21,8 @@ export const createRepository = async (name: string, description: string): Promi
         name,
         description
     };
-    return await repositoryController.createRepository(newRepositoryTO, config);
-}
+    return repositoryController.createRepository(newRepositoryTO, config);
+};
 
 export const updateRepository = async (id: string, name: string, description: string): Promise<AxiosResponse<RepositoryTO>> => {
     const repositoryController = new RepositoryApi();
@@ -31,23 +31,23 @@ export const updateRepository = async (id: string, name: string, description: st
         name,
         description
     };
-    return await repositoryController.updateRepository(id, repositoryUpdateTO, config);
-}
+    return repositoryController.updateRepository(id, repositoryUpdateTO, config);
+};
 
 export const deleteRepository = async (id: string): Promise<AxiosResponse<void>> => {
     const repositoryController = new RepositoryApi();
     const config = getClientConfig();
-    return await repositoryController.deleteRepository(id, config);
-}
+    return repositoryController.deleteRepository(id, config);
+};
 
 export const getManageableRepos = async (): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
     const config = getClientConfig();
-    return await repositoryController.getManageableRepositories(config);
-}
+    return repositoryController.getManageableRepositories(config);
+};
 
 export const searchRepos = async (typedName: string): Promise<AxiosResponse<RepositoryTO[]>> => {
     const repositoryController = new RepositoryApi();
     const config = getClientConfig();
-    return await repositoryController.searchRepositories(typedName, config);
-}
+    return repositoryController.searchRepositories(typedName, config);
+};

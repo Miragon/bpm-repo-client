@@ -1,16 +1,16 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {makeStyles} from "@material-ui/styles";
-import React, {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
-import {ArtifactTO, RepositoryTO} from "../../api";
-import {ErrorBoundary} from "../../components/Exception/ErrorBoundary";
-import {searchArtifact} from "../../store/actions";
-import {RootState} from "../../store/reducers/rootReducer";
+import { makeStyles } from "@material-ui/styles";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { ArtifactTO, RepositoryTO } from "../../api";
+import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import { searchArtifact } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
 import OverviewArtifactList from "./OverviewArtifactList";
-import {makeErrorToast} from "../../util/toastUtils";
+import { makeErrorToast } from "../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     headerText: {
@@ -34,7 +34,7 @@ let timeout: NodeJS.Timeout | undefined;
 
 const ArtifactSearchBar: React.FC = () => {
     const classes = useStyles();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
@@ -71,7 +71,6 @@ const ArtifactSearchBar: React.FC = () => {
         }
     }, [artifact]);
 
-
     const onChangeWithTimer = ((input: string) => {
         setArtifact(input);
         if (input === "") {
@@ -91,23 +90,21 @@ const ArtifactSearchBar: React.FC = () => {
     const fetchArtifactSuggestion = useCallback((input: string) => {
         searchArtifact(input).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                setReturnedArtifacts(response.data)
+                setReturnedArtifacts(response.data);
             } else {
-                makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input))
+                makeErrorToast(t(response.data.toString()), () => fetchArtifactSuggestion(input));
             }
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifactSuggestion(input))
-
-        })
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchArtifactSuggestion(input));
+        });
     }, [t]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateState = (event: any) => {
-        onChangeWithTimer(event.target.textContent)
+        onChangeWithTimer(event.target.textContent);
         setArtifact(event.target.textContent);
         setDisplayResult(true);
     };
-
 
     return (
         <>
@@ -117,7 +114,7 @@ const ArtifactSearchBar: React.FC = () => {
                         size="small"
                         id="ArtifactSearchBar"
                         freeSolo
-                        style={{width: "100%"}}
+                        style={{ width: "100%" }}
                         open={false}
                         onOpen={() => setOpen(false)}
                         onClose={() => setOpen(false)}
@@ -140,20 +137,20 @@ const ArtifactSearchBar: React.FC = () => {
                                             {loading && artifact !== "" && (
                                                 <CircularProgress
                                                     color="inherit"
-                                                    size={20}/>
+                                                    size={20} />
                                             )}
                                             {params.InputProps.endAdornment}
                                         </>
                                     ),
-                                }}/>
-                        )}/>
+                                }} />
+                        )} />
                     {displayResult && !loading && (
                         <div className={classes.resultsContainer}>
                             <OverviewArtifactList
                                 fallback="search.noResults"
                                 artifacts={returnedArtifacts}
                                 repositories={repos}
-                                favorites={favoriteArtifacts}/>
+                                favorites={favoriteArtifacts} />
                         </div>
                     )}
                 </ErrorBoundary>

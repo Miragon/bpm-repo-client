@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import clsx from "clsx";
 import React from "react";
@@ -39,7 +39,7 @@ const SettingsTextField: React.FC<Props> = props => {
             className={clsx(classes.root, props.className)}
             disabled={props.disabled}
             onChange={e => props.onChanged && props.onChanged(e.target.value)}
-            value={props.value}/>
+            value={props.value} />
     );
 };
 

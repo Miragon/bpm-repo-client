@@ -1,6 +1,6 @@
-import {CaseReducer} from "@reduxjs/toolkit";
-import {ArtifactTO, ArtifactTypeTO} from "../../api";
-import {ACTIVE_ARTIFACTS, FAVORITE_ARTIFACTS, FILETYPES, SHARED_ARTIFACTS} from "../../constants/Constants";
+import { CaseReducer } from "@reduxjs/toolkit";
+import { ArtifactTO, ArtifactTypeTO } from "../../api";
+import { ACTIVE_ARTIFACTS, FAVORITE_ARTIFACTS, FILETYPES, SHARED_ARTIFACTS } from "../../constants/Constants";
 
 const initialState = {
     artifacts: Array<ArtifactTO>(),
@@ -27,14 +27,13 @@ const reducer: CaseReducer = (state = initialState, action) => {
             return {
                 ...state,
                 fileTypes: action.fileTypes
-            }
+            };
 
         case SHARED_ARTIFACTS:
             return {
                 ...state,
                 sharedArtifacts: action.sharedArtifacts
-            }
-
+            };
     }
     return state;
 };

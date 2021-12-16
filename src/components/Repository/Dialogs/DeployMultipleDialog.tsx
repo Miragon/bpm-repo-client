@@ -1,18 +1,18 @@
-import {Checkbox, FormControlLabel, MenuItem, Typography} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { Checkbox, FormControlLabel, MenuItem, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
-import {ArtifactTO, NewDeploymentTO} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {deployMultiple, fetchTargets} from "../../../store/actions";
-import {SYNC_STATUS_MILESTONE, SYNC_STATUS_TARGETS, TARGETS} from "../../../constants/Constants";
-import PopupDialog from "../Form/PopupDialog";
-import SettingsForm from "../Form/SettingsForm";
-import SettingsSelect from "../Form/SettingsSelect";
-import SearchTextField from "../Form/SearchTextField";
-import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { ArtifactTO, NewDeploymentTO } from "../../../api";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { deployMultiple, fetchTargets } from "../../../store/actions";
+import { SYNC_STATUS_MILESTONE, SYNC_STATUS_TARGETS, TARGETS } from "../../../constants/Constants";
+import PopupDialog from "../../Shared/Form/PopupDialog";
+import SettingsForm from "../../Shared/Form/SettingsForm";
+import SettingsSelect from "../../Shared/Form/SettingsSelect";
+import SearchTextField from "../../Shared/Form/SearchTextField";
+import { makeErrorToast, makeSuccessToast } from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},
@@ -56,15 +56,15 @@ interface Props {
     artifacts: ArtifactTO[];
 }
 
-//TODO: wenn in einem listItem keine MIlestone ausgewählt wird, kann die Liste trotzdem deployt
+// TODO: wenn in einem listItem keine MIlestone ausgewählt wird, kann die Liste trotzdem deployt
 // werden (alle elemente außer das ohne MIlestone werden dann deplyot)
 const DeployMultipleDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
-    const targetsSynced: boolean = useSelector((state: RootState) => state.dataSynced.targetsSynced)
-    const targets: Array<string> = useSelector((state: RootState) => state.deployment.targets)
+    const targetsSynced: boolean = useSelector((state: RootState) => state.dataSynced.targetsSynced);
+    const targets: Array<string> = useSelector((state: RootState) => state.deployment.targets);
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [target, setTarget] = useState<string>("");
@@ -86,15 +86,13 @@ const DeployMultipleDialog: React.FC<Props> = props => {
             if (Math.floor(response.status / 100) !== 2) {
                 makeErrorToast(t(response.data.toString()), () => getTargets());
                 return;
-
             }
-            dispatch({type: TARGETS, targets: response.data});
-            dispatch({type: SYNC_STATUS_TARGETS, targetsSynced: true});
-
-        }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getTargets())
-        })
-    }, [dispatch, t])
+            dispatch({ type: TARGETS, targets: response.data });
+            dispatch({ type: SYNC_STATUS_TARGETS, targetsSynced: true });
+        }, err => {
+            makeErrorToast(t(typeof err.response.data === "string" ? err.response.data : err.response.data.error), () => getTargets());
+        });
+    }, [dispatch, t]);
 
     const filteredArtifacts = useMemo(() => {
         return props.artifacts.filter(a => a.name.toLowerCase().indexOf(search) !== -1);
@@ -102,9 +100,9 @@ const DeployMultipleDialog: React.FC<Props> = props => {
 
     useEffect(() => {
         if (!targetsSynced) {
-            getTargets()
+            getTargets();
         }
-    }, [getTargets, targetsSynced])
+    }, [getTargets, targetsSynced]);
 
     const deploy = useCallback(async () => {
         if (!target) {
@@ -127,21 +125,21 @@ const DeployMultipleDialog: React.FC<Props> = props => {
         }));
         deployMultiple(deployments).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                makeSuccessToast(t("deployment.deployedMultiple", {deployedMilestones: response.data.length}))
-                dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
-                props.onCancelled()
+                makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.data.length }));
+                dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
+                props.onCancelled();
             } else {
-                makeErrorToast(t(response.data.toString()), () => deploy())
+                makeErrorToast(t(response.data.toString()), () => deploy());
             }
-        }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => deploy())
-        })
-    }, [target, selectedArtifacts, dispatch, props, t])
+        }, err => {
+            makeErrorToast(t(typeof err.response.data === "string" ? err.response.data : err.response.data.error), () => deploy());
+        });
+    }, [target, selectedArtifacts, dispatch, props, t]);
 
     const onCancel = () => {
-        setSelectedArtifacts([])
-        props.onCancelled()
-    }
+        setSelectedArtifacts([]);
+        props.onCancelled();
+    };
 
     return (
         <PopupDialog
@@ -159,8 +157,8 @@ const DeployMultipleDialog: React.FC<Props> = props => {
                     label={t("deployment.target")}
                     value={target}
                     onChanged={setTarget}>
-                    {targets.map(target => (
-                        <MenuItem key={target} value={target}>{target}</MenuItem>
+                    {targets.map(obj => (
+                        <MenuItem key={obj} value={obj}>{obj}</MenuItem>
                     ))}
 
                 </SettingsSelect>
@@ -171,7 +169,7 @@ const DeployMultipleDialog: React.FC<Props> = props => {
                         className={classes.searchField}
                         label="Dateien durchsuchen..."
                         search={search}
-                        onSearchChanged={setSearch}/>
+                        onSearchChanged={setSearch} />
                 </div>
                 <div className={classes.list}>
                     {filteredArtifacts.length === 0 && (
@@ -195,12 +193,12 @@ const DeployMultipleDialog: React.FC<Props> = props => {
                                     className={classes.checkbox}
                                     checked={selectedArtifacts.indexOf(artifact.id) !== -1}
                                     disabled={disabled}
-                                    onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)}/>
-                            )}/>
+                                    onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)} />
+                            )} />
                     ))}
                 </div>
             </div>
         </PopupDialog>
     );
-}
+};
 export default DeployMultipleDialog;

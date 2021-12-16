@@ -1,9 +1,9 @@
-import {Menu, MenuItem} from "@material-ui/core";
-import {Theme} from "@material-ui/core/styles";
-import {makeStyles} from "@material-ui/styles";
+import { Menu, MenuItem } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
 import React from "react";
-import {DropdownButtonItem} from "./DropdownButton";
+import { DropdownButtonItem } from "./DropdownButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
     menuItem: {
@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: "4px 0 !important"
     }
 }));
-
 
 interface Props {
     open: boolean;
@@ -62,7 +61,7 @@ const PopupSettings: React.FC<Props> = ((props: Props) => {
                         if (option.onClick) {
                             option.onClick();
                         } else {
-                            console.log("No Action provided")
+                            console.log("No Action provided");
                         }
                         props.onCancel();
                     }}>
@@ -71,6 +70,6 @@ const PopupSettings: React.FC<Props> = ((props: Props) => {
             ))}
         </Menu>
     );
-})
+});
 
 export default PopupSettings;

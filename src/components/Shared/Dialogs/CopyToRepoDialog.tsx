@@ -1,17 +1,17 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {copyToRepo, fetchRepositories} from "../../../store/actions";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {REPOSITORIES, SYNC_STATUS_ARTIFACT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
+import { copyToRepo, fetchRepositories } from "../../../store/actions";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { REPOSITORIES, SYNC_STATUS_ARTIFACT, SYNC_STATUS_REPOSITORY } from "../../../constants/Constants";
 import PopupDialog from "../Form/PopupDialog";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
-import {ArtifactTO, RepositoryTO} from "../../../api";
+import { ArtifactTO, RepositoryTO } from "../../../api";
 import SettingsTextField from "../Form/SettingsTextField";
-import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
+import { makeErrorToast, makeSuccessToast } from "../../../util/toastUtils";
 
 interface Props {
     repoId: string;
@@ -22,23 +22,22 @@ interface Props {
 
 const CopyToRepoDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [repoId, setRepoId] = useState<string>(props.repoId);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
-
     useEffect(() => {
-        setTitle(`${props.artifact?.name}_copy`)
-        setDescription(props.artifact?.description || "")
-    }, [props.artifact?.description, props.artifact?.name])
+        setTitle(`${props.artifact?.name}_copy`);
+        setDescription(props.artifact?.description || "");
+    }, [props.artifact?.description, props.artifact?.name]);
 
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
-    const repoSynced: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced)
+    const repoSynced: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced);
 
     const onCopy = useCallback(async () => {
         if (!props.artifact) {
@@ -47,16 +46,16 @@ const CopyToRepoDialog: React.FC<Props> = props => {
 
         copyToRepo(repoId, props.artifact.id, title, description).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                makeSuccessToast(t("action.copied"))
-                setRepoId("")
+                makeSuccessToast(t("action.copied"));
+                setRepoId("");
                 props.onCancelled();
-                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false})
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
             } else {
-                makeErrorToast(t(response.data.toString()), () => onCopy())
+                makeErrorToast(t(response.data.toString()), () => onCopy());
             }
-        }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCopy())
-        })
+        }, excp => {
+            makeErrorToast(t(typeof excp.response.data === "string" ? excp.response.data : excp.response.data.error), () => onCopy());
+        });
     }, [props, repoId, title, description, t, dispatch]);
 
     const fetchRepos = useCallback(() => {
@@ -65,26 +64,26 @@ const CopyToRepoDialog: React.FC<Props> = props => {
                 makeErrorToast(t(response.data.toString()), () => fetchRepos());
                 return;
             }
-            
-            dispatch({type: REPOSITORIES, repos: response.data});
-            dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: true});
-        }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRepos())
-        })
+
+            dispatch({ type: REPOSITORIES, repos: response.data });
+            dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
+        }, excp => {
+            makeErrorToast(t(typeof excp.response.data === "string" ? excp.response.data : excp.response.data.error), () => fetchRepos());
+        });
     }, [dispatch, t]);
 
     useEffect(() => {
         if (!repoSynced) {
-            fetchRepos()
+            fetchRepos();
         }
-    }, [fetchRepos, repoSynced])
+    }, [fetchRepos, repoSynced]);
 
     return (
         <PopupDialog
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("artifact.copy", {artifactName: props.artifact?.name})}
+            title={t("artifact.copy", { artifactName: props.artifact?.name })}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.copy")}
@@ -109,7 +108,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
                 <SettingsTextField
                     label={t("properties.title")}
                     value={title}
-                    onChanged={setTitle}/>
+                    onChanged={setTitle} />
 
                 <SettingsTextField
                     label={t("properties.description")}
@@ -117,7 +116,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
                     multiline
                     minRows={3}
                     maxRows={3}
-                    onChanged={setDescription}/>
+                    onChanged={setDescription} />
 
             </SettingsForm>
         </PopupDialog>

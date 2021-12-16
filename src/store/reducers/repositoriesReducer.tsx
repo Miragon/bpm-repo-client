@@ -1,6 +1,6 @@
-import {CaseReducer} from "@reduxjs/toolkit";
-import {RepositoryTO, SharedRepositoryTO} from "../../api";
-import {ACTIVE_REPO, REPOSITORIES, SHARED_REPOS} from "../../constants/Constants";
+import { CaseReducer } from "@reduxjs/toolkit";
+import { RepositoryTO, SharedRepositoryTO } from "../../api";
+import { ACTIVE_REPO, REPOSITORIES, SHARED_REPOS } from "../../constants/Constants";
 
 const initialState = {
     repos: Array<RepositoryTO>(),
@@ -27,8 +27,7 @@ const reducer: CaseReducer = (state = initialState, action) => {
             return {
                 ...state,
                 sharedRepos: action.sharedRepos
-            }
-
+            };
     }
     return state;
 };

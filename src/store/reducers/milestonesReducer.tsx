@@ -1,6 +1,6 @@
-import {CaseReducer} from "@reduxjs/toolkit";
-import {ArtifactMilestoneTO} from "../../api";
-import {ACTIVE_MILESTONES, DEPLOYMENT_MILESTONES} from "../../constants/Constants";
+import { CaseReducer } from "@reduxjs/toolkit";
+import { ArtifactMilestoneTO } from "../../api";
+import { ACTIVE_MILESTONES, DEPLOYMENT_MILESTONES } from "../../constants/Constants";
 
 const initialState = {
     activeMilestones: Array<ArtifactMilestoneTO>(),
@@ -21,7 +21,7 @@ const reducer: CaseReducer = (state = initialState, action) => {
                 ...state,
                 deploymentMilestones: [...state.deploymentMilestones, action.deploymentMilestones]
 
-            }
+            };
     }
     return state;
 };

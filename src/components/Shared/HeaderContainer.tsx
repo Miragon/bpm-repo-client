@@ -1,15 +1,15 @@
-import {makeStyles} from "@material-ui/core/styles";
-import React, {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
-import {ArtifactTypeTO} from "../../api";
-import {createRepository} from "../../store/actions";
-import {SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
-import DropdownButton, {DropdownButtonItem} from "./Form/DropdownButton";
-import {RootState} from "../../store/reducers/rootReducer";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { ArtifactTypeTO } from "../../api";
+import { createRepository } from "../../store/actions";
+import { SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
+import DropdownButton, { DropdownButtonItem } from "./Form/DropdownButton";
+import { RootState } from "../../store/reducers/rootReducer";
 import ArtifactSearchBar from "../../screens/Overview/ArtifactSearchBar";
 import CreateTitleDescDialog from "./Dialogs/CreateTitleDescDialog";
-import CreateArtifactDialog from "./Dialogs/CreateArtifactDialog";
+import CreateArtifactDialog from "../Repository/Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "./Dialogs/UploadArtifactDialog";
 
 const useStyles = makeStyles(() => ({
@@ -33,13 +33,12 @@ const HeaderContainer: React.FC = (() => {
     const [uploadArtifactOpen, setUploadArtifactOpen] = useState(false);
     const [createArtifactOpen, setCreateArtifactOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("BPMN");
-    const [artifactOptions, setArtifactOptions] = useState<DropdownButtonItem[]>([])
+    const [artifactOptions, setArtifactOptions] = useState<DropdownButtonItem[]>([]);
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
 
-
     useEffect(() => {
-        const opts: DropdownButtonItem[] = []
+        const opts: DropdownButtonItem[] = [];
 
         opts.push({
             id: "createRepo",
@@ -47,7 +46,7 @@ const HeaderContainer: React.FC = (() => {
             type: "button",
             onClick: () => setCreateRepoOpen(true)
         });
-        //TODO: wieder aufnehmen
+        // TODO: wieder aufnehmen
         /*
         opts.push({
             id: "createTeam",
@@ -69,7 +68,7 @@ const HeaderContainer: React.FC = (() => {
                 type: "button",
                 onClick: () => {
                     setCreateArtifactOpen(true);
-                    setCreateArtifactType(fileType.name)
+                    setCreateArtifactType(fileType.name);
                 }
             });
         });
@@ -86,7 +85,7 @@ const HeaderContainer: React.FC = (() => {
         });
 
         setArtifactOptions(opts);
-    }, [fileTypes])
+    }, [fileTypes]);
 
     return (
         <>
@@ -94,7 +93,7 @@ const HeaderContainer: React.FC = (() => {
                 <ArtifactSearchBar />
                 <div>
                     <DropdownButton
-                        type={"default"}
+                        type="default"
                         className={classes.button}
                         title={t("action.createNew")}
                         options={artifactOptions} />
@@ -107,9 +106,7 @@ const HeaderContainer: React.FC = (() => {
                 successMessage={t("repository.created")}
                 title={t("repository.create")}
                 createMethod={createRepository}
-                dataSyncedType={SYNC_STATUS_REPOSITORY}/>
-
-
+                dataSyncedType={SYNC_STATUS_REPOSITORY} />
 
             <CreateArtifactDialog
                 open={createArtifactOpen}

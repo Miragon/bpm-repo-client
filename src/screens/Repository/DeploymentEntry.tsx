@@ -1,16 +1,15 @@
-import {ArtifactMilestoneTO, ArtifactTO, ArtifactTypeTO, DeploymentTO} from "../../api";
-import {makeStyles, Theme} from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
-import React, {useMemo} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/reducers/rootReducer";
-import {Link} from "@material-ui/core";
-import {useTranslation} from "react-i18next";
-import {COLOR_LINK} from "../../constants/Constants";
-import {openFileInTool} from "../../util/Redirections";
-import {CloudDownload} from "@material-ui/icons";
-import {formatTimeSince} from "../../util/formatUtils";
-
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
+import { CloudDownload } from "@material-ui/icons";
+import { RootState } from "../../store/reducers/rootReducer";
+import { COLOR_LINK } from "../../constants/Constants";
+import { openFileInTool } from "../../util/Redirections";
+import { ArtifactMilestoneTO, ArtifactTO, ArtifactTypeTO, DeploymentTO } from "../../api";
+import { formatTimeSince } from "../../util/formatUtils";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -85,8 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     icon: {
         cursor: "pointer"
     }
-}))
-
+}));
 
 interface Props {
     deployment: DeploymentTO;
@@ -96,17 +94,14 @@ interface Props {
 
 const DeploymentEntry: React.FC<Props> = props => {
     const classes = useStyles();
-    const {t} = useTranslation("common");
-
+    const { t } = useTranslation("common");
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
-
 
     const icon = useMemo(
         () => fileTypes.find(ft => ft.name === props.artifact?.fileType)?.svgIcon,
         [fileTypes, props.artifact]
     );
-
 
     /**
      * Open the file in tool:
@@ -114,12 +109,12 @@ const DeploymentEntry: React.FC<Props> = props => {
      */
 
     const download = () => {
-        const filePath = `/api/milestone/${props.artifact?.id}/${props.milestone?.id}/download`
+        const filePath = `/api/milestone/${props.artifact?.id}/${props.milestone?.id}/download`;
         const link = document.createElement("a");
         link.href = filePath;
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
         link.click();
-    }
+    };
 
     return (
         <>
@@ -131,17 +126,18 @@ const DeploymentEntry: React.FC<Props> = props => {
                     </div>
 
                     <div className={classes.textContainer}>
-                        {props.artifact !== undefined &&
-                            <Link
-                                href="#"
-                                onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", t("error.missingTool", props.artifact?.fileType), props.milestone?.milestone)}
-                                className={classes.title}>
-                                {props.artifact.name}
-                            </Link>
-                        }
+                        {props.artifact !== undefined
+                            && (
+                                <Link
+                                    href="#"
+                                    onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", t("error.missingTool", props.artifact?.fileType), props.milestone?.milestone)}
+                                    className={classes.title}>
+                                    {props.artifact.name}
+                                </Link>
+                            )}
                         <div className={classes.subtitle}>
                             <span className={classes.subtitleText}>
-                                {t("deployment.milestone", {milestoneNumber: props.milestone?.milestone})}
+                                {t("deployment.milestone", { milestoneNumber: props.milestone?.milestone })}
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
@@ -149,7 +145,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
-                                {t("deployment.deploymentDuration", {duration: formatTimeSince(props.deployment.timestamp, t)})}
+                                {t("deployment.deploymentDuration", { duration: formatTimeSince(props.deployment.timestamp, t) })}
                             </span>
                             &#8226;
                             <span className={classes.subtitleText}>
@@ -158,13 +154,11 @@ const DeploymentEntry: React.FC<Props> = props => {
                         </div>
                     </div>
 
-
                     <div className={classes.menuContainer}>
                         <h2>
                             {props.deployment.target}
                         </h2>
-                        <CloudDownload className={classes.icon} onClick={download}/>
-
+                        <CloudDownload className={classes.icon} onClick={download} />
 
                     </div>
 
@@ -172,7 +166,7 @@ const DeploymentEntry: React.FC<Props> = props => {
             </div>
 
         </>
-    )
-}
+    );
+};
 
 export default DeploymentEntry;

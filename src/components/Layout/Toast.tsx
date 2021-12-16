@@ -1,10 +1,9 @@
 import React from "react";
-import {Icon, IconButton, makeStyles} from "@material-ui/core";
-import {CheckCircle, Error, Replay} from "@material-ui/icons";
+import { Icon, IconButton, makeStyles } from "@material-ui/core";
+import { CheckCircle, Error, Replay } from "@material-ui/icons";
 import theme from "../../theme";
 
-
-//Styling of the Toast (according to the react-toastify library) is done in Layout. This is just the content
+// Styling of the Toast (according to the react-toastify library) is done in Layout. This is just the content
 const useStyles = makeStyles(() => ({
     container: {
         display: "flex",
@@ -40,26 +39,28 @@ const Toast: React.FC<Props> = props => {
 
     return (
         <div className={classes.container}>
-            {props.isError ?
-                <Icon className={classes.toastTypeIcon}>
-                    <Error/>
-                </Icon>
-                :
-                <Icon className={classes.toastTypeIcon}>
-                    <CheckCircle/>
-                </Icon>
-
-            }
+            {props.isError
+                ? (
+                    <Icon className={classes.toastTypeIcon}>
+                        <Error />
+                    </Icon>
+                )
+                : (
+                    <Icon className={classes.toastTypeIcon}>
+                        <CheckCircle />
+                    </Icon>
+                )}
             <div className={classes.message}>
                 {props.errorMessage}
             </div>
-            {props.isError &&
-                <IconButton
-                    className={classes.retryButton}
-                    onClick={() => props.retryMethod ? props.retryMethod() : console.log("Retry not available")}>
-                    <Replay/>
-                </IconButton>
-            }
+            {props.isError
+                && (
+                    <IconButton
+                        className={classes.retryButton}
+                        onClick={() => (props.retryMethod ? props.retryMethod() : console.log("Retry not available"))}>
+                        <Replay />
+                    </IconButton>
+                )}
         </div>
     );
 };

@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {DeploymentTO} from "../../../api";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { DeploymentTO } from "../../../api";
 import PopupDialog from "../../Shared/Form/PopupDialog";
-import {reformatDate} from "../../../util/formatUtils";
-
+import { reformatDate } from "../../../util/formatUtils";
 
 const useStyles = makeStyles(() => ({
     spacer: {
@@ -26,12 +25,12 @@ interface Props {
 const DeploymentHistory: React.FC<Props> = props => {
     const classes = useStyles();
 
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
     const [error, setError] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         props.deployments.sort(compare);
-    }, [props.deployments])
+    }, [props.deployments]);
 
     const compare = (a: DeploymentTO, b: DeploymentTO) => {
         if (a.timestamp < b.timestamp) {
@@ -41,8 +40,7 @@ const DeploymentHistory: React.FC<Props> = props => {
             return 1;
         }
         return 0;
-    }
-
+    };
 
     return (
         <PopupDialog
@@ -53,15 +51,33 @@ const DeploymentHistory: React.FC<Props> = props => {
             firstTitle={t("dialog.close")}
             onFirst={props.onCancelled}>
             <p>
-                {t("properties.filename")}: <b> {props.artifactTitle} </b>
+                {t("properties.filename")}
+                :
+                <b>
+                    {" "}
+                    {props.artifactTitle}
+                    {" "}
+                </b>
             </p>
             <p>
-                {t("properties.milestone")}: <b> {props.milestone} </b>
+                {t("properties.milestone")}
+                :
+                <b>
+                    {" "}
+                    {props.milestone}
+                    {" "}
+                </b>
             </p>
             <p>
-                {t("properties.comment")}: <b> {props.milestoneComment} </b>
+                {t("properties.comment")}
+                :
+                <b>
+                    {" "}
+                    {props.milestoneComment}
+                    {" "}
+                </b>
             </p>
-            <div className={classes.spacer}/>
+            <div className={classes.spacer} />
             <Table size="small">
                 <TableHead>
                     <TableRow>

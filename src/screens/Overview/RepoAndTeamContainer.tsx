@@ -1,17 +1,17 @@
-import React, {useCallback, useEffect} from "react";
-import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router-dom";
+import React, { useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import {RepositoryTO} from "../../api";
+import { makeStyles } from "@material-ui/styles";
+import { RepositoryTO } from "../../api";
 import Section from "../../components/Layout/Section";
-import {REPOSITORIES, SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
-import {fetchRepositories} from "../../store/actions";
-import {RootState} from "../../store/reducers/rootReducer";
-import {getRepositoryUrl} from "../../util/Redirections";
+import { REPOSITORIES, SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
+import { fetchRepositories } from "../../store/actions";
+import { RootState } from "../../store/reducers/rootReducer";
+import { getRepositoryUrl } from "../../util/Redirections";
 import Card from "./Holder/Card";
-import {makeStyles} from "@material-ui/styles";
-import {makeErrorToast} from "../../util/toastUtils";
+import { makeErrorToast } from "../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     horizontalAlignment: {
@@ -36,23 +36,22 @@ const RepoAndTeamContainer: React.FC = (() => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const allRepos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
     const syncStatusRepo: boolean = useSelector((state: RootState) => state.dataSynced.repoSynced);
 
-
     const fetchRepos = useCallback(() => {
         fetchRepositories().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: REPOSITORIES, repos: response.data});
-                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: true});
+                dispatch({ type: REPOSITORIES, repos: response.data });
+                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: true });
             } else {
-                makeErrorToast(t(response.data.toString()), () => fetchRepos())
+                makeErrorToast(t(response.data.toString()), () => fetchRepos());
             }
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRepos())
-        })
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchRepos());
+        });
     }, [dispatch, t]);
 
     useEffect(() => {
@@ -70,7 +69,7 @@ const RepoAndTeamContainer: React.FC = (() => {
                         title={repo.name}
                         onClick={() => history.push(getRepositoryUrl(repo))}
                         assignedUsers={repo.assignedUsers}
-                        existingArtifacts={repo.existingArtifacts}/>
+                        existingArtifacts={repo.existingArtifacts} />
                 ))}
                 {allRepos?.length === 0 && (
                     <span>{t("repository.notAvailable")}</span>

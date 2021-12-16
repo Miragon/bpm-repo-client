@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import {
     Divider,
     FormControl,
@@ -10,13 +10,12 @@ import {
     MenuItem,
     Select
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {useTranslation} from "react-i18next";
-import {ArtifactMilestoneTO} from "../../../api";
-import {getAllMilestones} from "../../../store/actions";
-import {DEPLOYMENT_MILESTONES} from "../../../constants/Constants";
-import {makeErrorToast} from "../../../util/toastUtils";
-
+import { makeStyles } from "@material-ui/core/styles";
+import { useTranslation } from "react-i18next";
+import { ArtifactMilestoneTO } from "../../../api";
+import { getAllMilestones } from "../../../store/actions";
+import { DEPLOYMENT_MILESTONES } from "../../../constants/Constants";
+import { makeErrorToast } from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
 
@@ -35,38 +34,36 @@ interface Props {
 const DeploymentListItem: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [milestones, setMilestones] = useState<ArtifactMilestoneTO[]>([]);
     const [selectedMilestone, setSelectedMilestone] = useState<string>("");
 
-
     const getMilestones = useCallback(async (artifactId: string) => {
         getAllMilestones(artifactId).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: DEPLOYMENT_MILESTONES, deploymentMilestones: response.data})
-                setMilestones(response.data)
+                dispatch({ type: DEPLOYMENT_MILESTONES, deploymentMilestones: response.data });
+                setMilestones(response.data);
             } else {
-                makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId))
+                makeErrorToast(t(response.data.toString()), () => getMilestones(artifactId));
             }
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getMilestones(artifactId))
-        })
-    }, [dispatch, t])
-
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => getMilestones(artifactId));
+        });
+    }, [dispatch, t]);
 
     useEffect(() => {
-        getMilestones(props.artifactId)
-    }, [getMilestones, props.artifactId])
+        getMilestones(props.artifactId);
+    }, [getMilestones, props.artifactId]);
 
     const changeMilestone = (milestoneId: string) => {
-        props.onChangeMilestone(props.artifactId, milestoneId)
-    }
+        props.onChangeMilestone(props.artifactId, milestoneId);
+    };
 
-    //TODO: Fetching all Milestones, including all files, will become very expensive => write new endpoint that returns only MilestoneIds and MileStones
+    // TODO: Fetching all Milestones, including all files, will become very expensive => write new endpoint that returns only MilestoneIds and MileStones
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         changeMilestone(event.target.value as string);
-        setSelectedMilestone(event.target.value as string)
+        setSelectedMilestone(event.target.value as string);
     };
 
     return (
@@ -74,7 +71,7 @@ const DeploymentListItem: React.FC<Props> = props => {
             <ListItem>
                 <ListItemText
                     primary={props.artifactName}
-                    secondary={"sadas"}/>
+                    secondary="sadas" />
 
                 <ListItemSecondaryAction>
                     <FormControl>
@@ -92,11 +89,10 @@ const DeploymentListItem: React.FC<Props> = props => {
                         </Select>
                     </FormControl>
 
-
                 </ListItemSecondaryAction>
             </ListItem>
-            <Divider/>
+            <Divider />
         </>
     );
-}
+};
 export default DeploymentListItem;

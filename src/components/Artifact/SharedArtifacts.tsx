@@ -1,26 +1,21 @@
 import React from "react";
-import {useSelector} from "react-redux";
-import {ArtifactTO, RepositoryTO} from "../../api";
-import {RootState} from "../../store/reducers/rootReducer";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { ArtifactTO, RepositoryTO } from "../../api";
+import { RootState } from "../../store/reducers/rootReducer";
 import Section from "../Layout/Section";
-import {ErrorBoundary} from "../Exception/ErrorBoundary";
+import { ErrorBoundary } from "../Exception/ErrorBoundary";
 import ArtifactListWithMilestones from "./ArtifactListWithMilestones";
-import {useParams} from "react-router";
-
 
 interface Props {
     sharedArtifacts: Array<ArtifactTO>;
 }
 
-const SharedArtifacts: React.FC<Props> = (props => {
-
+const SharedArtifacts: React.FC<Props> = () => {
     const { repoId } = useParams<{ repoId: string }>();
-
-
     const sharedArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.sharedArtifacts);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
-
 
     return (
         <Section title="category.shared">
@@ -34,5 +29,5 @@ const SharedArtifacts: React.FC<Props> = (props => {
             </ErrorBoundary>
         </Section>
     );
-});
+};
 export default SharedArtifacts;

@@ -1,22 +1,22 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import React, {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {RepositoryTO} from "../../../api";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {createArtifact} from "../../../store/actions";
+import { RepositoryTO } from "../../../api";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { createArtifact } from "../../../store/actions";
 import {
     SYNC_STATUS_ARTIFACT,
     SYNC_STATUS_MILESTONE,
     SYNC_STATUS_RECENT,
     SYNC_STATUS_REPOSITORY
 } from "../../../constants/Constants";
-import PopupDialog from "../Form/PopupDialog";
-import SettingsForm from "../Form/SettingsForm";
-import SettingsSelect from "../Form/SettingsSelect";
-import SettingsTextField from "../Form/SettingsTextField";
-import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
+import PopupDialog from "../../Shared/Form/PopupDialog";
+import SettingsForm from "../../Shared/Form/SettingsForm";
+import SettingsSelect from "../../Shared/Form/SettingsSelect";
+import SettingsTextField from "../../Shared/Form/SettingsTextField";
+import { makeErrorToast, makeSuccessToast } from "../../../util/toastUtils";
 
 interface Props {
     open: boolean;
@@ -27,7 +27,7 @@ interface Props {
 
 const CreateArtifactDialog: React.FC<Props> = props => {
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState<string>("");
@@ -46,23 +46,21 @@ const CreateArtifactDialog: React.FC<Props> = props => {
         createArtifact(repoId, title, description, props.type)
             .then(response => {
                 if (Math.floor(response.status / 100) === 2) {
-                    dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: false});
-                    dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false});
-                    dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
-                    dispatch({type: SYNC_STATUS_MILESTONE, dataSynced: false});
+                    dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false });
+                    dispatch({ type: SYNC_STATUS_MILESTONE, dataSynced: false });
                     setTitle("");
                     setDescription("");
                     makeSuccessToast(t("artifact.created"));
                     props.onCancelled();
                 } else {
-                    makeErrorToast(t(response.data.toString()), () => onCreate())
+                    makeErrorToast(t(response.data.toString()), () => onCreate());
                 }
-            }, error => {
-                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
-
-            })
+            }, err => {
+                makeErrorToast(t(typeof err.response.data === "string" ? err.response.data : err.response.data.error), () => onCreate());
+            });
     }, [props, dispatch, repoId, title, description, t]);
-
 
     return (
         <PopupDialog
@@ -103,7 +101,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                 <SettingsTextField
                     label={t("properties.title")}
                     value={title}
-                    onChanged={setTitle}/>
+                    onChanged={setTitle} />
 
                 <SettingsTextField
                     label={t("properties.description")}
@@ -111,7 +109,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                     multiline
                     minRows={3}
                     maxRows={3}
-                    onChanged={setDescription}/>
+                    onChanged={setDescription} />
 
             </SettingsForm>
         </PopupDialog>

@@ -1,19 +1,18 @@
 import MenuItem from "@material-ui/core/MenuItem";
-import {makeStyles} from "@material-ui/core/styles";
-import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 import PopupDialog from "../Form/PopupDialog";
-import {SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY} from "../../../constants/Constants";
+import { SYNC_STATUS_RECENT, SYNC_STATUS_REPOSITORY } from "../../../constants/Constants";
 import SettingsForm from "../Form/SettingsForm";
 import SettingsSelect from "../Form/SettingsSelect";
-import {ArtifactTypeTO, RepositoryTO} from "../../../api";
-import {useTranslation} from "react-i18next";
-import {RootState} from "../../../store/reducers/rootReducer";
-import {createArtifact} from "../../../store/actions";
+import { ArtifactTypeTO, RepositoryTO } from "../../../api";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { createArtifact } from "../../../store/actions";
 import SettingsTextField from "../Form/SettingsTextField";
-import {makeErrorToast} from "../../../util/toastUtils";
-
+import { makeErrorToast } from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     input: {
@@ -33,8 +32,7 @@ interface Props {
 const UploadArtifactDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
-
+    const { t } = useTranslation("common");
 
     const [error, setError] = useState<string | undefined>(undefined);
     const [title, setTitle] = useState("");
@@ -43,16 +41,15 @@ const UploadArtifactDialog: React.FC<Props> = props => {
     const [repoId, setRepoId] = useState<string>(props.repo ? props.repo.id : "");
     const [file, setFile] = useState<string>("");
 
-
     const fileTypeList = Array<string>();
     const allRepos: Array<RepositoryTO> = useSelector(
         (state: RootState) => state.repos.repos
     );
-    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes)
+    const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
 
     useEffect(() => {
-        fileTypes.map(type => fileTypeList.push(type.fileExtension))
-    })
+        fileTypes.map(type => fileTypeList.push(type.fileExtension));
+    });
 
     const onCreate = useCallback(async () => {
         createArtifact(repoId, title, description, uploadedFileType, file)
@@ -61,21 +58,21 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                     makeErrorToast(t(response.data.toString()), () => onCreate());
                     return;
                 }
-                dispatch({type: SYNC_STATUS_REPOSITORY, dataSynced: false})
-                dispatch({type: SYNC_STATUS_RECENT, dataSynced: false})
-            }, error => {
-                makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => onCreate())
-            })
+                dispatch({ type: SYNC_STATUS_REPOSITORY, dataSynced: false });
+                dispatch({ type: SYNC_STATUS_RECENT, dataSynced: false });
+            }, exception => {
+                makeErrorToast(t(typeof exception.response.data === "string" ? exception.response.data : exception.response.data.error), () => onCreate());
+            });
     }, [repoId, title, description, uploadedFileType, file, dispatch, t]);
 
     const onFileChanged = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const {target: {files}} = e;
+        const { target: { files } } = e;
         if (files != null && files.length > 0) {
             const f = files[0];
             const fileExtension = f.name.substring(f.name.lastIndexOf(".") + 1, f.name.length);
             if (!fileTypeList.includes(fileExtension)) {
-                makeErrorToast("exception.fileTypeNotSupported", () => onFileChanged)
+                makeErrorToast("exception.fileTypeNotSupported", () => onFileChanged);
             }
             setUploadedFileType(fileExtension);
             const reader = new FileReader();
@@ -103,10 +100,10 @@ const UploadArtifactDialog: React.FC<Props> = props => {
 
                 <input
                     className={classes.input}
-                    accept={"." + fileTypeList.join(",.")}
+                    accept={`.${fileTypeList.join(",.")}`}
                     type="file"
                     name="file"
-                    onChange={onFileChanged}/>
+                    onChange={onFileChanged} />
 
                 <SettingsSelect
                     disabled={false}
@@ -134,7 +131,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                 <SettingsTextField
                     label={t("properties.title")}
                     value={title}
-                    onChanged={setTitle}/>
+                    onChanged={setTitle} />
 
                 <SettingsTextField
                     label={t("properties.description")}
@@ -142,7 +139,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                     multiline
                     minRows={3}
                     maxRows={3}
-                    onChanged={setDescription}/>
+                    onChanged={setDescription} />
 
             </SettingsForm>
         </PopupDialog>

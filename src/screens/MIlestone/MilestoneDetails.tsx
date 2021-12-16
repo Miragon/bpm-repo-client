@@ -1,7 +1,7 @@
-import {List} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { List } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import {ArtifactMilestoneTO} from "../../../api";
+import { ArtifactMilestoneTO } from "../../api";
 import MilestoneListItem from "./Holder/MilestoneListItem";
 
 const useStyles = makeStyles(() => ({
@@ -21,8 +21,6 @@ interface Props {
 
 const MilestoneDetails: React.FC<Props> = ((props: Props) => {
     const classes = useStyles();
-
-
 
     return (
         <List className={classes.list}>

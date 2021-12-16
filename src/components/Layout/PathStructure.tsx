@@ -1,7 +1,7 @@
-import {Breadcrumbs} from "@material-ui/core";
+import { Breadcrumbs } from "@material-ui/core";
 import React from "react";
-import {useTranslation} from "react-i18next";
-import {makeStyles} from "@material-ui/core/styles";
+import { useTranslation } from "react-i18next";
+import { makeStyles } from "@material-ui/core/styles";
 import theme from "../../theme";
 
 const useStyles = makeStyles(() => ({
@@ -14,8 +14,7 @@ const useStyles = makeStyles(() => ({
             textDecoration: "underline",
         }
     }
-})
-)
+}));
 
 interface Props {
     structure: Array<CrumbElement>;
@@ -26,18 +25,20 @@ export interface CrumbElement {
     onClick: () => void;
 }
 
-
 const PathStructure: React.FC<Props> = props => {
     const classes = useStyles();
     const { t } = useTranslation("common");
 
-
     return (
         <Breadcrumbs separator="›">
-            {props.structure.map(crumb => (
-                <div className={classes.link}
+            {props.structure.map((crumb, index) => (
+                <div
+                    tabIndex={index}
+                    role="button"
+                    className={classes.link}
                     key={crumb.name}
                     color="inherit"
+                    onKeyDown={crumb.onClick}
                     onClick={crumb.onClick}>
                     {t(crumb.name)}
                 </div>

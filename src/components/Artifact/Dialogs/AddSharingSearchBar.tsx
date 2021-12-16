@@ -1,17 +1,17 @@
-import {makeStyles} from "@material-ui/styles";
-import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {IconButton, ListItem, ListItemSecondaryAction} from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { IconButton, ListItem, ListItemSecondaryAction } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {Add} from "@material-ui/icons";
-import {useTranslation} from "react-i18next";
-import {AxiosResponse} from "axios";
+import { Add } from "@material-ui/icons";
+import { useTranslation } from "react-i18next";
+import { AxiosResponse } from "axios";
 import theme from "../../../theme";
-import {SYNC_STATUS_SHARED} from "../../../constants/Constants";
-import {RepositoryTO, ShareWithRepositoryTORoleEnum} from "../../../api";
-import {makeErrorToast, makeSuccessToast} from "../../../util/toastUtils";
+import { SYNC_STATUS_SHARED } from "../../../constants/Constants";
+import { RepositoryTO, ShareWithRepositoryTORoleEnum } from "../../../api";
+import { makeErrorToast, makeSuccessToast } from "../../../util/toastUtils";
 
 const useStyles = makeStyles(() => ({
     listItem: {
@@ -48,14 +48,13 @@ let timeout: NodeJS.Timeout | undefined;
 const AddSharingSearchBar: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [elementName, setElementName] = useState("");
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState<RepositoryTO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [searchedElements, setSearchedElements] = useState<Array<RepositoryTO>>([]);
-
 
     useEffect(() => {
         if (!open) {
@@ -100,30 +99,29 @@ const AddSharingSearchBar: React.FC<Props> = props => {
             }
 
             setSearchedElements(response.data.filter((to: RepositoryTO) => to.id !== props.repositoryId));
-
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSuggestion(input))
-        })
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchSuggestion(input));
+        });
     }, [props, t]);
 
-    const getElementByName = useCallback((elementName: string) => {
-        return searchedElements.find(element => element.name.toLowerCase() === elementName.toLowerCase());
+    const getElementByName = useCallback((name: string) => {
+        return searchedElements.find(element => element.name.toLowerCase() === name.toLowerCase());
     }, [searchedElements]);
 
     const add = useCallback(() => {
         const element = getElementByName(elementName);
         const elementId = element ? element.id : "";
         if (!element) {
-            makeErrorToast(t("share.targetNotFound"), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments))
+            makeErrorToast(t("share.targetNotFound"), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments));
             return;
         }
 
         props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments).then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: SYNC_STATUS_SHARED, sharedSynced: false})
-                makeSuccessToast(t("share.successful"))
+                dispatch({ type: SYNC_STATUS_SHARED, sharedSynced: false });
+                makeSuccessToast(t("share.successful"));
             } else {
-                makeErrorToast(t(response.data.toString()), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments))
+                makeErrorToast(t(response.data.toString()), () => props.shareMethod(props.artifactId, elementId, props.roleForNewAssignments));
             }
         });
     }, [getElementByName, elementName, props, dispatch, t]);
@@ -138,7 +136,7 @@ const AddSharingSearchBar: React.FC<Props> = props => {
             <Autocomplete
                 id="UserSearchBar"
                 freeSolo
-                style={{width: 500}}
+                style={{ width: 500 }}
                 open={open}
                 onOpen={() => {
                     setOpen(true);
@@ -161,15 +159,15 @@ const AddSharingSearchBar: React.FC<Props> = props => {
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
+                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),
-                        }}/>
-                )}/>
+                        }} />
+                )} />
             <ListItemSecondaryAction>
                 <IconButton className={classes.addButton} edge="end" onClick={() => add()}>
-                    <Add/>
+                    <Add />
                 </IconButton>
             </ListItemSecondaryAction>
         </ListItem>

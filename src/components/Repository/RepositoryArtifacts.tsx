@@ -1,20 +1,20 @@
-import {makeStyles} from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
-import React, {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router";
-import {ArtifactTO, ArtifactTypeTO, RepositoryTO} from "../../api";
-import {RootState} from "../../store/reducers/rootReducer";
-import {FAVORITE_ARTIFACTS, SYNC_STATUS_ARTIFACT} from "../../constants/Constants";
-import {fetchFavoriteArtifacts} from "../../store/actions";
-import DropdownButton, {DropdownButtonItem} from "../Shared/Form/DropdownButton";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { ArtifactTO, ArtifactTypeTO, RepositoryTO } from "../../api";
+import { RootState } from "../../store/reducers/rootReducer";
+import { FAVORITE_ARTIFACTS, SYNC_STATUS_ARTIFACT } from "../../constants/Constants";
+import { fetchFavoriteArtifacts } from "../../store/actions";
+import DropdownButton, { DropdownButtonItem } from "../Shared/Form/DropdownButton";
 import SimpleButton from "../Shared/Form/SimpleButton";
 import ArtifactManagementContainer from "../Shared/Buttons/ArtifactManagementContainer";
-import DeployMultipleDialog from "../Shared/Dialogs/DeployMultipleDialog";
-import ArtifactListWithMilestones from "./ArtifactListWithMilestones";
-import {makeErrorToast} from "../../util/toastUtils";
-import {compareCreated, compareEdited, compareName} from "../../util/compareUtils";
+import DeployMultipleDialog from "./Dialogs/DeployMultipleDialog";
+import ArtifactListWithMilestones from "../Artifact/ArtifactListWithMilestones";
+import { makeErrorToast } from "../../util/toastUtils";
+import { compareCreated, compareEdited, compareName } from "../../util/compareUtils";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -50,12 +50,11 @@ interface Props {
     id: string;
 }
 
-const ArtifactDetails: React.FC<Props> = (props => {
+const RepositoryArtifacts: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {t} = useTranslation("common");
-
-    const {repoId} = useParams<{ repoId: string }>();
+    const { t } = useTranslation("common");
+    const { repoId } = useParams<{ repoId: string }>();
     const favoriteSynced: boolean = useSelector((state: RootState) => state.dataSynced.favoriteSynced);
     const fileTypes: Array<ArtifactTypeTO> = useSelector((state: RootState) => state.artifacts.fileTypes);
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
@@ -63,67 +62,51 @@ const ArtifactDetails: React.FC<Props> = (props => {
 
     const [deployMultipleOpen, setDeployMultipleOpen] = useState(false);
     const [displayedFileTypes, setDisplayedFileTypes] = useState<Array<string>>(fileTypes.map(type => type.name));
-    const [filteredArtifacts, setFilteredArtifacts] = useState<Array<ArtifactTO>>(props.artifacts);
     const [sortValue, setSortValue] = useState<string>("lastEdited");
-
 
     const fetchFavorite = useCallback(() => {
         fetchFavoriteArtifacts().then(response => {
             if (Math.floor(response.status / 100) === 2) {
-                dispatch({type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data});
-                dispatch({type: SYNC_STATUS_ARTIFACT, dataSynced: true})
+                dispatch({ type: FAVORITE_ARTIFACTS, favoriteArtifacts: response.data });
+                dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: true });
             } else {
-                makeErrorToast(t(response.data.toString()), () => fetchFavorite())
+                makeErrorToast(t(response.data.toString()), () => fetchFavorite());
             }
         }, error => {
-            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite())
-        })
-
+            makeErrorToast(t(typeof error.response.data === "string" ? error.response.data : error.response.data.error), () => fetchFavorite());
+        });
     }, [dispatch, t]);
-
 
     useEffect(() => {
         if (!favoriteSynced) {
-            fetchFavorite()
+            fetchFavorite();
         }
     }, [favoriteSynced, fetchFavorite]);
 
+    const sortArtifacts = (value: string, artifacts: Array<ArtifactTO>) : Array<ArtifactTO> => {
+        switch (value) {
+            case "lastEdited":
+                return artifacts.sort(compareEdited);
+            case "name":
+                return artifacts.sort(compareName);
+            default:
+                return artifacts.sort(compareCreated);
+        }
+    };
+
+    const filteredArtifacts = useMemo(() => {
+        const filtered = props.artifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType));
+        return sortArtifacts(sortValue, filtered);
+    }, [props.artifacts, sortValue, displayedFileTypes]);
 
     const changeFileTypeFilter = (selectedValue: string) => {
         const currentList = [...displayedFileTypes];
         if (displayedFileTypes.find(fileType => fileType === selectedValue)) {
-            currentList.splice(currentList.indexOf(selectedValue), 1)
+            currentList.splice(currentList.indexOf(selectedValue), 1);
         } else {
-            currentList.push(selectedValue)
+            currentList.push(selectedValue);
         }
-        setDisplayedFileTypes(currentList)
-        applyFilters()
-    }
-
-    const applyFilters = useCallback(() => {
-        const filtered = props.artifacts.filter(artifact => displayedFileTypes.includes(artifact.fileType))
-        sort(sortValue, filtered)
-    }, [displayedFileTypes, props.artifacts, sortValue])
-
-    useEffect(() => {
-        applyFilters()
-    }, [applyFilters])
-
-    const sort = (value: string, artifacts: Array<ArtifactTO>) => {
-        switch (value) {
-            case "created":
-                setSortValue("created")
-                setFilteredArtifacts(artifacts.sort(compareCreated));
-                return;
-            case "lastEdited":
-                setSortValue("lastEdited")
-                setFilteredArtifacts(artifacts.sort(compareEdited));
-                return;
-            case "name":
-                setSortValue("name")
-                setFilteredArtifacts(artifacts.sort(compareName));
-                return;
-        }
+        setDisplayedFileTypes(currentList);
     };
 
     const filterOptions: DropdownButtonItem[] = [];
@@ -134,7 +117,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
                 label: t(`artifact.type.${fileType.name}`),
                 type: "button",
                 onClick: () => {
-                    changeFileTypeFilter(fileType.name)
+                    changeFileTypeFilter(fileType.name);
                 }
             }
         )
@@ -146,7 +129,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
             label: t("sort.created"),
             type: "button",
             onClick: () => {
-                sort("created", filteredArtifacts)
+                setSortValue("created");
             }
         },
         {
@@ -154,7 +137,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
             label: t("sort.lastEdited"),
             type: "button",
             onClick: () => {
-                sort("lastEdited", filteredArtifacts)
+                setSortValue("lastEdited");
             }
         },
         {
@@ -162,8 +145,7 @@ const ArtifactDetails: React.FC<Props> = (props => {
             label: t("sort.name"),
             type: "button",
             onClick: () => {
-                sort("name", filteredArtifacts)
-
+                setSortValue("name");
             }
         },
     ];
@@ -176,22 +158,22 @@ const ArtifactDetails: React.FC<Props> = (props => {
                         className={clsx(classes.button, classes.dropdownButton)}
                         title={t("filter.filter")}
                         options={filterOptions}
-                        type={"checkbox"}
-                        selectedFilterOptions={displayedFileTypes}/>
+                        type="checkbox"
+                        selectedFilterOptions={displayedFileTypes} />
                     <DropdownButton
                         className={classes.dropdownButton}
                         title={t("sort.sort")}
                         options={sortOptions}
-                        type={"radio"}
-                        defaultSortValue={"lastEdited"}/>
+                        type="radio"
+                        defaultSortValue="lastEdited" />
                 </div>
                 <div className={classes.buttonGroup}>
                     <SimpleButton
                         className={classes.button}
                         title={t("deployment.multiple")}
-                        onClick={() => setDeployMultipleOpen(true)}/>
+                        onClick={() => setDeployMultipleOpen(true)} />
                     {
-                        props.view === "team" ? <></> : <ArtifactManagementContainer/>
+                        props.view === "team" ? <></> : <ArtifactManagementContainer />
                     }
                 </div>
             </div>
@@ -201,15 +183,16 @@ const ArtifactDetails: React.FC<Props> = (props => {
                     repoId={repoId}
                     artifacts={filteredArtifacts}
                     repositories={repos}
-                    favorites={favoriteArtifacts}/>
+                    favorites={favoriteArtifacts} />
             </div>
 
             <DeployMultipleDialog
                 artifacts={props.artifacts}
                 open={deployMultipleOpen}
                 onCancelled={() => setDeployMultipleOpen(false)}
-                repoId={repoId}/>
+                repoId={repoId} />
         </>
     );
-});
-export default ArtifactDetails;
+};
+
+export default RepositoryArtifacts;

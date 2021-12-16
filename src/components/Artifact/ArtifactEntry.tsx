@@ -1,16 +1,16 @@
-import {Collapse, Link} from "@material-ui/core";
+import { Collapse, Link } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {KeyboardArrowDown, KeyboardArrowUp, MoreVert, Star, StarOutline} from "@material-ui/icons";
-import React, {useMemo, useRef, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
-import {ArtifactTO, ArtifactTypeTO} from "../../api";
-import {COLOR_LINK} from "../../constants/Constants";
-import {RootState} from "../../store/reducers/rootReducer";
-import {openFileInTool} from "../../util/Redirections";
-import {formatTimeSince} from "../../util/formatUtils";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { KeyboardArrowDown, KeyboardArrowUp, MoreVert, Star, StarOutline } from "@material-ui/icons";
+import React, { useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { ArtifactTO, ArtifactTypeTO } from "../../api";
+import { COLOR_LINK } from "../../constants/Constants";
+import { RootState } from "../../store/reducers/rootReducer";
+import { openFileInTool } from "../../util/Redirections";
+import { formatTimeSince } from "../../util/formatUtils";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -117,10 +117,9 @@ interface Props {
 const ArtifactEntry: React.FC<Props> = props => {
     const classes = useStyles();
     const ref = useRef<HTMLButtonElement>(null);
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const fileTypes: ArtifactTypeTO[] = useSelector((state: RootState) => state.artifacts.fileTypes);
-
     const [expanded, setExpanded] = useState(false);
 
     const icon = useMemo(
@@ -131,18 +130,16 @@ const ArtifactEntry: React.FC<Props> = props => {
     return (
         <>
             <div className={classes.root}>
-
                 <div className={classes.summary}>
                     <div className={classes.iconContainer}>
                         <Icon>{icon}</Icon>
                     </div>
-
                     <div className={classes.textContainer}>
                         <Link
                             href="#"
                             // eslint-disable-next-line
                             onClick={(event: any) => {
-                                openFileInTool(fileTypes, props.artifact.fileType, props.artifact.repositoryId, props.artifact.id, t("error.missingTool", props.artifact.fileType))
+                                openFileInTool(fileTypes, props.artifact.fileType, props.artifact.repositoryId, props.artifact.id, t("error.missingTool", props.artifact.fileType));
                                 event.preventDefault();
                             }}
                             className={classes.title}>
@@ -173,15 +170,15 @@ const ArtifactEntry: React.FC<Props> = props => {
                         {props.favorite && (
                             <Star
                                 className={classes.starActive}
-                                onClick={() => props.onFavorite(props.artifact)}/>
+                                onClick={() => props.onFavorite(props.artifact)} />
                         )}
                         {!props.favorite && (
                             <StarOutline
                                 className={classes.starInactive}
-                                onClick={() => props.onFavorite(props.artifact)}/>
+                                onClick={() => props.onFavorite(props.artifact)} />
                         )}
                         <IconButton
-                            size={"small"}
+                            size="small"
                             ref={ref}
                             onClick={event => props.onMenuClicked({
                                 artifact: props.artifact,
@@ -189,20 +186,19 @@ const ArtifactEntry: React.FC<Props> = props => {
                                 target: event.currentTarget,
                                 isFavorite: props.favorite
                             })}>
-                            <MoreVert/>
+                            <MoreVert />
                         </IconButton>
                         {props.expandable && (
                             <IconButton
                                 size="small"
                                 ref={ref}
                                 onClick={() => setExpanded(cur => !cur)}>
-                                {!expanded && <KeyboardArrowDown/>}
-                                {expanded && <KeyboardArrowUp/>}
+                                {!expanded && <KeyboardArrowDown />}
+                                {expanded && <KeyboardArrowUp />}
                             </IconButton>
                         )}
                     </div>
                 </div>
-
                 {props.expandable && (
                     <div className={classes.expandArea}>
                         <Collapse
@@ -212,7 +208,6 @@ const ArtifactEntry: React.FC<Props> = props => {
                         </Collapse>
                     </div>
                 )}
-
             </div>
         </>
     );

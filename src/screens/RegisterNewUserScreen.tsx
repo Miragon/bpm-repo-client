@@ -1,15 +1,15 @@
-import React, {useCallback, useState} from "react";
+import React, { useCallback, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import LockIcon from "@material-ui/icons/Lock";
 import Typography from "@material-ui/core/Typography";
-import {makeStyles} from "@material-ui/core/styles";
-import {useHistory} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
-import {UserApi} from "../api/api";
-import {useTranslation} from "react-i18next";
-import {getClientConfig} from "../api/config";
-import {makeErrorToast} from "../util/toastUtils";
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { UserApi } from "../api/api";
+import { getClientConfig } from "../api/config";
+import { makeErrorToast } from "../util/toastUtils";
 
 const useStyles = makeStyles(theme => ({
     createUserProfilePage: {
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 const RegisterNewUserScreen: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
     const [userController] = useState<UserApi>(new UserApi());
 
@@ -80,7 +80,7 @@ const RegisterNewUserScreen: React.FC = () => {
         <div className={classes.createUserProfilePage}>
             <div className={classes.createUserProfileContent}>
                 <Avatar className={classes.avatar}>
-                    <LockIcon/>
+                    <LockIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     {t("registration.signup")}
@@ -88,19 +88,18 @@ const RegisterNewUserScreen: React.FC = () => {
 
                 <p className={classes.infoText}>
                     {t("registration.firstTime")}
-                    <br/>
+                    <br />
                     {t("registration.accountRequired")}
                 </p>
 
                 <form className={classes.form} noValidate>
-
 
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
-                        //disabled={isButtonDisabled}
+                        // disabled={isButtonDisabled}
                         className={classes.createUserProfileButton}
                         onClick={handleCreateUserProfile}>
 
@@ -108,7 +107,7 @@ const RegisterNewUserScreen: React.FC = () => {
                     </Button>
                 </form>
             </div>
-            <ToastContainer/>
+            <ToastContainer />
         </div>
     );
 };
