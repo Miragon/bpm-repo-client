@@ -140,7 +140,11 @@ const ArtifactEntry: React.FC<Props> = props => {
                     <div className={classes.textContainer}>
                         <Link
                             href="#"
-                            onClick={() => openFileInTool(fileTypes, props.artifact.fileType, props.artifact.repositoryId, props.artifact.id, t("error.missingTool", props.artifact.fileType))}
+                            // eslint-disable-next-line
+                            onClick={(event: any) => {
+                                openFileInTool(fileTypes, props.artifact.fileType, props.artifact.repositoryId, props.artifact.id, t("error.missingTool", props.artifact.fileType))
+                                event.preventDefault();
+                            }}
                             className={classes.title}>
                             {props.artifact.name}
                         </Link>
