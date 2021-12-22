@@ -4,6 +4,9 @@ import { createTheme, responsiveFontSizes } from "@material-ui/core/styles";
 export const THEME = {
     menu: {
         background: "white",
+        divider: blueGrey[200],
+        icon: blueGrey[500],
+        text: "rgba(0, 0, 0, 0.87)",
         active: {
             icon: lightBlue[500],
             text: "rgba(0, 0, 0, 0.87)",

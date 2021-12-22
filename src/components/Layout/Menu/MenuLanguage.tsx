@@ -1,42 +1,45 @@
-import { Avatar } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import { TranslateOutlined } from "@material-ui/icons";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { THEME } from "../../../theme";
 import MenuPopup from "./MenuPopup";
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
+    menuItem: {
+        display: "flex",
+        flexDirection: "row",
+        height: "80px",
+        cursor: "pointer",
+        "&:hover": {
+            "&>div>svg": {
+                fill: THEME.menu.hover.icon
+            },
+            "&>div>span": {
+                color: THEME.menu.hover.text,
+                fontWeight: 500
+            }
+        }
+    },
+    menuItemContent: {
         display: "flex",
         flexDirection: "column",
-        height: "80px",
         justifyContent: "center",
         alignItems: "center",
-        cursor: "pointer",
-        "&:hover>div:first-child": {
-            backgroundColor: THEME.menu.avatar.hover.background,
-            color: THEME.menu.avatar.hover.text
+        flexGrow: 1
+    },
+    menuItemActive: {
+        "&>div>svg": {
+            fill: `${THEME.menu.active.icon} !important`
         },
-        "&:hover>span": {
-            color: THEME.menu.hover.text,
+        "&>div>span": {
+            color: `${THEME.menu.active.text} !important`,
             fontWeight: 500
         }
     },
-    rootActive: {
-        "&>div:first-child": {
-            backgroundColor: THEME.menu.avatar.hover.background,
-            color: THEME.menu.avatar.hover.text
-        },
-        "&>span": {
-            color: THEME.menu.hover.text,
-            fontWeight: 500
-        }
-    },
-    avatar: {
-        textTransform: "uppercase",
-        backgroundColor: THEME.menu.avatar.default.background,
-        color: THEME.menu.avatar.default.text,
-        transition: theme.transitions.create(["background-color", "color"])
+    menuItemIcon: {
+        fill: THEME.menu.inactive.icon,
+        transition: theme.transitions.create("fill")
     },
     menuItemText: {
         marginTop: "0.5rem",
@@ -49,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-    name: string | undefined;
     children: ((props: {
         close: () => void;
     }) => React.ReactNode);
@@ -63,18 +65,20 @@ const MenuAvatar: React.FC<Props> = props => {
     return (
         <div
             onClick={e => setMenuAnchor(e.currentTarget)}
-            className={clsx(classes.root, !!menuAnchor && classes.rootActive)}>
-            <Avatar className={classes.avatar}>
-                {props.name?.substr(0, 1) ?? "?"}
-            </Avatar>
+            className={clsx(classes.menuItem, !!menuAnchor && classes.menuItemActive)}>
+
+            <div className={classes.menuItemContent}>
+                <TranslateOutlined className={classes.menuItemIcon} />
+                <span className={classes.menuItemText}>
+                    Language
+                </span>
+            </div>
+
             <MenuPopup
                 anchor={menuAnchor}
                 onClose={() => setMenuAnchor(undefined)}>
                 {props.children}
             </MenuPopup>
-            <span className={classes.menuItemText}>
-                Account
-            </span>
         </div>
     );
 };

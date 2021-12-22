@@ -1,4 +1,3 @@
-import { MenuList } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import {
@@ -20,6 +19,9 @@ import Identity from "../../Shared/Identity";
 import MenuBar from "../MenuBar";
 import MenuAvatar from "./MenuAvatar";
 import MenuItem from "./MenuItem";
+import MenuAvatarPopup from "./MenuAvatarPopup";
+import MenuLanguage from "./MenuLanguage";
+import MenuLanguagePopup from "./MenuLanguagePopup";
 import MenuSpacer from "./MenuSpacer";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -116,11 +118,16 @@ const Menu: React.FC = () => {
                 text="Optionen"
                 icon={SettingsOutlined} />
             <MenuSpacer />
+            <MenuLanguage>
+                {({ close }) => (
+                    <MenuLanguagePopup onClose={close} />
+                )}
+            </MenuLanguage>
             <MenuAvatar name={currentUser?.username}>
-                {close => (
-                    <MenuList>
-                        Text
-                    </MenuList>
+                {({ close }) => (
+                    <MenuAvatarPopup
+                        onClose={close}
+                        user={currentUser} />
                 )}
             </MenuAvatar>
             <MenuBar className={classes.menu}>
