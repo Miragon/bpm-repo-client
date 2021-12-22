@@ -1,4 +1,5 @@
 import {makeStyles} from "@material-ui/core";
+import { deepOrange } from "@material-ui/core/colors";
 import {Theme} from "@material-ui/core/styles";
 import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
@@ -6,16 +7,18 @@ import {ToastContainer} from "react-toastify";
 import {ArtifactApi, UserApi} from "../../api";
 import {CURRENT_USER_INFO, FILETYPES} from "../../constants/Constants";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
+import { THEME } from "../../theme";
 import helpers from "../../util/helperFunctions";
-import Menu from "./Menu";
+import Menu from "./Menu/Menu";
 import Router from "./Router";
 
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
         flexGrow: 1,
         display: "flex",
-        maxHeight: "calc(100vh - 60px)",
-        overflowY: "auto"
+        maxHeight: "100vh",
+        overflowY: "auto",
+        backgroundColor: THEME.content.background
     },
     content: {
         display: "flex",

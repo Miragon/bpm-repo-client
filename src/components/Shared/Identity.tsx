@@ -11,8 +11,6 @@ import theme from "../../theme";
 
 const useStyles = makeStyles(() => ({
     container: {
-        minWidth: "150px",
-        paddingRight: "20px",
         display: "flex",
         justifyContent: "space-between",
         whiteSpace: "nowrap",

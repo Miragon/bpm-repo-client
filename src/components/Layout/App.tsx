@@ -8,8 +8,7 @@ import Layout from "./Layout";
 const useStyles = makeStyles(() => ({
     root: {
         minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column"
+        display: "flex"
     }
 }));
 
