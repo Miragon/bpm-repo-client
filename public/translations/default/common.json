@@ -101,9 +101,19 @@
     "target": "Target"
   },
   "menu": {
-    "home": "Repository",
-    "forms": "Forms",
-    "integration": "Integration blocks"
+    "Home": "Repository",
+    "Forms": "Forms",
+    "Integration": "Integration blocks",
+    "home": "Home",
+    "projects": "Projects",
+    "favorites": "Favorites",
+    "recents": "Recents",
+    "settings": "Settings",
+    "account": "Account",
+    "accountMenu": {
+      "account": "Account",
+      "logout": "Logout"
+    }
   },
   "registration": {
     "signup": "Sign up",

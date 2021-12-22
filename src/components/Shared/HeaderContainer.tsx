@@ -7,7 +7,7 @@ import {createRepository} from "../../store/actions";
 import {SYNC_STATUS_REPOSITORY} from "../../constants/Constants";
 import DropdownButton, {DropdownButtonItem} from "./Form/DropdownButton";
 import {RootState} from "../../store/reducers/rootReducer";
-import ArtifactSearchBar from "../../screens/Overview/ArtifactSearchBar";
+import ArtifactSearchBar from "../../screens/Home/ArtifactSearchBar";
 import CreateTitleDescDialog from "./Dialogs/CreateTitleDescDialog";
 import CreateArtifactDialog from "./Dialogs/CreateArtifactDialog";
 import UploadArtifactDialog from "./Dialogs/UploadArtifactDialog";

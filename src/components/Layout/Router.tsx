@@ -1,6 +1,6 @@
 import React from "react";
 import {HashRouter, Route, Switch} from "react-router-dom";
-import Overview from "../../screens/Overview/Overview";
+import HomeScreen from "../../screens/Home/HomeScreen";
 import Repository from "../../screens/Repository/Repository";
 
 const Router: React.FC = () => {
@@ -10,7 +10,7 @@ const Router: React.FC = () => {
                 <Route
                     exact
                     path="/"
-                    component={Overview}/>
+                    component={HomeScreen}/>
                 <Route
                     exact
                     path="/repository/:repoId"

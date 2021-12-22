@@ -34,7 +34,24 @@ export const THEME = {
         }
     },
     content: {
-        background: blueGrey[50]
+        background: blueGrey[50],
+    },
+    pageHeader: {
+        text: `${blueGrey[900]}EE`,
+        icon: lightBlue[500],
+        divider: `${blueGrey[200]}88`,
+        action: {
+            default: {
+                default: blueGrey[200],
+                hover: lightBlue[500],
+                active: lightBlue[500]
+            },
+            primary: {
+                default: lightBlue[500],
+                hover: lightBlue[500],
+                active: lightBlue[500]
+            }
+        }
     }
 };
 

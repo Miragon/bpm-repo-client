@@ -43,12 +43,12 @@ const LANGUAGES = [
     {
         id: "German",
         label: "Deutsch",
-        key: "default"
+        key: "custom"
     },
     {
         id: "English",
         label: "English",
-        key: "custom"
+        key: "default"
     }
 ];
 
@@ -75,6 +75,7 @@ const MenuLanguagePopup: React.FC<Props> = props => {
             <div className={classes.languageMenuDivider} />
             {LANGUAGES.map(language => (
                 <ListItem
+                    dense
                     key={language.id}
                     className={classes.languageMenuItem}
                     onClick={() => changeLanguage(language.key)}

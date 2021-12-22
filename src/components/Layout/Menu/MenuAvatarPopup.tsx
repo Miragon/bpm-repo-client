@@ -1,12 +1,8 @@
 import { ListItem, ListItemText } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import {
-    ArrowForwardIos,
-    ArrowForwardIosOutlined,
-    ExitToAppOutlined,
-    PersonOutlined, TranslateOutlined
-} from "@material-ui/icons";
+import { ExitToAppOutlined, PersonOutlined } from "@material-ui/icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { UserInfoTO } from "../../../api";
 import { THEME } from "../../../theme";
 
@@ -60,6 +56,8 @@ interface Props {
 const MenuAvatarPopup: React.FC<Props> = props => {
     const classes = useStyles();
 
+    const { t } = useTranslation("common");
+
     return (
         <div className={classes.avatarMenu}>
             <span className={classes.avatarMenuName}>
@@ -67,22 +65,24 @@ const MenuAvatarPopup: React.FC<Props> = props => {
             </span>
             <div className={classes.avatarMenuDivider} />
             <ListItem
+                dense
                 className={classes.avatarMenuItem}
                 button>
                 <PersonOutlined
                     className={classes.avatarMenuItemIcon} />
                 <ListItemText
                     className={classes.avatarMenuItemText}
-                    primary="Account" />
+                    primary={t("menu.accountMenu.account")} />
             </ListItem>
             <ListItem
+                dense
                 className={classes.avatarMenuItem}
                 button>
                 <ExitToAppOutlined
                     className={classes.avatarMenuItemIcon} />
                 <ListItemText
                     className={classes.avatarMenuItemText}
-                    primary="Logout" />
+                    primary={t("menu.accountMenu.logout")} />
             </ListItem>
         </div>
     );

@@ -144,11 +144,6 @@
         "type": "Typ",
         "target": "Ziel"
     },
-    "menu": {
-        "Home": "Modellverwaltung",
-        "Forms": "Formulare",
-        "Integration": "Integrationsbausteine"
-    },
     "registration": {
         "signup": "Für Miragon Cloud Services anmelden",
         "firstTime": "Sie versuchen zum ersten Mal, sich bei Miragon Cloud Services anzumelden.",
@@ -173,6 +168,21 @@
         "missingTool": "Ihr Paket beinhaltet keine Anwendung zum Bearbeiten von {{fileType}}. Kontaktieren Sie den Service, um die Erweiterung zu aktivieren",
         "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
         "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
+    },
+    "menu": {
+        "Home": "Modellverwaltung",
+        "Forms": "Formulare",
+        "Integration": "Integrationsbausteine",
+        "home": "Start",
+        "projects": "Projekte",
+        "favorites": "Favoriten",
+        "recents": "Verlauf",
+        "settings": "Optionen",
+        "account": "Account",
+        "accountMenu": {
+            "account": "Account",
+            "logout": "Logout"
+        }
     },
     "path": {
         "overview": "Übersicht",
