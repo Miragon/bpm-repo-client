@@ -43,11 +43,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ScreenHeader: React.FC<Props> = props => {
+const ActionButton: React.FC<Props> = props => {
     const classes = useStyles();
 
     return (
         <IconButton
+            title={props.label}
             onClick={props.onClick}
             className={clsx(
                 classes.actionButton,
@@ -67,4 +68,4 @@ const ScreenHeader: React.FC<Props> = props => {
     );
 };
 
-export default ScreenHeader;
+export default ActionButton;

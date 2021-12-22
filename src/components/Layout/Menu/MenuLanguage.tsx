@@ -13,10 +13,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         cursor: "pointer",
         "&:hover": {
             "&>div>svg": {
-                fill: THEME.menu.hover.icon
+                fill: THEME.navigation.hover.icon
             },
             "&>div>span": {
-                color: THEME.menu.hover.text,
+                color: THEME.navigation.hover.text,
                 fontWeight: 500
             }
         }
@@ -30,20 +30,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     menuItemActive: {
         "&>div>svg": {
-            fill: `${THEME.menu.active.icon} !important`
+            fill: `${THEME.navigation.active.icon} !important`
         },
         "&>div>span": {
-            color: `${THEME.menu.active.text} !important`,
+            color: `${THEME.navigation.active.text} !important`,
             fontWeight: 500
         }
     },
     menuItemIcon: {
-        fill: THEME.menu.inactive.icon,
+        fill: THEME.navigation.inactive.icon,
         transition: theme.transitions.create("fill")
     },
     menuItemText: {
         marginTop: "0.5rem",
-        color: THEME.menu.inactive.text,
+        color: THEME.navigation.inactive.text,
         textTransform: "uppercase",
         fontSize: "0.6rem",
         fontWeight: 400,

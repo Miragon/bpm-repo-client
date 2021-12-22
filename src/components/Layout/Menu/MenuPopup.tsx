@@ -5,7 +5,7 @@ import { THEME } from "../../../theme";
 
 const useStyles = makeStyles((theme: Theme) => ({
     paper: {
-        backgroundColor: THEME.menu.background,
+        backgroundColor: THEME.navigation.background,
         overflowX: "unset",
         overflowY: "unset",
         borderRadius: "8px",
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             left: 1,
             width: 10,
             height: 10,
-            backgroundColor: THEME.menu.background,
+            backgroundColor: THEME.navigation.background,
             boxShadow: theme.shadows[2],
             transform: "translate(-50%, -100%) rotate(225deg)",
             border: "1px solid #CCC",

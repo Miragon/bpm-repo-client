@@ -1,4 +1,3 @@
-import { blue, blueGrey, lightBlue } from "@material-ui/core/colors";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -12,14 +11,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         textDecoration: "none",
         "&:hover": {
             "&>div>svg": {
-                fill: THEME.menu.hover.icon
+                fill: THEME.navigation.hover.icon
             },
             "&>div>span": {
-                color: THEME.menu.hover.text,
+                color: THEME.navigation.hover.text,
                 fontWeight: 500
             },
             "&>div:last-child": {
-                backgroundColor: THEME.menu.hover.border
+                backgroundColor: THEME.navigation.hover.border
             }
         }
     },
@@ -34,28 +33,28 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: "calc(100% - 2rem)",
         width: "3px",
         margin: "1rem 0",
-        backgroundColor: THEME.menu.inactive.border,
+        backgroundColor: THEME.navigation.inactive.border,
         transition: theme.transitions.create("background-color")
     },
     menuItemActive: {
         "&>div>svg": {
-            fill: `${THEME.menu.active.icon} !important`
+            fill: `${THEME.navigation.active.icon} !important`
         },
         "&>div>span": {
-            color: `${THEME.menu.active.text} !important`,
+            color: `${THEME.navigation.active.text} !important`,
             fontWeight: 500
         },
         "&>div:last-child": {
-            backgroundColor: `${THEME.menu.active.border} !important`
+            backgroundColor: `${THEME.navigation.active.border} !important`
         }
     },
     menuItemIcon: {
-        fill: THEME.menu.inactive.icon,
+        fill: THEME.navigation.inactive.icon,
         transition: theme.transitions.create("fill")
     },
     menuItemText: {
         marginTop: "0.5rem",
-        color: THEME.menu.inactive.text,
+        color: THEME.navigation.inactive.text,
         textTransform: "uppercase",
         fontSize: "0.6rem",
         fontWeight: 400,

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     avatarMenuDivider: {
         width: "100%",
         height: "1px",
-        backgroundColor: THEME.menu.divider
+        backgroundColor: THEME.navigation.divider
     },
     avatarMenuItem: {
         display: "flex",
@@ -32,19 +32,19 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     avatarMenuItemIcon: {
-        fill: THEME.menu.icon,
+        fill: THEME.navigation.icon,
         height: "1.25rem",
         width: "1.25rem",
         marginRight: "1rem"
     },
     avatarMenuItemIconMore: {
-        fill: THEME.menu.icon,
+        fill: THEME.navigation.icon,
         height: "1.25rem",
         width: "1.25rem",
         marginRight: "-0.5rem"
     },
     avatarMenuItemText: {
-        color: THEME.menu.text
+        color: THEME.navigation.text
     }
 }));
 

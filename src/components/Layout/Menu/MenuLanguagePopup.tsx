@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     languageMenuDivider: {
         width: "100%",
         height: "1px",
-        backgroundColor: THEME.menu.divider
+        backgroundColor: THEME.navigation.divider
     },
     languageMenuItem: {
         display: "flex",
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     languageMenuItemText: {
-        color: THEME.menu.text
+        color: THEME.navigation.text
     }
 }));
 

@@ -1,4 +1,3 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
 import { StarOutlined, StarOutlineOutlined } from "@material-ui/icons";
 import React from "react";
 import ActionButton from "./ActionButton";
@@ -9,18 +8,15 @@ interface Props {
     active: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({}));
-
-const ScreenHeader: React.FC<Props> = props => {
-    const classes = useStyles();
-
+const FavoriteButton: React.FC<Props> = props => {
     return (
         <ActionButton
             label="Favorit"
+            onClick={() => props.onFavorite(!props.active)}
             icon={props.active ? StarOutlined : StarOutlineOutlined}
             primary={props.primary}
-            active={false} />
+            active={props.active} />
     );
 };
 
-export default ScreenHeader;
+export default FavoriteButton;

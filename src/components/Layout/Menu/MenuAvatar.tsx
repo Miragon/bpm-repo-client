@@ -14,33 +14,33 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: "center",
         cursor: "pointer",
         "&:hover>div:first-child": {
-            backgroundColor: THEME.menu.avatar.hover.background,
-            color: THEME.menu.avatar.hover.text
+            backgroundColor: THEME.navigation.avatar.hover.background,
+            color: THEME.navigation.avatar.hover.text
         },
         "&:hover>span": {
-            color: THEME.menu.hover.text,
+            color: THEME.navigation.hover.text,
             fontWeight: 500
         }
     },
     rootActive: {
         "&>div:first-child": {
-            backgroundColor: THEME.menu.avatar.hover.background,
-            color: THEME.menu.avatar.hover.text
+            backgroundColor: THEME.navigation.avatar.hover.background,
+            color: THEME.navigation.avatar.hover.text
         },
         "&>span": {
-            color: THEME.menu.hover.text,
+            color: THEME.navigation.hover.text,
             fontWeight: 500
         }
     },
     avatar: {
         textTransform: "uppercase",
-        backgroundColor: THEME.menu.avatar.default.background,
-        color: THEME.menu.avatar.default.text,
+        backgroundColor: THEME.navigation.avatar.default.background,
+        color: THEME.navigation.avatar.default.text,
         transition: theme.transitions.create(["background-color", "color"])
     },
     menuItemText: {
         marginTop: "0.5rem",
-        color: THEME.menu.inactive.text,
+        color: THEME.navigation.inactive.text,
         textTransform: "uppercase",
         fontSize: "0.6rem",
         fontWeight: 400,

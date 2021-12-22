@@ -1,8 +1,10 @@
 import {
-    AddOutlined, CloudUploadOutlined,
+    CloudUploadOutlined,
     CreateNewFolderOutlined,
     FormatShapesOutlined,
-    NoteAddOutlined, RepeatOutlined, TuneOutlined
+    NoteAddOutlined,
+    RepeatOutlined,
+    TuneOutlined
 } from "@material-ui/icons";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -10,12 +12,12 @@ import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
-import PathStructure, { CrumbElement } from "../../components/Layout/PathStructure";
-import HeaderContainer from "../../components/Shared/HeaderContainer";
+import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
+import { CrumbElement } from "../../components/Layout/PathStructure";
 import { SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE } from "../../constants/Constants";
-import FavoriteArtifacts from "./FavoriteArtifacts";
+import FavoriteSection from "./FavoriteSection";
 import RecentArtifacts from "./RecentArtifacts";
-import RepoAndTeamContainer from "./RepoAndTeamContainer";
+import RepositorySection from "./RepositorySection";
 
 const ADD_OPTIONS = [
     [
@@ -82,20 +84,21 @@ const HomeScreen: React.FC = (() => {
                 onFavorite={console.log}
                 title="Modellverwaltung"
                 addOptions={ADD_OPTIONS}
+                isFavorite={false}
                 primary="add" />
-            <PathStructure structure={path} />
+
             <ErrorBoundary>
-                <RepoAndTeamContainer />
+                <ScreenSectionHeader title="Alle Repositories" />
+                <RepositorySection />
             </ErrorBoundary>
+
             <ErrorBoundary>
-                <HeaderContainer />
+                <ScreenSectionHeader title="Favoriten" />
+                <FavoriteSection />
             </ErrorBoundary>
 
             <ErrorBoundary>
                 <RecentArtifacts />
-            </ErrorBoundary>
-            <ErrorBoundary>
-                <FavoriteArtifacts />
             </ErrorBoundary>
         </>
     );

@@ -2,7 +2,7 @@ import { blue, blueGrey, lightBlue } from "@material-ui/core/colors";
 import { createTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 export const THEME = {
-    menu: {
+    navigation: {
         background: "white",
         divider: blueGrey[200],
         icon: blueGrey[500],
@@ -33,8 +33,13 @@ export const THEME = {
             }
         }
     },
+    menu: {
+        icon: lightBlue[500],
+        divider: `${blueGrey[200]}88`,
+    },
     content: {
-        background: blueGrey[50],
+        background: "rgb(241, 247, 252)",
+        primary: lightBlue[500]
     },
     pageHeader: {
         text: `${blueGrey[900]}EE`,
@@ -52,6 +57,21 @@ export const THEME = {
                 active: lightBlue[500]
             }
         }
+    },
+    avatar: {
+        background: [
+            "rgb(7, 141, 238)",
+            "rgb(160, 81, 184)",
+            "rgb(255, 105, 74)",
+            "rgb(247, 176, 0)",
+            "rgb(52, 216, 112)"
+        ],
+        text: "rgba(255, 255, 255, 0.87)"
+    },
+    tooltip: {
+        background: "#000000",
+        text: "rgba(255, 255, 255, 0.87)",
+        fontSize: "0.8rem"
     }
 };
 

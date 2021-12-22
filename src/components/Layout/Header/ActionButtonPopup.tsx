@@ -24,7 +24,7 @@ const ActionButtonPopup: React.FC<Props> = props => {
         <Popup
             rotation={315}
             top="1px"
-            right="15%"
+            right="30px"
             anchor={props.anchor}
             background="#FFFFFF"
             translateX="100%"

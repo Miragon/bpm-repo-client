@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ScreenHeader: React.FC<Props> = props => {
+const AddButton: React.FC<Props> = props => {
     const classes = useStyles();
 
     const { t } = useTranslation("common");
@@ -76,4 +76,4 @@ const ScreenHeader: React.FC<Props> = props => {
     );
 };
 
-export default ScreenHeader;
+export default AddButton;

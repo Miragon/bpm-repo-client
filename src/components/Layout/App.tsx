@@ -17,6 +17,7 @@ const App: React.FC = () => {
     const classes = useStyles();
 
     // Required to force re-render on language change
+    // eslint-disable-next-line
     const { t } = useTranslation("common");
 
     return (

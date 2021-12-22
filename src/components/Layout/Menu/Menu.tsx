@@ -6,7 +6,6 @@ import {
     SettingsOutlined,
     StarOutlineOutlined
 } from "@material-ui/icons";
-import i18next from "i18next";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -23,9 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     menuBar: {
         display: "flex",
         height: "100vh",
-        backgroundColor: THEME.menu.background,
+        backgroundColor: THEME.navigation.background,
         flexDirection: "column",
-        width: "96px",
+        width: "80px",
         padding: "4rem 0 1rem 0"
     }
 }));
