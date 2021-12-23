@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ActionButtonPopup from "../Header/ActionButtonPopup";
 import MenuList, { MenuListConfig } from "../MenuList/MenuList";
@@ -16,12 +16,8 @@ interface Props {
 }
 
 const useStyles = makeStyles({
-    root: {
-
-    },
-    fallback: {
-
-    }
+    root: {},
+    fallback: {}
 });
 
 const FileList: React.FC<Props> = (props: Props) => {
@@ -36,6 +32,14 @@ const FileList: React.FC<Props> = (props: Props) => {
         onFavorite,
         onClick
     } = props;
+
+    const [renderKey, setRenderKey] = useState(0);
+
+    // Make sure this component is re-rendered every 60 seconds to update the view and the times
+    useEffect(() => {
+        const interval = setInterval(() => setRenderKey(cur => cur + 1), 60000);
+        return () => clearInterval(interval);
+    }, []);
 
     const [menuAnchor, setMenuAnchor] = useState<{
         target: HTMLButtonElement;
@@ -59,6 +63,22 @@ const FileList: React.FC<Props> = (props: Props) => {
                     onFavorite={value => props.onFavorite(file, value)}
                     onMenuClicked={target => setMenuAnchor({ target, file })} />
             ))}
+            {files.map(file => (
+                <FileListEntry
+                    key={file.id}
+                    file={file}
+                    onClick={() => props.onClick(file)}
+                    onFavorite={value => props.onFavorite(file, value)}
+                    onMenuClicked={target => setMenuAnchor({ target, file })} />
+            ))}
+            {files.map(file => (
+                <FileListEntry
+                    key={file.id}
+                    file={file}
+                    onClick={() => props.onClick(file)}
+                    onFavorite={value => props.onFavorite(file, value)}
+                    onMenuClicked={target => setMenuAnchor({ target, file })} />
+            ))}
             <ActionButtonPopup
                 anchor={menuAnchor?.target}
                 onClose={() => setMenuAnchor(undefined)}>
@@ -67,7 +87,7 @@ const FileList: React.FC<Props> = (props: Props) => {
                         onClick={action => {
                             if (menuAnchor) {
                                 props.onMenuClick(action, menuAnchor.file);
-                                setTimeout(() => setMenuAnchor(undefined));
+                                setTimeout(close);
                             }
                         }}
                         options={props.menuEntries} />

@@ -6,15 +6,23 @@ import {
     RepeatOutlined,
     TuneOutlined
 } from "@material-ui/icons";
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
 import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
 import { CrumbElement } from "../../components/Layout/PathStructure";
-import { SYNC_STATUS_ARTIFACT, SYNC_STATUS_FAVORITE } from "../../constants/Constants";
+import CreateTitleDescDialog from "../../components/Shared/Dialogs/CreateTitleDescDialog";
+import {
+    SYNC_STATUS_ARTIFACT,
+    SYNC_STATUS_FAVORITE,
+    SYNC_STATUS_REPOSITORY
+} from "../../constants/Constants";
+import { createRepository } from "../../store/actions";
 import FavoriteSection from "./FavoriteSection";
 import RecentArtifacts from "./RecentArtifacts";
 import RepositorySection from "./RepositorySection";
@@ -67,6 +75,19 @@ const HomeScreen: React.FC = (() => {
     const history = useHistory();
     const dispatch = useDispatch();
 
+    const { t } = useTranslation("common");
+
+    const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
+
+    const onAddItemClicked = useCallback((action: string) => {
+        switch (action) {
+            case "create-repository": {
+                setCreateRepositoryDialogOpen(true);
+                break;
+            }
+        }
+    }, []);
+
     const path: Array<CrumbElement> = [{
         name: "path.overview",
         onClick: () => {
@@ -80,26 +101,36 @@ const HomeScreen: React.FC = (() => {
         <>
             <ScreenHeader
                 onSearch={console.log}
-                onAdd={console.log}
+                onAdd={onAddItemClicked}
                 onFavorite={console.log}
                 title="Modellverwaltung"
                 addOptions={ADD_OPTIONS}
                 isFavorite={false}
                 primary="add" />
 
-            <ErrorBoundary>
-                <ScreenSectionHeader title="Alle Repositories" />
-                <RepositorySection />
-            </ErrorBoundary>
+            <ContentLayout>
+                <ErrorBoundary>
+                    <ScreenSectionHeader title="Alle Repositories" />
+                    <RepositorySection />
+                </ErrorBoundary>
 
-            <ErrorBoundary>
-                <ScreenSectionHeader title="Favoriten" />
-                <FavoriteSection />
-            </ErrorBoundary>
+                <ErrorBoundary>
+                    <ScreenSectionHeader title="Favoriten" />
+                    <FavoriteSection />
+                </ErrorBoundary>
 
-            <ErrorBoundary>
-                <RecentArtifacts />
-            </ErrorBoundary>
+                <ErrorBoundary>
+                    <RecentArtifacts />
+                </ErrorBoundary>
+            </ContentLayout>
+
+            <CreateTitleDescDialog
+                open={createRepositoryDialogOpen}
+                onCancelled={() => setCreateRepositoryDialogOpen(false)}
+                successMessage={t("repository.created")}
+                title={t("repository.create")}
+                createMethod={createRepository}
+                dataSyncedType={SYNC_STATUS_REPOSITORY} />
         </>
     );
 });

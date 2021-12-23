@@ -72,7 +72,7 @@ const RepositoryCard: React.FC<Props> = props => {
             <div className={classes.cardHeader}>
                 <Folder className={classes.cardHeaderIcon} />
                 <AvatarList
-                    names={[currentUser.username, "Test", "Hallo", "Siebzehn"]} />
+                    names={[currentUser.username, "Test", "Hallo", "Siebzehn", "Test123"]} />
             </div>
 
             <div className={classes.cardBody}>

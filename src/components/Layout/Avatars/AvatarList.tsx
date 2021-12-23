@@ -1,4 +1,4 @@
-import { Avatar } from "@material-ui/core";
+import { Avatar, Tooltip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { AvatarGroup } from "@material-ui/lab";
 import clsx from "clsx";
@@ -30,6 +30,17 @@ const useStyles = makeStyles(theme => ({
     },
     avatar4: {
         backgroundColor: THEME.avatar.background[4]
+    },
+    tooltip: {
+        backgroundColor: THEME.tooltip.background,
+        color: THEME.tooltip.text,
+        fontSize: THEME.tooltip.fontSize
+    },
+    tooltipArrow: {
+        color: THEME.tooltip.background
+    },
+    tooltipName: {
+        display: "block"
     }
 }));
 
@@ -61,26 +72,46 @@ const AvatarList: React.FC<Props> = props => {
     return (
         <AvatarGroup className={clsx(classes.cardHeaderAvatars, props.className)}>
             {namesToShow.map((name, index) => (
-                <Avatar
-                    className={clsx(
-                        classes.avatar,
-                        avatarClasses[(startIndex + index) % avatarClasses.length]
-                    )}
-                    variant="rounded"
-                    alt={name}>
-                    {name.substr(0, 1)}
-                </Avatar>
+                <Tooltip
+                    arrow
+                    placement="top"
+                    classes={{
+                        arrow: classes.tooltipArrow,
+                        tooltip: classes.tooltip
+                    }}
+                    title={(<span className={classes.tooltipName}>{name}</span>)}>
+                    <Avatar
+                        className={clsx(
+                            classes.avatar,
+                            avatarClasses[(startIndex + index) % avatarClasses.length]
+                        )}
+                        variant="rounded"
+                        alt={name}>
+                        {name.substr(0, 1)}
+                    </Avatar>
+                </Tooltip>
             ))}
             {moreCount > 0 && (
-                <Avatar
-                    className={clsx(
-                        classes.avatar,
-                        avatarClasses[(startIndex + namesToShow.length) % avatarClasses.length]
-                    )}
-                    variant="rounded"
-                    alt={`+${moreCount}`}>
-                    {`+${moreCount}`}
-                </Avatar>
+                <Tooltip
+                    arrow
+                    placement="top"
+                    classes={{
+                        arrow: classes.tooltipArrow,
+                        tooltip: classes.tooltip
+                    }}
+                    title={props.names.slice(props.max ?? 3).map(name => (
+                        <span className={classes.tooltipName}>{name}</span>
+                    ))}>
+                    <Avatar
+                        className={clsx(
+                            classes.avatar,
+                            avatarClasses[(startIndex + namesToShow.length) % avatarClasses.length]
+                        )}
+                        variant="rounded"
+                        alt={`+${moreCount}`}>
+                        {`+${moreCount}`}
+                    </Avatar>
+                </Tooltip>
             )}
         </AvatarGroup>
     );

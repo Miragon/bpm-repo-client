@@ -39,6 +39,7 @@ export const THEME = {
     },
     content: {
         background: "rgb(241, 247, 252)",
+        default: blueGrey[200],
         primary: lightBlue[500]
     },
     pageHeader: {

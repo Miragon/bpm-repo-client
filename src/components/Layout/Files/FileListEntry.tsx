@@ -96,6 +96,13 @@ const useStyles = makeStyles((theme: Theme) => ({
             content: '""'
         }
     },
+    cardActionFavorite: {
+        marginRight: "0.5rem",
+        "&>span>svg": {
+            fill: THEME.content.primary
+        }
+    },
+    cardActionMenu: {},
     cardIcon: {
         fontSize: "1.25rem",
         fill: THEME.content.primary
@@ -187,12 +194,14 @@ const FileListEntry: React.FC<Props> = props => {
 
                 <IconButton
                     size="small"
+                    className={classes.cardActionFavorite}
                     onClick={() => props.onFavorite(false)}>
                     <StarOutlined />
                 </IconButton>
 
                 <IconButton
                     size="small"
+                    className={classes.cardActionMenu}
                     onClick={e => props.onMenuClicked(e.currentTarget)}>
                     <MoreVertOutlined />
                 </IconButton>

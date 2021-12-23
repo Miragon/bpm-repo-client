@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,9 +19,13 @@ const useStyles = makeStyles(() => ({
         flexDirection: "row",
         flexWrap: "wrap",
         margin: "0 -0.5rem 2rem -0.5rem"
+    },
+    fallback: {
+        margin: "0.5rem",
+        fontSize: "0.9rem",
+        fontWeight: 300
     }
 }));
-
 
 const RepositorySection: React.FC = (() => {
     const dispatch = useDispatch();
@@ -59,7 +64,11 @@ const RepositorySection: React.FC = (() => {
                     onClick={() => history.push(getRepositoryUrl(repo))} />
             ))}
             {allRepos?.length === 0 && (
-                <span>{t("repository.notAvailable")}</span>
+                <Typography
+                    variant="body1"
+                    className={classes.fallback}>
+                    {t("repository.notAvailable")}
+                </Typography>
             )}
         </div>
     );
