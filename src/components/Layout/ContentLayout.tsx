@@ -6,8 +6,7 @@ import React from "react";
 const useStyles = makeStyles((theme: Theme) => ({
     contentWrapper: {
         flexGrow: 1,
-        display: "flex",
-        maxHeight: "100vh"
+        display: "flex"
     },
     content: {
         display: "flex",

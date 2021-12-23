@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import ActionButtonPopup from "../Header/ActionButtonPopup";
 import MenuList, { MenuListConfig } from "../MenuList/MenuList";
 import FileListEntry, { FileDescription } from "./FileListEntry";
+import FileListPopup from "./FileListPopup";
 
 interface Props {
     files: FileDescription[];
@@ -79,7 +80,7 @@ const FileList: React.FC<Props> = (props: Props) => {
                     onFavorite={value => props.onFavorite(file, value)}
                     onMenuClicked={target => setMenuAnchor({ target, file })} />
             ))}
-            <ActionButtonPopup
+            <FileListPopup
                 anchor={menuAnchor?.target}
                 onClose={() => setMenuAnchor(undefined)}>
                 {({ close }) => (
@@ -92,7 +93,7 @@ const FileList: React.FC<Props> = (props: Props) => {
                         }}
                         options={props.menuEntries} />
                 )}
-            </ActionButtonPopup>
+            </FileListPopup>
         </div>
     );
 };

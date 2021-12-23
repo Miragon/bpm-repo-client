@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         zIndex: 10
     },
     headerStuck: {
-        boxShadow: "rgba(0, 0, 0, 0.1) -4px 9px 25px -4px",
-        borderBottom: "0px solid transparent !important"
+        boxShadow: "rgba(0, 0, 0, 0.2) -4px 9px 25px -6px",
+        borderBottom: "1px solid transparent !important"
     },
     headerContent: {
         padding: 0

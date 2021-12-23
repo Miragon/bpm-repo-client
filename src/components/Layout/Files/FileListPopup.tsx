@@ -1,5 +1,6 @@
+import { PopperPlacementType } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import React from "react";
+import React, { useCallback } from "react";
 import Popup from "../Common/Popup";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,7 +18,7 @@ interface Props {
     }) => React.ReactNode);
 }
 
-const ActionButtonPopup: React.FC<Props> = props => {
+const FileListPopup: React.FC<Props> = props => {
     const classes = useStyles();
 
     return (
@@ -30,15 +31,17 @@ const ActionButtonPopup: React.FC<Props> = props => {
                 translateY: "-50%",
                 background: "#FFFFFF",
                 transformOrigin: "top",
-                right: "30px"
+                right: "20px"
             }}
             popupStyleFlip={{
                 rotation: 135,
-                top: undefined,
+                top: "unset",
                 bottom: "1px",
                 translateX: "100%",
-                translateY: "-50%",
-                transformOrigin: "bottom"
+                translateY: "50%",
+                background: "#FFFFFF",
+                transformOrigin: "bottom",
+                right: "20px"
             }}
             placement="bottom-end"
             anchor={props.anchor}
@@ -49,4 +52,4 @@ const ActionButtonPopup: React.FC<Props> = props => {
     );
 };
 
-export default ActionButtonPopup;
+export default FileListPopup;
