@@ -17,7 +17,7 @@ import CreateTitleDescDialog from "../../components/Shared/Dialogs/CreateTitleDe
 import { SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
 import { createRepository } from "../../store/actions";
 import FavoriteSection from "./FavoriteSection";
-import RecentArtifacts from "./RecentArtifacts";
+import RecentSection from "./RecentSection";
 import RepositorySection from "./RepositorySection";
 
 const ADD_OPTIONS = [
@@ -102,7 +102,8 @@ const HomeScreen: React.FC = (() => {
                 </ErrorBoundary>
 
                 <ErrorBoundary>
-                    <RecentArtifacts />
+                    <ScreenSectionHeader title="Zuletzt bearbeitet" />
+                    <RecentSection />
                 </ErrorBoundary>
             </ContentLayout>
 
