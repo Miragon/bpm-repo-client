@@ -1,9 +1,12 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { TranslateOutlined } from "@material-ui/icons";
+import { Done, TranslateOutlined } from "@material-ui/icons";
 import clsx from "clsx";
-import React, { useState } from "react";
+import i18next from "i18next";
+import React, { useMemo, useState } from "react";
 import { THEME } from "../../../theme";
-import MenuPopup from "./MenuPopup";
+import Popup from "../Common/Popup";
+import MenuList, { MenuListConfig } from "../MenuList/MenuList";
+import MenuListTitle from "../MenuList/MenuListTitle";
 
 const useStyles = makeStyles((theme: Theme) => ({
     menuItem: {
@@ -48,19 +51,45 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontSize: "0.6rem",
         fontWeight: 400,
         transition: theme.transitions.create("color")
+    },
+    option: {
+        minWidth: "200px"
+    },
+    popup: {
+        cursor: "default"
     }
 }));
 
-interface Props {
-    children: ((props: {
-        close: () => void;
-    }) => React.ReactNode);
-}
-
-const MenuAvatar: React.FC<Props> = props => {
+const MenuAvatar: React.FC = () => {
     const classes = useStyles();
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLDivElement>();
+    const [activeLanguage, setActiveLanguage] = useState(
+        localStorage.getItem("language") || "default"
+    );
+
+    const changeLanguage = async (languageKey: string) => {
+        // Does not work without setTimeout
+        setMenuAnchor(undefined);
+        setActiveLanguage(languageKey);
+        localStorage.setItem("language", languageKey);
+        await i18next.changeLanguage(languageKey);
+    };
+
+    const options: MenuListConfig = useMemo(() => [[
+        {
+            label: "Deutsch",
+            value: "custom",
+            className: classes.option,
+            right: activeLanguage === "custom" ? <Done /> : undefined
+        },
+        {
+            label: "English",
+            value: "default",
+            className: classes.option,
+            right: activeLanguage === "default" ? <Done /> : undefined
+        }
+    ]], [activeLanguage, classes]);
 
     return (
         <div
@@ -74,11 +103,23 @@ const MenuAvatar: React.FC<Props> = props => {
                 </span>
             </div>
 
-            <MenuPopup
+            <Popup
+                background="#FFFFFF"
                 anchor={menuAnchor}
-                onClose={() => setMenuAnchor(undefined)}>
-                {props.children}
-            </MenuPopup>
+                className={classes.popup}
+                onClose={() => setMenuAnchor(undefined)}
+                placement="right-end"
+                arrowInset={10}>
+                {({ close }) => (
+                    <MenuList
+                        title={<MenuListTitle title="Choose Language" />}
+                        options={options}
+                        onClick={value => {
+                            setTimeout(close);
+                            changeLanguage(value);
+                        }} />
+                )}
+            </Popup>
         </div>
     );
 };

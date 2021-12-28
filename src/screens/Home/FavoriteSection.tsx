@@ -5,12 +5,13 @@ import {
     FolderOutlined
 } from "@material-ui/icons";
 import { observer } from "mobx-react";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArtifactTO, RepositoryTO } from "../../api";
 import FileList from "../../components/Layout/Files/FileList";
 import { FileDescription } from "../../components/Layout/Files/FileListEntry";
+import Pagination from "../../components/Layout/List/Pagination";
 import { FAVORITE_ARTIFACTS, SYNC_STATUS_FAVORITE } from "../../constants/Constants";
 import { fetchFavoriteArtifacts } from "../../store/actions";
 import { RootState } from "../../store/reducers/rootReducer";
@@ -46,9 +47,13 @@ const FAVORITE_OPTIONS = [
     ]
 ]
 
+const PAGE_SIZE = 5;
+
 const FavoriteArtifacts: React.FC = observer(() => {
     const dispatch = useDispatch();
     const { t } = useTranslation("common");
+
+    const [currentPage, setCurrentPage] = useState(0);
 
     const favoriteArtifacts: Array<ArtifactTO> = useSelector((state: RootState) => state.artifacts.favoriteArtifacts);
     const repos: Array<RepositoryTO> = useSelector((state: RootState) => state.repos.repos);
@@ -77,17 +82,28 @@ const FavoriteArtifacts: React.FC = observer(() => {
     const files: FileDescription[] = useMemo(() => favoriteArtifacts.map(artifact => ({
         ...artifact,
         favorite: true,
-        repository: repos.find(r => r.id === artifact.repositoryId)!
+        repository: repos?.find(r => r.id === artifact.repositoryId)
     })), [repos, favoriteArtifacts]);
 
+    const startIndex = PAGE_SIZE * currentPage;
+    const endIndex = Math.min(files.length, startIndex + PAGE_SIZE);
+    const pageFiles = files.slice(startIndex, endIndex);
+
     return (
-        <FileList
-            files={files}
-            fallback="favorites.notAvailable"
-            onFavorite={console.log}
-            onClick={console.log}
-            onMenuClick={console.log}
-            menuEntries={FAVORITE_OPTIONS} />
+        <>
+            <FileList
+                files={pageFiles}
+                fallback="favorites.notAvailable"
+                onFavorite={console.log}
+                onClick={console.log}
+                onMenuClick={console.log}
+                menuEntries={FAVORITE_OPTIONS} />
+            <Pagination
+                currentPage={currentPage}
+                itemsPerPage={PAGE_SIZE}
+                totalItems={files.length}
+                onPage={setCurrentPage} />
+        </>
     );
 });
 

@@ -2,7 +2,7 @@ import { TextField } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { CloseOutlined, SearchOutlined } from "@material-ui/icons";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { THEME } from "../../../theme";
 import ActionButton from "./ActionButton";
 
@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SearchButton: React.FC<Props> = props => {
     const classes = useStyles();
 
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
 
@@ -62,6 +64,7 @@ const SearchButton: React.FC<Props> = props => {
                 <TextField
                     size="small"
                     value={search}
+                    inputRef={searchInputRef}
                     className={clsx(classes.input, search && classes.inputActive)}
                     onChange={e => {
                         setSearch(e.target.value);
@@ -72,9 +75,15 @@ const SearchButton: React.FC<Props> = props => {
             </div>
             <ActionButton
                 onClick={() => {
-                    setSearch("");
-                    props.onSearch("");
-                    setOpen(cur => !cur)
+                    if(open) {
+                        setSearch("");
+                        props.onSearch("");
+                        searchInputRef.current?.blur();
+                        setOpen(false);
+                    } else {
+                        searchInputRef.current?.focus();
+                        setOpen(true);
+                    }
                 }}
                 label={open ? "Fertig" : "Suchen"}
                 icon={open ? CloseOutlined : SearchOutlined}

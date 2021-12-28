@@ -1,7 +1,7 @@
 import { Card, IconButton, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { CheckBoxOutlined, MoreVertOutlined, StarOutlined } from "@material-ui/icons";
-import React, { useRef } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers/rootReducer";
@@ -22,7 +22,7 @@ export interface FileDescription {
     lockedUntil?: string;
     lockedBy?: string;
     favorite: boolean;
-    repository: {
+    repository?: {
         id: string;
         name: string;
         description: string;
@@ -138,7 +138,7 @@ interface Props {
 
 const FileListEntry: React.FC<Props> = props => {
     const classes = useStyles();
-    const ref = useRef<HTMLButtonElement>(null);
+
     const { t } = useTranslation("common");
 
     const currentUser = useSelector((state: RootState) => state.user.currentUserInfo)
@@ -173,7 +173,7 @@ const FileListEntry: React.FC<Props> = props => {
                     <Typography
                         variant="body2"
                         className={classes.subtitle}>
-                        {props.file.repository.name}
+                        {props.file.repository?.name ?? "Unknown"}
                     </Typography>
                 </div>
             </div>

@@ -16,21 +16,6 @@ const useStyles = makeStyles(theme => ({
         marginLeft: "-4px",
         borderRadius: "8px"
     },
-    avatar0: {
-        backgroundColor: THEME.avatar.background[0]
-    },
-    avatar1: {
-        backgroundColor: THEME.avatar.background[1]
-    },
-    avatar2: {
-        backgroundColor: THEME.avatar.background[2]
-    },
-    avatar3: {
-        backgroundColor: THEME.avatar.background[3]
-    },
-    avatar4: {
-        backgroundColor: THEME.avatar.background[4]
-    },
     tooltip: {
         backgroundColor: THEME.tooltip.background,
         color: THEME.tooltip.text,
@@ -50,6 +35,14 @@ interface Props {
     max?: number;
 }
 
+const getColor = (name: string): string => {
+    const index = name
+        .split("")
+        .map(letter => letter.charCodeAt(0))
+        .reduce((cur, val) => val, 0);
+    return THEME.avatar.background[index % THEME.avatar.background.length];
+};
+
 const AvatarList: React.FC<Props> = props => {
     const classes = useStyles();
 
@@ -60,18 +53,9 @@ const AvatarList: React.FC<Props> = props => {
     const namesToShow = props.names.slice(0, props.max ?? 3);
     const moreCount = props.names.length - namesToShow.length;
 
-    const avatarClasses = [
-        classes.avatar0,
-        classes.avatar1,
-        classes.avatar2,
-        classes.avatar3,
-        classes.avatar4
-    ];
-    const startIndex = Math.floor(Math.random() * avatarClasses.length);
-
     return (
         <AvatarGroup className={clsx(classes.cardHeaderAvatars, props.className)}>
-            {namesToShow.map((name, index) => (
+            {namesToShow.map(name => (
                 <Tooltip
                     arrow
                     placement="top"
@@ -81,10 +65,8 @@ const AvatarList: React.FC<Props> = props => {
                     }}
                     title={(<span className={classes.tooltipName}>{name}</span>)}>
                     <Avatar
-                        className={clsx(
-                            classes.avatar,
-                            avatarClasses[(startIndex + index) % avatarClasses.length]
-                        )}
+                        className={classes.avatar}
+                        style={{ backgroundColor: getColor(name) }}
                         variant="rounded"
                         alt={name}>
                         {name.substr(0, 1)}
@@ -103,10 +85,8 @@ const AvatarList: React.FC<Props> = props => {
                         <span className={classes.tooltipName}>{name}</span>
                     ))}>
                     <Avatar
-                        className={clsx(
-                            classes.avatar,
-                            avatarClasses[(startIndex + namesToShow.length) % avatarClasses.length]
-                        )}
+                        className={classes.avatar}
+                        style={{ backgroundColor: getColor("MORE") }}
                         variant="rounded"
                         alt={`+${moreCount}`}>
                         {`+${moreCount}`}

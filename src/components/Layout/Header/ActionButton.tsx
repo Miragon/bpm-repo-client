@@ -13,7 +13,9 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    actionButton: {},
+    actionButton: {
+        zIndex: 1
+    },
     actionButtonIcon: {
         transition: theme.transitions.create("fill")
     },

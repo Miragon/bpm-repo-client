@@ -12,10 +12,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers/rootReducer";
 import { THEME } from "../../../theme";
 import MenuAvatar from "./MenuAvatar";
-import MenuAvatarPopup from "./MenuAvatarPopup";
 import MenuItem from "./MenuItem";
 import MenuLanguage from "./MenuLanguage";
-import MenuLanguagePopup from "./MenuLanguagePopup";
 import MenuSpacer from "./MenuSpacer";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,18 +57,8 @@ const Menu: React.FC = () => {
                 text={t("menu.settings")}
                 icon={SettingsOutlined} />
             <MenuSpacer />
-            <MenuLanguage>
-                {({ close }) => (
-                    <MenuLanguagePopup onClose={close} />
-                )}
-            </MenuLanguage>
-            <MenuAvatar name={currentUser?.username}>
-                {({ close }) => (
-                    <MenuAvatarPopup
-                        onClose={close}
-                        user={currentUser} />
-                )}
-            </MenuAvatar>
+            <MenuLanguage />
+            <MenuAvatar name={currentUser?.username} />
         </div>
     );
 };

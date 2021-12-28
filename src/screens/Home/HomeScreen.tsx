@@ -8,20 +8,13 @@ import {
 } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
 import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
-import { CrumbElement } from "../../components/Layout/PathStructure";
 import CreateTitleDescDialog from "../../components/Shared/Dialogs/CreateTitleDescDialog";
-import {
-    SYNC_STATUS_ARTIFACT,
-    SYNC_STATUS_FAVORITE,
-    SYNC_STATUS_REPOSITORY
-} from "../../constants/Constants";
+import { SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
 import { createRepository } from "../../store/actions";
 import FavoriteSection from "./FavoriteSection";
 import RecentArtifacts from "./RecentArtifacts";
@@ -72,9 +65,6 @@ const ADD_OPTIONS = [
 ]
 
 const HomeScreen: React.FC = (() => {
-    const history = useHistory();
-    const dispatch = useDispatch();
-
     const { t } = useTranslation("common");
 
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
@@ -88,21 +78,13 @@ const HomeScreen: React.FC = (() => {
         }
     }, []);
 
-    const path: Array<CrumbElement> = [{
-        name: "path.overview",
-        onClick: () => {
-            dispatch({ type: SYNC_STATUS_ARTIFACT, dataSynced: false })
-            dispatch({ type: SYNC_STATUS_FAVORITE, dataSynced: false })
-            history.push("/")
-        }
-    }];
-
     return (
         <>
             <ScreenHeader
                 onSearch={console.log}
                 onAdd={onAddItemClicked}
                 onFavorite={console.log}
+                showFavorite={false}
                 title="Modellverwaltung"
                 addOptions={ADD_OPTIONS}
                 isFavorite={false}

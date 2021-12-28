@@ -2,7 +2,6 @@ import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import ActionButtonPopup from "../Header/ActionButtonPopup";
 import MenuList, { MenuListConfig } from "../MenuList/MenuList";
 import FileListEntry, { FileDescription } from "./FileListEntry";
 import FileListPopup from "./FileListPopup";
@@ -34,9 +33,8 @@ const FileList: React.FC<Props> = (props: Props) => {
         onClick
     } = props;
 
-    const [renderKey, setRenderKey] = useState(0);
-
     // Make sure this component is re-rendered every 60 seconds to update the view and the times
+    const [, setRenderKey] = useState(0);
     useEffect(() => {
         const interval = setInterval(() => setRenderKey(cur => cur + 1), 60000);
         return () => clearInterval(interval);
@@ -53,31 +51,15 @@ const FileList: React.FC<Props> = (props: Props) => {
                 <Typography
                     variant="body1"
                     className={classes.fallback}>
-                    {t(props.fallback)}
+                    {t(fallback)}
                 </Typography>
             )}
             {files.map(file => (
                 <FileListEntry
                     key={file.id}
                     file={file}
-                    onClick={() => props.onClick(file)}
-                    onFavorite={value => props.onFavorite(file, value)}
-                    onMenuClicked={target => setMenuAnchor({ target, file })} />
-            ))}
-            {files.map(file => (
-                <FileListEntry
-                    key={file.id}
-                    file={file}
-                    onClick={() => props.onClick(file)}
-                    onFavorite={value => props.onFavorite(file, value)}
-                    onMenuClicked={target => setMenuAnchor({ target, file })} />
-            ))}
-            {files.map(file => (
-                <FileListEntry
-                    key={file.id}
-                    file={file}
-                    onClick={() => props.onClick(file)}
-                    onFavorite={value => props.onFavorite(file, value)}
+                    onClick={() => onClick(file)}
+                    onFavorite={value => onFavorite(file, value)}
                     onMenuClicked={target => setMenuAnchor({ target, file })} />
             ))}
             <FileListPopup
@@ -87,11 +69,11 @@ const FileList: React.FC<Props> = (props: Props) => {
                     <MenuList
                         onClick={action => {
                             if (menuAnchor) {
-                                props.onMenuClick(action, menuAnchor.file);
+                                onMenuClick(action, menuAnchor.file);
                                 setTimeout(close);
                             }
                         }}
-                        options={props.menuEntries} />
+                        options={menuEntries} />
                 )}
             </FileListPopup>
         </div>

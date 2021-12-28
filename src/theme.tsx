@@ -1,5 +1,26 @@
-import { blue, blueGrey, lightBlue } from "@material-ui/core/colors";
+import {
+    amber,
+    blue,
+    blueGrey,
+    brown,
+    cyan,
+    deepPurple,
+    green,
+    grey,
+    indigo,
+    lightBlue,
+    lightGreen,
+    lime,
+    orange,
+    pink,
+    purple,
+    red,
+    teal
+} from "@material-ui/core/colors";
 import { createTheme, responsiveFontSizes } from "@material-ui/core/styles";
+
+const avatarIndex = 500;
+const avatarIndexDark = 800;
 
 export const THEME = {
     navigation: {
@@ -61,11 +82,23 @@ export const THEME = {
     },
     avatar: {
         background: [
-            "rgb(7, 141, 238)",
-            "rgb(160, 81, 184)",
-            "rgb(255, 105, 74)",
-            "rgb(247, 176, 0)",
-            "rgb(52, 216, 112)"
+            red[avatarIndex],
+            pink[avatarIndex],
+            purple[avatarIndex],
+            deepPurple[avatarIndex],
+            indigo[avatarIndex],
+            blue[avatarIndex],
+            lightBlue[avatarIndex],
+            cyan[avatarIndex],
+            teal[avatarIndex],
+            green[avatarIndex],
+            lightGreen[avatarIndex],
+            lime[avatarIndexDark],
+            amber[avatarIndexDark],
+            orange[avatarIndex],
+            brown[avatarIndex],
+            grey[avatarIndex],
+            blueGrey[avatarIndex]
         ],
         text: "rgba(255, 255, 255, 0.87)"
     },
