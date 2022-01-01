@@ -20,10 +20,10 @@ import { openRepository } from "../../util/Redirections";
 import CreateArtifactDialog from "../Common/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/UploadArtifactDialog";
-import FavoriteSection from "./FavoriteSection";
-import RecentSection from "./RecentSection";
-import RepositorySection from "./RepositorySection";
-import SearchSection from "./SearchSection";
+import FavoriteSection from "./Sections/FavoriteSection";
+import RecentSection from "./Sections/RecentSection";
+import RepositorySection from "./Sections/RepositorySection";
+import SearchSection from "./Sections/SearchSection";
 
 const ADD_OPTIONS = [
     [

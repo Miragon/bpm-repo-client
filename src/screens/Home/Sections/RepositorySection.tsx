@@ -5,14 +5,14 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
-import Pagination from "../../components/Layout/List/Pagination";
-import RepositoryCard from "../../components/Layout/Repositories/RepositoryCard";
-import { RootState } from "../../store/reducers/rootReducer";
-import { loadRepositories } from "../../store/RepositoryState";
-import { usePagination } from "../../util/hooks/usePagination";
-import { getRepositoryUrl } from "../../util/Redirections";
-import { searchAllCaseInsensitive } from "../../util/SearchUtils";
+import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
+import Pagination from "../../../components/Layout/List/Pagination";
+import RepositoryCard from "../../../components/Layout/Repositories/RepositoryCard";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { loadRepositories } from "../../../store/RepositoryState";
+import { usePagination } from "../../../util/hooks/usePagination";
+import { getRepositoryUrl } from "../../../util/Redirections";
+import { searchAllCaseInsensitive } from "../../../util/SearchUtils";
 
 const useStyles = makeStyles(() => ({
     root: {

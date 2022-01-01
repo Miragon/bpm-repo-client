@@ -2,16 +2,16 @@ import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ArtifactApi, ArtifactTO } from "../../api";
-import DefaultFileList from "../../components/Layout/Files/DefaultFileList";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
-import { loadArtifactTypes } from "../../store/ArtifactTypeState";
-import { loadFavoriteArtifacts } from "../../store/FavoriteArtifactState";
-import { RootState } from "../../store/reducers/rootReducer";
-import { loadRepositories } from "../../store/RepositoryState";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactApi, ArtifactTO } from "../../../api";
+import DefaultFileList from "../../../components/Layout/Files/DefaultFileList";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
+import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
+import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
+import { RootState } from "../../../store/reducers/rootReducer";
+import { loadRepositories } from "../../../store/RepositoryState";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles({
     fileList: {
