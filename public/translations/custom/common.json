@@ -34,7 +34,6 @@
         "locked": "Sie haben die Datei zur Bearbeitung gesperrt",
         "share": "Datei teilen",
         "upload": "Datei hochladen",
-        "import": "Aus Cawemo importieren",
         "notAvailable": "Sie haben noch keine Datei erstellt",
         "addedToFavorite": "Datei zu Favoriten hinzugefügt",
         "addToFavorites": "Zu Favoriten hinzufügen",
@@ -135,6 +134,8 @@
         "share": "{{artifactName}} Teilen"
     },
     "properties": {
+        "notSelected": "Nicht ausgewählt",
+        "file": "Hier klicken oder Datei ablegen.",
         "title": "Titel",
         "filename": "Name",
         "milestone": "Milestone",

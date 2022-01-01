@@ -3,12 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import clsx from "clsx";
 import React from "react";
+import { PaginationConfig } from "../../../util/hooks/usePagination";
 
 interface Props {
-    currentPage: number;
-    totalItems: number;
-    itemsPerPage: number;
-    onPage: (page: number) => void;
+    config: PaginationConfig;
 }
 
 const useStyles = makeStyles({
@@ -16,82 +14,69 @@ const useStyles = makeStyles({
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-end",
-        alignItems: "center",
-        marginTop: "1rem"
+        alignItems: "center"
     },
-    textButton: {
-        textTransform: "none",
-        padding: "4px"
-    },
-    textButtonLeft: {
-        paddingRight: "0.5rem",
-        "&>span>span": {
-            marginRight: "2px"
-        }
-    },
-    textButtonRight: {
-        paddingLeft: "0.5rem",
-        "&>span>span": {
-            marginLeft: "2px"
-        }
-    },
-    textButtonIcon: {
-        height: "14px",
-        width: "14px",
-        marginBottom: "2px"
-    },
-    numberButton: {
+    button: {
+        minHeight: "32px",
         minWidth: "32px",
-        borderRadius: "4px",
+        borderRadius: "8px",
         padding: "4px",
-        margin: "0 2px"
+        marginLeft: "2px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center"
     },
-    numberButtonActive: {
+    buttonIcon: {
+        fontSize: "0.65rem"
+    },
+    buttonActive: {
         backgroundColor: "rgba(0, 0, 0, 0.1) !important",
         fontWeight: "bold"
+    },
+    buttonIconLeft: {
+        // Required because icon has offset
+        marginLeft: "4px",
     }
 });
 
 const Pagination: React.FC<Props> = props => {
     const classes = useStyles();
 
-    const totalPages = Math.max(Math.ceil(props.totalItems / props.itemsPerPage), 1);
-
-    if (props.totalItems === 0) {
+    if (props.config.totalPages === 0) {
         return null;
     }
 
     return (
         <div className={classes.root}>
             <Button
-                startIcon={<ArrowBackIos className={classes.textButtonIcon} />}
+                className={classes.button}
+                onClick={() => props.config.onPageChanged(Math.max(0, props.config.currentPage - 1))}
+                disabled={props.config.currentPage === 0}
                 variant="text"
-                size="small"
-                className={clsx(classes.textButton, classes.textButtonLeft)}
-                onClick={() => props.onPage(Math.max(0, props.currentPage - 1))}
-                disabled={props.currentPage === 0}>
-                Vorherige
+                size="small">
+                <ArrowBackIos className={clsx(classes.buttonIcon, classes.buttonIconLeft)} />
             </Button>
-            {Array.from({ length: totalPages }, (v, i) => i).map(page => (
+            {Array.from({ length: props.config.totalPages }, (v, i) => i).map(page => (
                 <Button
+                    key={page}
                     className={clsx(
-                        classes.numberButton,
-                        props.currentPage === page && classes.numberButtonActive
+                        classes.button,
+                        props.config.currentPage === page && classes.buttonActive
                     )}
-                    onClick={() => props.onPage(page)}
+                    onClick={() => props.config.onPageChanged(page)}
                     variant="text"
                     size="small">
                     {page + 1}
                 </Button>
             ))}
             <Button
-                endIcon={<ArrowForwardIos className={classes.textButtonIcon} />}
+                className={classes.button}
+                onClick={() => props.config.onPageChanged(Math.min(props.config.totalPages, props.config.currentPage + 1))}
+                disabled={props.config.currentPage === props.config.totalPages - 1}
                 variant="text"
-                size="small"
-                className={clsx(classes.textButton, classes.textButtonRight)}
-                onClick={() => props.onPage(Math.min(totalPages, props.currentPage + 1))}
-                disabled={props.currentPage === totalPages - 1}>
-                Nächste
+                size="small">
+                <ArrowForwardIos className={classes.buttonIcon} />
             </Button>
         </div>
     );

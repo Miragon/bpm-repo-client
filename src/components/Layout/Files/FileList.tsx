@@ -1,5 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import MenuList, { MenuListConfig } from "../MenuList/MenuList";
@@ -9,6 +10,7 @@ import FileListPopup from "./FileListPopup";
 interface Props {
     files: FileDescription[];
     fallback: string;
+    className?: string;
     onFavorite: (file: FileDescription, value: boolean) => void;
     onClick: (file: FileDescription) => void;
     onMenuClick: (operation: string, file: FileDescription) => void;
@@ -30,7 +32,8 @@ const FileList: React.FC<Props> = (props: Props) => {
         menuEntries,
         onMenuClick,
         onFavorite,
-        onClick
+        onClick,
+        className
     } = props;
 
     // Make sure this component is re-rendered every 60 seconds to update the view and the times
@@ -46,7 +49,7 @@ const FileList: React.FC<Props> = (props: Props) => {
     }>();
 
     return (
-        <div className={classes.root}>
+        <div className={clsx(classes.root, className)}>
             {files.length === 0 && (
                 <Typography
                     variant="body1"

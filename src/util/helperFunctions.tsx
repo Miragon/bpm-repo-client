@@ -114,7 +114,6 @@ const helpers = {
             style: {
                 backgroundColor: theme.palette.secondary.main,
                 color: theme.palette.secondary.contrastText,
-
             }
         })
     },

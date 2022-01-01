@@ -1,16 +1,14 @@
 import { Card, IconButton, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { CheckBoxOutlined, MoreVertOutlined, StarOutlined } from "@material-ui/icons";
+import { MoreVertOutlined, StarOutlined, StarOutlineOutlined } from "@material-ui/icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers/rootReducer";
 import { THEME } from "../../../theme";
 import helperFunctions from "../../../util/helperFunctions";
-import FileBpmn from "../../Icons/FileBpmn";
-import FileConfiguration from "../../Icons/FileConfiguration";
-import FileDmn from "../../Icons/FileDmn";
 import AvatarList from "../Avatars/AvatarList";
+import FileIcon from "./FileIcon";
 
 export interface FileDescription {
     id: string;
@@ -74,27 +72,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: "4px 4px 4px 4px",
-        boxShadow: "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px",
-        border: "1px solid #CCC",
-        marginRight: "1.5rem",
-        marginLeft: "0.5rem",
-        height: "2.5rem",
-        width: "2rem",
-        paddingTop: "0.5rem",
-        position: "relative",
-        "&::before": {
-            borderBottom: "1px solid #CCC",
-            backgroundColor: "#F6F8FA",
-            transform: "rotate(45deg)",
-            width: "16px",
-            height: "15px",
-            position: "absolute",
-            top: "-7px",
-            right: "-8px",
-            // eslint-disable-next-line
-            content: '""'
-        }
+        marginRight: "1rem",
+        marginTop: "-1rem",
+        marginBottom: "-1rem"
     },
     cardActionFavorite: {
         marginRight: "0.5rem",
@@ -103,10 +83,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     cardActionMenu: {},
-    cardIcon: {
-        fontSize: "1.25rem",
-        fill: THEME.content.primary
-    },
     cardAvatars: {
         marginRight: "1rem"
     },
@@ -151,18 +127,10 @@ const FileListEntry: React.FC<Props> = props => {
 
             <div className={classes.cardMainSection}>
                 <div className={classes.cardIconWrapper}>
-                    {props.file.fileType === "BPMN" && (
-                        <FileBpmn className={classes.cardIcon} />
-                    )}
-                    {props.file.fileType === "DMN" && (
-                        <FileDmn className={classes.cardIcon} />
-                    )}
-                    {props.file.fileType === "CONFIGURATION" && (
-                        <FileConfiguration className={classes.cardIcon} />
-                    )}
-                    {props.file.fileType === "FORM" && (
-                        <CheckBoxOutlined className={classes.cardIcon} />
-                    )}
+                    <FileIcon
+                        color={THEME.content.primary}
+                        iconColor="white"
+                        type={props.file.fileType} />
                 </div>
                 <div className={classes.cardMainSectionText}>
                     <Typography
@@ -195,8 +163,11 @@ const FileListEntry: React.FC<Props> = props => {
                 <IconButton
                     size="small"
                     className={classes.cardActionFavorite}
-                    onClick={() => props.onFavorite(false)}>
-                    <StarOutlined />
+                    onClick={e => {
+                        e.stopPropagation();
+                        props.onFavorite(!props.file.favorite);
+                    }}>
+                    {props.file.favorite ? <StarOutlined /> : <StarOutlineOutlined />}
                 </IconButton>
 
                 <IconButton

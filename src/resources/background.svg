@@ -1,0 +1,33 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 63.99999999999999" preserveAspectRatio="xMaxYMax slice">
+    <g transform="scale(0.06387225548902195)">
+        <rect x="0" y="0" width="1002" height="1002" fill="#03a9f4"/>
+        <g transform="translate(350.7,100.2) scale(2.505) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#62c9f8"/>
+        </g>
+        <g transform="translate(601.2,100.2) scale(2.505) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#0dacf4"/>
+        </g>
+        <g transform="translate(70.14,320.64) scale(5.511) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#0fadf5"/>
+        </g>
+        <g transform="translate(320.64,320.64) scale(5.511) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#89d7fa"/>
+        </g>
+        <g transform="translate(571.14,320.64) scale(5.511) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#f4fbff"/>
+        </g>
+        <g transform="translate(821.64,320.64) scale(5.511) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#0dacf4"/>
+        </g>
+        <g transform="translate(40.08,541.08) scale(8.517) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#20b3f5"/>
+        </g>
+        <g transform="translate(541.08,541.08) scale(8.517) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#49c1f7"/>
+        </g>
+        <g transform="translate(511.02,761.52) scale(11.523) rotate(0)">
+            <path d="M10 0H20V10L10 20H0V10L10 0Z" fill="#81d4fa"/>
+        </g>
+    </g>
+</svg>

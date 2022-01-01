@@ -91,6 +91,8 @@
     "share": "Share {{artifactName}}"
   },
   "properties": {
+    "notSelected": "None selected",
+    "file": "Click here or drop file.",
     "title": "Title",
     "filename": "Name",
     "milestone": "Milestone",
@@ -167,7 +169,6 @@
     "modifiedOn": "Modified on",
     "upload": "Upload Artifact",
     "updated": "Artifact updated",
-    "import": "Import from Cawemo",
     "notAvailable": "You haven't added any artifacts yet",
     "share": "Share File",
     "showInRepo": "Show in Repository",

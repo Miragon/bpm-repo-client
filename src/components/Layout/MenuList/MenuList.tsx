@@ -53,11 +53,12 @@ const MenuList: React.FC<Props> = props => {
         <div>
             {props.title}
             {props.options.map((group, index) => (
-                <div className={classes.optionGroup}>
+                <div key={index} className={classes.optionGroup}>
                     {group.map(option => (
                         <ListItem
                             dense
                             button
+                            key={option.value}
                             className={clsx(classes.option, option.className)}
                             onClick={() => props.onClick(option.value)}>
                             {option.icon !== undefined && (

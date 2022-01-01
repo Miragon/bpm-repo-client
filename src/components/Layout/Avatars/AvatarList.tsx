@@ -57,6 +57,7 @@ const AvatarList: React.FC<Props> = props => {
         <AvatarGroup className={clsx(classes.cardHeaderAvatars, props.className)}>
             {namesToShow.map(name => (
                 <Tooltip
+                    key={name}
                     arrow
                     placement="top"
                     classes={{
@@ -82,7 +83,7 @@ const AvatarList: React.FC<Props> = props => {
                         tooltip: classes.tooltip
                     }}
                     title={props.names.slice(props.max ?? 3).map(name => (
-                        <span className={classes.tooltipName}>{name}</span>
+                        <span key={name} className={classes.tooltipName}>{name}</span>
                     ))}>
                     <Avatar
                         className={classes.avatar}

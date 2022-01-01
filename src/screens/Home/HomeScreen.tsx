@@ -3,19 +3,23 @@ import {
     CreateNewFolderOutlined,
     FormatShapesOutlined,
     NoteAddOutlined,
-    RepeatOutlined,
     TuneOutlined
 } from "@material-ui/icons";
-import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
 import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
-import CreateTitleDescDialog from "../../components/Shared/Dialogs/CreateTitleDescDialog";
-import { SYNC_STATUS_REPOSITORY } from "../../constants/Constants";
-import { createRepository } from "../../store/actions";
+import { loadArtifactTypes } from "../../store/ArtifactTypeState";
+import { loadRecentArtifacts } from "../../store/RecentArtifactState";
+import { loadRepositories } from "../../store/RepositoryState";
+import { RootState } from "../../store/Store";
+import CreateArtifactDialog from "../Common/CreateArtifactDialog";
+import CreateRepositoryDialog from "../Common/CreateRepositoryDialog";
+import UploadArtifactDialog from "../Common/UploadArtifactDialog";
 import FavoriteSection from "./FavoriteSection";
 import RecentSection from "./RecentSection";
 import RepositorySection from "./RepositorySection";
@@ -55,19 +59,25 @@ const ADD_OPTIONS = [
             label: "artifact.upload",
             value: "upload-file",
             icon: CloudUploadOutlined
-        },
-        {
-            label: "artifact.import",
-            value: "import-file",
-            icon: RepeatOutlined
         }
     ]
 ]
 
 const HomeScreen: React.FC = (() => {
-    const { t } = useTranslation("common");
+    const history = useHistory();
+    const dispatch = useDispatch();
 
+    const repositories = useSelector((state: RootState) => state.repositories);
+    const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
+
+    const [uploadArtifactDialogOpen, setUploadArtifactDialogOpen] = useState(false);
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
+    const [createArtifactType, setCreateArtifactType] = useState("");
+
+    useEffect(() => {
+        dispatch(loadRepositories());
+        dispatch(loadArtifactTypes());
+    }, [dispatch]);
 
     const onAddItemClicked = useCallback((action: string) => {
         switch (action) {
@@ -75,20 +85,42 @@ const HomeScreen: React.FC = (() => {
                 setCreateRepositoryDialogOpen(true);
                 break;
             }
+            case "create-bpmn": {
+                setCreateArtifactType("BPMN");
+                break;
+            }
+            case "create-dmn": {
+                setCreateArtifactType("DMN");
+                break;
+            }
+            case "create-form": {
+                setCreateArtifactType("FORM");
+                break;
+            }
+            case "create-configuration": {
+                setCreateArtifactType("CONFIGURATION");
+                break;
+            }
+            case "upload-file": {
+                setUploadArtifactDialogOpen(true);
+                break;
+            }
         }
     }, []);
 
     return (
         <>
-            <ScreenHeader
-                onSearch={console.log}
-                onAdd={onAddItemClicked}
-                onFavorite={console.log}
-                showFavorite={false}
-                title="Modellverwaltung"
-                addOptions={ADD_OPTIONS}
-                isFavorite={false}
-                primary="add" />
+            <ErrorBoundary>
+                <ScreenHeader
+                    onSearch={console.log}
+                    onAdd={onAddItemClicked}
+                    onFavorite={console.log}
+                    showFavorite={false}
+                    title="Modellverwaltung"
+                    addOptions={ADD_OPTIONS}
+                    isFavorite={false}
+                    primary="add" />
+            </ErrorBoundary>
 
             <ContentLayout>
                 <ErrorBoundary>
@@ -107,13 +139,37 @@ const HomeScreen: React.FC = (() => {
                 </ErrorBoundary>
             </ContentLayout>
 
-            <CreateTitleDescDialog
-                open={createRepositoryDialogOpen}
-                onCancelled={() => setCreateRepositoryDialogOpen(false)}
-                successMessage={t("repository.created")}
-                title={t("repository.create")}
-                createMethod={createRepository}
-                dataSyncedType={SYNC_STATUS_REPOSITORY} />
+            <ErrorBoundary>
+                <CreateRepositoryDialog
+                    open={createRepositoryDialogOpen}
+                    onClose={repositoryId => {
+                        setCreateRepositoryDialogOpen(false);
+                        repositoryId && history.push("/repository/" + repositoryId);
+                    }} />
+
+                <CreateArtifactDialog
+                    repositories={repositories.value || []}
+                    open={!!createArtifactType}
+                    type={createArtifactType}
+                    onClose={result => {
+                        setCreateArtifactType("");
+                        result && history.push(`/repository/${result.repositoryId}/${result.artifactId}`);
+                    }} />
+
+                <UploadArtifactDialog
+                    open={uploadArtifactDialogOpen}
+                    onClose={result => {
+                        setUploadArtifactDialogOpen(false);
+                        if (result) {
+                            history.push(`/repository/${result.repositoryId}/${result.artifactId}/milestone/${result.milestone}`);
+                            // Update state
+                            dispatch(loadRepositories(true));
+                            dispatch(loadRecentArtifacts(true));
+                        }
+                    }}
+                    repositories={repositories.value || []}
+                    artifactTypes={artifactTypes.value || []} />
+            </ErrorBoundary>
         </>
     );
 });

@@ -125,33 +125,30 @@ const Popup: React.FC<Props> = props => {
             placement={props.placement}
             className={clsx(classes.popper, props.className)}>
 
-            {({ TransitionProps, placement }) => {
-                console.log(placement);
-                return (
-                    <ClickAwayListener onClickAway={props.onClose}>
-                        <Grow
-                            style={{ transformOrigin: transformOrigins[placement] }}
-                            {...TransitionProps}>
-                            <Paper
-                                className={clsx(classes.paper, {
-                                    [classes.arrowTop]: placement.startsWith("bottom"),
-                                    [classes.arrowBottom]: placement.startsWith("top"),
-                                    [classes.arrowLeft]: placement.startsWith("right"),
-                                    [classes.arrowRight]: placement.startsWith("left"),
-                                    [classes.arrowCenterH]: placement === "top" || placement === "bottom",
-                                    [classes.arrowStartH]: placement === "top-start" || placement === "bottom-start",
-                                    [classes.arrowEndH]: placement === "top-end" || placement === "bottom-end",
-                                    [classes.arrowCenterV]: placement === "left" || placement === "right",
-                                    [classes.arrowStartV]: placement === "left-start" || placement === "right-start",
-                                    [classes.arrowEndV]: placement === "left-end" || placement === "right-end"
-                                })}
-                                elevation={2}>
-                                {props.children({ close: props.onClose })}
-                            </Paper>
-                        </Grow>
-                    </ClickAwayListener>
-                )
-            }}
+            {({ TransitionProps, placement }) => (
+                <ClickAwayListener onClickAway={props.onClose}>
+                    <Grow
+                        style={{ transformOrigin: transformOrigins[placement] }}
+                        {...TransitionProps}>
+                        <Paper
+                            className={clsx(classes.paper, {
+                                [classes.arrowTop]: placement.startsWith("bottom"),
+                                [classes.arrowBottom]: placement.startsWith("top"),
+                                [classes.arrowLeft]: placement.startsWith("right"),
+                                [classes.arrowRight]: placement.startsWith("left"),
+                                [classes.arrowCenterH]: placement === "top" || placement === "bottom",
+                                [classes.arrowStartH]: placement === "top-start" || placement === "bottom-start",
+                                [classes.arrowEndH]: placement === "top-end" || placement === "bottom-end",
+                                [classes.arrowCenterV]: placement === "left" || placement === "right",
+                                [classes.arrowStartV]: placement === "left-start" || placement === "right-start",
+                                [classes.arrowEndV]: placement === "left-end" || placement === "right-end"
+                            })}
+                            elevation={2}>
+                            {props.children({ close: props.onClose })}
+                        </Paper>
+                    </Grow>
+                </ClickAwayListener>
+            )}
 
         </Popper>
     );
