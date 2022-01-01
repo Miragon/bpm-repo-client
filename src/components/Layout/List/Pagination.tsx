@@ -2,7 +2,7 @@ import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect } from "react";
 import { PaginationConfig } from "../../../util/hooks/usePagination";
 
 interface Props {
@@ -42,6 +42,14 @@ const useStyles = makeStyles({
 
 const Pagination: React.FC<Props> = props => {
     const classes = useStyles();
+
+    console.log(props.config);
+    // Make sure we are never on pages that don't exist
+    useEffect(() => {
+        if (props.config.currentPage >= props.config.totalPages) {
+            props.config.onPageChanged(Math.max(0, props.config.totalPages - 1));
+        }
+    }, [props.config]);
 
     if (props.config.totalPages === 0) {
         return null;
