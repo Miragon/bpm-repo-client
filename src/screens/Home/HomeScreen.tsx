@@ -17,6 +17,7 @@ import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
+import { openRepository } from "../../util/Redirections";
 import CreateArtifactDialog from "../Common/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/UploadArtifactDialog";
@@ -144,7 +145,7 @@ const HomeScreen: React.FC = (() => {
                     open={createRepositoryDialogOpen}
                     onClose={repositoryId => {
                         setCreateRepositoryDialogOpen(false);
-                        repositoryId && history.push("/repository/" + repositoryId);
+                        repositoryId && history.push(openRepository(repositoryId));
                     }} />
 
                 <CreateArtifactDialog
@@ -153,6 +154,7 @@ const HomeScreen: React.FC = (() => {
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
+                        // TODO: Open file screen here
                         result && history.push(`/repository/${result.repositoryId}/${result.artifactId}`);
                     }} />
 
@@ -161,6 +163,7 @@ const HomeScreen: React.FC = (() => {
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);
                         if (result) {
+                            // TODO: Open milestone screen here
                             history.push(`/repository/${result.repositoryId}/${result.artifactId}/milestone/${result.milestone}`);
                             // Update state
                             dispatch(loadRepositories(true));

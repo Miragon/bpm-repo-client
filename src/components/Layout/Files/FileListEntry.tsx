@@ -173,7 +173,10 @@ const FileListEntry: React.FC<Props> = props => {
                 <IconButton
                     size="small"
                     className={classes.cardActionMenu}
-                    onClick={e => props.onMenuClicked(e.currentTarget)}>
+                    onClick={e => {
+                        e.stopPropagation();
+                        props.onMenuClicked(e.currentTarget);
+                    }}>
                     <MoreVertOutlined />
                 </IconButton>
 

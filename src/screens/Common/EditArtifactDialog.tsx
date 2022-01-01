@@ -1,27 +1,20 @@
-import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import "react-toastify/dist/ReactToastify.css";
-import { ArtifactApi, RepositoryTO } from "../../api";
+import { ArtifactApi } from "../../api";
 import FileIcon from "../../components/Layout/Files/FileIcon";
+import { FileDescription } from "../../components/Layout/Files/FileListEntry";
 import PopupDialog from "../../components/Shared/Form/PopupDialog";
 import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
 import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
 import { THEME } from "../../theme";
 import { apiExec, hasFailed } from "../../util/ApiUtils";
 import helpers from "../../util/helperFunctions";
 
 interface Props {
-    type: string;
-    repositories: RepositoryTO[];
-    repositoryId?: string;
+    artifact: FileDescription | undefined;
     open: boolean;
-    onClose: (artifact: {
-        repositoryId: string;
-        artifactId: string;
-    } | null) => void;
+    onClose: (saved: boolean) => void;
 }
 
 const useStyles = makeStyles({
@@ -30,34 +23,38 @@ const useStyles = makeStyles({
     }
 });
 
-const CreateArtifactDialog: React.FC<Props> = props => {
+const EditArtifactDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const { t } = useTranslation("common");
 
-    const { repositoryId, repositories, type, open, onClose } = props;
+    const { artifact, open, onClose } = props;
 
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState<string>();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [repository, setRepository] = useState("");
 
     useEffect(() => {
-        if (repositoryId) {
-            setRepository(repositoryId);
+        if (artifact) {
+            setTitle(artifact.name);
+            setDescription(artifact.description);
         }
-    }, [repositoryId]);
+    }, [artifact]);
 
-    const onCreate = useCallback(async () => {
+    const onEdit = useCallback(async () => {
         if (title.length < 4) {
             setError("Der Titel ist zu kurz!");
             return;
         }
 
+        if (!artifact) {
+            setError("Keine Datei ausgewählt!");
+            return;
+        }
+
         setError(undefined);
         setDisabled(true);
-        const response = await apiExec(ArtifactApi, api => api.createArtifact(repository, {
-            fileType: type,
+        const response = await apiExec(ArtifactApi, api => api.updateArtifact(artifact.id, {
             description: description,
             name: title
         }));
@@ -72,18 +69,14 @@ const CreateArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("artifact.created"));
-        onClose({
-            repositoryId: response.result.repositoryId,
-            artifactId: response.result.id
-        });
+        helpers.makeSuccessToast(t("artifact.changed"));
+        onClose(true);
         setTitle("");
         setDescription("");
-        setRepository("");
-    }, [repository, type, title, description, onClose, t]);
+    }, [artifact, title, description, onClose, t]);
 
     const onCancel = useCallback(() => {
-        onClose(null);
+        onClose(false);
     }, [onClose]);
 
     return (
@@ -95,33 +88,17 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                     color="white"
                     className={classes.titleIcon}
                     iconColor={THEME.content.primary}
-                    type={type} />
+                    type={artifact?.fileType} />
             )}
             disabled={disabled}
             error={error}
             onCloseError={() => setError(undefined)}
             open={open}
-            title={t(`artifact.create${type}`)}
-            firstTitle={t("dialog.create")}
-            onFirst={onCreate}>
+            title={t("artifact.edit")}
+            firstTitle={t("dialog.applyChanges")}
+            onFirst={onEdit}>
 
             <SettingsForm>
-
-                <SettingsSelect
-                    disabled={disabled}
-                    value={repository}
-                    label={t("repository.target")}
-                    onChanged={setRepository}>
-                    <MenuItem value=""><em>{t("properties.notSelected")}</em></MenuItem>
-                    {repositories.map(repo => (
-                        <MenuItem
-                            key={repo.id}
-                            value={repo.id}
-                            selected={repo.id === repository}>
-                            {repo.name}
-                        </MenuItem>
-                    ))}
-                </SettingsSelect>
 
                 <SettingsTextField
                     label={t("properties.title")}
@@ -144,4 +121,4 @@ const CreateArtifactDialog: React.FC<Props> = props => {
     );
 };
 
-export default CreateArtifactDialog;
+export default EditArtifactDialog;

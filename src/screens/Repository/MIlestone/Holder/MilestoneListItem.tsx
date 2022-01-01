@@ -123,7 +123,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
         event.stopPropagation();
         setHistoryOpen(true);
     }
-    
+
     const getTargets = useCallback(async () => {
         fetchTargets().then(response => {
             if(Math.floor(response.status / 100) === 2) {
@@ -182,7 +182,7 @@ const MilestoneListItem: React.FC<Props> = ((props: Props) => {
     //                <ListItemText primary={props.comment ? props.comment : <i>No comment available</i>} />
     return (
         <>
-            <ListItem className={classes.listItem} onClick={() => openFileInTool(fileTypes, props.type, props.repoId, props.artifactId, t("error.missingTool", props.type), props.milestone)}>
+            <ListItem className={classes.listItem} onClick={() => openFileInTool(fileTypes, props.type, props.repoId, props.artifactId, props.milestone)}>
                 <div className={classes.leftPanel}>
                     <Chip label={props.milestone} color={"primary"}/>
                 </div>

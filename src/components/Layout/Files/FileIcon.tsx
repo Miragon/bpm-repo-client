@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-    type: string;
+    type: string | undefined;
     color: string;
     iconColor: string;
     className?: string;
@@ -33,7 +33,7 @@ const FileIcon: React.FC<Props> = props => {
             className={clsx(classes.root, props.className)}
             color={props.color}
             iconColor={props.iconColor}
-            path={ICONS[props.type.toLowerCase()] || ICONS.unknown} />
+            path={ICONS[props.type?.toLowerCase() || ""] || ICONS.unknown} />
     );
 };
 

@@ -101,8 +101,8 @@ const ArtifactListWithMilestones: React.FC<Props> = (props: Props) => {
     }, []);
 
     const onOpen = useCallback((artifact: ArtifactTO) => {
-        openFileInTool(fileTypes, artifact.fileType, artifact.repositoryId, artifact.id, t("error.missingTool", artifact.fileType));
-    }, [fileTypes, t]);
+        openFileInTool(fileTypes, artifact.fileType, artifact.repositoryId, artifact.id);
+    }, [fileTypes]);
 
     const onCreateMilestone = useCallback((artifact: ArtifactTO) => {
         setCreateMilestoneArtifact(artifact);

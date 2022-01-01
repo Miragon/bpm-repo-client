@@ -118,9 +118,9 @@ const helpers = {
         })
     },
 
-    makeErrorToast: (message: string, retryMethod: () => void): ReactText => {
+    makeErrorToast: (message: string, retryMethod?: () => void): ReactText => {
         return toast(<Toast errorMessage={message} isError={true}
-            retryMethod={() => retryMethod()} />, {
+            retryMethod={retryMethod} />, {
             autoClose: 8000,
             pauseOnHover: true,
             progressStyle: {

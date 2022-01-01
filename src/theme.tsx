@@ -23,6 +23,14 @@ const avatarIndex = 500;
 const avatarIndexDark = 800;
 
 export const THEME = {
+    dialog: {
+        text: `${blueGrey[900]}EE`,
+        icon: {
+            danger: {
+                background: red[600]
+            }
+        }
+    },
     navigation: {
         background: "white",
         divider: blueGrey[200],
