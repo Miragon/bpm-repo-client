@@ -1,14 +1,14 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { observer } from "mobx-react";
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultFileList from "../../components/Layout/Files/DefaultFileList";
 import { FileDescription } from "../../components/Layout/Files/FileListEntry";
+import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../store/FavoriteArtifactState";
-import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { RootState } from "../../store/reducers/rootReducer";
 import { loadRepositories } from "../../store/RepositoryState";
+import { filterArtifactList } from "../../util/SearchUtils";
 
 const useStyles = makeStyles({
     fileList: {
@@ -16,7 +16,13 @@ const useStyles = makeStyles({
     }
 });
 
-const FavoriteArtifacts: React.FC = observer(() => {
+interface Props {
+    search: string;
+    loadKey: number;
+    onChange: () => void;
+}
+
+const FavoriteSection: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -30,23 +36,38 @@ const FavoriteArtifacts: React.FC = observer(() => {
         dispatch(loadFavoriteArtifacts());
     }, [dispatch]);
 
+    // Reload if something changed in the other sections
+    useEffect(() => {
+        if (props.loadKey > 0) {
+            dispatch(loadRepositories(true));
+            dispatch(loadArtifactTypes(true));
+            dispatch(loadFavoriteArtifacts(true));
+        }
+    }, [dispatch, props.loadKey]);
+
     const files: FileDescription[] = useMemo(() => (favoriteArtifacts.value || []).map(artifact => ({
         ...artifact,
         favorite: true,
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [repositories, favoriteArtifacts]);
 
-    return (
-        <DefaultFileList
-            files={files}
-            reloadFiles={() => {
-                dispatch(loadFavoriteArtifacts(true));
-                dispatch(loadRecentArtifacts(true));
-            }}
-            className={classes.fileList}
-            artifactTypes={artifactTypes.value || []}
-            fallback="favorites.notAvailable" />
-    );
-});
+    const filtered = useMemo(() => filterArtifactList(props.search, files), [files, props.search]);
 
-export default FavoriteArtifacts;
+    if (props.search && filtered.length === 0) {
+        return null;
+    }
+
+    return (
+        <>
+            <ScreenSectionHeader title="Favoriten" />
+            <DefaultFileList
+                files={filtered}
+                reloadFiles={props.onChange}
+                className={classes.fileList}
+                artifactTypes={artifactTypes.value || []}
+                fallback="favorites.notAvailable" />
+        </>
+    );
+};
+
+export default FavoriteSection;

@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
-import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
@@ -24,6 +23,7 @@ import UploadArtifactDialog from "../Common/UploadArtifactDialog";
 import FavoriteSection from "./FavoriteSection";
 import RecentSection from "./RecentSection";
 import RepositorySection from "./RepositorySection";
+import SearchSection from "./SearchSection";
 
 const ADD_OPTIONS = [
     [
@@ -71,6 +71,8 @@ const HomeScreen: React.FC = (() => {
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
 
+    const [loadKey, setLoadKey] = useState(0);
+    const [search, setSearch] = useState("");
     const [uploadArtifactDialogOpen, setUploadArtifactDialogOpen] = useState(false);
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("");
@@ -109,35 +111,49 @@ const HomeScreen: React.FC = (() => {
         }
     }, []);
 
+    const reload = useCallback(() => setLoadKey(cur => cur + 1), []);
+
     return (
         <>
             <ErrorBoundary>
                 <ScreenHeader
-                    onSearch={console.log}
+                    onSearch={setSearch}
                     onAdd={onAddItemClicked}
-                    onFavorite={console.log}
-                    showFavorite={false}
                     title="Modellverwaltung"
                     addOptions={ADD_OPTIONS}
-                    isFavorite={false}
                     primary="add" />
             </ErrorBoundary>
 
             <ContentLayout>
                 <ErrorBoundary>
-                    <ScreenSectionHeader title="Alle Repositories" />
-                    <RepositorySection />
+                    <RepositorySection
+                        loadKey={loadKey}
+                        onChange={reload}
+                        search={search} />
                 </ErrorBoundary>
 
                 <ErrorBoundary>
-                    <ScreenSectionHeader title="Favoriten" />
-                    <FavoriteSection />
+                    <FavoriteSection
+                        loadKey={loadKey}
+                        onChange={reload}
+                        search={search} />
                 </ErrorBoundary>
 
                 <ErrorBoundary>
-                    <ScreenSectionHeader title="Zuletzt bearbeitet" />
-                    <RecentSection />
+                    <RecentSection
+                        loadKey={loadKey}
+                        onChange={reload}
+                        search={search} />
                 </ErrorBoundary>
+
+                {search && (
+                    <ErrorBoundary>
+                        <SearchSection
+                            loadKey={loadKey}
+                            onChange={reload}
+                            search={search} />
+                    </ErrorBoundary>
+                )}
             </ContentLayout>
 
             <ErrorBoundary>

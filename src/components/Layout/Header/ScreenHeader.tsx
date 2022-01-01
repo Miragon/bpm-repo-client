@@ -16,13 +16,10 @@ interface Props {
         value: string,
         icon: React.ElementType
     }[][];
-    onAdd: (value: string) => void;
-    onSearch: (value: string) => void;
-    onFavorite: (value: boolean) => void;
+    onAdd?: (value: string) => void;
+    onSearch?: (value: string) => void;
+    onFavorite?: (value: boolean) => void;
     isFavorite?: boolean;
-    showAdd?: boolean;
-    showSearch?: boolean;
-    showFavorite?: boolean;
     primary: "add" | "search" | "favorite";
 }
 
@@ -109,18 +106,18 @@ const ScreenHeader: React.FC<Props> = props => {
                         {props.title}
                     </Typography>
                     <div className={classes.actionContainer}>
-                        {props.showAdd !== false && (
+                        {props.onAdd && (
                             <AddButton
                                 addOptions={props.addOptions}
                                 onAdd={props.onAdd}
                                 primary={props.primary === "add"} />
                         )}
-                        {props.showSearch !== false && (
+                        {props.onSearch && (
                             <SearchButton
                                 onSearch={props.onSearch}
                                 primary={props.primary === "search"} />
                         )}
-                        {props.showFavorite !== false && (
+                        {props.onFavorite && (
                             <FavoriteButton
                                 onFavorite={props.onFavorite}
                                 active={props.isFavorite ?? false}

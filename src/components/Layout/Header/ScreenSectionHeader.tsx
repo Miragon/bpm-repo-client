@@ -13,8 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginBottom: "1rem",
         display: "flex",
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between"
+        alignItems: "center"
     },
     title: {
         fontSize: "1.35rem",
@@ -33,6 +32,7 @@ const ScreenSectionHeader: React.FC<Props> = props => {
                 className={classes.title}>
                 {props.title}
             </Typography>
+            {props.children}
         </div>
     );
 };
