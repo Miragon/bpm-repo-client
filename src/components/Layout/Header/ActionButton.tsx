@@ -9,6 +9,7 @@ interface Props {
     icon: React.ElementType;
     primary: boolean;
     active: boolean;
+    iconClassName?: string;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -63,7 +64,8 @@ const ActionButton: React.FC<Props> = props => {
                     classes.actionButtonIcon,
                     props.primary ? classes.actionButtonIconPrimary : classes.actionButtonIconDefault,
                     props.active && props.primary && classes.actionButtonIconPrimaryActive,
-                    props.active && !props.primary && classes.actionButtonIconDefaultActive
+                    props.active && !props.primary && classes.actionButtonIconDefaultActive,
+                    props.iconClassName
                 )
             })}
         </IconButton>

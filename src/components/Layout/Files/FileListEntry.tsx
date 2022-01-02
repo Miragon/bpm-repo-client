@@ -3,11 +3,8 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { MoreVertOutlined, StarOutlined, StarOutlineOutlined } from "@material-ui/icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { THEME } from "../../../theme";
 import helperFunctions from "../../../util/helperFunctions";
-import AvatarList from "../Avatars/AvatarList";
 import FileIcon from "./FileIcon";
 
 export interface FileDescription {
@@ -46,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     cardMainSection: {
-        width: "55%",
+        flexGrow: 1,
         display: "flex",
         flexDirection: "row",
         alignItems: "center"
@@ -56,13 +53,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: "column"
     },
     cardSecondarySection: {
-        width: "15%",
+        width: "100px",
         display: "flex",
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        marginRight: "2rem"
     },
     cardActionSection: {
-        width: "30%",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -83,9 +80,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     cardActionMenu: {},
-    cardAvatars: {
-        marginRight: "1rem"
-    },
     cardBody: {
         display: "flex",
         flexDirection: "column"
@@ -102,6 +96,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontSize: "0.75rem",
         fontWeight: 400,
         color: "rgba(0, 0, 0, 0.54)"
+    },
+    timeSince: {
+        fontSize: "0.75rem",
+        fontWeight: 400,
+        color: "rgba(0, 0, 0, 0.54)",
+        width: "100%",
+        textAlign: "right"
     }
 }));
 
@@ -116,8 +117,6 @@ const FileListEntry: React.FC<Props> = props => {
     const classes = useStyles();
 
     const { t } = useTranslation("common");
-
-    const currentUser = useSelector((state: RootState) => state.user.currentUserInfo)
 
     return (
         <Card
@@ -149,16 +148,12 @@ const FileListEntry: React.FC<Props> = props => {
             <div className={classes.cardSecondarySection}>
                 <Typography
                     variant="body1"
-                    className={classes.subtitle}>
+                    className={classes.timeSince}>
                     {helperFunctions.formatTimeSince(props.file.updatedDate, t)}
                 </Typography>
             </div>
 
             <div className={classes.cardActionSection}>
-
-                <AvatarList
-                    className={classes.cardAvatars}
-                    names={[currentUser.username, "Test", "Hallo", "Siebzehn"]} />
 
                 <IconButton
                     size="small"

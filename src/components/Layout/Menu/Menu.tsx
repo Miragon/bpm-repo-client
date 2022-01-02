@@ -41,7 +41,7 @@ const Menu: React.FC = () => {
                 text={t("menu.home")}
                 icon={HomeOutlined} />
             <MenuItem
-                href="/projects"
+                href="/repository"
                 text={t("menu.projects")}
                 icon={FolderOutlined} />
             <MenuItem

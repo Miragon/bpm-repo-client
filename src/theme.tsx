@@ -76,6 +76,10 @@ export const THEME = {
         text: `${blueGrey[900]}EE`,
         icon: lightBlue[500],
         divider: `${blueGrey[200]}88`,
+        breadcrumb: {
+            text: `${blueGrey[900]}EE`,
+            separator: `${blueGrey[500]}EE`
+        },
         action: {
             default: {
                 default: blueGrey[200],

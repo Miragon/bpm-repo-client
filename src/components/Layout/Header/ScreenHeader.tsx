@@ -1,24 +1,24 @@
-import { Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React from "react";
 import { useInView } from "react-intersection-observer";
 import { THEME } from "../../../theme";
 import ContentLayout from "../ContentLayout";
+import { MenuListConfig } from "../MenuList/MenuList";
 import AddButton from "./AddButton";
+import BreadCrumbNavigation, { BreadcrumbEntry } from "./BreadCrumbNavigation";
 import FavoriteButton from "./FavoriteButton";
+import MenuButton from "./MenuButton";
 import SearchButton from "./SearchButton";
 
 interface Props {
-    title: string;
-    addOptions: {
-        label: string,
-        value: string,
-        icon: React.ElementType
-    }[][];
+    title: BreadcrumbEntry[];
+    addOptions?: MenuListConfig;
+    menuOptions?: MenuListConfig;
     onAdd?: (value: string) => void;
     onSearch?: (value: string) => void;
     onFavorite?: (value: boolean) => void;
+    onMenu?: (value: string) => void;
     isFavorite?: boolean;
     primary: "add" | "search" | "favorite";
 }
@@ -71,11 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             background: THEME.content.background
         }
     },
-    title: {
-        fontSize: "1.25rem",
-        fontWeight: 700,
-        color: THEME.pageHeader.text
-    },
     actionContainer: {
         display: "flex",
         flexDirection: "row",
@@ -100,13 +95,9 @@ const ScreenHeader: React.FC<Props> = props => {
             <ContentLayout
                 className={classes.headerContent}>
                 <div className={clsx(classes.header, !inView && classes.headerStuck)}>
-                    <Typography
-                        variant="h1"
-                        className={classes.title}>
-                        {props.title}
-                    </Typography>
+                    <BreadCrumbNavigation title={props.title} />
                     <div className={classes.actionContainer}>
-                        {props.onAdd && (
+                        {props.onAdd && props.addOptions && (
                             <AddButton
                                 addOptions={props.addOptions}
                                 onAdd={props.onAdd}
@@ -122,6 +113,11 @@ const ScreenHeader: React.FC<Props> = props => {
                                 onFavorite={props.onFavorite}
                                 active={props.isFavorite ?? false}
                                 primary={props.primary === "favorite"} />
+                        )}
+                        {props.onMenu && props.menuOptions && (
+                            <MenuButton
+                                menuOptions={props.menuOptions}
+                                onMenu={props.onMenu} />
                         )}
                     </div>
                 </div>

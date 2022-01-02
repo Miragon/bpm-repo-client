@@ -155,7 +155,7 @@
     "changed": "Changes saved",
     "created": "Artifact created",
     "copy": "Copy {{artifactName}} to another Repository",
-    "copyTo": "Copy to Repository",
+    "copyTo": "Copy to different Repository",
     "createdFromExisting": "Created Artifact os existing Milestone",
     "createdDefault": "Created Artifact",
     "createBpmn": "Create BPMN Artifact",

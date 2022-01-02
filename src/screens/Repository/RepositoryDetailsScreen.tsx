@@ -1,38 +1,29 @@
 import {
     CloudUploadOutlined,
-    CreateNewFolderOutlined,
     FormatShapesOutlined,
     NoteAddOutlined,
+    PeopleAltOutlined,
+    SettingsOutlined,
     TuneOutlined
 } from "@material-ui/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
+import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
-import { openRepository } from "../../util/Redirections";
 import CreateArtifactDialog from "../Common/CreateArtifactDialog";
-import CreateRepositoryDialog from "../Common/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/UploadArtifactDialog";
-import FavoriteSection from "./Sections/FavoriteSection";
-import RecentSection from "./Sections/RecentSection";
-import RepositorySection from "./Sections/RepositorySection";
-import SearchSection from "./Sections/SearchSection";
+import FilesSection from "./Sections/FilesSection";
 
 const ADD_OPTIONS = [
-    [
-        {
-            label: "repository.create",
-            value: "create-repository",
-            icon: CreateNewFolderOutlined
-        }
-    ],
     [
         {
             label: "artifact.createBPMN",
@@ -62,11 +53,31 @@ const ADD_OPTIONS = [
             icon: CloudUploadOutlined
         }
     ]
-]
+];
 
-const HomeScreen: React.FC = (() => {
+const MENU_OPTIONS = [
+    [
+        {
+            label: "repository.editUsers",
+            value: "members",
+            icon: PeopleAltOutlined
+        },
+        {
+            label: "repository.settings",
+            value: "settings",
+            icon: SettingsOutlined
+        }
+    ]
+];
+
+interface Params {
+    repositoryId: string;
+}
+
+const RepositoryDetailsScreen: React.FC = (() => {
     const history = useHistory();
     const dispatch = useDispatch();
+    const params = useParams<Params>();
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
@@ -74,7 +85,6 @@ const HomeScreen: React.FC = (() => {
     const [loadKey, setLoadKey] = useState(0);
     const [search, setSearch] = useState("");
     const [uploadArtifactDialogOpen, setUploadArtifactDialogOpen] = useState(false);
-    const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("");
 
     useEffect(() => {
@@ -84,10 +94,6 @@ const HomeScreen: React.FC = (() => {
 
     const onAddItemClicked = useCallback((action: string) => {
         switch (action) {
-            case "create-repository": {
-                setCreateRepositoryDialogOpen(true);
-                break;
-            }
             case "create-bpmn": {
                 setCreateArtifactType("BPMN");
                 break;
@@ -111,7 +117,17 @@ const HomeScreen: React.FC = (() => {
         }
     }, []);
 
+    const onMenuItemClicked = useCallback((action: string) => {
+        switch (action) {
+            default: {
+                break;
+            }
+        }
+    }, []);
+
     const reload = useCallback(() => setLoadKey(cur => cur + 1), []);
+
+    const repository = repositories.value?.find(r => r.id === params.repositoryId);
 
     return (
         <>
@@ -119,52 +135,36 @@ const HomeScreen: React.FC = (() => {
                 <ScreenHeader
                     onSearch={setSearch}
                     onAdd={onAddItemClicked}
-                    title={[{ title: "Modellverwaltung", link: "/" }]}
+                    onMenu={onMenuItemClicked}
+                    title={[
+                        { title: "Alle Projekte", link: "/repositories" },
+                        {
+                            title: repository?.name ?? "Unbekannt",
+                            link: "/repositories/" + repository?.id
+                        }
+                    ]}
                     addOptions={ADD_OPTIONS}
+                    menuOptions={MENU_OPTIONS}
                     primary="add" />
             </ErrorBoundary>
 
             <ContentLayout>
                 <ErrorBoundary>
-                    <RepositorySection
+                    <FilesSection
+                        search={search}
                         loadKey={loadKey}
                         onChange={reload}
-                        search={search} />
+                        repositoryId={params.repositoryId} />
                 </ErrorBoundary>
-
                 <ErrorBoundary>
-                    <FavoriteSection
-                        loadKey={loadKey}
-                        onChange={reload}
-                        search={search} />
+                    <ScreenSectionHeader title="Mit diesem Projekt geteilt" />
+                    Test
                 </ErrorBoundary>
-
-                <ErrorBoundary>
-                    <RecentSection
-                        loadKey={loadKey}
-                        onChange={reload}
-                        search={search} />
-                </ErrorBoundary>
-
-                {search && (
-                    <ErrorBoundary>
-                        <SearchSection
-                            loadKey={loadKey}
-                            onChange={reload}
-                            search={search} />
-                    </ErrorBoundary>
-                )}
             </ContentLayout>
 
             <ErrorBoundary>
-                <CreateRepositoryDialog
-                    open={createRepositoryDialogOpen}
-                    onClose={repositoryId => {
-                        setCreateRepositoryDialogOpen(false);
-                        repositoryId && history.push(openRepository(repositoryId));
-                    }} />
-
                 <CreateArtifactDialog
+                    repositoryId={params.repositoryId}
                     repositories={repositories.value || []}
                     open={!!createArtifactType}
                     type={createArtifactType}
@@ -176,6 +176,7 @@ const HomeScreen: React.FC = (() => {
 
                 <UploadArtifactDialog
                     open={uploadArtifactDialogOpen}
+                    repositoryId={params.repositoryId}
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);
                         if (result) {
@@ -193,4 +194,4 @@ const HomeScreen: React.FC = (() => {
     );
 });
 
-export default HomeScreen;
+export default RepositoryDetailsScreen;

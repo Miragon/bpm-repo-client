@@ -75,24 +75,13 @@ const AvatarList: React.FC<Props> = props => {
                 </Tooltip>
             ))}
             {moreCount > 0 && (
-                <Tooltip
-                    arrow
-                    placement="top"
-                    classes={{
-                        arrow: classes.tooltipArrow,
-                        tooltip: classes.tooltip
-                    }}
-                    title={props.names.slice(props.max ?? 3).map(name => (
-                        <span key={name} className={classes.tooltipName}>{name}</span>
-                    ))}>
-                    <Avatar
-                        className={classes.avatar}
-                        style={{ backgroundColor: getColor("MORE") }}
-                        variant="rounded"
-                        alt={`+${moreCount}`}>
-                        {`+${moreCount}`}
-                    </Avatar>
-                </Tooltip>
+                <Avatar
+                    className={classes.avatar}
+                    style={{ backgroundColor: getColor("MORE") }}
+                    variant="rounded"
+                    alt={`+${moreCount}`}>
+                    {`+${moreCount}`}
+                </Avatar>
             )}
         </AvatarGroup>
     );

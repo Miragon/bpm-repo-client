@@ -1,7 +1,10 @@
 import {combineReducers} from "@reduxjs/toolkit";
 import { ArtifactTypeSlice } from "../ArtifactTypeState";
+import { DeploymentTargetsSlice } from "../DeploymentTargetState";
 import { FavoriteArtifactSlice } from "../FavoriteArtifactState";
+import { OwnRepositorySlice } from "../OwnRepositoryState";
 import { RecentArtifactSlice } from "../RecentArtifactState";
+import { RepositoryArtifactSlice } from "../RepositoryArtifactState";
 import { RepositorySlice } from "../RepositoryState";
 import usersReducer from "./usersReducer";
 import artifactReducer from "./artifactReducer";
@@ -15,6 +18,9 @@ export const rootReducer = combineReducers({
     favoriteArtifacts: FavoriteArtifactSlice.reducer,
     recentArtifacts: RecentArtifactSlice.reducer,
     artifactTypes: ArtifactTypeSlice.reducer,
+    repositoryArtifacts: RepositoryArtifactSlice.reducer,
+    deploymentTargets: DeploymentTargetsSlice.reducer,
+    ownRepositories: OwnRepositorySlice.reducer,
     repos: repoReducer,
     dataSynced: dataSyncedReducer,
     artifacts: artifactReducer,

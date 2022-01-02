@@ -62,6 +62,9 @@ const RepositoryCard: React.FC<Props> = props => {
     const classes = useStyles();
 
     const currentUser = useSelector((state: RootState) => state.user.currentUserInfo)
+    const names = [currentUser.username + " (Sie)"];
+    names.push(...Array.from({ length: props.repository.assignedUsers - 1 })
+        .map((v, i) => String(i)));
 
     return (
         <Card
@@ -72,7 +75,8 @@ const RepositoryCard: React.FC<Props> = props => {
             <div className={classes.cardHeader}>
                 <Folder className={classes.cardHeaderIcon} />
                 <AvatarList
-                    names={[currentUser.username, "Test", "Hallo", "Siebzehn", "Test123"]} />
+                    max={1}
+                    names={names} />
             </div>
 
             <div className={classes.cardBody}>

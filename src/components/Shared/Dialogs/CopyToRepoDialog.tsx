@@ -83,7 +83,7 @@ const CopyToRepoDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={props.open}
-            title={t("artifact.copy", { artifactName: props.artifact?.name })}
+            title={t("artifact.copyTo")}
             secondTitle={t("dialog.cancel")}
             onSecond={props.onCancelled}
             firstTitle={t("dialog.copy")}
