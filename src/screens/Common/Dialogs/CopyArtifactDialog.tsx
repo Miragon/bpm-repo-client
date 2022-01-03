@@ -4,14 +4,14 @@ import { CreateNewFolderOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
-import { ArtifactApi, RepositoryTO } from "../../api";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactApi, RepositoryTO } from "../../../api";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsForm from "../../../components/Shared/Form/SettingsForm";
+import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles({
     icon: {

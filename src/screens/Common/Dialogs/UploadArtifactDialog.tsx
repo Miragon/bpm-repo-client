@@ -4,17 +4,17 @@ import { CloudUploadOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
-import { ArtifactApi, ArtifactTypeTO, MilestoneApi, RepositoryTO } from "../../api";
-import FileUploadField from "../../components/Form/FileUploadField";
-import FileDownloadOutlined from "../../components/Icons/FileDownloadOutlined";
-import FileIcon from "../../components/Layout/Files/FileIcon";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { THEME } from "../../theme";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactApi, ArtifactTypeTO, MilestoneApi, RepositoryTO } from "../../../api";
+import FileUploadField from "../../../components/Form/FileUploadField";
+import FileDownloadOutlined from "../../../components/Icons/FileDownloadOutlined";
+import FileIcon from "../../../components/Layout/Files/FileIcon";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsForm from "../../../components/Shared/Form/SettingsForm";
+import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { THEME } from "../../../theme";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 interface Props {
     artifactTypes: ArtifactTypeTO[];

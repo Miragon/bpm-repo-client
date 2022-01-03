@@ -3,15 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
-import { ArtifactApi, RepositoryTO } from "../../api";
-import FileIcon from "../../components/Layout/Files/FileIcon";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { THEME } from "../../theme";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactApi, RepositoryTO } from "../../../api";
+import FileIcon from "../../../components/Layout/Files/FileIcon";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsForm from "../../../components/Shared/Form/SettingsForm";
+import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { THEME } from "../../../theme";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 interface Props {
     type: string;

@@ -2,12 +2,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { SaveOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArtifactApi, ArtifactMilestoneTO, MilestoneApi } from "../../api";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactApi, ArtifactMilestoneTO, MilestoneApi } from "../../../api";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsForm from "../../../components/Shared/Form/SettingsForm";
+import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 interface Props {
     open: boolean;

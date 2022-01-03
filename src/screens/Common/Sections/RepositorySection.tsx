@@ -36,7 +36,9 @@ const useStyles = makeStyles(() => ({
 interface Props {
     search: string;
     loadKey: number;
+    pageSize?: number;
     onChange: () => void;
+    hideWhenNoneFound?: boolean;
 }
 
 const RepositorySection: React.FC<Props> = props => {
@@ -53,7 +55,7 @@ const RepositorySection: React.FC<Props> = props => {
         ));
     }, [props.search, repositories]);
 
-    const { pageItems, paginationConfig } = usePagination(filtered, 6);
+    const { pageItems, paginationConfig } = usePagination(filtered, props.pageSize ?? 6);
 
     useEffect(() => {
         dispatch(loadRepositories());
@@ -66,13 +68,13 @@ const RepositorySection: React.FC<Props> = props => {
         }
     }, [dispatch, props.loadKey]);
 
-    if (props.search && filtered.length === 0) {
+    if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;
     }
 
     return (
         <>
-            <ScreenSectionHeader title={props.search ? "Repositories" : "Alle Repositories"} />
+            <ScreenSectionHeader title={props.search ? "Projekte" : "Alle Projekte"} />
             <div className={classes.root}>
                 <div className={classes.content}>
                     {pageItems.map(repo => (

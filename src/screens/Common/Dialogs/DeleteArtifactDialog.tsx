@@ -3,11 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DeleteForeverOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArtifactApi } from "../../api";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactApi } from "../../../api";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 interface Props {
     artifact: FileDescription | undefined;

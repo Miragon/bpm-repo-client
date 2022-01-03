@@ -3,7 +3,6 @@ import {
     FolderOutlined,
     HomeOutlined,
     ScheduleOutlined,
-    SettingsOutlined,
     StarOutlineOutlined
 } from "@material-ui/icons";
 import React from "react";
@@ -45,17 +44,13 @@ const Menu: React.FC = () => {
                 text={t("menu.projects")}
                 icon={FolderOutlined} />
             <MenuItem
-                href="/favorites"
+                href="/favorite"
                 text={t("menu.favorites")}
                 icon={StarOutlineOutlined} />
             <MenuItem
                 href="/recent"
                 text={t("menu.recents")}
                 icon={ScheduleOutlined} />
-            <MenuItem
-                href="/settings"
-                text={t("menu.settings")}
-                icon={SettingsOutlined} />
             <MenuSpacer />
             <MenuLanguage />
             <MenuAvatar name={currentUser?.username} />

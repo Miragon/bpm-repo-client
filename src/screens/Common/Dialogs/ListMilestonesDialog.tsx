@@ -8,12 +8,12 @@ import {
 import { makeStyles } from "@material-ui/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArtifactMilestoneTO, ArtifactTypeTO, MilestoneApi } from "../../api";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import MilestoneList from "../../components/Layout/Milestones/MilestoneList";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import { openFileInTool } from "../../util/Redirections";
+import { ArtifactMilestoneTO, ArtifactTypeTO, MilestoneApi } from "../../../api";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import MilestoneList from "../../../components/Layout/Milestones/MilestoneList";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import { openFileInTool } from "../../../util/Redirections";
 import DeployMilestoneDialog from "./DeployMilestoneDialog";
 import SaveMilestoneAsDialog from "./SaveMilestoneAsDialog";
 

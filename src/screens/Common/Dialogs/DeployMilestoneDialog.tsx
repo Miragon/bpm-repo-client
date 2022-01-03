@@ -3,11 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArtifactMilestoneTO, DeploymentApi } from "../../api";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { ArtifactMilestoneTO, DeploymentApi } from "../../../api";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 interface Props {
     open: boolean;

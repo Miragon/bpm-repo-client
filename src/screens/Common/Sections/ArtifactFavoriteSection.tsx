@@ -17,12 +17,14 @@ const useStyles = makeStyles({
 });
 
 interface Props {
+    pageSize?: number;
+    hideWhenNoneFound?: boolean;
     search: string;
     loadKey: number;
     onChange: () => void;
 }
 
-const FavoriteSection: React.FC<Props> = props => {
+const ArtifactFavoriteSection: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -53,15 +55,16 @@ const FavoriteSection: React.FC<Props> = props => {
 
     const filtered = useMemo(() => filterArtifactList(props.search, files), [files, props.search]);
 
-    if (props.search && filtered.length === 0) {
+    if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;
     }
 
     return (
         <>
-            <ScreenSectionHeader title="Favoriten" />
+            <ScreenSectionHeader title="Alle Favoriten" />
             <DefaultFileList
                 files={filtered}
+                pageSize={props.pageSize}
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 artifactTypes={artifactTypes.value || []}
@@ -70,4 +73,4 @@ const FavoriteSection: React.FC<Props> = props => {
     );
 };
 
-export default FavoriteSection;
+export default ArtifactFavoriteSection;

@@ -3,15 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DeploymentApi, NewDeploymentTO } from "../../api";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SearchTextField from "../../components/Shared/Form/SearchTextField";
-import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
-import { filterArtifactList } from "../../util/SearchUtils";
+import { DeploymentApi, NewDeploymentTO } from "../../../api";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SearchTextField from "../../../components/Shared/Form/SearchTextField";
+import SettingsForm from "../../../components/Shared/Form/SettingsForm";
+import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
+import { filterArtifactList } from "../../../util/SearchUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},

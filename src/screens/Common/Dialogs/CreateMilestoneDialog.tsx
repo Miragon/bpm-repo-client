@@ -2,12 +2,12 @@ import { SaveOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MilestoneApi } from "../../api";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { MilestoneApi } from "../../../api";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles(() => ({
     icon: {

@@ -3,13 +3,13 @@ import { CreateNewFolderOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { RepositoryApi } from "../../api";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../components/Shared/Form/SettingsForm";
-import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { updateRepositories } from "../../store/RepositoryState";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { RepositoryApi } from "../../../api";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsForm from "../../../components/Shared/Form/SettingsForm";
+import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { updateRepositories } from "../../../store/RepositoryState";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles({
     icon: {

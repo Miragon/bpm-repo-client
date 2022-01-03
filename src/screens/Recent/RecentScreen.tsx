@@ -20,9 +20,7 @@ import { openRepository } from "../../util/Redirections";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
-import ArtifactFavoriteSection from "../Common/Sections/ArtifactFavoriteSection";
 import ArtifactRecentSection from "../Common/Sections/ArtifactRecentSection";
-import RepositorySection from "../Common/Sections/RepositorySection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
 
 const ADD_OPTIONS = [
@@ -64,7 +62,7 @@ const ADD_OPTIONS = [
     ]
 ]
 
-const HomeScreen: React.FC = (() => {
+const RecentScreen: React.FC = (() => {
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -119,33 +117,20 @@ const HomeScreen: React.FC = (() => {
                 <ScreenHeader
                     onSearch={setSearch}
                     onAdd={onAddItemClicked}
-                    title={[{ title: "Modellverwaltung", link: "/" }]}
+                    title={[{ title: "Zuletzt bearbeitet", link: "/recent" }]}
                     addOptions={ADD_OPTIONS}
                     primary="add" />
             </ErrorBoundary>
 
             <ContentLayout>
                 <ErrorBoundary>
-                    <RepositorySection
-                        loadKey={loadKey}
-                        onChange={reload}
-                        search={search} />
-                </ErrorBoundary>
-
-                <ErrorBoundary>
-                    <ArtifactFavoriteSection
-                        loadKey={loadKey}
-                        onChange={reload}
-                        search={search} />
-                </ErrorBoundary>
-
-                <ErrorBoundary>
                     <ArtifactRecentSection
+                        pageSize={18}
+                        hideWhenNoneFound={false}
                         loadKey={loadKey}
                         onChange={reload}
                         search={search} />
                 </ErrorBoundary>
-
                 {search && (
                     <ErrorBoundary>
                         <ArtifactSearchSection
@@ -193,4 +178,4 @@ const HomeScreen: React.FC = (() => {
     );
 });
 
-export default HomeScreen;
+export default RecentScreen;

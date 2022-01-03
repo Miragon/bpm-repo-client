@@ -3,12 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ShareOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RepositoryTO, ShareApi, ShareWithRepositoryTORoleEnum } from "../../api";
-import { FileDescription } from "../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
-import { apiExec, hasFailed } from "../../util/ApiUtils";
-import helpers from "../../util/helperFunctions";
+import { RepositoryTO, ShareApi, ShareWithRepositoryTORoleEnum } from "../../../api";
+import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
+import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { apiExec, hasFailed } from "../../../util/ApiUtils";
+import helpers from "../../../util/helperFunctions";
 
 interface Props {
     open: boolean;

@@ -28,7 +28,7 @@ interface Props {
     onChange: () => void;
 }
 
-const SearchSection: React.FC<Props> = props => {
+const ArtifactSearchSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -103,4 +103,4 @@ const SearchSection: React.FC<Props> = props => {
     );
 };
 
-export default SearchSection;
+export default ArtifactSearchSection;

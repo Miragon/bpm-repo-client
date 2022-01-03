@@ -9,8 +9,8 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ArtifactApi, ArtifactTypeTO, MilestoneApi } from "../../../api";
-import DeleteArtifactDialog from "../../../screens/Common/DeleteArtifactDialog";
-import EditArtifactDialog from "../../../screens/Common/EditArtifactDialog";
+import DeleteArtifactDialog from "../../../screens/Common/Dialogs/DeleteArtifactDialog";
+import EditArtifactDialog from "../../../screens/Common/Dialogs/EditArtifactDialog";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 import helpers from "../../../util/helperFunctions";
@@ -53,6 +53,7 @@ interface Props {
     files: FileDescription[];
     fallback: string;
     className?: string;
+    pageSize?: number;
     reloadFiles: () => void;
     artifactTypes: ArtifactTypeTO[];
 }
@@ -66,7 +67,7 @@ const DefaultFileList: React.FC<Props> = props => {
     const [editArtifact, setEditArtifact] = useState<FileDescription>();
     const [deleteArtifact, setDeleteArtifact] = useState<FileDescription>();
 
-    const { pageItems, paginationConfig } = usePagination(props.files, 5);
+    const { pageItems, paginationConfig } = usePagination(props.files, props.pageSize ?? 5);
 
     const onFavoriteClicked = useCallback(async (file: FileDescription) => {
         const response = await apiExec(ArtifactApi, api => api.setStarred(file.id));

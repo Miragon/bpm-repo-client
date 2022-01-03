@@ -19,10 +19,10 @@ import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
-import CreateArtifactDialog from "../Common/CreateArtifactDialog";
-import UploadArtifactDialog from "../Common/UploadArtifactDialog";
-import FilesSection from "./Sections/FilesSection";
-import SharedSection from "./Sections/SharedSection";
+import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
+import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
+import RepositoryFilesSection from "../Common/Sections/RepositoryFilesSection";
+import RepositorySharedSection from "../Common/Sections/RepositorySharedSection";
 
 const ADD_OPTIONS = [
     [
@@ -158,14 +158,14 @@ const RepositoryDetailsScreen: React.FC = (() => {
 
             <ContentLayout>
                 <ErrorBoundary>
-                    <FilesSection
+                    <RepositoryFilesSection
                         search={search}
                         loadKey={loadKey}
                         onChange={reload}
                         repositoryId={params.repositoryId} />
                 </ErrorBoundary>
                 <ErrorBoundary>
-                    <SharedSection
+                    <RepositorySharedSection
                         search={search}
                         loadKey={loadKey}
                         onChange={reload}

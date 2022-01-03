@@ -18,12 +18,14 @@ const useStyles = makeStyles({
 });
 
 interface Props {
+    pageSize?: number;
+    hideWhenNoneFound?: boolean;
     search: string;
     loadKey: number;
     onChange: () => void;
 }
 
-const RecentSection: React.FC<Props> = props => {
+const ArtifactRecentSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -57,7 +59,7 @@ const RecentSection: React.FC<Props> = props => {
 
     const filtered = useMemo(() => filterArtifactList(props.search, files), [files, props.search]);
 
-    if (props.search && filtered.length === 0) {
+    if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;
     }
 
@@ -66,6 +68,7 @@ const RecentSection: React.FC<Props> = props => {
             <ScreenSectionHeader title="Zuletzt bearbeitet" />
             <DefaultFileList
                 files={filtered}
+                pageSize={props.pageSize}
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 artifactTypes={artifactTypes.value || []}
@@ -74,4 +77,4 @@ const RecentSection: React.FC<Props> = props => {
     );
 };
 
-export default RecentSection;
+export default ArtifactRecentSection;
