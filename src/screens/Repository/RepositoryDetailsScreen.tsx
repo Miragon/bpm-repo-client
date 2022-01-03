@@ -24,6 +24,7 @@ import DeleteRepositoryDialog from "../Common/Dialogs/DeleteRepositoryDialog";
 import EditRepositoryDialog from "../Common/Dialogs/EditRepositoryDialog";
 import RepositoryMembersDialog from "../Common/Dialogs/RepositoryMembersDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
+import RepositoryDeploymentSection from "../Common/Sections/RepositoryDeploymentSection";
 import RepositoryFilesSection from "../Common/Sections/RepositoryFilesSection";
 import RepositorySharedSection from "../Common/Sections/RepositorySharedSection";
 
@@ -181,6 +182,13 @@ const RepositoryDetailsScreen: React.FC = (() => {
                 </ErrorBoundary>
                 <ErrorBoundary>
                     <RepositorySharedSection
+                        search={search}
+                        loadKey={loadKey}
+                        onChange={reload}
+                        repositoryId={params.repositoryId} />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                    <RepositoryDeploymentSection
                         search={search}
                         loadKey={loadKey}
                         onChange={reload}

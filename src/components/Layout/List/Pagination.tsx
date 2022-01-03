@@ -44,7 +44,6 @@ const useStyles = makeStyles({
 const Pagination: React.FC<Props> = props => {
     const classes = useStyles();
 
-    console.log(props.config);
     // Make sure we are never on pages that don't exist
     useEffect(() => {
         if (props.config.currentPage >= props.config.totalPages) {
