@@ -61,11 +61,7 @@ const EditArtifactDialog: React.FC<Props> = props => {
         setDisabled(false);
 
         if (hasFailed(response)) {
-            if (response.error) {
-                setError(t(response.error));
-            } else {
-                setError(response.error);
-            }
+            setError(t(response.error));
             return;
         }
 

@@ -27,7 +27,8 @@ const useStyles = makeStyles({
     headerActions: {
         flexGrow: 1,
         display: "flex",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        marginRight: "-1rem"
     }
 });
 
@@ -167,6 +168,7 @@ const FilesSection: React.FC<Props> = props => {
                 </div>
             </ScreenSectionHeader>
             <DetailFileList
+                targets={deploymentTargets.value || []}
                 files={filtered}
                 fallback="artifact.notAvailable"
                 reloadFiles={props.onChange}

@@ -70,7 +70,7 @@ const CopyArtifactDialog: React.FC<Props> = props => {
         setDisabled(false);
 
         if (hasFailed(response)) {
-            helpers.makeErrorToast(t(response.error));
+            setError(t(response.error));
             return;
         }
 

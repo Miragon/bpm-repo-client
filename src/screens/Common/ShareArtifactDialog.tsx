@@ -59,7 +59,7 @@ const ShareArtifactDialog: React.FC<Props> = props => {
         }));
         setDisabled(false);
         if (hasFailed(response)) {
-            helpers.makeErrorToast(response.error);
+            setError(t(response.error));
             return;
         }
 

@@ -1,5 +1,5 @@
 import {
-    CloudUploadOutlined,
+    CloudUploadOutlined, DeleteOutlineOutlined,
     FormatShapesOutlined,
     NoteAddOutlined,
     PeopleAltOutlined,
@@ -66,6 +66,13 @@ const MENU_OPTIONS = [
             label: "repository.settings",
             value: "settings",
             icon: SettingsOutlined
+        }
+    ],
+    [
+        {
+            label: "repository.delete",
+            value: "delete",
+            icon: DeleteOutlineOutlined
         }
     ]
 ];
@@ -137,10 +144,10 @@ const RepositoryDetailsScreen: React.FC = (() => {
                     onAdd={onAddItemClicked}
                     onMenu={onMenuItemClicked}
                     title={[
-                        { title: "Alle Projekte", link: "/repositories" },
+                        { title: "Alle Projekte", link: "/repository" },
                         {
                             title: repository?.name ?? "Unbekannt",
-                            link: "/repositories/" + repository?.id
+                            link: "/repository/" + repository?.id
                         }
                     ]}
                     addOptions={ADD_OPTIONS}

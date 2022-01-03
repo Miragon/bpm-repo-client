@@ -28,6 +28,7 @@
     "download": "Download milestone",
     "delete": "Delete milestone",
     "openLatest": "Open latest Milestone",
+    "list": "List milestones",
     "milestone": "Milestone",
     "RELEASE": "Release",
     "MILESTONE": "Milestone",

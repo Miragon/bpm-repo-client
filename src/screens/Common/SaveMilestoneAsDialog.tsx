@@ -1,15 +1,20 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { CreateNewFolderOutlined } from "@material-ui/icons";
+import { SaveOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { RepositoryApi } from "../../api";
+import { ArtifactApi, ArtifactMilestoneTO, MilestoneApi } from "../../api";
 import PopupDialog from "../../components/Shared/Form/PopupDialog";
 import SettingsForm from "../../components/Shared/Form/SettingsForm";
 import SettingsTextField from "../../components/Shared/Form/SettingsTextField";
-import { updateRepositories } from "../../store/RepositoryState";
 import { apiExec, hasFailed } from "../../util/ApiUtils";
 import helpers from "../../util/helperFunctions";
+
+interface Props {
+    open: boolean;
+    fileType: string | undefined;
+    onClose: (saved: boolean) => void;
+    milestone: ArtifactMilestoneTO | undefined;
+}
 
 const useStyles = makeStyles({
     icon: {
@@ -18,68 +23,69 @@ const useStyles = makeStyles({
     }
 });
 
-interface Props {
-    open: boolean;
-    onClose: (repositoryId: string | null) => void;
-}
-
-const CreateRepositoryDialog: React.FC<Props> = props => {
+const SaveMilestoneAsDialog: React.FC<Props> = props => {
     const classes = useStyles();
-    const dispatch = useDispatch();
     const { t } = useTranslation("common");
 
-    const { open, onClose } = props;
+    const { open, milestone, fileType, onClose } = props;
 
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState<string>();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const onCreate = useCallback(async () => {
+    const onSave = useCallback(async () => {
+        if (!milestone || !fileType) {
+            return;
+        }
+
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError("Titel ist zu kurz!");
             return;
         }
 
         setError(undefined);
         setDisabled(true);
-        const response = await apiExec(RepositoryApi, api => api.createRepository({
-            description: description,
-            name: title
-        }));
-        setDisabled(false);
 
-        if (hasFailed(response)) {
-            setError(t(response.error));
+        const artifactResponse = await apiExec(ArtifactApi, api => api.createArtifact(milestone.repositoryId, {
+            name: title,
+            description: description,
+            fileType: fileType
+        }));
+        if (hasFailed(artifactResponse)) {
+            setError(t(artifactResponse.error));
+            setDisabled(false);
             return;
         }
 
-        helpers.makeSuccessToast(t("repository.created"));
-        dispatch(updateRepositories({
-            key: "id",
-            update: [response.result]
+        const milestoneResponse = await apiExec(MilestoneApi, api => api.createMilestone(artifactResponse.result.id, {
+            file: milestone.file,
+            comment: ""
         }));
-        onClose(response.result.id);
+        setDisabled(false);
+        if (hasFailed(milestoneResponse)) {
+            setError(t(milestoneResponse.error));
+            return;
+        }
+
+        helpers.makeSuccessToast(t("milestone.savedAsArtifact"));
         setTitle("");
         setDescription("");
-    }, [title, description, onClose, dispatch, t]);
-
-    const onCancel = useCallback(() => {
-        onClose(null);
-    }, [onClose]);
+        onClose(true);
+    }, [milestone, fileType, title, description, t, onClose]);
 
     return (
         <PopupDialog
             small
-            disabled={disabled}
-            error={error}
-            icon={<CreateNewFolderOutlined className={classes.icon} />}
-            onClose={onCancel}
-            onCloseError={() => setError(undefined)}
             open={open}
-            title={t("repository.create")}
+            error={error}
+            disabled={disabled}
+            icon={<SaveOutlined className={classes.icon} />}
+            onClose={() => onClose(false)}
+            onCloseError={() => setError(undefined)}
+            title={t("milestone.saveAsNewArtifact")}
             firstTitle={t("dialog.create")}
-            onFirst={onCreate}>
+            onFirst={onSave}>
 
             <SettingsForm large>
 
@@ -104,4 +110,4 @@ const CreateRepositoryDialog: React.FC<Props> = props => {
     );
 };
 
-export default CreateRepositoryDialog;
+export default SaveMilestoneAsDialog;

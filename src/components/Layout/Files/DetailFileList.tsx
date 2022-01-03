@@ -3,6 +3,7 @@ import {
     CreateNewFolderOutlined,
     DeleteOutlineOutlined,
     EditOutlined,
+    HistoryOutlined,
     LaunchOutlined,
     SaveOutlined,
     ShareOutlined
@@ -12,8 +13,10 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { ArtifactApi, ArtifactTypeTO, MilestoneApi, RepositoryTO } from "../../../api";
 import CopyArtifactDialog from "../../../screens/Common/CopyArtifactDialog";
+import CreateMilestoneDialog from "../../../screens/Common/CreateMilestoneDialog";
 import DeleteArtifactDialog from "../../../screens/Common/DeleteArtifactDialog";
 import EditArtifactDialog from "../../../screens/Common/EditArtifactDialog";
+import ListMilestonesDialog from "../../../screens/Common/ListMilestonesDialog";
 import ShareArtifactDialog from "../../../screens/Common/ShareArtifactDialog";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
@@ -35,6 +38,11 @@ const DETAIL_OPTIONS = [
             label: "milestone.create",
             value: "create-milestone",
             icon: SaveOutlined
+        },
+        {
+            label: "milestone.list",
+            value: "list-milestones",
+            icon: HistoryOutlined
         }
     ],
     [
@@ -71,10 +79,11 @@ const DETAIL_OPTIONS = [
 ];
 
 interface Props {
-    files: FileDescription[];
     fallback: string;
+    targets: string[];
     className?: string;
     reloadFiles: () => void;
+    files: FileDescription[];
     repositories: RepositoryTO[];
     ownRepositories: RepositoryTO[];
     artifactTypes: ArtifactTypeTO[];
@@ -86,6 +95,7 @@ const DefaultFileList: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     const [createMilestoneArtifact, setCreateMilestoneArtifact] = useState<FileDescription>();
+    const [listMilestonesArtifact, setListMilestonesArtifact] = useState<FileDescription>();
     const [shareArtifact, setShareArtifact] = useState<FileDescription>();
     const [copyArtifact, setCopyArtifact] = useState<FileDescription>();
     const [editArtifact, setEditArtifact] = useState<FileDescription>();
@@ -114,6 +124,10 @@ const DefaultFileList: React.FC<Props> = props => {
                 if (file.repository) {
                     openFileInTool(props.artifactTypes, file.fileType, file.repository.id, file.id);
                 }
+                break;
+            }
+            case "list-milestones": {
+                setListMilestonesArtifact(file);
                 break;
             }
             case "create-milestone": {
@@ -189,6 +203,16 @@ const DefaultFileList: React.FC<Props> = props => {
                 artifact={shareArtifact}
                 ownRepositories={props.ownRepositories}
                 onClose={() => setShareArtifact(undefined)} />
+            <CreateMilestoneDialog
+                open={!!createMilestoneArtifact}
+                artifact={createMilestoneArtifact}
+                onClose={() => setCreateMilestoneArtifact(undefined)} />
+            <ListMilestonesDialog
+                targets={props.targets}
+                onChanged={props.reloadFiles}
+                open={!!listMilestonesArtifact}
+                artifact={listMilestonesArtifact}
+                onClose={() => setListMilestonesArtifact(undefined)} />
         </>
     );
 };

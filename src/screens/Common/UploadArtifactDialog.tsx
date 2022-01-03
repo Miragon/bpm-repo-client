@@ -105,26 +105,18 @@ const UploadArtifactDialog: React.FC<Props> = props => {
             name: title
         }));
         if (hasFailed(artifactResponse)) {
-            if (artifactResponse.error) {
-                setError(t(artifactResponse.error));
-            } else {
-                setError(artifactResponse.error);
-            }
+            setError(t(artifactResponse.error));
             setDisabled(false);
             return;
         }
 
         const milestoneResponse = await apiExec(MilestoneApi, api => api.createMilestone(artifactResponse.result.id, { file }));
         if (hasFailed(milestoneResponse)) {
-            if (milestoneResponse.error) {
-                setError(t(milestoneResponse.error));
-            } else {
-                setError(milestoneResponse.error);
-            }
-            setDisabled(false);
+            setError(t(milestoneResponse.error));
             return;
         }
 
+        setDisabled(false);
         helpers.makeSuccessToast(t("artifact.created"));
         onClose({
             milestone: milestoneResponse.result.milestone,

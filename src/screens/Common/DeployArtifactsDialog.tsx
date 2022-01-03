@@ -11,6 +11,7 @@ import SettingsForm from "../../components/Shared/Form/SettingsForm";
 import SettingsSelect from "../../components/Shared/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../util/ApiUtils";
 import helpers from "../../util/helperFunctions";
+import { filterArtifactList } from "../../util/SearchUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},
@@ -71,7 +72,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
     }, []);
 
     const filteredArtifacts = useMemo(() => {
-        return props.artifacts.filter(a => a.name.toLowerCase().indexOf(search) !== -1);
+        return filterArtifactList(search, props.artifacts);
     }, [props.artifacts, search]);
 
     const deploy = useCallback(async () => {
@@ -98,11 +99,12 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
         setDisabled(false);
 
         if (hasFailed(response)) {
-            helpers.makeErrorToast(t(response.error));
-        } else {
-            helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.result.length }));
-            props.onClose(true);
+            setError(t(response.error));
+            return;
         }
+
+        helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.result.length }));
+        props.onClose(true);
     }, [target, selectedArtifacts, props, t])
 
     const onCancel = () => {
@@ -122,7 +124,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             onFirst={deploy}>
             <SettingsForm large>
                 <SettingsSelect
-                    disabled={false}
+                    disabled={disabled}
                     label={t("deployment.target")}
                     value={target}
                     onChanged={setTarget}>

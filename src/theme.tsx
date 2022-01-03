@@ -70,6 +70,7 @@ export const THEME = {
         background: "rgb(241, 247, 252)",
         default: blueGrey[200],
         primary: lightBlue[500],
+        secondary: blueGrey[500],
         backgroundSecondary: blueGrey[50]
     },
     pageHeader: {

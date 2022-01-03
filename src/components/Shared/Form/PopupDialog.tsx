@@ -14,7 +14,9 @@ import { PopupToast } from "./PopupToast";
 interface Props {
     open: boolean;
     title: string;
+    full?: boolean;
     error?: string;
+    large?: boolean;
     small?: boolean;
     danger?: boolean;
     disabled?: boolean;
@@ -49,10 +51,18 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: "8px",
         maxWidth: "600px",
         width: "calc(100vw - 0.2rem)",
-        position: "static"
+        position: "static",
+        maxHeight: "calc(100vh - 10rem)"
     },
     paperSmall: {
         maxWidth: "400px"
+    },
+    paperLarge: {
+        maxWidth: "800px"
+    },
+    paperFull: {
+        maxWidth: "960px",
+        minHeight: "600px"
     },
     title: {
         fontSize: "1.35rem",
@@ -128,7 +138,12 @@ const PopupDialog: React.FC<Props> = props => {
         <Dialog
             BackdropProps={{ className: classes.backdropBlur }}
             PaperProps={{
-                className: clsx(classes.paper, props.small && classes.paperSmall),
+                className: clsx(
+                    classes.paper,
+                    props.small && classes.paperSmall,
+                    props.large && classes.paperLarge,
+                    props.full && classes.paperFull
+                ),
                 elevation: 16
             }}
             open={props.open}>
