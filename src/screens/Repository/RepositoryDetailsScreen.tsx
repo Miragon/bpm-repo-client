@@ -1,5 +1,6 @@
 import {
-    CloudUploadOutlined, DeleteOutlineOutlined,
+    CloudUploadOutlined,
+    DeleteOutlineOutlined,
     FormatShapesOutlined,
     NoteAddOutlined,
     PeopleAltOutlined,
@@ -14,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
-import ScreenSectionHeader from "../../components/Layout/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
@@ -22,6 +22,7 @@ import { RootState } from "../../store/Store";
 import CreateArtifactDialog from "../Common/CreateArtifactDialog";
 import UploadArtifactDialog from "../Common/UploadArtifactDialog";
 import FilesSection from "./Sections/FilesSection";
+import SharedSection from "./Sections/SharedSection";
 
 const ADD_OPTIONS = [
     [
@@ -164,8 +165,11 @@ const RepositoryDetailsScreen: React.FC = (() => {
                         repositoryId={params.repositoryId} />
                 </ErrorBoundary>
                 <ErrorBoundary>
-                    <ScreenSectionHeader title="Mit diesem Projekt geteilt" />
-                    Test
+                    <SharedSection
+                        search={search}
+                        loadKey={loadKey}
+                        onChange={reload}
+                        repositoryId={params.repositoryId} />
                 </ErrorBoundary>
             </ContentLayout>
 

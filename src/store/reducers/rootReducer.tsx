@@ -6,6 +6,7 @@ import { OwnRepositorySlice } from "../OwnRepositoryState";
 import { RecentArtifactSlice } from "../RecentArtifactState";
 import { RepositoryArtifactSlice } from "../RepositoryArtifactState";
 import { RepositorySlice } from "../RepositoryState";
+import { SharedArtifactSlice } from "../SharedArtifactState";
 import usersReducer from "./usersReducer";
 import artifactReducer from "./artifactReducer";
 import dataSyncedReducer from "./dataSyncedReducer";
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers({
     repositoryArtifacts: RepositoryArtifactSlice.reducer,
     deploymentTargets: DeploymentTargetsSlice.reducer,
     ownRepositories: OwnRepositorySlice.reducer,
+    sharedArtifacts: SharedArtifactSlice.reducer,
     repos: repoReducer,
     dataSynced: dataSyncedReducer,
     artifacts: artifactReducer,

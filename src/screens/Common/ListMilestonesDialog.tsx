@@ -8,11 +8,12 @@ import {
 import { makeStyles } from "@material-ui/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArtifactMilestoneTO, MilestoneApi } from "../../api";
+import { ArtifactMilestoneTO, ArtifactTypeTO, MilestoneApi } from "../../api";
 import { FileDescription } from "../../components/Layout/Files/FileListEntry";
 import MilestoneList from "../../components/Layout/Milestones/MilestoneList";
 import PopupDialog from "../../components/Shared/Form/PopupDialog";
 import { apiExec, hasFailed } from "../../util/ApiUtils";
+import { openFileInTool } from "../../util/Redirections";
 import DeployMilestoneDialog from "./DeployMilestoneDialog";
 import SaveMilestoneAsDialog from "./SaveMilestoneAsDialog";
 
@@ -52,6 +53,7 @@ interface Props {
     open: boolean;
     targets: string[];
     onChanged: () => void;
+    artifactTypes: ArtifactTypeTO[];
     artifact: FileDescription | undefined;
     onClose: () => void;
 }
@@ -131,6 +133,7 @@ const ListMilestonesDialog: React.FC<Props> = props => {
                     milestones={milestones}
                     fallback="milestone.na"
                     onMenuClick={onMenuClick}
+                    onClick={milestone => props.artifact && openFileInTool(props.artifactTypes, props.artifact.fileType, milestone.repositoryId, milestone.artifactId, milestone.milestone)}
                     menuEntries={MILESTONE_OPTIONS} />
             )}
 

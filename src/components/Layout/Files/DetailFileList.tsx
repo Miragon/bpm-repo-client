@@ -87,6 +87,7 @@ interface Props {
     repositories: RepositoryTO[];
     ownRepositories: RepositoryTO[];
     artifactTypes: ArtifactTypeTO[];
+    paginationClassName?: string;
 }
 
 const DefaultFileList: React.FC<Props> = props => {
@@ -178,7 +179,9 @@ const DefaultFileList: React.FC<Props> = props => {
                 onClick={file => file.repository && openFileInTool(props.artifactTypes, file.fileType, file.repository.id, file.id)}
                 onMenuClick={onMenuEntryClicked}
                 menuEntries={DETAIL_OPTIONS} />
-            <Pagination config={paginationConfig} />
+            <Pagination
+                className={props.paginationClassName}
+                config={paginationConfig} />
             <EditArtifactDialog
                 onClose={saved => {
                     setEditArtifact(undefined);
@@ -208,6 +211,7 @@ const DefaultFileList: React.FC<Props> = props => {
                 artifact={createMilestoneArtifact}
                 onClose={() => setCreateMilestoneArtifact(undefined)} />
             <ListMilestonesDialog
+                artifactTypes={props.artifactTypes}
                 targets={props.targets}
                 onChanged={props.reloadFiles}
                 open={!!listMilestonesArtifact}

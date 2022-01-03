@@ -14,8 +14,8 @@ import { loadDeploymentTargets } from "../../../store/DeploymentTargetState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { loadOwnRepositories } from "../../../store/OwnRepositoryState";
 import { RootState } from "../../../store/reducers/rootReducer";
-import { loadRepositoryArtifacts } from "../../../store/RepositoryArtifactState";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { loadSharedArtifacts } from "../../../store/SharedArtifactState";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../../Common/DeployArtifactsDialog";
@@ -60,7 +60,7 @@ const SORT_CONFIG = [
     ]
 ];
 
-const FilesSection: React.FC<Props> = props => {
+const SharedSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -75,13 +75,13 @@ const FilesSection: React.FC<Props> = props => {
     const ownRepositories = useSelector((state: RootState) => state.ownRepositories);
     const favoriteArtifacts = useSelector((state: RootState) => state.favoriteArtifacts);
     const deploymentTargets = useSelector((state: RootState) => state.deploymentTargets);
-    const repositoryArtifacts = useSelector((state: RootState) => state.repositoryArtifacts.values[props.repositoryId]);
+    const sharedArtifacts = useSelector((state: RootState) => state.sharedArtifacts.values[props.repositoryId]);
 
-    const files: FileDescription[] = useMemo(() => (repositoryArtifacts?.value || []).map(artifact => ({
+    const files: FileDescription[] = useMemo(() => (sharedArtifacts?.value || []).map(artifact => ({
         ...artifact,
         favorite: !!favoriteArtifacts.value?.find(a => a.id === artifact.id),
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
-    })), [repositoryArtifacts, repositories, favoriteArtifacts]);
+    })), [sharedArtifacts, repositories, favoriteArtifacts]);
 
     const filtered = useMemo(() => {
         const filteredArtifacts = filterArtifactList(props.search, files)
@@ -128,7 +128,7 @@ const FilesSection: React.FC<Props> = props => {
         dispatch(loadFavoriteArtifacts());
         dispatch(loadDeploymentTargets());
         if (props.repositoryId) {
-            dispatch(loadRepositoryArtifacts(props.repositoryId));
+            dispatch(loadSharedArtifacts(props.repositoryId));
         }
     }, [dispatch, props.repositoryId]);
 
@@ -146,13 +146,13 @@ const FilesSection: React.FC<Props> = props => {
     // Reload if something changed in the other sections
     useEffect(() => {
         if (props.loadKey > 0 && props.repositoryId) {
-            dispatch(loadRepositoryArtifacts(props.repositoryId, true));
+            dispatch(loadSharedArtifacts(props.repositoryId, true));
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
 
     return (
         <>
-            <ScreenSectionHeader title="Projektdateien">
+            <ScreenSectionHeader title="Mit diesem Projekt geteilt">
                 <div className={classes.headerActions}>
                     <ActionButton
                         label={t("deployment.multiple")}
@@ -173,7 +173,7 @@ const FilesSection: React.FC<Props> = props => {
             <DetailFileList
                 targets={deploymentTargets.value || []}
                 files={filtered}
-                fallback="artifact.notAvailable"
+                fallback="share.na"
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 paginationClassName={classes.pagination}
@@ -190,4 +190,4 @@ const FilesSection: React.FC<Props> = props => {
     );
 };
 
-export default FilesSection;
+export default SharedSection;

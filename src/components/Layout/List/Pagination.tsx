@@ -7,6 +7,7 @@ import { PaginationConfig } from "../../../util/hooks/usePagination";
 
 interface Props {
     config: PaginationConfig;
+    className?: string;
 }
 
 const useStyles = makeStyles({
@@ -56,7 +57,7 @@ const Pagination: React.FC<Props> = props => {
     }
 
     return (
-        <div className={classes.root}>
+        <div className={clsx(classes.root, props.className)}>
             <Button
                 className={classes.button}
                 onClick={() => props.config.onPageChanged(Math.max(0, props.config.currentPage - 1))}

@@ -17,8 +17,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: "0.75rem 0",
         borderRadius: "8px",
         padding: "1.25rem",
+        cursor: "pointer",
+        transition: theme.transitions.create("box-shadow"),
         boxShadow: "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px",
-        border: "1px solid #EAEAEA"
+        border: "1px solid #EAEAEA",
+        "&:hover": {
+            boxShadow: "rgba(0, 0, 0, 0.25) -4px 9px 25px -6px"
+        }
     },
     cardMainSection: {
         flexGrow: 1,
@@ -120,6 +125,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+    onClick: () => void;
     milestone: ArtifactMilestoneTO;
     onMenuClicked: (target: HTMLButtonElement) => void;
 }
@@ -130,7 +136,9 @@ const MilestoneListEntry: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     return (
-        <Card className={classes.root}>
+        <Card
+            onClick={props.onClick}
+            className={classes.root}>
 
             <div className={classes.cardMainSection}>
                 <div className={classes.cardIconWrapper}>

@@ -10,6 +10,7 @@ interface Props {
     milestones: ArtifactMilestoneTO[];
     fallback: string;
     className?: string;
+    onClick: (milestone: ArtifactMilestoneTO) => void;
     onMenuClick: (operation: string, milestone: ArtifactMilestoneTO) => void;
     menuEntries: MenuListConfig;
 }
@@ -48,6 +49,7 @@ const MilestoneList: React.FC<Props> = (props: Props) => {
                 <MilestoneListEntry
                     key={milestone.id}
                     milestone={milestone}
+                    onClick={() => props.onClick(milestone)}
                     onMenuClicked={target => setMenuAnchor({ target, milestone })} />
             ))}
             <MilestoneListPopup
