@@ -35,7 +35,7 @@ interface Props {
     max?: number;
 }
 
-const getColor = (name: string): string => {
+export const getAvatarColor = (name: string): string => {
     const index = name
         .split("")
         .map(letter => letter.charCodeAt(0))
@@ -67,7 +67,7 @@ const AvatarList: React.FC<Props> = props => {
                     title={(<span className={classes.tooltipName}>{name}</span>)}>
                     <Avatar
                         className={classes.avatar}
-                        style={{ backgroundColor: getColor(name) }}
+                        style={{ backgroundColor: getAvatarColor(name) }}
                         variant="rounded"
                         alt={name}>
                         {name.substr(0, 1)}
@@ -77,7 +77,7 @@ const AvatarList: React.FC<Props> = props => {
             {moreCount > 0 && (
                 <Avatar
                     className={classes.avatar}
-                    style={{ backgroundColor: getColor("MORE") }}
+                    style={{ backgroundColor: getAvatarColor("MORE") }}
                     variant="rounded"
                     alt={`+${moreCount}`}>
                     {`+${moreCount}`}

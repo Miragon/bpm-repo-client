@@ -22,6 +22,7 @@ import { RootState } from "../../store/Store";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import DeleteRepositoryDialog from "../Common/Dialogs/DeleteRepositoryDialog";
 import EditRepositoryDialog from "../Common/Dialogs/EditRepositoryDialog";
+import RepositoryMembersDialog from "../Common/Dialogs/RepositoryMembersDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
 import RepositoryFilesSection from "../Common/Sections/RepositoryFilesSection";
 import RepositorySharedSection from "../Common/Sections/RepositorySharedSection";
@@ -92,6 +93,7 @@ const RepositoryDetailsScreen: React.FC = (() => {
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
 
+    const [memberDialogOpen, setMemberDialogOpen] = useState(false);
     const [deleteRepositoryDialogOpen, setDeleteRepositoryDialogOpen] = useState(false);
     const [editRepositoryDialogOpen, setEditRepositoryDialogOpen] = useState(false);
     const [loadKey, setLoadKey] = useState(0);
@@ -132,6 +134,7 @@ const RepositoryDetailsScreen: React.FC = (() => {
     const onMenuItemClicked = useCallback((action: string) => {
         switch (action) {
             case "members": {
+                setMemberDialogOpen(true);
                 break;
             }
             case "settings": {
@@ -225,6 +228,11 @@ const RepositoryDetailsScreen: React.FC = (() => {
                         setDeleteRepositoryDialogOpen(false);
                         deleted && history.push("/");
                     }} />
+
+                <RepositoryMembersDialog
+                    open={memberDialogOpen}
+                    repository={repository}
+                    onClose={() => setMemberDialogOpen(false)} />
 
             </ErrorBoundary>
         </>
