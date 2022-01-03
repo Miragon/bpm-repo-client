@@ -20,6 +20,8 @@ import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
+import DeleteRepositoryDialog from "../Common/Dialogs/DeleteRepositoryDialog";
+import EditRepositoryDialog from "../Common/Dialogs/EditRepositoryDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
 import RepositoryFilesSection from "../Common/Sections/RepositoryFilesSection";
 import RepositorySharedSection from "../Common/Sections/RepositorySharedSection";
@@ -90,6 +92,8 @@ const RepositoryDetailsScreen: React.FC = (() => {
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
 
+    const [deleteRepositoryDialogOpen, setDeleteRepositoryDialogOpen] = useState(false);
+    const [editRepositoryDialogOpen, setEditRepositoryDialogOpen] = useState(false);
     const [loadKey, setLoadKey] = useState(0);
     const [search, setSearch] = useState("");
     const [uploadArtifactDialogOpen, setUploadArtifactDialogOpen] = useState(false);
@@ -127,7 +131,15 @@ const RepositoryDetailsScreen: React.FC = (() => {
 
     const onMenuItemClicked = useCallback((action: string) => {
         switch (action) {
-            default: {
+            case "members": {
+                break;
+            }
+            case "settings": {
+                setEditRepositoryDialogOpen(true);
+                break;
+            }
+            case "delete": {
+                setDeleteRepositoryDialogOpen(true);
                 break;
             }
         }
@@ -200,6 +212,20 @@ const RepositoryDetailsScreen: React.FC = (() => {
                     }}
                     repositories={repositories.value || []}
                     artifactTypes={artifactTypes.value || []} />
+
+                <EditRepositoryDialog
+                    open={editRepositoryDialogOpen}
+                    repository={repository}
+                    onClose={() => setEditRepositoryDialogOpen(false)} />
+
+                <DeleteRepositoryDialog
+                    open={deleteRepositoryDialogOpen}
+                    repository={repository}
+                    onClose={deleted => {
+                        setDeleteRepositoryDialogOpen(false);
+                        deleted && history.push("/");
+                    }} />
+
             </ErrorBoundary>
         </>
     );

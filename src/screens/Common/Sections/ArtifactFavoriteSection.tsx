@@ -9,6 +9,7 @@ import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositories } from "../../../store/RepositoryState";
 import { filterArtifactList } from "../../../util/SearchUtils";
+import { sortByString } from "../../../util/SortUtils";
 
 const useStyles = makeStyles({
     fileList: {
@@ -53,7 +54,9 @@ const ArtifactFavoriteSection: React.FC<Props> = props => {
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [repositories, favoriteArtifacts]);
 
-    const filtered = useMemo(() => filterArtifactList(props.search, files), [files, props.search]);
+    const filtered = useMemo(() => sortByString(
+        filterArtifactList(props.search, files),
+        artifact => artifact.name), [files, props.search]);
 
     if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;

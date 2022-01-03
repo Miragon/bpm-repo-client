@@ -13,6 +13,7 @@ import { loadRepositories } from "../../../store/RepositoryState";
 import { usePagination } from "../../../util/hooks/usePagination";
 import { getRepositoryUrl } from "../../../util/Redirections";
 import { searchAllCaseInsensitive } from "../../../util/SearchUtils";
+import { sortByString } from "../../../util/SortUtils";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -50,9 +51,9 @@ const RepositorySection: React.FC<Props> = props => {
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const filtered = useMemo(() => {
-        return (repositories.value || []).filter(repo => (
+        return sortByString((repositories.value || []).filter(repo => (
             searchAllCaseInsensitive(props.search, repo.name, repo.description)
-        ));
+        )), repository => repository.name);
     }, [props.search, repositories]);
 
     const { pageItems, paginationConfig } = usePagination(filtered, props.pageSize ?? 6);
