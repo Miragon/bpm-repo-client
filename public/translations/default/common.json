@@ -119,11 +119,10 @@
     }
   },
   "registration": {
-    "signup": "Sign up",
-    "firstTime": "This is the first time you are trying to access the application",
-    "accountRequired": "To use this service you need an account.\n To create a new account, click the button below.",
-    "agree": " ",
-    "create": "Create a new User Profile"
+    "signup": "Welcome to the model manager!",
+    "firstTime": "Use this portal to manage your models, forms, and much more in one central location and edit them together with your team.",
+    "accountRequired": "Before you can get started, you need to create an account.",
+    "create": "Create account"
   },
   "language": {
     "german": "German",

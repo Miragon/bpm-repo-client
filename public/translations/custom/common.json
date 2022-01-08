@@ -146,11 +146,10 @@
         "target": "Ziel"
     },
     "registration": {
-        "signup": "Für Miragon Cloud Services anmelden",
-        "firstTime": "Sie versuchen zum ersten Mal, sich bei Miragon Cloud Services anzumelden.",
-        "accountRequired": "Sie benötigen einen Account, um diesen Service zu verwenden.\n Um einen Account zu erstellen, akzeptieren Sie bitte die AGBs.",
-        "agree": "Ich akzeptiere die AGBs",
-        "create": "Neues Benutzerprofil erstellen"
+        "signup": "Willkommen bei der Modellverwaltung!",
+        "firstTime": "Auf diesem Portal können Sie Ihre Modelle, Formulare und vieles mehr an einem zentralen Ort verwalten und gemeinsam mit Ihrem Team bearbeiten.",
+        "accountRequired": "Bevor Sie loslegen können, müssen Sie einen Account erstellen.",
+        "create": "Account erstellen"
     },
     "language": {
         "german": "Deutsch",

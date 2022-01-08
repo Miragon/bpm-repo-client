@@ -45,7 +45,8 @@ const Layout: React.FC = () => {
         return null;
     }
 
-    if (userInfo.statusCode === 404) {
+    // TODO: Backend should give more detailed information - how are we supposed to detect errors?
+    if (userInfo.error) {
         return (
             <RegisterNewUserScreen />
         );

@@ -5,7 +5,7 @@ import {
     NoteAddOutlined,
     TuneOutlined
 } from "@material-ui/icons";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,45 +24,6 @@ import ArtifactRecentSection from "../Common/Sections/ArtifactRecentSection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
 import RepositorySection from "../Common/Sections/RepositorySection";
 
-const ADD_OPTIONS = [
-    [
-        {
-            label: "repository.create",
-            value: "create-repository",
-            icon: CreateNewFolderOutlined
-        }
-    ],
-    [
-        {
-            label: "artifact.createBPMN",
-            value: "create-bpmn",
-            icon: NoteAddOutlined
-        },
-        {
-            label: "artifact.createDMN",
-            value: "create-dmn",
-            icon: NoteAddOutlined
-        },
-        {
-            label: "artifact.createFORM",
-            value: "create-form",
-            icon: FormatShapesOutlined
-        },
-        {
-            label: "artifact.createCONFIGURATION",
-            value: "create-configuration",
-            icon: TuneOutlined
-        }
-    ],
-    [
-        {
-            label: "artifact.upload",
-            value: "upload-file",
-            icon: CloudUploadOutlined
-        }
-    ]
-]
-
 const HomeScreen: React.FC = (() => {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -75,6 +36,45 @@ const HomeScreen: React.FC = (() => {
     const [uploadArtifactDialogOpen, setUploadArtifactDialogOpen] = useState(false);
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("");
+
+    const addOptions = useMemo(() => [
+        [
+            {
+                label: "repository.create",
+                value: "create-repository",
+                icon: CreateNewFolderOutlined
+            }
+        ],
+        [
+            {
+                label: "artifact.createBPMN",
+                value: "create-bpmn",
+                icon: NoteAddOutlined
+            },
+            {
+                label: "artifact.createDMN",
+                value: "create-dmn",
+                icon: NoteAddOutlined
+            },
+            {
+                label: "artifact.createFORM",
+                value: "create-form",
+                icon: FormatShapesOutlined
+            },
+            {
+                label: "artifact.createCONFIGURATION",
+                value: "create-configuration",
+                icon: TuneOutlined
+            }
+        ],
+        [
+            {
+                label: "artifact.upload",
+                value: "upload-file",
+                icon: CloudUploadOutlined
+            }
+        ]
+    ], []);
 
     useEffect(() => {
         dispatch(loadRepositories());
@@ -126,7 +126,7 @@ const HomeScreen: React.FC = (() => {
                     onSearch={setSearch}
                     onAdd={onAddItemClicked}
                     title={[{ title: "Modellverwaltung", link: "/" }]}
-                    addOptions={ADD_OPTIONS}
+                    addOptions={addOptions}
                     primary="add" />
             </ErrorBoundary>
 
