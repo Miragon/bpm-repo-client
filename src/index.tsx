@@ -6,7 +6,7 @@ import {Provider} from "react-redux";
 import {HashRouter} from "react-router-dom";
 import App from "./components/Layout/App";
 import "./index.css";
-import store from "./store/store";
+import store from "./store/Store";
 
 const language = window.localStorage.getItem("language") ? window.localStorage.getItem("language") : "default";
 fetch("/repository/translations/default/common.json", {

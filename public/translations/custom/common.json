@@ -11,7 +11,7 @@
         "nameTaken": "Name wird bereits verwendet",
         "edit": "Projekt bearbeiten",
         "updated": "Projekt aktualisiert",
-        "notAvailable": "Sie haben noch keine Projekte erstellt",
+        "notAvailable": "Sie haben noch keine Projekte erstellt.",
         "target": "Projekt",
         "members": "Mitglieder",
         "settings": "Einstellungen"
@@ -21,8 +21,7 @@
         "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
         "create": "Datei erstellen",
         "created": "Datei erstellt",
-        "copy": "{{artifactName}} in anderes Projekt kopieren",
-        "copyTo": "In Projekt kopieren",
+        "copyTo": "In anderes Projekt kopieren",
         "createdFromExisting": "Datei aus existierender Milestone erstellt",
         "createdDefault": "Datei erstellt",
         "delete": "Datei löschen",
@@ -34,7 +33,6 @@
         "locked": "Sie haben die Datei zur Bearbeitung gesperrt",
         "share": "Datei teilen",
         "upload": "Datei hochladen",
-        "import": "Aus Cawemo importieren",
         "notAvailable": "Sie haben noch keine Datei erstellt",
         "addedToFavorite": "Datei zu Favoriten hinzugefügt",
         "addToFavorites": "Zu Favoriten hinzufügen",
@@ -67,16 +65,17 @@
         "create": "Milestone erstellen",
         "created": "Milestone erstellt",
         "deploy": "Milestone veröffentlichen",
-        "deployMultiple": "Milestoneen veröffentlichen",
+        "deployMultiple": "Milestones veröffentlichen",
         "downloading": "Milestone wird heruntergeladen",
         "deployed": "Milestone veröffentlicht",
         "dialogHeader": "Neue Milestone von {{artifactName}} erstellen",
         "edit": "Milestone bearbeiten",
         "download": "Milestone herunterladen",
         "delete": "Milestone löschen",
-        "openLatest": "Aktuellen Meilenstein öffnen",
+        "openLatest": "Aktuellen Milestone öffnen",
+        "list": "Milestones anzeigen",
         "milestone": "Milestone",
-        "MILESTONE": "Meilenstein",
+        "MILESTONE": "Milestone",
         "deploymentHistory": "Veröffentlichungen",
         "saveAsNewArtifact": "Als neue Datei speichern",
         "saveMilestoneXAsNewArtifact": "Milestone {{milestone}} als neue Datei speichern"
@@ -98,9 +97,9 @@
         "deployments": "Veröffentlichungen",
         "multiple": "Dateien veröffentlichen",
         "target": "Ziel",
-        "milestone": "{{milestoneNumber}}. Meilenstein",
+        "milestone": "{{milestoneNumber}}. Milestone",
         "deploymentDuration": "{{duration}} veröffentlicht",
-        "deployedMultiple": "{{deployedMilestones}} Milestoneen veröffentlicht",
+        "deployedMultiple": "{{deployedMilestones}} Milestones veröffentlicht",
         "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
         "dialogHeader": "Milestone {{milestoneNumber}} veröffentlichen",
         "history": "Alle Veröffentlichungen",
@@ -135,6 +134,8 @@
         "share": "{{artifactName}} Teilen"
     },
     "properties": {
+        "notSelected": "Nicht ausgewählt",
+        "file": "Hier klicken oder Datei ablegen.",
         "title": "Titel",
         "filename": "Name",
         "milestone": "Milestone",
@@ -143,11 +144,6 @@
         "date": "Datum",
         "type": "Typ",
         "target": "Ziel"
-    },
-    "menu": {
-        "Home": "Modellverwaltung",
-        "Forms": "Formulare",
-        "Integration": "Integrationsbausteine"
     },
     "registration": {
         "signup": "Für Miragon Cloud Services anmelden",
@@ -173,6 +169,21 @@
         "missingTool": "Ihr Paket beinhaltet keine Anwendung zum Bearbeiten von {{fileType}}. Kontaktieren Sie den Service, um die Erweiterung zu aktivieren",
         "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
         "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
+    },
+    "menu": {
+        "Home": "Modellverwaltung",
+        "Forms": "Formulare",
+        "Integration": "Integrationsbausteine",
+        "home": "Start",
+        "projects": "Projekte",
+        "favorites": "Favoriten",
+        "recents": "Verlauf",
+        "settings": "Optionen",
+        "account": "Account",
+        "accountMenu": {
+            "account": "Mein Account",
+            "logout": "Logout"
+        }
     },
     "path": {
         "overview": "Übersicht",
@@ -224,7 +235,7 @@
     "action": {
         "createNew": "Neu",
         "save": "Speichern",
-        "saveAsNewMilestone": "Als neuen Meilenstein speichern",
+        "saveAsNewMilestone": "Als neuen Milestone speichern",
         "saveAsNewArtifact": "Als neue Datei speichern",
         "copied": "Datei kopiert",
         "saved": "Gespeichert"
@@ -235,8 +246,8 @@
         "authFailed": "Autorisierung fehlgeschlagen",
         "editDeployedMilestone": "Sie können keine Dateien überspeichern, die bereits veröffentlicht wurden",
         "accessHistory": "Dateien aus dem Archiv können nicht geändert werden",
-        "oldMilestone": "Sie betrachten eine veraltete Datei, ein neuerer Meilenstein ist verfügbar. Zum Öffnen hier klicken",
-        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten - ein neuer Meilenstein ist verfügbar",
+        "oldMilestone": "Sie betrachten eine veraltete Datei, ein neuerer Milestone ist verfügbar. Zum Öffnen hier klicken",
+        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten - ein neuer Milestone ist verfügbar",
         "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet",
         "noAssignmentOrShareFound": "Keine direkte oder indirekte Zugriffserlaubnis",
         "emptyTitle": "Der Titel darf nicht leer sein",

@@ -134,7 +134,7 @@ const DeploymentEntry: React.FC<Props> = props => {
                         {props.artifact !== undefined &&
                             <Link
                                 href="#"
-                                onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", t("error.missingTool", props.artifact?.fileType), props.milestone?.milestone)}
+                                onClick={() => openFileInTool(fileTypes, props.artifact?.fileType ? props.artifact.fileType : "", props.artifact?.repositoryId ? props.artifact.repositoryId : "", props.artifact?.id ? props.artifact.id : "", props.milestone?.milestone)}
                                 className={classes.title}>
                                 {props.artifact.name}
                             </Link>

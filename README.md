@@ -58,7 +58,7 @@ In order to add a new language, you have to go through three steps:
 1. Create a new folder *foldername* in [translations](public/translations)
 2. Copy the whole dictionary from another language package and replace all the translations
 3. Add the corresponding Select-Option in the UI:
-   - Navigate to [Menu](src/components/Layout/Menu.tsx)
+   - Navigate to [Menu](src/components/Layout/Menu/Menu.tsx)
     - Add an object like this to the *options*-Array, where you enter id, label, code (all standard nation codes are supported) and your *foldername* :
     
     ```javascript        
