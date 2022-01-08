@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import { PopupToast, retryAction } from "../../components/Form/PopupToast";
 import ScreenHeader from "../../components/Header/ScreenHeader";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import { MenuListConfig } from "../../components/MenuList/MenuList";
@@ -97,6 +98,17 @@ const HomeScreen: React.FC = (() => {
     }, []);
 
     const reload = useCallback(() => setLoadKey(cur => cur + 1), []);
+
+    if (repositories.error || artifactTypes.error) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                })} />
+        );
+    }
 
     return (
         <>

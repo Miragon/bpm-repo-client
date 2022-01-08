@@ -19,14 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxHeight: "100vh",
         overflowY: "auto",
         backgroundColor: THEME.content.background
-    },
-    content: {
-        display: "flex",
-        flexGrow: 1,
-        padding: "2rem 0",
-        flexDirection: "column",
-        maxWidth: "960px",
-        margin: "0 auto"
     }
 }));
 
@@ -50,11 +42,6 @@ const Layout: React.FC = () => {
         return (
             <RegisterNewUserScreen />
         );
-    }
-
-    if (userInfo.error) {
-        // TODO: Error Handling with retry
-        return null;
     }
 
     return (

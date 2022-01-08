@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ArtifactMilestoneTO, MilestoneApi } from "../../../api";
 import DeploymentList from "../../../components/Deployments/DeploymentList";
 import { DeploymentInfo } from "../../../components/Deployments/DeploymentListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import Pagination from "../../../components/List/Pagination";
 import { usePagination } from "../../../components/List/usePagination";
@@ -98,6 +99,20 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
         link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
         link.click();
     }, []);
+
+    if (repositories.error || repositoryArtifacts.error || repositoryDeployments.error) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    if (props.repositoryId) {
+                        repositoryArtifacts.error && dispatch(loadRepositoryArtifacts(props.repositoryId, true));
+                        repositoryDeployments.error && dispatch(loadRepositoryDeployments(props.repositoryId, true));
+                    }
+                })} />
+        );
+    }
 
     if (props.search) {
         // TODO: Should we display search results instead?

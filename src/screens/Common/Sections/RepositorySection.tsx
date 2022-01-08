@@ -5,11 +5,12 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import Pagination from "../../../components/List/Pagination";
+import { usePagination } from "../../../components/List/usePagination";
 import RepositoryCard from "../../../components/Repositories/RepositoryCard";
 import { loadRepositories } from "../../../store/RepositoryState";
-import { usePagination } from "../../../components/List/usePagination";
 import { RootState } from "../../../store/Store";
 import { openRepository } from "../../../util/LinkUtils";
 import { searchAllCaseInsensitive } from "../../../util/SearchUtils";
@@ -68,6 +69,14 @@ const RepositorySection: React.FC<Props> = props => {
             dispatch(loadRepositories(true));
         }
     }, [dispatch, props.loadKey]);
+
+    if (repositories.error) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => dispatch(loadRepositories(true)))} />
+        );
+    }
 
     if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;

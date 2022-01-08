@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { ArtifactApi, ArtifactTO } from "../../../api";
 import DefaultFileList from "../../../components/Files/DefaultFileList";
 import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { loadRepositories } from "../../../store/RepositoryState";
 import { RootState } from "../../../store/Store";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import { makeErrorToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles({
     fileList: {
@@ -38,15 +38,17 @@ const ArtifactSearchSection: React.FC<Props> = props => {
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
     const favoriteArtifacts = useSelector((state: RootState) => state.favoriteArtifacts);
 
+    const [searchError, setSearchError] = useState(false);
     const [searching, setSearching] = useState(false);
     const [found, setFound] = useState<ArtifactTO[]>();
 
     const search = useCallback(async () => {
+        setSearchError(false);
         setSearching(true);
         const response = await apiExec(ArtifactApi, api => api.searchArtifacts(props.search));
         setSearching(false);
         if (hasFailed(response)) {
-            makeErrorToast("Suche konnte nicht aktualisiert werden.");
+            setSearchError(true);
             return;
         }
 
@@ -82,6 +84,19 @@ const ArtifactSearchSection: React.FC<Props> = props => {
         favorite: !!favoriteArtifacts.value?.find(a => a.id === artifact.id),
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [found, repositories, favoriteArtifacts]);
+
+    if (repositories.error || artifactTypes.error || favoriteArtifacts.error || searchError) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                    searchError && search();
+                })} />
+        );
+    }
 
     return (
         <>

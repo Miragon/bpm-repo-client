@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultFileList from "../../../components/Files/DefaultFileList";
 import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
@@ -58,6 +59,19 @@ const ArtifactRecentSection: React.FC<Props> = props => {
     })), [recentArtifacts, repositories, favoriteArtifacts]);
 
     const filtered = useMemo(() => filterArtifactList(props.search, files), [files, props.search]);
+
+    if (repositories.error || artifactTypes.error || recentArtifacts.error || favoriteArtifacts.error) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    recentArtifacts.error && dispatch(loadRecentArtifacts(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                })} />
+        );
+    }
 
     if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import DetailFileList from "../../../components/Files/DetailFileList";
 import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ActionButton from "../../../components/Header/ActionButton";
 import FilterButton from "../../../components/Header/FilterButton";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
@@ -149,6 +150,28 @@ const RepositorySharedSection: React.FC<Props> = props => {
             dispatch(loadSharedArtifacts(props.repositoryId, true));
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
+
+    if (repositories.error
+        || artifactTypes.error
+        || ownRepositories.error
+        || favoriteArtifacts.error
+        || deploymentTargets.error
+        || sharedArtifacts.error) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    ownRepositories.error && dispatch(loadOwnRepositories(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                    deploymentTargets.error && dispatch(loadDeploymentTargets(true));
+                    if (props.repositoryId) {
+                        sharedArtifacts.error && dispatch(loadSharedArtifacts(props.repositoryId, true));
+                    }
+                })} />
+        );
+    }
 
     if (files.length === 0) {
         return null;

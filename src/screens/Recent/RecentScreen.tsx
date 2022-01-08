@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import { PopupToast, retryAction } from "../../components/Form/PopupToast";
 import ContentLayout from "../../components/Layout/ContentLayout";
 import ScreenHeader from "../../components/Header/ScreenHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
@@ -116,6 +117,17 @@ const RecentScreen: React.FC = (() => {
     }, []);
 
     const reload = useCallback(() => setLoadKey(cur => cur + 1), []);
+
+    if (repositories.error || artifactTypes.error) {
+        return (
+            <PopupToast
+                message="Daten konnten nicht geladen werden."
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                })} />
+        );
+    }
 
     return (
         <>
