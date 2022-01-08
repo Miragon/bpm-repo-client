@@ -42,15 +42,6 @@ interface Props {
     repositoryId: string;
 }
 
-const FILTER_CONFIG = [
-    [
-        { value: "bpmn", label: "BPMN-Dateien" },
-        { value: "dmn", label: "DMN-Dateien" },
-        { value: "configuration", label: "Konfigurationen" },
-        { value: "form", label: "Formulare" }
-    ]
-];
-
 const SORT_CONFIG = [
     [
         { value: "createdAt", label: "Erstellt" },
@@ -67,7 +58,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     const [deployArtifactsOpen, setDeployArtifactsOpen] = useState(false);
-    const [activeFilters, setActiveFilters] = useState(["bpmn", "dmn", "form", "configuration"]);
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [activeSort, setActiveSort] = useState("name");
 
     const repositories = useSelector((state: RootState) => state.repositories);
@@ -82,6 +73,21 @@ const RepositoryFilesSection: React.FC<Props> = props => {
         favorite: !!favoriteArtifacts.value?.find(a => a.id === artifact.id),
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [repositoryArtifacts, repositories, favoriteArtifacts]);
+
+    const filterConfig = useMemo(() => [
+        [
+            ...(artifactTypes.value || []).map(type => ({
+                value: type.name.toLowerCase(),
+                label: t("artifact.filter" + type.name)
+            }))
+        ]
+    ], [artifactTypes.value, t]);
+
+    useEffect(() => {
+        if (artifactTypes.value) {
+            setActiveFilters(artifactTypes.value.map(type => type.name.toLowerCase()));
+        }
+    }, [artifactTypes.value]);
 
     const filtered = useMemo(() => {
         const filteredArtifacts = filterArtifactList(props.search, files)
@@ -166,7 +172,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
                         onChange={setActiveSort} />
                     <FilterButton
                         active={activeFilters}
-                        filterOptions={FILTER_CONFIG}
+                        filterOptions={filterConfig}
                         onChange={changeFilter} />
                 </div>
             </ScreenSectionHeader>

@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ScreenHeader from "../../components/Header/ScreenHeader";
 import ContentLayout from "../../components/Layout/ContentLayout";
+import { MenuListConfig } from "../../components/MenuList/MenuList";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
@@ -23,6 +24,11 @@ import ArtifactFavoriteSection from "../Common/Sections/ArtifactFavoriteSection"
 import ArtifactRecentSection from "../Common/Sections/ArtifactRecentSection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
 import RepositorySection from "../Common/Sections/RepositorySection";
+
+const CUSTOM_ICONS: { [key: string]: React.ElementType } = {
+    "CONFIGURATION": TuneOutlined,
+    "FORM": FormatShapesOutlined
+};
 
 const HomeScreen: React.FC = (() => {
     const history = useHistory();
@@ -37,7 +43,7 @@ const HomeScreen: React.FC = (() => {
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("");
 
-    const addOptions = useMemo(() => [
+    const addOptions: MenuListConfig = useMemo(() => [
         [
             {
                 label: "repository.create",
@@ -45,28 +51,11 @@ const HomeScreen: React.FC = (() => {
                 icon: CreateNewFolderOutlined
             }
         ],
-        [
-            {
-                label: "artifact.createBPMN",
-                value: "create-bpmn",
-                icon: NoteAddOutlined
-            },
-            {
-                label: "artifact.createDMN",
-                value: "create-dmn",
-                icon: NoteAddOutlined
-            },
-            {
-                label: "artifact.createFORM",
-                value: "create-form",
-                icon: FormatShapesOutlined
-            },
-            {
-                label: "artifact.createCONFIGURATION",
-                value: "create-configuration",
-                icon: TuneOutlined
-            }
-        ],
+        (artifactTypes.value || []).map(type => ({
+            label: "artifact.create" + type.name,
+            value: "create-file-" + type.name,
+            icon: CUSTOM_ICONS[type.name] || NoteAddOutlined
+        })),
         [
             {
                 label: "artifact.upload",
@@ -74,7 +63,7 @@ const HomeScreen: React.FC = (() => {
                 icon: CloudUploadOutlined
             }
         ]
-    ], []);
+    ], [artifactTypes]);
 
     useEffect(() => {
         dispatch(loadRepositories());
@@ -94,24 +83,14 @@ const HomeScreen: React.FC = (() => {
                 setCreateRepositoryDialogOpen(true);
                 break;
             }
-            case "create-bpmn": {
-                setCreateArtifactType("BPMN");
-                break;
-            }
-            case "create-dmn": {
-                setCreateArtifactType("DMN");
-                break;
-            }
-            case "create-form": {
-                setCreateArtifactType("FORM");
-                break;
-            }
-            case "create-configuration": {
-                setCreateArtifactType("CONFIGURATION");
-                break;
-            }
             case "upload-file": {
                 setUploadArtifactDialogOpen(true);
+                break;
+            }
+            default: {
+                if (action.startsWith("create-file-")) {
+                    setCreateArtifactType(action.substring(12));
+                }
                 break;
             }
         }
