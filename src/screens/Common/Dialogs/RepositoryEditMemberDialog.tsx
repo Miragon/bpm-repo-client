@@ -4,9 +4,9 @@ import { EditOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AssignmentTORoleEnum, RepoAssignmentApi, RepositoryTO } from "../../../api";
-import { UserInfo } from "../../../components/Layout/Users/UserListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { UserInfo } from "../../../components/Users/UserListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 
 const useStyles = makeStyles({

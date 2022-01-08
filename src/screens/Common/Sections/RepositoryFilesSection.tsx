@@ -3,19 +3,19 @@ import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import DetailFileList from "../../../components/Layout/Files/DetailFileList";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import ActionButton from "../../../components/Layout/Header/ActionButton";
-import FilterButton from "../../../components/Layout/Header/FilterButton";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
-import SortButton from "../../../components/Layout/Header/SortButton";
+import DetailFileList from "../../../components/Files/DetailFileList";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import ActionButton from "../../../components/Header/ActionButton";
+import FilterButton from "../../../components/Header/FilterButton";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
+import SortButton from "../../../components/Header/SortButton";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadDeploymentTargets } from "../../../store/DeploymentTargetState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { loadOwnRepositories } from "../../../store/OwnRepositoryState";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositoryArtifacts } from "../../../store/RepositoryArtifactState";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { RootState } from "../../../store/Store";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
@@ -182,7 +182,10 @@ const RepositoryFilesSection: React.FC<Props> = props => {
                 artifactTypes={artifactTypes.value || []} />
             <DeployArtifactsDialog
                 open={deployArtifactsOpen}
-                onClose={() => setDeployArtifactsOpen(false)}
+                onClose={deployed => {
+                    setDeployArtifactsOpen(false);
+                    deployed && props.onChange();
+                }}
                 repositoryId={props.repositoryId}
                 artifacts={files}
                 targets={deploymentTargets.value || []} />

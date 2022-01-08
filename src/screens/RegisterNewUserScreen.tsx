@@ -1,29 +1,15 @@
-import React, {useCallback, useState} from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import LockIcon from "@material-ui/icons/Lock";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import {makeStyles} from "@material-ui/core/styles";
-import {useHistory} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
-import {UserApi} from "../api/api";
-import helpers from "../util/helperFunctions";
-import {useTranslation} from "react-i18next";
-/*
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright © "}
-            <Link color="inherit" href="https://flowsquad.io">
-                FlowSquad GmbH
-            </Link>
-            {", "}
-            {new Date().getFullYear()}
-            .
-        </Typography>
-    );
-}
-*/
+import LockIcon from "@material-ui/icons/Lock";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { UserApi } from "../api/api";
+import { apiExec, hasFailed } from "../util/ApiUtils";
+
 const useStyles = makeStyles(theme => ({
     createUserProfilePage: {
         display: "flex",
@@ -65,6 +51,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+// TODO: Refactor file
+
 /**
  * Creates a FlowRepo User profile
  * if a User with a given oAuth key does not have one yet.
@@ -72,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 const RegisterNewUserScreen: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const {t} = useTranslation("common");
+    const { t } = useTranslation("common");
 
 
     const [userController] = useState<UserApi>(new UserApi());
@@ -83,12 +71,11 @@ const RegisterNewUserScreen: React.FC = () => {
      * Persist a new User-profile in the FlowRepo-backend
      */
     const handleCreateUserProfile = useCallback(async (): Promise<void> => {
-        try {
-            const config = helpers.getClientConfig();
-            await userController.createUser(config);
+        const response = await apiExec(UserApi, api => api.createUser());
+        if (hasFailed(response)) {
+            // TODO
+        } else {
             history.push("/");
-        } catch (response) {
-            helpers.makeErrorToast("Could not persist the new User", () => handleCreateUserProfile());
         }
     }, [history, userController]);
 
@@ -111,7 +98,6 @@ const RegisterNewUserScreen: React.FC = () => {
                 <form className={classes.form} noValidate>
 
 
-
                     <Button
                         type="submit"
                         fullWidth
@@ -131,17 +117,3 @@ const RegisterNewUserScreen: React.FC = () => {
 };
 
 export default RegisterNewUserScreen;
-
-
-/* Accept AGBs:
-                    <FormControlLabel
-                        className={classes.confirmationCheckbox}
-                        control={(
-                            <Checkbox
-                                checked={!isButtonDisabled}
-                                onClick={() => setButtonDisabled(!isButtonDisabled)}
-                                value="allowExtraEmails"
-                                color="primary" />
-                        )}
-                        label= {t("registration.agree")}/>
- */

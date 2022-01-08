@@ -1,15 +1,4 @@
-import { FileDescription } from "../components/Layout/Files/FileListEntry";
-
-export const searchCaseInsensitive = (
-    content: string | undefined,
-    search: string | undefined
-): boolean => {
-    if (content === undefined || search === undefined) {
-        return false;
-    }
-
-    return content.toLowerCase().indexOf(search.toLowerCase()) !== -1;
-};
+import { FileDescription } from "../components/Files/FileListEntry";
 
 export const searchAllCaseInsensitive = (
     search: string | undefined,
@@ -26,17 +15,6 @@ export const searchAllCaseInsensitive = (
         }
     }
     return false;
-};
-
-export const search = (
-    content: string | undefined,
-    searchValue: string | undefined
-): boolean => {
-    if (content === undefined || searchValue === undefined) {
-        return false;
-    }
-
-    return content.indexOf(searchValue) !== -1;
 };
 
 export const filterArtifactList = (

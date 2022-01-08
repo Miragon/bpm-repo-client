@@ -5,13 +5,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
 import { ArtifactApi, RepositoryTO } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles({
     icon: {
@@ -74,7 +74,7 @@ const CopyArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast("action.copied");
+        makeSuccessToast("action.copied");
         setDescription("");
         setTitle("");
         setRepositoryId("");

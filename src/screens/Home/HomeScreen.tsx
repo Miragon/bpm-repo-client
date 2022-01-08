@@ -10,20 +10,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import ScreenHeader from "../../components/Header/ScreenHeader";
 import ContentLayout from "../../components/Layout/ContentLayout";
-import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
-import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
-import { openRepository } from "../../util/Redirections";
+import { openRepository } from "../../util/LinkUtils";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
 import ArtifactFavoriteSection from "../Common/Sections/ArtifactFavoriteSection";
 import ArtifactRecentSection from "../Common/Sections/ArtifactRecentSection";
-import RepositorySection from "../Common/Sections/RepositorySection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
+import RepositorySection from "../Common/Sections/RepositorySection";
 
 const ADD_OPTIONS = [
     [
@@ -81,6 +80,13 @@ const HomeScreen: React.FC = (() => {
         dispatch(loadRepositories());
         dispatch(loadArtifactTypes());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (loadKey > 0) {
+            dispatch(loadRepositories());
+            dispatch(loadArtifactTypes());
+        }
+    }, [dispatch, loadKey]);
 
     const onAddItemClicked = useCallback((action: string) => {
         switch (action) {
@@ -170,8 +176,10 @@ const HomeScreen: React.FC = (() => {
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
-                        // TODO: Open file screen here
-                        result && history.push(`/repository/${result.repositoryId}/${result.artifactId}`);
+                        if (result) {
+                            reload();
+                            history.push(openRepository(result.repositoryId));
+                        }
                     }} />
 
                 <UploadArtifactDialog
@@ -179,11 +187,8 @@ const HomeScreen: React.FC = (() => {
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);
                         if (result) {
-                            // TODO: Open milestone screen here
-                            history.push(`/repository/${result.repositoryId}/${result.artifactId}/milestone/${result.milestone}`);
-                            // Update state
-                            dispatch(loadRepositories(true));
-                            dispatch(loadRecentArtifacts(true));
+                            reload();
+                            history.push(openRepository(result.repositoryId));
                         }
                     }}
                     repositories={repositories.value || []}

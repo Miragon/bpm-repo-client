@@ -13,8 +13,8 @@ import {
     UserApi,
     UserInfoTO
 } from "../../../api";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 
 const useStyles = makeStyles({

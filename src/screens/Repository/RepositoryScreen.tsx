@@ -11,12 +11,12 @@ import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import ContentLayout from "../../components/Layout/ContentLayout";
-import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
+import ScreenHeader from "../../components/Header/ScreenHeader";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
-import { openRepository } from "../../util/Redirections";
+import { openRepository } from "../../util/LinkUtils";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
@@ -78,6 +78,13 @@ const RepositoryScreen: React.FC = (() => {
         dispatch(loadRepositories());
         dispatch(loadArtifactTypes());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (loadKey > 0) {
+            dispatch(loadRepositories(true));
+            dispatch(loadArtifactTypes(true));
+        }
+    }, [dispatch, loadKey]);
 
     const onAddItemClicked = useCallback((action: string) => {
         switch (action) {
@@ -146,8 +153,11 @@ const RepositoryScreen: React.FC = (() => {
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
-                        // TODO: Open file screen here
-                        result && history.push(`/repository/${result.repositoryId}/${result.artifactId}`);
+                        if (result) {
+                            // Update state
+                            reload();
+                            history.push(openRepository(result.repositoryId));
+                        }
                     }} />
 
                 <UploadArtifactDialog
@@ -155,11 +165,10 @@ const RepositoryScreen: React.FC = (() => {
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);
                         if (result) {
-                            // TODO: Open milestone screen here
-                            history.push(`/repository/${result.repositoryId}/${result.artifactId}/milestone/${result.milestone}`);
                             // Update state
                             dispatch(loadRepositories(true));
                             dispatch(loadRecentArtifacts(true));
+                            history.push(openRepository(result.repositoryId));
                         }
                     }}
                     repositories={repositories.value || []}

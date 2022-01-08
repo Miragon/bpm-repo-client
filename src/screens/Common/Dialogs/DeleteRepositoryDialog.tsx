@@ -5,10 +5,10 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { RepositoryApi, RepositoryTO } from "../../../api";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import PopupDialog from "../../../components/Form/PopupDialog";
 import { updateRepositories } from "../../../store/RepositoryState";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 interface Props {
     open: boolean;
@@ -53,7 +53,7 @@ const DeleteRepositoryDialog: React.FC<Props> = props => {
             key: "id",
             delete: [repository.id]
         }));
-        helpers.makeSuccessToast(t("repository.deleted"));
+        makeSuccessToast(t("repository.deleted"));
         onClose(true);
     }, [repository, dispatch, onClose, t]);
 

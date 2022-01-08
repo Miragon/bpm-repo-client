@@ -3,8 +3,8 @@ import { DeleteOutlineOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RepoAssignmentApi, RepositoryTO } from "../../../api";
-import { UserInfo } from "../../../components/Layout/Users/UserListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import { UserInfo } from "../../../components/Users/UserListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 
 const useStyles = makeStyles({

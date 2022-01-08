@@ -2,14 +2,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArtifactApi } from "../../../api";
-import FileIcon from "../../../components/Layout/Files/FileIcon";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import FileIcon from "../../../components/Files/FileIcon";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import { THEME } from "../../../theme";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 interface Props {
     artifact: FileDescription | undefined;
@@ -65,7 +65,7 @@ const EditArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("artifact.changed"));
+        makeSuccessToast(t("artifact.changed"));
         onClose(true);
         setTitle("");
         setDescription("");

@@ -1,14 +1,14 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import DefaultFileList from "../../../components/Layout/Files/DefaultFileList";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
+import DefaultFileList from "../../../components/Files/DefaultFileList";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { loadRecentArtifacts } from "../../../store/RecentArtifactState";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { RootState } from "../../../store/Store";
 import { filterArtifactList } from "../../../util/SearchUtils";
 
 const useStyles = makeStyles({

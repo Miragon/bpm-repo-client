@@ -4,11 +4,11 @@ import { ShareOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RepositoryTO, ShareApi, ShareWithRepositoryTORoleEnum } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 interface Props {
     open: boolean;
@@ -63,7 +63,7 @@ const ShareArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("share.successful"));
+        makeSuccessToast(t("share.successful"));
         setRole("");
         setRepositoryId("");
         props.onClose(true);

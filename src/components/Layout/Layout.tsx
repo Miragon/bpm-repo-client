@@ -1,15 +1,14 @@
 import { makeStyles } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { ArtifactApi, UserApi } from "../../api";
-import { CURRENT_USER_INFO, FILETYPES } from "../../constants/Constants";
 import RegisterNewUserScreen from "../../screens/RegisterNewUserScreen";
+import { RootState } from "../../store/Store";
+import { loadUserInfo } from "../../store/UserInfoState";
 import { THEME } from "../../theme";
-import helpers from "../../util/helperFunctions";
+import Menu from "../Menu/Menu";
 import ContentLayout from "./ContentLayout";
-import Menu from "./Menu/Menu";
 import Router from "./Router";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,42 +35,25 @@ const Layout: React.FC = () => {
 
     const classes = useStyles();
 
-    const [userDoesExist, setUserDoesExist] = useState<boolean>();
-    const [fileConfigFetched, setFileConfigFetched] = useState(false);
+    const userInfo = useSelector((state: RootState) => state.userInfo);
 
     useEffect(() => {
-        const config = helpers.getClientConfig();
-        new UserApi().getUserInfo(config)
-            .then(response => {
-                if (response.data) {
-                    setUserDoesExist(true);
-                    dispatch({ type: CURRENT_USER_INFO, currentUserInfo: response.data });
-                } else {
-                    setUserDoesExist(false);
-                }
-            })
-            .catch(() => setUserDoesExist(false));
+        dispatch(loadUserInfo());
     }, [dispatch]);
 
-    useEffect(() => {
-        if (!fileConfigFetched) {
-            const config = helpers.getClientConfig();
-            new ArtifactApi().getAllFileTypes(config).then(response => {
-                if (response.data) {
-                    dispatch({ type: FILETYPES, fileTypes: response.data });
-                    setFileConfigFetched(true);
-                }
-            })
-
-        }
-    }, [dispatch, fileConfigFetched])
-
-    if (userDoesExist === undefined) {
+    if (userInfo.initialLoading) {
         return null;
     }
 
-    if (!userDoesExist) {
-        return <RegisterNewUserScreen />;
+    if (userInfo.statusCode === 404) {
+        return (
+            <RegisterNewUserScreen />
+        );
+    }
+
+    if (userInfo.error) {
+        // TODO: Error Handling with retry
+        return null;
     }
 
     return (

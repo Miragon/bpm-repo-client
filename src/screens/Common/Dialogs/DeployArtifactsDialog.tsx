@@ -4,14 +4,14 @@ import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DeploymentApi, NewDeploymentTO } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SearchTextField from "../../../components/Shared/Form/SearchTextField";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SearchTextField from "../../../components/Form/SearchTextField";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
 import { filterArtifactList } from "../../../util/SearchUtils";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},
@@ -103,8 +103,11 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.result.length }));
+        makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.result.length }));
         props.onClose(true);
+        setTarget("");
+        setSearch("");
+        setSelectedArtifacts([]);
     }, [target, selectedArtifacts, props, t])
 
     const onCancel = () => {

@@ -6,7 +6,8 @@ import {
     PayloadAction,
     SliceCaseReducers
 } from "@reduxjs/toolkit";
-import { ApiResponse, FailedResponse, hasFailed, SuccessfulResponse } from "../../util/ApiUtils";
+import { AxiosResponse } from "axios";
+import { FailedResponse, hasFailed, transformAxiosResponse } from "../../util/ApiUtils";
 import type { RootDispatch, RootState } from "../Store";
 import {
     ApiState,
@@ -73,34 +74,15 @@ declare type ErrorHandler<Type> = (
     loadSucceeded: (payload: ObjectLoadSuccessfulPayload<Type>) => void
 ) => boolean;
 
-declare type ObjectBaseOptions = {
-    name: string,
-    cacheTimeout: number
-};
-
-declare type ObjectDefaultOptions<Type> = ObjectBaseOptions & {
-    execute: () => Promise<ApiResponse<Type>>;
+declare type ObjectOptions<Type> = {
+    name: string;
+    cacheTimeout: number;
+    execute: () => Promise<AxiosResponse<Type>>;
     onError?: ErrorHandler<Type>;
 };
-
-declare type ObjectCustomOptions<Type, Response> = ObjectBaseOptions & {
-    execute: () => Promise<ApiResponse<Response>>;
-    transform: (response: Response) => Type;
-    onError?: ErrorHandler<Type>;
-};
-
-declare type ObjectOptions<Type, Response> =
-    | ObjectDefaultOptions<Type>
-    | ObjectCustomOptions<Type, Response>;
-
-const isCustomObjectResponse = <Type, Response>(
-    param: ObjectOptions<Type, Response>
-): param is ObjectCustomOptions<Type, Response> => (
-    (!!(param as ObjectCustomOptions<Type, Response>).transform)
-);
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const createObjectApiState = <Type, Response = Type>(options: ObjectOptions<Type, Response>) => {
+const createObjectApiState = <Type>(options: ObjectOptions<Type>) => {
     const loadStartedAction = options.name + LoadStarted;
     const loadFailedAction = options.name + LoadFailed;
     const loadSucceededAction = options.name + ObjectLoadSucceeded;
@@ -151,7 +133,7 @@ const createObjectApiState = <Type, Response = Type>(options: ObjectOptions<Type
 
         dispatch(loadStarted());
         try {
-            const result = await options.execute();
+            const result = transformAxiosResponse(await options.execute());
             if (hasFailed(result)) {
                 const wasHandled = options.onError && options.onError(
                     result,
@@ -166,19 +148,12 @@ const createObjectApiState = <Type, Response = Type>(options: ObjectOptions<Type
                     }));
                 }
             } else {
-                let transformed: Type;
-                if (isCustomObjectResponse(options)) {
-                    const typedResult = result as SuccessfulResponse<Response>;
-                    transformed = options.transform(typedResult.result);
-                } else {
-                    const typedResult = result as SuccessfulResponse<Type>;
-                    transformed = typedResult.result;
-                }
                 dispatch(loadSucceeded({
-                    value: transformed,
+                    value: result.result,
                     statusCode: result.status
                 }));
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const wasHandled = options.onError && options.onError(
                 error,

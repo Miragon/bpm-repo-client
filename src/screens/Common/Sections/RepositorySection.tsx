@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
-import Pagination from "../../../components/Layout/List/Pagination";
-import RepositoryCard from "../../../components/Layout/Repositories/RepositoryCard";
-import { RootState } from "../../../store/reducers/rootReducer";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
+import Pagination from "../../../components/List/Pagination";
+import RepositoryCard from "../../../components/Repositories/RepositoryCard";
 import { loadRepositories } from "../../../store/RepositoryState";
-import { usePagination } from "../../../util/hooks/usePagination";
-import { getRepositoryUrl } from "../../../util/Redirections";
+import { usePagination } from "../../../components/List/usePagination";
+import { RootState } from "../../../store/Store";
+import { openRepository } from "../../../util/LinkUtils";
 import { searchAllCaseInsensitive } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 
@@ -82,7 +82,7 @@ const RepositorySection: React.FC<Props> = props => {
                         <RepositoryCard
                             key={repo.id}
                             repository={repo}
-                            onClick={() => history.push(getRepositoryUrl(repo))} />
+                            onClick={() => history.push(openRepository(repo.id))} />
                     ))}
                     {filtered.length === 0 && (
                         <Typography
