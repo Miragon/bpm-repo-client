@@ -1,147 +1,59 @@
-import React, {useCallback, useState} from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import LockIcon from "@material-ui/icons/Lock";
-import Typography from "@material-ui/core/Typography";
-import {makeStyles} from "@material-ui/core/styles";
-import {useHistory} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
-import {UserApi} from "../api/api";
-import helpers from "../util/helperFunctions";
-import {useTranslation} from "react-i18next";
-/*
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright © "}
-            <Link color="inherit" href="https://flowsquad.io">
-                FlowSquad GmbH
-            </Link>
-            {", "}
-            {new Date().getFullYear()}
-            .
-        </Typography>
-    );
-}
-*/
+import { makeStyles } from "@material-ui/core/styles";
+import { Flare } from "@material-ui/icons";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { UserApi } from "../api/api";
+import PopupDialog from "../components/Form/PopupDialog";
+import { loadUserInfo } from "../store/UserInfoState";
+import { apiExec, hasFailed } from "../util/ApiUtils";
+import { makeErrorToast } from "../util/ToastUtils";
+
 const useStyles = makeStyles(theme => ({
-    createUserProfilePage: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    createUserProfileContent: {
-        width: "100%",
-        maxWidth: "960px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingLeft: "30px",
-        paddingRight: "30px",
-        paddingTop: "20vh",
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: "deeppink"
+    icon: {
+        fontSize: "3rem",
+        color: "white"
     },
     infoText: {
-        textAlign: "center",
-        fontSize: "15px",
-        width: "100%",
-        maxWidth: "500px",
-    },
-    form: {
-        width: "100%",
-        maxWidth: "500px",
-        marginTop: theme.spacing(3),
-    },
-    confirmationCheckbox: {
-        marginTop: "15px",
-    },
-    createUserProfileButton: {
-        marginTop: "25px",
-        marginBottom: "50px",
-        backgroundColor: "#0bb538",
-    },
+        margin: "0.5rem 0",
+        textAlign: "center"
+    }
 }));
 
-/**
- * Creates a FlowRepo User profile
- * if a User with a given oAuth key does not have one yet.
- */
 const RegisterNewUserScreen: React.FC = () => {
     const classes = useStyles();
-    const history = useHistory();
-    const {t} = useTranslation("common");
+    const dispatch = useDispatch();
+    const { t } = useTranslation("common");
 
+    const [disabled, setDisabled] = useState(false);
 
-    const [userController] = useState<UserApi>(new UserApi());
-    //const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
-
-
-    /**
-     * Persist a new User-profile in the FlowRepo-backend
-     */
-    const handleCreateUserProfile = useCallback(async (): Promise<void> => {
-        try {
-            const config = helpers.getClientConfig();
-            await userController.createUser(config);
-            history.push("/");
-        } catch (response) {
-            helpers.makeErrorToast("Could not persist the new User", () => handleCreateUserProfile());
+    const createUserProfile = useCallback(async () => {
+        setDisabled(true);
+        const response = await apiExec(UserApi, api => api.createUser());
+        if (hasFailed(response)) {
+            setDisabled(false);
+            makeErrorToast(t(response.error));
+        } else {
+            dispatch(loadUserInfo(true));
         }
-    }, [history, userController]);
+    }, [t, dispatch]);
 
     return (
-        <div className={classes.createUserProfilePage}>
-            <div className={classes.createUserProfileContent}>
-                <Avatar className={classes.avatar}>
-                    <LockIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    {t("registration.signup")}
-                </Typography>
-
-                <p className={classes.infoText}>
-                    {t("registration.firstTime")}
-                    <br />
-                    {t("registration.accountRequired")}
-                </p>
-
-                <form className={classes.form} noValidate>
-
-
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        //disabled={isButtonDisabled}
-                        className={classes.createUserProfileButton}
-                        onClick={handleCreateUserProfile}>
-
-                        {t("registration.create")}
-                    </Button>
-                </form>
-            </div>
-            <ToastContainer />
-        </div>
+        <PopupDialog
+            open
+            title={t("registration.signup")}
+            firstTitle={t("registration.create")}
+            onFirst={createUserProfile}
+            disabled={disabled}
+            icon={<Flare className={classes.icon} />}>
+            <p className={classes.infoText}>
+                {t("registration.firstTime")}
+            </p>
+            <p className={classes.infoText}>
+                {t("registration.accountRequired")}
+            </p>
+        </PopupDialog>
     );
 };
 
 export default RegisterNewUserScreen;
-
-
-/* Accept AGBs:
-                    <FormControlLabel
-                        className={classes.confirmationCheckbox}
-                        control={(
-                            <Checkbox
-                                checked={!isButtonDisabled}
-                                onClick={() => setButtonDisabled(!isButtonDisabled)}
-                                value="allowExtraEmails"
-                                color="primary" />
-                        )}
-                        label= {t("registration.agree")}/>
- */

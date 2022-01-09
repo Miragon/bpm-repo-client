@@ -3,9 +3,9 @@ import { PeopleAltOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AssignmentTO, RepoAssignmentApi, RepositoryTO, UserApi, UserInfoTO } from "../../../api";
-import UserList from "../../../components/Layout/Users/UserList";
-import { UserInfo } from "../../../components/Layout/Users/UserListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import UserList from "../../../components/Users/UserList";
+import { UserInfo } from "../../../components/Users/UserListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 import RepositoryAddMemberDialog from "./RepositoryAddMemberDialog";
 import RepositoryEditMemberDialog from "./RepositoryEditMemberDialog";
@@ -41,9 +41,9 @@ const RepositoryMembersDialog: React.FC<Props> = props => {
         return assignments?.map(assignment => ({
             id: assignment.userId,
             role: assignment.role,
-            name: users?.find(user => user.id === assignment.userId)?.username || "Unknown"
+            name: users?.find(user => user.id === assignment.userId)?.username || t("repository.members.unknown")
         })) || [];
-    }, [assignments, users]);
+    }, [assignments, users, t]);
 
     const load = useCallback(async () => {
         if (!repository) {
@@ -86,9 +86,9 @@ const RepositoryMembersDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={load}
             open={open}
-            firstTitle="Benutzer hinzufügen"
+            firstTitle={t("repository.members.add")}
             onFirst={() => setAddMemberDialogOpen(true)}
-            title={t("repository.editUsers")}>
+            title={t("repository.members.manage")}>
 
             <UserList
                 users={userInfo}

@@ -4,12 +4,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { RepositoryApi, RepositoryTO } from "../../../api";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import { updateRepositories } from "../../../store/RepositoryState";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles({
     icon: {
@@ -49,7 +49,7 @@ const EditRepositoryDialog: React.FC<Props> = props => {
         }
 
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
@@ -66,7 +66,7 @@ const EditRepositoryDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("repository.updated"));
+        makeSuccessToast(t("repository.updated"));
         dispatch(updateRepositories({
             key: "id",
             update: [response.result]

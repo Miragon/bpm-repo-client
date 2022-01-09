@@ -13,24 +13,13 @@
  */
 
 
-import {Configuration} from './configuration';
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-    assertParamExists,
-    createRequestFunction,
-    DUMMY_BASE_URL,
-    serializeDataIfNeeded,
-    setApiKeyToObject,
-    setBasicAuthToObject,
-    setBearerAuthToObject,
-    setOAuthToObject,
-    setSearchParams,
-    toPathString
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * version of an artifact, contains the file and information about deployments
@@ -326,6 +315,18 @@ export interface DeploymentTO {
      * @type {string}
      * @memberof DeploymentTO
      */
+    status: DeploymentTOStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentTO
+     */
+    message?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentTO
+     */
     user: string;
     /**
      * 
@@ -334,37 +335,17 @@ export interface DeploymentTO {
      */
     timestamp: string;
 }
+
 /**
- * Containing the specifications for connected apps
- * @export
- * @interface MenuItemTO
- */
-export interface MenuItemTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof MenuItemTO
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MenuItemTO
-     */
-    url: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MenuItemTO
-     */
-    icon: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MenuItemTO
-     */
-    position?: number;
+    * @export
+    * @enum {string}
+    */
+export enum DeploymentTOStatusEnum {
+    Pending = 'PENDING',
+    Success = 'SUCCESS',
+    Error = 'ERROR'
 }
+
 /**
  * Client created object for creating a new artifact
  * @export
@@ -389,6 +370,12 @@ export interface NewArtifactTO {
      * @memberof NewArtifactTO
      */
     fileType: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NewArtifactTO
+     */
+    file?: string;
 }
 /**
  * Client created object containing the deployment target and artifact(-version) id(-s) for creating a new deployment
@@ -620,25 +607,6 @@ export enum SharedRepositoryTORoleEnum {
 }
 
 /**
- * 
- * @export
- * @interface User
- */
-export interface User {
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    username?: string;
-}
-/**
  * Containing all information about an user
  * @export
  * @interface UserInfoTO
@@ -669,25 +637,6 @@ export interface UserTO {
      * @memberof UserTO
      */
     username: string;
-}
-/**
- * 
- * @export
- * @interface UserUpdateTO
- */
-export interface UserUpdateTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdateTO
-     */
-    userId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdateTO
-     */
-    username?: string;
 }
 
 /**
@@ -1985,104 +1934,6 @@ export class DeploymentApi extends BaseAPI {
      */
     public getAllDeploymentsFromRepository(repositoryId: string, options?: any) {
         return DeploymentApiFp(this.configuration).getAllDeploymentsFromRepository(repositoryId, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * MenuApi - axios parameter creator
- * @export
- */
-export const MenuApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Get all menu items
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllMenuItems: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/menu`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * MenuApi - functional programming interface
- * @export
- */
-export const MenuApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MenuApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Get all menu items
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAllMenuItems(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MenuItemTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllMenuItems(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * MenuApi - factory interface
- * @export
- */
-export const MenuApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MenuApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Get all menu items
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllMenuItems(options?: any): AxiosPromise<Array<MenuItemTO>> {
-            return localVarFp.getAllMenuItems(options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * MenuApi - object-oriented interface
- * @export
- * @class MenuApi
- * @extends {BaseAPI}
- */
-export class MenuApi extends BaseAPI {
-    /**
-     * 
-     * @summary Get all menu items
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MenuApi
-     */
-    public getAllMenuItems(options?: any) {
-        return MenuApiFp(this.configuration).getAllMenuItems(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4479,42 +4330,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @summary Update the user
-         * @param {UserUpdateTO} userUpdateTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser: async (userUpdateTO: UserUpdateTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userUpdateTO' is not null or undefined
-            assertParamExists('updateUser', 'userUpdateTO', userUpdateTO)
-            const localVarPath = `/api/user`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userUpdateTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -4577,17 +4392,6 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.searchUsers(typedName, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
-        /**
-         * 
-         * @summary Update the user
-         * @param {UserUpdateTO} userUpdateTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateUser(userUpdateTO: UserUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(userUpdateTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
     }
 };
 
@@ -4644,16 +4448,6 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         searchUsers(typedName: string, options?: any): AxiosPromise<Array<UserInfoTO>> {
             return localVarFp.searchUsers(typedName, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Update the user
-         * @param {UserUpdateTO} userUpdateTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser(userUpdateTO: UserUpdateTO, options?: any): AxiosPromise<User> {
-            return localVarFp.updateUser(userUpdateTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4720,18 +4514,6 @@ export class UserApi extends BaseAPI {
      */
     public searchUsers(typedName: string, options?: any) {
         return UserApiFp(this.configuration).searchUsers(typedName, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Update the user
-     * @param {UserUpdateTO} userUpdateTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public updateUser(userUpdateTO: UserUpdateTO, options?: any) {
-        return UserApiFp(this.configuration).updateUser(userUpdateTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

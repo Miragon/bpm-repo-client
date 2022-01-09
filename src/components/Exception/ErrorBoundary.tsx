@@ -21,6 +21,7 @@ export class ErrorBoundary extends React.Component<unknown, { [key: string]: str
     render(): React.ReactNode {
         if (this.state.hasError) {
             // You can render any custom fallback UI
+            // Cannot be translated as we can't use hooks inside class components
             return <i>Something went wrong. Please reload the page</i>;
         }
         return this.props.children;

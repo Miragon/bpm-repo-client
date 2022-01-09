@@ -1,17 +1,18 @@
 import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArtifactApi, ArtifactTO } from "../../../api";
-import DefaultFileList from "../../../components/Layout/Files/DefaultFileList";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
+import DefaultFileList from "../../../components/Files/DefaultFileList";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { RootState } from "../../../store/Store";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
 
 const useStyles = makeStyles({
     fileList: {
@@ -32,21 +33,25 @@ const ArtifactSearchSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
+    const { t } = useTranslation("common");
+
     const searchTimeout = useRef<NodeJS.Timeout | undefined>();
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
     const favoriteArtifacts = useSelector((state: RootState) => state.favoriteArtifacts);
 
+    const [searchError, setSearchError] = useState(false);
     const [searching, setSearching] = useState(false);
     const [found, setFound] = useState<ArtifactTO[]>();
 
     const search = useCallback(async () => {
+        setSearchError(false);
         setSearching(true);
         const response = await apiExec(ArtifactApi, api => api.searchArtifacts(props.search));
         setSearching(false);
         if (hasFailed(response)) {
-            helpers.makeErrorToast("Suche konnte nicht aktualisiert werden.");
+            setSearchError(true);
             return;
         }
 
@@ -83,9 +88,22 @@ const ArtifactSearchSection: React.FC<Props> = props => {
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [found, repositories, favoriteArtifacts]);
 
+    if (repositories.error || artifactTypes.error || favoriteArtifacts.error || searchError) {
+        return (
+            <PopupToast
+                message={t("exception.loadingError")}
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                    searchError && search();
+                })} />
+        );
+    }
+
     return (
         <>
-            <ScreenSectionHeader title="Gefundene Dateien">
+            <ScreenSectionHeader title={t("artifact.searchResults")}>
                 {searching && (
                     <CircularProgress
                         size={16}

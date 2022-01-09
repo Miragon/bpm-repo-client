@@ -38,22 +38,22 @@ export const THEME = {
         text: "rgba(0, 0, 0, 0.87)",
         active: {
             icon: lightBlue[500],
-            text: "rgba(0, 0, 0, 0.87)",
+            text: "rgba(0, 0, 0, 1)",
             border: lightBlue[500]
         },
         hover: {
-            icon: lightBlue[300],
-            text: "rgba(0, 0, 0, 0.87)",
+            icon: lightBlue[500],
+            text: "rgba(0, 0, 0, 1)",
             border: "transparent"
         },
         inactive: {
             icon: blueGrey[200],
-            text: "rgba(0, 0, 0, 0.38)",
+            text: "rgba(0, 0, 0, 0.75)",
             border: "transparent"
         },
         avatar: {
             default: {
-                background: blueGrey[200],
+                background: blueGrey[300],
                 text: "rgba(255, 255, 255, 0.87)"
             },
             hover: {

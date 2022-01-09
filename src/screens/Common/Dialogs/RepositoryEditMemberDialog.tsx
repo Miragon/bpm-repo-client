@@ -4,9 +4,9 @@ import { EditOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AssignmentTORoleEnum, RepoAssignmentApi, RepositoryTO } from "../../../api";
-import { UserInfo } from "../../../components/Layout/Users/UserListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { UserInfo } from "../../../components/Users/UserListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 
 const useStyles = makeStyles({
@@ -45,7 +45,7 @@ const RepositoryEditMemberDialog: React.FC<Props> = props => {
         }
 
         if (!role) {
-            setError("Keine Rolle ausgewählt!");
+            setError(t("validation.noRole"));
             return;
         }
 
@@ -78,20 +78,20 @@ const RepositoryEditMemberDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={() => setError(undefined)}
             open={open}
-            title="Rolle bearbeiten"
+            title={t("repository.members.changeRole")}
             onFirst={edit}
             firstTitle={t("dialog.applyChanges")}>
 
             <SettingsSelect
                 disabled={false}
-                label="Neue Rolle"
+                label={t("properties.role")}
                 value={role}
                 onChanged={setRole}>
-                <MenuItem value=""><em>Keine Rolle ausgewählt</em></MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Viewer}>Betrachter</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Member}>Mitglied</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Admin}>Administrator</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Owner}>Eigentümer</MenuItem>
+                <MenuItem value=""><em>{t("properties.noRole")}</em></MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Viewer}>{t("role.viewer")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Member}>{t("role.member")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Admin}>{t("role.admin")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Owner}>{t("role.owner")}</MenuItem>
 
             </SettingsSelect>
 

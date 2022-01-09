@@ -5,13 +5,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
 import { ArtifactApi, RepositoryTO } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles({
     icon: {
@@ -52,12 +52,12 @@ const CopyArtifactDialog: React.FC<Props> = props => {
         }
 
         if (!repositoryId) {
-            setError("Kein Projekt gewählt!");
+            setError(t("validation.noRepository"));
             return;
         }
 
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
@@ -74,7 +74,7 @@ const CopyArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast("action.copied");
+        makeSuccessToast("artifact.copied");
         setDescription("");
         setTitle("");
         setRepositoryId("");
@@ -91,7 +91,7 @@ const CopyArtifactDialog: React.FC<Props> = props => {
             onCloseError={() => setError(undefined)}
             open={props.open}
             title={t("artifact.copyTo")}
-            firstTitle={t("dialog.copy")}
+            firstTitle={t("artifact.copy")}
             onFirst={onCopy}>
 
             <SettingsForm large>
@@ -99,10 +99,10 @@ const CopyArtifactDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     value={repositoryId}
                     disabled={disabled}
-                    label={t("repository.target")}
+                    label={t("properties.repository")}
                     onChanged={setRepositoryId}>
                     <MenuItem value="">
-                        <em>Kein Projekt ausgewählt</em>
+                        <em>{t("properties.noRepository")}</em>
                     </MenuItem>
                     {props.repositories.map(repo => (
                         <MenuItem

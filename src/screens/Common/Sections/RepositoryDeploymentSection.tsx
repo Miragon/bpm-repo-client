@@ -2,15 +2,18 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArtifactMilestoneTO, MilestoneApi } from "../../../api";
-import DeploymentList from "../../../components/Layout/Deployments/DeploymentList";
-import { DeploymentInfo } from "../../../components/Layout/Deployments/DeploymentListEntry";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
-import { RootState } from "../../../store/reducers/rootReducer";
+import DeploymentList from "../../../components/Deployments/DeploymentList";
+import { DeploymentInfo } from "../../../components/Deployments/DeploymentListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
+import Pagination from "../../../components/List/Pagination";
+import { usePagination } from "../../../components/List/usePagination";
 import { loadRepositoryArtifacts } from "../../../store/RepositoryArtifactState";
 import { loadRepositoryDeployments } from "../../../store/RepositoryDeploymentState";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { RootState } from "../../../store/Store";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeErrorToast } from "../../../util/ToastUtils";
 
 interface Props {
     search: string;
@@ -38,7 +41,7 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
         const ids = repositoryDeployments.value.map(deployment => deployment.id);
         const response = await apiExec(MilestoneApi, api => api.getAllByDeploymentIds(ids));
         if (hasFailed(response)) {
-            helpers.makeErrorToast(t(response.error));
+            makeErrorToast(t(response.error));
             return;
         }
 
@@ -50,7 +53,7 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
     }, [loadMilestones, repositoryDeployments?.value]);
 
     const deployments: DeploymentInfo[] = useMemo(() => (repositoryDeployments?.value || []).map(deployment => {
-        const artifact = repositoryArtifacts.value?.find(a => a.id === deployment.artifactId);
+        const artifact = repositoryArtifacts?.value?.find(a => a.id === deployment.artifactId);
         const milestone = milestones.find(m => m.deployments.find(d => d.id === deployment.id));
         const repository = repositories.value?.find(r => r.id === deployment.repositoryId);
         return {
@@ -87,6 +90,8 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
 
+    const { pageItems, paginationConfig } = usePagination(deployments, 5);
+
     const download = useCallback((deployment: DeploymentInfo) => {
         const filePath = `/api/milestone/${deployment.artifact?.id}/${deployment.milestone?.id}/download`;
         const link = document.createElement("a");
@@ -95,17 +100,37 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
         link.click();
     }, []);
 
+    if (repositories.error || repositoryArtifacts?.error || repositoryDeployments?.error) {
+        return (
+            <PopupToast
+                message={t("exception.loadingError")}
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    if (props.repositoryId) {
+                        repositoryArtifacts?.error && dispatch(loadRepositoryArtifacts(props.repositoryId, true));
+                        repositoryDeployments?.error && dispatch(loadRepositoryDeployments(props.repositoryId, true));
+                    }
+                })} />
+        );
+    }
+
     if (props.search) {
+        // TODO: Should we display search results instead?
+        return null;
+    }
+
+    if (repositoryDeployments?.value?.length === 0) {
         return null;
     }
 
     return (
         <>
-            <ScreenSectionHeader title="Veröffentlichte Dateien" />
+            <ScreenSectionHeader title={t("repository.deployments")} />
             <DeploymentList
-                deployments={deployments}
-                fallback="deployments.na"
+                deployments={pageItems}
+                fallback="repository.noDeployments"
                 onDownloadClick={download} />
+            <Pagination config={paginationConfig} />
         </>
     );
 };

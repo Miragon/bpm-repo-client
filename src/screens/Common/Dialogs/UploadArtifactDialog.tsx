@@ -4,17 +4,17 @@ import { CloudUploadOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
-import { ArtifactApi, ArtifactTypeTO, MilestoneApi, RepositoryTO } from "../../../api";
+import { ArtifactApi, ArtifactTypeTO, RepositoryTO } from "../../../api";
+import FileIcon from "../../../components/Files/FileIcon";
 import FileUploadField from "../../../components/Form/FileUploadField";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import FileDownloadOutlined from "../../../components/Icons/FileDownloadOutlined";
-import FileIcon from "../../../components/Layout/Files/FileIcon";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
 import { THEME } from "../../../theme";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 interface Props {
     artifactTypes: ArtifactTypeTO[];
@@ -22,7 +22,6 @@ interface Props {
     repositoryId?: string;
     open: boolean;
     onClose: (artifact: {
-        milestone: number;
         repositoryId: string;
         artifactId: string;
     } | null) => void;
@@ -65,7 +64,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
         const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1).toLowerCase();
         const artifactType = artifactTypes.find(type => type.fileExtension.toLowerCase() === fileExtension);
         if (!artifactType) {
-            helpers.makeErrorToast("exception.fileTypeNotSupported", () => onFileChanged)
+            setError("exception.fileTypeNotSupported");
             return;
         }
 
@@ -82,52 +81,46 @@ const UploadArtifactDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
         if (!file || !artifactType) {
-            setError("Keine Datei ausgewählt!");
+            setError(t("validation.noFile"));
             return;
         }
 
         if (!repository) {
-            setError("Kein Projekt ausgewählt!");
+            setError(t("validation.noRepository"));
             return;
         }
 
         setError(undefined);
         setDisabled(true);
 
-        const artifactResponse = await apiExec(ArtifactApi, api => api.createArtifact(repository, {
-            fileType: artifactType.fileExtension,
+        const response = await apiExec(ArtifactApi, api => api.createArtifact(repository, {
+            fileType: artifactType.name,
             description: description,
-            name: title
+            name: title,
+            file: file
         }));
-        if (hasFailed(artifactResponse)) {
-            setError(t(artifactResponse.error));
-            setDisabled(false);
-            return;
-        }
-
-        const milestoneResponse = await apiExec(MilestoneApi, api => api.createMilestone(artifactResponse.result.id, { file }));
-        if (hasFailed(milestoneResponse)) {
-            setError(t(milestoneResponse.error));
-            return;
-        }
-
         setDisabled(false);
-        helpers.makeSuccessToast(t("artifact.created"));
+        if (hasFailed(response)) {
+            setError(t(response.error));
+            return;
+        }
+
+        makeSuccessToast(t("artifact.uploaded"));
         onClose({
-            milestone: milestoneResponse.result.milestone,
-            repositoryId: milestoneResponse.result.repositoryId,
-            artifactId: milestoneResponse.result.id
+            repositoryId: response.result.repositoryId,
+            artifactId: response.result.id
         });
         setTitle("");
         setDescription("");
         setRepository("");
         setFile(undefined);
         setArtifactType(undefined);
+        setFileName(undefined);
     }, [onClose, t, title, file, artifactType, repository, description]);
 
     const onCancel = useCallback(() => {
@@ -167,7 +160,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     disabled={disabled}
                     value={repository}
-                    label={t("repository.target")}
+                    label={t("properties.repository")}
                     onChanged={setRepository}>
                     <MenuItem value=""><em>{t("properties.notSelected")}</em></MenuItem>
                     {repositories.map(repo => (

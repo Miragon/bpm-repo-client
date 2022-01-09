@@ -4,10 +4,10 @@ import { DeleteForeverOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArtifactApi } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 interface Props {
     artifact: FileDescription | undefined;
@@ -33,7 +33,7 @@ const DeleteArtifactDialog: React.FC<Props> = props => {
 
     const onDelete = useCallback(async () => {
         if (!artifact) {
-            setError("Keine Datei ausgewählt!");
+            setError(t("validation.noFile"));
             return;
         }
 
@@ -47,7 +47,7 @@ const DeleteArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("artifact.deleted"));
+        makeSuccessToast(t("artifact.deleted"));
         onClose(true);
     }, [artifact, onClose, t]);
 

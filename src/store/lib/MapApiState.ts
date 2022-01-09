@@ -13,7 +13,7 @@ import { ObjectApiState } from "./ObjectApiState";
 
 export interface MapApiState<Type> {
     readonly name: string;
-    readonly values: { [key: string]: Omit<ObjectApiState<Type>, "name"> }
+    readonly values: { [key: string]: Omit<ObjectApiState<Type>, "name"> | undefined }
 }
 
 export interface MapLoadStartedPayload {

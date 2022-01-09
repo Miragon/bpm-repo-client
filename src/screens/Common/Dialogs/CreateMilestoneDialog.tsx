@@ -3,11 +3,11 @@ import { makeStyles } from "@material-ui/styles";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MilestoneApi } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles(() => ({
     icon: {
@@ -40,7 +40,7 @@ const CreateMilestoneDialog: React.FC<Props> = props => {
         }
 
         if (comment.length < 4) {
-            setError("Kommentar zu kurz!");
+            setError(t("validation.commentTooShort"));
             return;
         }
 
@@ -64,7 +64,7 @@ const CreateMilestoneDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("milestone.created"));
+        makeSuccessToast(t("milestone.created"));
         setComment("");
         onClose(true);
     }, [artifact, comment, onClose, t])

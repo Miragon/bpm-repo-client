@@ -3,19 +3,21 @@ import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import DetailFileList from "../../../components/Layout/Files/DetailFileList";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import ActionButton from "../../../components/Layout/Header/ActionButton";
-import FilterButton from "../../../components/Layout/Header/FilterButton";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
-import SortButton from "../../../components/Layout/Header/SortButton";
+import DetailFileList from "../../../components/Files/DetailFileList";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
+import ActionButton from "../../../components/Header/ActionButton";
+import FilterButton from "../../../components/Header/FilterButton";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
+import SortButton from "../../../components/Header/SortButton";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadDeploymentTargets } from "../../../store/DeploymentTargetState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { loadOwnRepositories } from "../../../store/OwnRepositoryState";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositories } from "../../../store/RepositoryState";
 import { loadSharedArtifacts } from "../../../store/SharedArtifactState";
+import { RootState } from "../../../store/Store";
+import { getFilterConfig, getSortConfig } from "../../../util/MenuUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
@@ -42,24 +44,6 @@ interface Props {
     repositoryId: string;
 }
 
-const FILTER_CONFIG = [
-    [
-        { value: "bpmn", label: "BPMN-Dateien" },
-        { value: "dmn", label: "DMN-Dateien" },
-        { value: "configuration", label: "Konfigurationen" },
-        { value: "form", label: "Formulare" }
-    ]
-];
-
-const SORT_CONFIG = [
-    [
-        { value: "createdAt", label: "Erstellt" },
-        { value: "editedAt", label: "Zuletzt bearbeitet" },
-        { value: "name", label: "Name" },
-        { value: "type", label: "Typ" }
-    ]
-];
-
 const RepositorySharedSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -67,7 +51,7 @@ const RepositorySharedSection: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     const [deployArtifactsOpen, setDeployArtifactsOpen] = useState(false);
-    const [activeFilters, setActiveFilters] = useState(["bpmn", "dmn", "form", "configuration"]);
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [activeSort, setActiveSort] = useState("name");
 
     const repositories = useSelector((state: RootState) => state.repositories);
@@ -82,6 +66,19 @@ const RepositorySharedSection: React.FC<Props> = props => {
         favorite: !!favoriteArtifacts.value?.find(a => a.id === artifact.id),
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [sharedArtifacts, repositories, favoriteArtifacts]);
+
+    const filterConfig = useMemo(
+        () => getFilterConfig(artifactTypes.value || [], t),
+        [artifactTypes, t]
+    );
+
+    const sortConfig = useMemo(() => getSortConfig(t), [t]);
+
+    useEffect(() => {
+        if (artifactTypes.value) {
+            setActiveFilters(artifactTypes.value.map(type => type.name.toLowerCase()));
+        }
+    }, [artifactTypes.value]);
 
     const filtered = useMemo(() => {
         const filteredArtifacts = filterArtifactList(props.search, files)
@@ -150,30 +147,56 @@ const RepositorySharedSection: React.FC<Props> = props => {
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
 
+    if (repositories.error
+        || artifactTypes.error
+        || ownRepositories.error
+        || favoriteArtifacts.error
+        || deploymentTargets.error
+        || sharedArtifacts?.error) {
+        return (
+            <PopupToast
+                message={t("exception.loadingError")}
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    ownRepositories.error && dispatch(loadOwnRepositories(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                    deploymentTargets.error && dispatch(loadDeploymentTargets(true));
+                    if (props.repositoryId) {
+                        sharedArtifacts?.error && dispatch(loadSharedArtifacts(props.repositoryId, true));
+                    }
+                })} />
+        );
+    }
+
+    if (files.length === 0) {
+        return null;
+    }
+
     return (
         <>
-            <ScreenSectionHeader title="Mit diesem Projekt geteilt">
+            <ScreenSectionHeader title={t("repository.shared")}>
                 <div className={classes.headerActions}>
                     <ActionButton
-                        label={t("deployment.multiple")}
+                        label={t("milestone.deployMultiple")}
                         icon={LocalShippingOutlined}
                         onClick={() => setDeployArtifactsOpen(true)}
                         active={false}
                         primary />
                     <SortButton
                         active={activeSort}
-                        sortOptions={SORT_CONFIG}
+                        sortOptions={sortConfig}
                         onChange={setActiveSort} />
                     <FilterButton
                         active={activeFilters}
-                        filterOptions={FILTER_CONFIG}
+                        filterOptions={filterConfig}
                         onChange={changeFilter} />
                 </div>
             </ScreenSectionHeader>
             <DetailFileList
                 targets={deploymentTargets.value || []}
                 files={filtered}
-                fallback="share.na"
+                fallback="repository.noShared"
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 paginationClassName={classes.pagination}

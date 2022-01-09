@@ -1,53 +1,68 @@
 {
     "repository": {
-        "confirmDelete": "Wollen Sie {{repoName}} wirklich löschen?",
-        "repository": "Projekt",
-        "repositories": "Projekte",
+        "confirmDelete": "Wollen Sie {{repositoryName}} wirklich löschen?",
         "create": "Projekt erstellen",
         "created": "Projekt erstellt",
         "delete": "Projekt löschen",
         "deleted": "Projekt gelöscht",
-        "editUsers": "Mitglieder verwalten",
-        "nameTaken": "Name wird bereits verwendet",
-        "edit": "Projekt bearbeiten",
+        "files": "Projektdateien",
+        "fileCount": "{{count}} Dateien",
         "updated": "Projekt aktualisiert",
         "notAvailable": "Sie haben noch keine Projekte erstellt.",
-        "target": "Projekt",
-        "members": "Mitglieder",
-        "settings": "Einstellungen"
+        "settings": "Einstellungen",
+        "shared": "Mit diesem Projekt geteilt",
+        "noShared": "Bisher werden keine Dateien mit diesem Projekt geteilt.",
+        "deployments": "Alle Veröffentlichungen",
+        "noDeployments": "Es wurden noch keine Dateien aus diesem Projekt veröffentlicht.",
+        "avatarYou": "{{name}} (Sie)",
+        "members": {
+            "manage": "Mitglieder verwalten",
+            "add": "Benutzer hinzufügen",
+            "remove": "Benutzer entfernen",
+            "confirmRemove": "Wollen Sie diesen Benutzer wirklich aus dem Projekt entfernen?",
+            "changeRole": "Rolle bearbeiten",
+            "searchUser": "Benutzer suchen...",
+            "unknown": "Unbekannt"
+        }
     },
     "artifact": {
-        "artifacts": "Dateien",
         "confirmDelete": "Wollen Sie {{artifactName}} wirklich löschen?",
-        "create": "Datei erstellen",
         "created": "Datei erstellt",
+        "copy": "Kopieren",
         "copyTo": "In anderes Projekt kopieren",
-        "createdFromExisting": "Datei aus existierender Milestone erstellt",
-        "createdDefault": "Datei erstellt",
+        "copied": "Datei kopiert",
         "delete": "Datei löschen",
         "deleted": "Datei gelöscht",
         "changed": "Änderungen gespeichert",
         "download": "Datei herunterladen",
+        "downloadFailed": "Download fehlgeschlagen",
+        "downloadStarted": "Download gestartet",
         "edit": "Datei bearbeiten",
-        "modifiedOn": "Bearbeitet am",
-        "locked": "Sie haben die Datei zur Bearbeitung gesperrt",
         "share": "Datei teilen",
+        "shared": "Datei geteilt",
         "upload": "Datei hochladen",
+        "uploaded": "Datei hochgeladen",
         "notAvailable": "Sie haben noch keine Datei erstellt",
-        "addedToFavorite": "Datei zu Favoriten hinzugefügt",
-        "addToFavorites": "Zu Favoriten hinzufügen",
-        "createBPMN": "BPMN-Diagramm erstellen",
-        "createDMN": "DMN-Diagramm erstellen",
-        "createFORM": "Formular erstellen",
-        "createCONFIGURATION": "Konfiguration erstellen",
-        "updated": "Datei geändert",
         "showInRepo": "In Projekt anzeigen",
-        "updatedDuration": "{{duration}} aktualisiert",
-        "type": {
-            "BPMN": "BPMN",
-            "DMN": "DMN",
-            "FORM": "Formular",
-            "CONFIGURATION": "Konfiguration"
+        "searchResults": "Gefundene Dateien",
+        "recent": "Zuletzt bearbeitet",
+        "noRecent": "Sie haben noch keine Dateien bearbeitet.",
+        "favorites": "Alle Favoriten",
+        "noFavorites": "Sie haben noch keine Dateien als Favoriten markiert.",
+        "favoriteFailed": "Favorit konnte nicht gespeichert werden!",
+        "favoriteSaved": "Favorit gespeichert",
+        "unknownRepository": "Unbekannt",
+        "create": {
+            "BPMN": "BPMN-Diagramm erstellen",
+            "DMN": "DMN-Diagramm erstellen",
+            "FORM": "Formular erstellen",
+            "CONFIGURATION": "Konfiguration erstellen"
+        },
+        "filter": {
+            "BPMN": "BPMN-Diagramme",
+            "DMN": "DMN-Diagramme",
+            "FORM": "Formulare",
+            "CONFIGURATION": "Konfigurationen"
         }
     },
     "duration": {
@@ -66,191 +81,119 @@
         "created": "Milestone erstellt",
         "deploy": "Milestone veröffentlichen",
         "deployMultiple": "Milestones veröffentlichen",
-        "downloading": "Milestone wird heruntergeladen",
         "deployed": "Milestone veröffentlicht",
-        "dialogHeader": "Neue Milestone von {{artifactName}} erstellen",
-        "edit": "Milestone bearbeiten",
+        "deployedMultiple": "{{deployedMilestones}} Milestones veröffentlicht",
         "download": "Milestone herunterladen",
-        "delete": "Milestone löschen",
         "openLatest": "Aktuellen Milestone öffnen",
         "list": "Milestones anzeigen",
-        "milestone": "Milestone",
-        "MILESTONE": "Milestone",
-        "deploymentHistory": "Veröffentlichungen",
         "saveAsNewArtifact": "Als neue Datei speichern",
-        "saveMilestoneXAsNewArtifact": "Milestone {{milestone}} als neue Datei speichern"
-    },
-    "form": {
-        "create": "Formular erstellen"
-    },
-    "config": {
-        "create": "Konfiguration erstellen"
-    },
-    "assignment": {
-        "changedAssignment": "Zugriffsrechte von {{username}} zu {{role}} geändert",
-        "added": "{{username}} zum Projekt hinzugefügt",
-        "removed": "{{username}} entfernt",
-        "alreadyPresent": "{{username}} ist bereits Mitglied dieses Projekts"
-    },
-    "deployment": {
-        "deployment": "Veröffentlichung",
-        "deployments": "Veröffentlichungen",
-        "multiple": "Dateien veröffentlichen",
-        "target": "Ziel",
-        "milestone": "{{milestoneNumber}}. Milestone",
-        "deploymentDuration": "{{duration}} veröffentlicht",
-        "deployedMultiple": "{{deployedMilestones}} Milestones veröffentlicht",
-        "adminPermissionsRequired": "Sie benötigen Admin-Rechte um Dateien zu veröffentlichen",
-        "dialogHeader": "Milestone {{milestoneNumber}} veröffentlichen",
-        "history": "Alle Veröffentlichungen",
-        "notAvailable": "Es wurden noch keine Dateien veröffentlicht"
-    },
-    "user": {
-        "user": "Benutzer",
-        "users": "Benutzer",
-        "manage": "Benutzer bearbeiten",
-        "OWNER": "Eigentümer",
-        "ADMIN": "Administrator",
-        "MEMBER": "Mitglied",
-        "VIEWER": "Gast",
-        "remove": "Benutzer entfernen"
-    },
-    "category": {
-        "favorite": "Favoriten",
-        "recent": "Zuletzt bearbeitet",
-        "shared": "Geteilt",
-        "noFavoritesAvailable": "Sie haben noch keine Datei zu Ihren Favoriten hinzugefügt."
-    },
-    "search": {
-        "search": "Suchen...",
-        "noResults": "Keine Ergebnisse"
+        "savedAsNewArtifact": "Als neue Datei gespeichert",
+        "noMilestones": "Sie haben noch keine Milestones erstellt.",
+        "noneFound": "Keine Milestones gefunden.",
+        "search": "Milestones durchsuchen...",
+        "noComment": "Kein Kommentar",
+        "latest": "Latest",
+        "authoredBy": "{{timeSince}} durch {{user}}"
     },
     "dialog": {
         "applyChanges": "Bestätigen",
-        "cancel": "Abbrechen",
-        "close": "Schließen",
-        "create": "Erstellen",
-        "copy": "Kopieren",
-        "share": "{{artifactName}} Teilen"
+        "create": "Erstellen"
     },
     "properties": {
         "notSelected": "Nicht ausgewählt",
         "file": "Hier klicken oder Datei ablegen.",
         "title": "Titel",
-        "filename": "Name",
-        "milestone": "Milestone",
         "description": "Beschreibung",
         "comment": "Kommentar",
-        "date": "Datum",
-        "type": "Typ",
-        "target": "Ziel"
+        "role": "Rolle",
+        "noRole": "Keine Rolle ausgewählt",
+        "repository": "Projekt",
+        "noRepository": "Kein Projekt ausgewählt",
+        "target": "Ziel",
+        "noTarget": "Kein Ziel ausgewählt"
+    },
+    "role": {
+        "viewer": "Betrachter",
+        "member": "Mitglied",
+        "admin": "Administrator",
+        "owner": "Besitzer"
+    },
+    "search": {
+        "running": "Suche läuft...",
+        "notMatching": "Keine Ergebnisse gefunden."
     },
     "registration": {
-        "signup": "Für Miragon Cloud Services anmelden",
-        "firstTime": "Sie versuchen zum ersten Mal, sich bei Miragon Cloud Services anzumelden.",
-        "accountRequired": "Sie benötigen einen Account, um diesen Service zu verwenden.\n Um einen Account zu erstellen, akzeptieren Sie bitte die AGBs.",
-        "agree": "Ich akzeptiere die AGBs",
-        "create": "Neues Benutzerprofil erstellen"
-    },
-    "language": {
-        "german": "Deutsch",
-        "english": "Englisch",
-        "select": "Sprache auswählen"
-    },
-    "defaultErrors": {
-        "error": "Fehler",
-        "400": "Fehlerhafte Anfrage - bitte alle Daten beifügen",
-        "401": "Nicht Authorisiert",
-        "403": "Session abgelaufen - Bitte Seite neu laden",
-        "404": "Nicht gefunden",
-        "409": "Konflikt"
-    },
-    "error": {
-        "missingTool": "Ihr Paket beinhaltet keine Anwendung zum Bearbeiten von {{fileType}}. Kontaktieren Sie den Service, um die Erweiterung zu aktivieren",
-        "couldNotProcess": "Anfrage konnte nicht ausgeführt werden",
-        "unknown": "Unbekannter Fehler - Bitte Seite neu laden"
+        "signup": "Willkommen bei der Modellverwaltung!",
+        "firstTime": "Auf diesem Portal können Sie Ihre Modelle, Formulare und vieles mehr an einem zentralen Ort verwalten und gemeinsam mit Ihrem Team bearbeiten.",
+        "accountRequired": "Bevor Sie loslegen können, müssen Sie einen Account erstellen.",
+        "create": "Account erstellen"
     },
     "menu": {
-        "Home": "Modellverwaltung",
-        "Forms": "Formulare",
-        "Integration": "Integrationsbausteine",
         "home": "Start",
         "projects": "Projekte",
         "favorites": "Favoriten",
-        "recents": "Verlauf",
-        "settings": "Optionen",
+        "recent": "Verlauf",
         "account": "Account",
         "accountMenu": {
             "account": "Mein Account",
-            "logout": "Logout"
+            "logout": "Logout",
+            "unknown": "Unbekannter Benutzer"
         }
     },
-    "path": {
-        "overview": "Übersicht",
-        "repository": "Projekt",
-        "team": "Team",
-        "editor": "Editor"
-    },
-    "filter": {
-        "filter": "Filter"
+    "action": {
+        "menu": "Menü",
+        "search": "Suchen...",
+        "sort": "Sortieren",
+        "sortBy": "Sortieren nach",
+        "filter": "Filtern",
+        "filterBy": "Dateitypen filtern",
+        "favorite": "Favorit",
+        "add": "Hinzufügen"
     },
     "sort": {
-        "sort": "Sortieren nach",
-        "lastEdited": "Zuletzt bearbeitet",
-        "created": "Erstellungsdatum",
-        "name": "Name"
+        "created": "Erstellt",
+        "edited": "Zuletzt bearbeitet",
+        "name": "Name",
+        "type": "Typ"
     },
-    "share": {
-        "successful": "Datei geteilt",
-        "removed": "Datei wird nicht mehr geteilt",
-        "na": "Bisher werden keine Dateien mit diesem Projekt geteilt",
-        "updatedRepoRole": "Zugriffsrechte für Mitglieder des Projekts {{repoName}} zu {{role}} geändert",
-        "targetNotFound": "Ziel existiert nicht",
-        "withrepository": "Mit Projekt teilen",
-        "withteam": "Mit Team teilen",
-        "removed": "Datei wird nicht mehr mit {{targetName}} geteilt"
-
+    "breadcrumbs": {
+        "unknown": "Unbekannt",
+        "home": "Modellverwaltung",
+        "allFavorites": "Alle Favoriten",
+        "allRepositories": "Alle Projekte",
+        "repositories": "Projekte",
+        "recent": "Zuletzt bearbeitet"
     },
-    "role": {
-        "owner": "Besitzer",
-        "admin": "Admin",
-        "member": "Mitglied",
-        "viewer": "Gast",
-        "updated": "Zugriffsrechte aktualisiert",
-        "notFound": "Administrationsrechte konnten nicht überprüft werden"
-
-    },
-    "team": {
-        "members": "Mitglieder",
-        "team": "Team",
-        "teams": "Teams",
-        "create": "Team erstellen",
-        "edit": "Team bearbeiten",
-        "notAvailable": "Keine Teams verfügbar",
-        "settings": "Einstellungen"
-    },
-    "options": {
-        "editUsers": "Mitglieder verwalten"
-    },
-    "action": {
-        "createNew": "Neu",
-        "save": "Speichern",
-        "saveAsNewMilestone": "Als neuen Milestone speichern",
-        "saveAsNewArtifact": "Als neue Datei speichern",
-        "copied": "Datei kopiert",
-        "saved": "Gespeichert"
-
+    "validation": {
+        "titleTooShort": "Der Titel ist zu kurz!",
+        "commentTooShort": "Der Kommentar ist zu kurz!",
+        "noFile": "Keine Datei ausgewählt!",
+        "noRepository": "Kein Projekt ausgewählt!",
+        "noRole": "Keine Rolle gewählt!",
+        "noUser": "Kein Benutzer ausgewählt!",
+        "userNotFound": "Benutzer nicht gefunden!",
+        "noTarget": "Kein Ziel ausgewählt!",
+        "noArtifacts": "Keine Dateien ausgewählt!"
     },
     "exception": {
-        "changeOwnRole": "Sie können Ihre eigene Rolle nicht ändern",
-        "authFailed": "Autorisierung fehlgeschlagen",
-        "editDeployedMilestone": "Sie können keine Dateien überspeichern, die bereits veröffentlicht wurden",
-        "accessHistory": "Dateien aus dem Archiv können nicht geändert werden",
-        "oldMilestone": "Sie betrachten eine veraltete Datei, ein neuerer Milestone ist verfügbar. Zum Öffnen hier klicken",
-        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten - ein neuer Milestone ist verfügbar",
-        "locked": "Diese Datei wird derzeit von einem anderen User bearbeitet",
-        "noAssignmentOrShareFound": "Keine direkte oder indirekte Zugriffserlaubnis",
-        "emptyTitle": "Der Titel darf nicht leer sein",
-        "alreadyDeployed": "Diese Datei wurde bereits im angegebene Ziel veröffentlicht"
+        "fileTypeNotSupported": "Dieser Dateityp wird nicht unterstützt!",
+        "loadingError": "Daten konnten nicht geladen werden!",
+        "alreadyDeployed": "Diese Datei wurde bereits im selben Ziel veröffentlicht!",
+        "versionNotFound": "Diese Version wurde nicht gefunden!",
+        "milestoneNotFound": "Dieser Milestone wurde nicht gefunden!",
+        "artifactNotFound": "Diese Datei wurde nicht gefunden!",
+        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten, da ein neuer Milestone verfügbar ist!",
+        "locked": "Diese Datei wird derzeit von einem anderen Benutzer bearbeitet!",
+        "repositoryNotFound": "Dieses Projekt wurde nicht gefunden!",
+        "repositoryNameInUse": "Dieser Projektname ist bereits vergeben!",
+        "assignmentNotFound": "Dieser Benutzer besitzt keine Zuweisung für diese Datei!",
+        "authFailed": "Autorisierung fehlgeschlagen!",
+        "noAssignmentOrShareFound": "Sie haben keine Zugriffsberechtigung!",
+        "changeOwnRole": "Sie können Ihre eigene Rolle nicht ändern!",
+        "cantShareWithParentRepo": "Eine Datei kann nur mit anderen Projekten geteilt werden!",
+        "shareWithRepositoryNotFound": "Diese Datei wird noch nicht mit diesem Projekt geteilt!",
+        "shareWithTeamNotFound": "Diese Datei wird noch nicht mit diesem Team geteilt!",
+        "currentUserNotFound": "Sie haben noch keinen Account!",
+        "usernameInUse": "Dieser Benutzername ist bereits vergeben!"
     }
 }

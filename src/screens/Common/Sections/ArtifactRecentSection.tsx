@@ -1,14 +1,16 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import DefaultFileList from "../../../components/Layout/Files/DefaultFileList";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
+import DefaultFileList from "../../../components/Files/DefaultFileList";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
 import { loadRecentArtifacts } from "../../../store/RecentArtifactState";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { RootState } from "../../../store/Store";
 import { filterArtifactList } from "../../../util/SearchUtils";
 
 const useStyles = makeStyles({
@@ -28,6 +30,8 @@ interface Props {
 const ArtifactRecentSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
+
+    const { t } = useTranslation("common");
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
@@ -59,20 +63,33 @@ const ArtifactRecentSection: React.FC<Props> = props => {
 
     const filtered = useMemo(() => filterArtifactList(props.search, files), [files, props.search]);
 
+    if (repositories.error || artifactTypes.error || recentArtifacts.error || favoriteArtifacts.error) {
+        return (
+            <PopupToast
+                message={t("exception.loadingError")}
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    recentArtifacts.error && dispatch(loadRecentArtifacts(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                })} />
+        );
+    }
+
     if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;
     }
 
     return (
         <>
-            <ScreenSectionHeader title="Zuletzt bearbeitet" />
+            <ScreenSectionHeader title={t("artifact.recent")} />
             <DefaultFileList
                 files={filtered}
                 pageSize={props.pageSize}
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 artifactTypes={artifactTypes.value || []}
-                fallback="recents.notAvailable" />
+                fallback="artifact.noRecent" />
         </>
     );
 };

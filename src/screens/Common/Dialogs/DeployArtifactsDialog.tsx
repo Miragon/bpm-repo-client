@@ -4,14 +4,14 @@ import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DeploymentApi, NewDeploymentTO } from "../../../api";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SearchTextField from "../../../components/Shared/Form/SearchTextField";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SearchTextField from "../../../components/Form/SearchTextField";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
 import { filterArtifactList } from "../../../util/SearchUtils";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},
@@ -77,12 +77,12 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
 
     const deploy = useCallback(async () => {
         if (!target) {
-            setError("Keine Zielumgebung ausgewählt!");
+            setError(t("validation.noTarget"));
             return;
         }
 
         if (selectedArtifacts.length === 0) {
-            setError("Keine Dateien ausgewählt!");
+            setError(t("validation.noArtifacts"));
             return;
         }
 
@@ -103,8 +103,11 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.result.length }));
+        makeSuccessToast(t("milestone.deployedMultiple", { deployedMilestones: response.result.length }));
         props.onClose(true);
+        setTarget("");
+        setSearch("");
+        setSelectedArtifacts([]);
     }, [target, selectedArtifacts, props, t])
 
     const onCancel = () => {
@@ -117,7 +120,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             open={props.open}
             onClose={onCancel}
             icon={<LocalShippingOutlined className={classes.icon} />}
-            title={t("deployment.multiple")}
+            title={t("milestone.deployMultiple")}
             error={error}
             onCloseError={() => setError(undefined)}
             firstTitle={t("milestone.deployMultiple")}
@@ -125,10 +128,10 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             <SettingsForm large>
                 <SettingsSelect
                     disabled={disabled}
-                    label={t("deployment.target")}
+                    label={t("properties.target")}
                     value={target}
                     onChanged={setTarget}>
-                    <MenuItem value=""><em>Kein Ziel ausgewählt</em></MenuItem>
+                    <MenuItem value=""><em>{t("properties.noTarget")}</em></MenuItem>
                     {props.targets.map(target => (
                         <MenuItem
                             key={target}
@@ -142,7 +145,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
                 <div className={classes.search}>
                     <SearchTextField
                         className={classes.searchField}
-                        label="Dateien durchsuchen..."
+                        label={t("milestone.search")}
                         search={search}
                         onSearchChanged={setSearch} />
                 </div>
@@ -151,7 +154,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
                         <Typography
                             variant="body1"
                             className={classes.placeholder}>
-                            Keine Dateien gefunden.
+                            {t("milestone.noneFound")}
                         </Typography>
                     )}
                     {filteredArtifacts.map(artifact => (

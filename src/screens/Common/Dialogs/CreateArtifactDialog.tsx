@@ -4,14 +4,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
 import { ArtifactApi, RepositoryTO } from "../../../api";
-import FileIcon from "../../../components/Layout/Files/FileIcon";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsForm from "../../../components/Shared/Form/SettingsForm";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
-import SettingsTextField from "../../../components/Shared/Form/SettingsTextField";
+import FileIcon from "../../../components/Files/FileIcon";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsForm from "../../../components/Form/SettingsForm";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
+import SettingsTextField from "../../../components/Form/SettingsTextField";
 import { THEME } from "../../../theme";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
-import helpers from "../../../util/helperFunctions";
+import { makeSuccessToast } from "../../../util/ToastUtils";
 
 interface Props {
     type: string;
@@ -50,7 +50,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
@@ -68,7 +68,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        helpers.makeSuccessToast(t("artifact.created"));
+        makeSuccessToast(t("artifact.created"));
         onClose({
             repositoryId: response.result.repositoryId,
             artifactId: response.result.id
@@ -97,7 +97,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={open}
-            title={t(`artifact.create${type}`)}
+            title={t(`artifact.create.${type}`)}
             firstTitle={t("dialog.create")}
             onFirst={onCreate}>
 
@@ -106,9 +106,9 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     disabled={disabled}
                     value={repository}
-                    label={t("repository.target")}
+                    label={t("properties.repository")}
                     onChanged={setRepository}>
-                    <MenuItem value=""><em>{t("properties.notSelected")}</em></MenuItem>
+                    <MenuItem value=""><em>{t("properties.noRepository")}</em></MenuItem>
                     {repositories.map(repo => (
                         <MenuItem
                             key={repo.id}

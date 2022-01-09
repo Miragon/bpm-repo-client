@@ -13,8 +13,8 @@ import {
     UserApi,
     UserInfoTO
 } from "../../../api";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
-import SettingsSelect from "../../../components/Shared/Form/SettingsSelect";
+import PopupDialog from "../../../components/Form/PopupDialog";
+import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 
 const useStyles = makeStyles({
@@ -54,19 +54,18 @@ const RepositoryAddMemberDialog: React.FC<Props> = props => {
         }
 
         if (!role) {
-            setError("Keine Rolle ausgewählt!");
+            setError(t("validation.noRole"));
             return;
         }
 
         if (!username) {
-            setError("Kein Benutzer ausgewählt!");
+            setError(t("validation.noUser"));
             return;
         }
 
-        console.log(options, username);
         const user = options.find(u => u.username.toLowerCase() === username.toLowerCase());
         if (!user) {
-            setError("Benutzer nicht gefunden!");
+            setError(t("validation.userNotFound"));
             return;
         }
 
@@ -119,7 +118,7 @@ const RepositoryAddMemberDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={() => setError(undefined)}
             open={open}
-            title="Mitglied hinzufügen"
+            title={t("repository.members.add")}
             onFirst={add}
             firstTitle={t("dialog.applyChanges")}>
 
@@ -135,7 +134,7 @@ const RepositoryAddMemberDialog: React.FC<Props> = props => {
                 renderInput={params => (
                     <TextField
                         {...params}
-                        label="Benutzer suchen..."
+                        label={t("repository.members.searchUser")}
                         size="small"
                         variant="outlined"
                         onChange={event => onChange(event.target.value)}
@@ -154,14 +153,14 @@ const RepositoryAddMemberDialog: React.FC<Props> = props => {
 
             <SettingsSelect
                 disabled={false}
-                label="Rolle"
+                label={t("properties.role")}
                 value={role}
                 onChanged={setRole}>
-                <MenuItem value=""><em>Keine Rolle ausgewählt</em></MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Viewer}>Betrachter</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Member}>Mitglied</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Admin}>Administrator</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Owner}>Eigentümer</MenuItem>
+                <MenuItem value=""><em>{t("properties.noRole")}</em></MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Viewer}>{t("role.viewer")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Member}>{t("role.member")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Admin}>{t("role.admin")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Owner}>{t("role.owner")}</MenuItem>
 
             </SettingsSelect>
 

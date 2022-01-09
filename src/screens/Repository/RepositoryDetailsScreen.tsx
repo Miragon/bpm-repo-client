@@ -1,24 +1,19 @@
-import {
-    CloudUploadOutlined,
-    DeleteOutlineOutlined,
-    FormatShapesOutlined,
-    NoteAddOutlined,
-    PeopleAltOutlined,
-    SettingsOutlined,
-    TuneOutlined
-} from "@material-ui/icons";
-import React, { useCallback, useEffect, useState } from "react";
+import { DeleteOutlineOutlined, PeopleAltOutlined, SettingsOutlined } from "@material-ui/icons";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
+import { PopupToast, retryAction } from "../../components/Form/PopupToast";
+import ScreenHeader from "../../components/Header/ScreenHeader";
 import ContentLayout from "../../components/Layout/ContentLayout";
-import ScreenHeader from "../../components/Layout/Header/ScreenHeader";
+import { MenuListConfig } from "../../components/MenuList/MenuList";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
-import { loadRecentArtifacts } from "../../store/RecentArtifactState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
+import { getAddOptions } from "../../util/MenuUtils";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import DeleteRepositoryDialog from "../Common/Dialogs/DeleteRepositoryDialog";
 import EditRepositoryDialog from "../Common/Dialogs/EditRepositoryDialog";
@@ -28,42 +23,10 @@ import RepositoryDeploymentSection from "../Common/Sections/RepositoryDeployment
 import RepositoryFilesSection from "../Common/Sections/RepositoryFilesSection";
 import RepositorySharedSection from "../Common/Sections/RepositorySharedSection";
 
-const ADD_OPTIONS = [
-    [
-        {
-            label: "artifact.createBPMN",
-            value: "create-bpmn",
-            icon: NoteAddOutlined
-        },
-        {
-            label: "artifact.createDMN",
-            value: "create-dmn",
-            icon: NoteAddOutlined
-        },
-        {
-            label: "artifact.createFORM",
-            value: "create-form",
-            icon: FormatShapesOutlined
-        },
-        {
-            label: "artifact.createCONFIGURATION",
-            value: "create-configuration",
-            icon: TuneOutlined
-        }
-    ],
-    [
-        {
-            label: "artifact.upload",
-            value: "upload-file",
-            icon: CloudUploadOutlined
-        }
-    ]
-];
-
 const MENU_OPTIONS = [
     [
         {
-            label: "repository.editUsers",
+            label: "repository.members.manage",
             value: "members",
             icon: PeopleAltOutlined
         },
@@ -91,6 +54,8 @@ const RepositoryDetailsScreen: React.FC = (() => {
     const dispatch = useDispatch();
     const params = useParams<Params>();
 
+    const { t } = useTranslation("common");
+
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
 
@@ -107,26 +72,28 @@ const RepositoryDetailsScreen: React.FC = (() => {
         dispatch(loadArtifactTypes());
     }, [dispatch]);
 
+    useEffect(() => {
+        if (loadKey > 0) {
+            dispatch(loadRepositories(true));
+            dispatch(loadArtifactTypes(true));
+        }
+    }, [dispatch, loadKey]);
+
+    const addOptions: MenuListConfig = useMemo(
+        () => getAddOptions(artifactTypes.value || [], false),
+        [artifactTypes]
+    );
+
     const onAddItemClicked = useCallback((action: string) => {
         switch (action) {
-            case "create-bpmn": {
-                setCreateArtifactType("BPMN");
-                break;
-            }
-            case "create-dmn": {
-                setCreateArtifactType("DMN");
-                break;
-            }
-            case "create-form": {
-                setCreateArtifactType("FORM");
-                break;
-            }
-            case "create-configuration": {
-                setCreateArtifactType("CONFIGURATION");
-                break;
-            }
             case "upload-file": {
                 setUploadArtifactDialogOpen(true);
+                break;
+            }
+            default: {
+                if (action.startsWith("create-file-")) {
+                    setCreateArtifactType(action.substring(12));
+                }
                 break;
             }
         }
@@ -153,6 +120,23 @@ const RepositoryDetailsScreen: React.FC = (() => {
 
     const repository = repositories.value?.find(r => r.id === params.repositoryId);
 
+    if (repositories.error || artifactTypes.error) {
+        return (
+            <PopupToast
+                message={t("exception.loadingError")}
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                })} />
+        );
+    }
+
+    if (repositories.value && !repository) {
+        return (
+            <PopupToast message={t("exception.repositoryNotFound")} />
+        );
+    }
+
     return (
         <>
             <ErrorBoundary>
@@ -161,13 +145,13 @@ const RepositoryDetailsScreen: React.FC = (() => {
                     onAdd={onAddItemClicked}
                     onMenu={onMenuItemClicked}
                     title={[
-                        { title: "Alle Projekte", link: "/repository" },
+                        { title: t("breadcrumbs.allRepositories"), link: "/repository" },
                         {
-                            title: repository?.name ?? "Unbekannt",
+                            title: repository?.name ?? t("breadcrumbs.unknown"),
                             link: "/repository/" + repository?.id
                         }
                     ]}
-                    addOptions={ADD_OPTIONS}
+                    addOptions={addOptions}
                     menuOptions={MENU_OPTIONS}
                     primary="add" />
             </ErrorBoundary>
@@ -204,8 +188,7 @@ const RepositoryDetailsScreen: React.FC = (() => {
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
-                        // TODO: Open file screen here
-                        result && history.push(`/repository/${result.repositoryId}/${result.artifactId}`);
+                        result && reload();
                     }} />
 
                 <UploadArtifactDialog
@@ -213,13 +196,7 @@ const RepositoryDetailsScreen: React.FC = (() => {
                     repositoryId={params.repositoryId}
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);
-                        if (result) {
-                            // TODO: Open milestone screen here
-                            history.push(`/repository/${result.repositoryId}/${result.artifactId}/milestone/${result.milestone}`);
-                            // Update state
-                            dispatch(loadRepositories(true));
-                            dispatch(loadRecentArtifacts(true));
-                        }
+                        result && reload();
                     }}
                     repositories={repositories.value || []}
                     artifactTypes={artifactTypes.value || []} />
@@ -240,7 +217,10 @@ const RepositoryDetailsScreen: React.FC = (() => {
                 <RepositoryMembersDialog
                     open={memberDialogOpen}
                     repository={repository}
-                    onClose={() => setMemberDialogOpen(false)} />
+                    onClose={() => {
+                        setMemberDialogOpen(false);
+                        reload();
+                    }} />
 
             </ErrorBoundary>
         </>

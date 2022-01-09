@@ -1,13 +1,15 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import DefaultFileList from "../../../components/Layout/Files/DefaultFileList";
-import { FileDescription } from "../../../components/Layout/Files/FileListEntry";
-import ScreenSectionHeader from "../../../components/Layout/Header/ScreenSectionHeader";
+import DefaultFileList from "../../../components/Files/DefaultFileList";
+import { FileDescription } from "../../../components/Files/FileListEntry";
+import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
+import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
-import { RootState } from "../../../store/reducers/rootReducer";
 import { loadRepositories } from "../../../store/RepositoryState";
+import { RootState } from "../../../store/Store";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 
@@ -28,6 +30,8 @@ interface Props {
 const ArtifactFavoriteSection: React.FC<Props> = props => {
     const classes = useStyles();
     const dispatch = useDispatch();
+
+    const { t } = useTranslation("common");
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
@@ -58,20 +62,32 @@ const ArtifactFavoriteSection: React.FC<Props> = props => {
         filterArtifactList(props.search, files),
         artifact => artifact.name), [files, props.search]);
 
+    if (repositories.error || artifactTypes.error || favoriteArtifacts.error) {
+        return (
+            <PopupToast
+                message={t("exception.loadingError")}
+                action={retryAction(() => {
+                    repositories.error && dispatch(loadRepositories(true));
+                    artifactTypes.error && dispatch(loadArtifactTypes(true));
+                    favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
+                })} />
+        );
+    }
+
     if (props.hideWhenNoneFound !== false && props.search && filtered.length === 0) {
         return null;
     }
 
     return (
         <>
-            <ScreenSectionHeader title="Alle Favoriten" />
+            <ScreenSectionHeader title={t("artifact.favorites")} />
             <DefaultFileList
                 files={filtered}
                 pageSize={props.pageSize}
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 artifactTypes={artifactTypes.value || []}
-                fallback="favorites.notAvailable" />
+                fallback="artifact.noFavorites" />
         </>
     );
 };

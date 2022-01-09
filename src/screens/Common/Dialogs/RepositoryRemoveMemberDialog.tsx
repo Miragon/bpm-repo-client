@@ -3,8 +3,8 @@ import { DeleteOutlineOutlined } from "@material-ui/icons";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RepoAssignmentApi, RepositoryTO } from "../../../api";
-import { UserInfo } from "../../../components/Layout/Users/UserListEntry";
-import PopupDialog from "../../../components/Shared/Form/PopupDialog";
+import { UserInfo } from "../../../components/Users/UserListEntry";
+import PopupDialog from "../../../components/Form/PopupDialog";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 
 const useStyles = makeStyles({
@@ -61,11 +61,11 @@ const RepositoryRemoveMemberDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={() => setError(undefined)}
             open={open}
-            firstTitle="Benutzer entfernen"
+            firstTitle={t("repository.members.remove")}
             onFirst={remove}
-            title="Benutzer entfernen">
+            title={t("repository.members.remove")}>
 
-            Wollen Sie diesen Benutzer wirklich aus dem Projekt entfernen?
+            {t("repository.members.confirmRemove")}
 
         </PopupDialog>
     );
