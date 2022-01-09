@@ -2,6 +2,7 @@ import { Card, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Folder } from "@material-ui/icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RepositoryTO } from "../../api";
 import { RootState } from "../../store/Store";
@@ -60,9 +61,10 @@ interface Props {
 
 const RepositoryCard: React.FC<Props> = props => {
     const classes = useStyles();
+    const { t } = useTranslation("common");
 
     const currentUser = useSelector((state: RootState) => state.userInfo)
-    const names = [currentUser.value?.username + " (Sie)"];
+    const names = [t("repository.avatarYou", { name: currentUser.value?.username })];
     names.push(...Array.from({ length: props.repository.assignedUsers - 1 })
         .map((v, i) => String(i)));
 
@@ -88,7 +90,7 @@ const RepositoryCard: React.FC<Props> = props => {
                 <Typography
                     variant="subtitle2"
                     className={classes.subtitle}>
-                    {`${props.repository.existingArtifacts} Dateien`}
+                    {t("repository.fileCount", { count: props.repository.existingArtifacts })}
                 </Typography>
             </div>
 

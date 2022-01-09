@@ -35,7 +35,7 @@ const DeleteRepositoryDialog: React.FC<Props> = props => {
 
     const onDelete = useCallback(async () => {
         if (!repository) {
-            setError("Kein Projekt ausgewählt!");
+            setError(t("validation.noRepository"));
             return;
         }
 

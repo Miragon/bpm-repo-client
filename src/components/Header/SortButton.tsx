@@ -1,5 +1,6 @@
 import { SortOutlined } from "@material-ui/icons";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Popup from "../Common/Popup";
 import MenuListTitle from "../MenuList/MenuListTitle";
 import SelectMenuList, { SelectMenuListConfig } from "../MenuList/SelectMenuList";
@@ -14,11 +15,13 @@ interface Props {
 const SortButton: React.FC<Props> = props => {
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement>();
 
+    const { t } = useTranslation("common");
+
     return (
         <>
             <ActionButton
                 onClick={e => setMenuAnchor(e.currentTarget)}
-                label="Sortieren"
+                label={t("action.sort")}
                 icon={SortOutlined}
                 primary={false}
                 active={!!menuAnchor} />
@@ -30,7 +33,7 @@ const SortButton: React.FC<Props> = props => {
                 placement="bottom-end">
                 {({ close }) => (
                     <SelectMenuList
-                        title={<MenuListTitle title="Sortieren nach" />}
+                        title={<MenuListTitle title={t("action.sortBy")} />}
                         active={[props.active]}
                         options={props.sortOptions}
                         onChange={value => {

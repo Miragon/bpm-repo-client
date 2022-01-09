@@ -5,13 +5,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
 import { ArtifactApi, ArtifactTypeTO, RepositoryTO } from "../../../api";
-import FileUploadField from "../../../components/Form/FileUploadField";
-import FileDownloadOutlined from "../../../components/Icons/FileDownloadOutlined";
 import FileIcon from "../../../components/Files/FileIcon";
+import FileUploadField from "../../../components/Form/FileUploadField";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import SettingsForm from "../../../components/Form/SettingsForm";
 import SettingsSelect from "../../../components/Form/SettingsSelect";
 import SettingsTextField from "../../../components/Form/SettingsTextField";
+import FileDownloadOutlined from "../../../components/Icons/FileDownloadOutlined";
 import { THEME } from "../../../theme";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 import { makeSuccessToast } from "../../../util/ToastUtils";
@@ -81,17 +81,17 @@ const UploadArtifactDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
         if (!file || !artifactType) {
-            setError("Keine Datei ausgewählt!");
+            setError(t("validation.noFile"));
             return;
         }
 
         if (!repository) {
-            setError("Kein Projekt ausgewählt!");
+            setError(t("validation.noRepository"));
             return;
         }
 
@@ -110,7 +110,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast(t("artifact.created"));
+        makeSuccessToast(t("artifact.uploaded"));
         onClose({
             repositoryId: response.result.repositoryId,
             artifactId: response.result.id
@@ -160,7 +160,7 @@ const UploadArtifactDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     disabled={disabled}
                     value={repository}
-                    label={t("repository.target")}
+                    label={t("properties.repository")}
                     onChanged={setRepository}>
                     <MenuItem value=""><em>{t("properties.notSelected")}</em></MenuItem>
                     {repositories.map(repo => (

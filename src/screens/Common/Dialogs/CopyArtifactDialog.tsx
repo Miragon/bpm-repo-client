@@ -52,12 +52,12 @@ const CopyArtifactDialog: React.FC<Props> = props => {
         }
 
         if (!repositoryId) {
-            setError("Kein Projekt gewählt!");
+            setError(t("validation.noRepository"));
             return;
         }
 
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
@@ -74,7 +74,7 @@ const CopyArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast("action.copied");
+        makeSuccessToast("artifact.copied");
         setDescription("");
         setTitle("");
         setRepositoryId("");
@@ -91,7 +91,7 @@ const CopyArtifactDialog: React.FC<Props> = props => {
             onCloseError={() => setError(undefined)}
             open={props.open}
             title={t("artifact.copyTo")}
-            firstTitle={t("dialog.copy")}
+            firstTitle={t("artifact.copy")}
             onFirst={onCopy}>
 
             <SettingsForm large>
@@ -99,10 +99,10 @@ const CopyArtifactDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     value={repositoryId}
                     disabled={disabled}
-                    label={t("repository.target")}
+                    label={t("properties.repository")}
                     onChanged={setRepositoryId}>
                     <MenuItem value="">
-                        <em>Kein Projekt ausgewählt</em>
+                        <em>{t("properties.noRepository")}</em>
                     </MenuItem>
                     {props.repositories.map(repo => (
                         <MenuItem

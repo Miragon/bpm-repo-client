@@ -17,6 +17,7 @@ import { loadOwnRepositories } from "../../../store/OwnRepositoryState";
 import { loadRepositoryArtifacts } from "../../../store/RepositoryArtifactState";
 import { loadRepositories } from "../../../store/RepositoryState";
 import { RootState } from "../../../store/Store";
+import { getFilterConfig, getSortConfig } from "../../../util/MenuUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
@@ -43,15 +44,6 @@ interface Props {
     repositoryId: string;
 }
 
-const SORT_CONFIG = [
-    [
-        { value: "createdAt", label: "Erstellt" },
-        { value: "editedAt", label: "Zuletzt bearbeitet" },
-        { value: "name", label: "Name" },
-        { value: "type", label: "Typ" }
-    ]
-];
-
 const RepositoryFilesSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -75,14 +67,12 @@ const RepositoryFilesSection: React.FC<Props> = props => {
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [repositoryArtifacts, repositories, favoriteArtifacts]);
 
-    const filterConfig = useMemo(() => [
-        [
-            ...(artifactTypes.value || []).map(type => ({
-                value: type.name.toLowerCase(),
-                label: t("artifact.filter" + type.name)
-            }))
-        ]
-    ], [artifactTypes.value, t]);
+    const sortConfig = useMemo(() => getSortConfig(t), [t]);
+
+    const filterConfig = useMemo(
+        () => getFilterConfig(artifactTypes.value || [], t),
+        [artifactTypes, t]
+    );
 
     useEffect(() => {
         if (artifactTypes.value) {
@@ -162,10 +152,10 @@ const RepositoryFilesSection: React.FC<Props> = props => {
         || ownRepositories.error
         || favoriteArtifacts.error
         || deploymentTargets.error
-        || repositoryArtifacts.error) {
+        || repositoryArtifacts?.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     artifactTypes.error && dispatch(loadArtifactTypes(true));
@@ -173,7 +163,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
                     favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
                     deploymentTargets.error && dispatch(loadDeploymentTargets(true));
                     if (props.repositoryId) {
-                        repositoryArtifacts.error && dispatch(loadRepositoryArtifacts(props.repositoryId, true));
+                        repositoryArtifacts?.error && dispatch(loadRepositoryArtifacts(props.repositoryId, true));
                     }
                 })} />
         );
@@ -181,17 +171,17 @@ const RepositoryFilesSection: React.FC<Props> = props => {
 
     return (
         <>
-            <ScreenSectionHeader title="Projektdateien">
+            <ScreenSectionHeader title={t("repository.files")}>
                 <div className={classes.headerActions}>
                     <ActionButton
-                        label={t("deployment.multiple")}
+                        label={t("milestone.deployMultiple")}
                         icon={LocalShippingOutlined}
                         onClick={() => setDeployArtifactsOpen(true)}
                         active={false}
                         primary />
                     <SortButton
                         active={activeSort}
-                        sortOptions={SORT_CONFIG}
+                        sortOptions={sortConfig}
                         onChange={setActiveSort} />
                     <FilterButton
                         active={activeFilters}

@@ -50,7 +50,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
@@ -97,7 +97,7 @@ const CreateArtifactDialog: React.FC<Props> = props => {
             error={error}
             onCloseError={() => setError(undefined)}
             open={open}
-            title={t(`artifact.create${type}`)}
+            title={t(`artifact.create.${type}`)}
             firstTitle={t("dialog.create")}
             onFirst={onCreate}>
 
@@ -106,9 +106,9 @@ const CreateArtifactDialog: React.FC<Props> = props => {
                 <SettingsSelect
                     disabled={disabled}
                     value={repository}
-                    label={t("repository.target")}
+                    label={t("properties.repository")}
                     onChanged={setRepository}>
-                    <MenuItem value=""><em>{t("properties.notSelected")}</em></MenuItem>
+                    <MenuItem value=""><em>{t("properties.noRepository")}</em></MenuItem>
                     {repositories.map(repo => (
                         <MenuItem
                             key={repo.id}

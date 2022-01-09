@@ -17,6 +17,7 @@ import { loadOwnRepositories } from "../../../store/OwnRepositoryState";
 import { loadRepositories } from "../../../store/RepositoryState";
 import { loadSharedArtifacts } from "../../../store/SharedArtifactState";
 import { RootState } from "../../../store/Store";
+import { getFilterConfig, getSortConfig } from "../../../util/MenuUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
@@ -43,24 +44,6 @@ interface Props {
     repositoryId: string;
 }
 
-const FILTER_CONFIG = [
-    [
-        { value: "bpmn", label: "BPMN-Dateien" },
-        { value: "dmn", label: "DMN-Dateien" },
-        { value: "configuration", label: "Konfigurationen" },
-        { value: "form", label: "Formulare" }
-    ]
-];
-
-const SORT_CONFIG = [
-    [
-        { value: "createdAt", label: "Erstellt" },
-        { value: "editedAt", label: "Zuletzt bearbeitet" },
-        { value: "name", label: "Name" },
-        { value: "type", label: "Typ" }
-    ]
-];
-
 const RepositorySharedSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -68,7 +51,7 @@ const RepositorySharedSection: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     const [deployArtifactsOpen, setDeployArtifactsOpen] = useState(false);
-    const [activeFilters, setActiveFilters] = useState(["bpmn", "dmn", "form", "configuration"]);
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [activeSort, setActiveSort] = useState("name");
 
     const repositories = useSelector((state: RootState) => state.repositories);
@@ -83,6 +66,19 @@ const RepositorySharedSection: React.FC<Props> = props => {
         favorite: !!favoriteArtifacts.value?.find(a => a.id === artifact.id),
         repository: repositories.value?.find(r => r.id === artifact.repositoryId)
     })), [sharedArtifacts, repositories, favoriteArtifacts]);
+
+    const filterConfig = useMemo(
+        () => getFilterConfig(artifactTypes.value || [], t),
+        [artifactTypes, t]
+    );
+
+    const sortConfig = useMemo(() => getSortConfig(t), [t]);
+
+    useEffect(() => {
+        if (artifactTypes.value) {
+            setActiveFilters(artifactTypes.value.map(type => type.name.toLowerCase()));
+        }
+    }, [artifactTypes.value]);
 
     const filtered = useMemo(() => {
         const filteredArtifacts = filterArtifactList(props.search, files)
@@ -156,10 +152,10 @@ const RepositorySharedSection: React.FC<Props> = props => {
         || ownRepositories.error
         || favoriteArtifacts.error
         || deploymentTargets.error
-        || sharedArtifacts.error) {
+        || sharedArtifacts?.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     artifactTypes.error && dispatch(loadArtifactTypes(true));
@@ -167,7 +163,7 @@ const RepositorySharedSection: React.FC<Props> = props => {
                     favoriteArtifacts.error && dispatch(loadFavoriteArtifacts(true));
                     deploymentTargets.error && dispatch(loadDeploymentTargets(true));
                     if (props.repositoryId) {
-                        sharedArtifacts.error && dispatch(loadSharedArtifacts(props.repositoryId, true));
+                        sharedArtifacts?.error && dispatch(loadSharedArtifacts(props.repositoryId, true));
                     }
                 })} />
         );
@@ -179,28 +175,28 @@ const RepositorySharedSection: React.FC<Props> = props => {
 
     return (
         <>
-            <ScreenSectionHeader title="Mit diesem Projekt geteilt">
+            <ScreenSectionHeader title={t("repository.shared")}>
                 <div className={classes.headerActions}>
                     <ActionButton
-                        label={t("deployment.multiple")}
+                        label={t("milestone.deployMultiple")}
                         icon={LocalShippingOutlined}
                         onClick={() => setDeployArtifactsOpen(true)}
                         active={false}
                         primary />
                     <SortButton
                         active={activeSort}
-                        sortOptions={SORT_CONFIG}
+                        sortOptions={sortConfig}
                         onChange={setActiveSort} />
                     <FilterButton
                         active={activeFilters}
-                        filterOptions={FILTER_CONFIG}
+                        filterOptions={filterConfig}
                         onChange={changeFilter} />
                 </div>
             </ScreenSectionHeader>
             <DetailFileList
                 targets={deploymentTargets.value || []}
                 files={filtered}
-                fallback="share.na"
+                fallback="repository.noShared"
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 paginationClassName={classes.pagination}

@@ -173,10 +173,12 @@ const PopupDialog: React.FC<Props> = props => {
                     {props.title}
                 </Typography>
 
-                <PopupToast
-                    message={props.error}
-                    onClose={props.onCloseError}
-                    className={classes.error} />
+                {props.error && (
+                    <PopupToast
+                        message={props.error}
+                        onClose={props.onCloseError}
+                        className={classes.error} />
+                )}
 
             </DialogTitle>
 
@@ -203,7 +205,7 @@ const PopupDialog: React.FC<Props> = props => {
                             onClick={props.onSecond}
                             variant="outlined"
                             disabled={props.disabled || props.secondDisabled}>
-                            {props.secondTitle || "Abbrechen"}
+                            {props.secondTitle}
                         </Button>
                     )}
 
@@ -218,7 +220,7 @@ const PopupDialog: React.FC<Props> = props => {
                             color="secondary"
                             variant="contained"
                             disabled={props.disabled || props.firstDisabled}>
-                            {props.firstTitle || "Fertig"}
+                            {props.firstTitle}
                         </Button>
                     )}
 

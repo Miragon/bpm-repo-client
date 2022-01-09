@@ -49,7 +49,7 @@ const EditRepositoryDialog: React.FC<Props> = props => {
         }
 
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 

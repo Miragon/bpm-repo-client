@@ -1,11 +1,5 @@
-import {
-    CloudUploadOutlined,
-    CreateNewFolderOutlined,
-    FormatShapesOutlined,
-    NoteAddOutlined,
-    TuneOutlined
-} from "@material-ui/icons";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,58 +7,23 @@ import { ErrorBoundary } from "../../components/Exception/ErrorBoundary";
 import { PopupToast, retryAction } from "../../components/Form/PopupToast";
 import ScreenHeader from "../../components/Header/ScreenHeader";
 import ContentLayout from "../../components/Layout/ContentLayout";
+import { MenuListConfig } from "../../components/MenuList/MenuList";
 import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
 import { openRepository } from "../../util/LinkUtils";
+import { getAddOptions } from "../../util/MenuUtils";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
 import ArtifactFavoriteSection from "../Common/Sections/ArtifactFavoriteSection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
 
-const ADD_OPTIONS = [
-    [
-        {
-            label: "repository.create",
-            value: "create-repository",
-            icon: CreateNewFolderOutlined
-        }
-    ],
-    [
-        {
-            label: "artifact.createBPMN",
-            value: "create-bpmn",
-            icon: NoteAddOutlined
-        },
-        {
-            label: "artifact.createDMN",
-            value: "create-dmn",
-            icon: NoteAddOutlined
-        },
-        {
-            label: "artifact.createFORM",
-            value: "create-form",
-            icon: FormatShapesOutlined
-        },
-        {
-            label: "artifact.createCONFIGURATION",
-            value: "create-configuration",
-            icon: TuneOutlined
-        }
-    ],
-    [
-        {
-            label: "artifact.upload",
-            value: "upload-file",
-            icon: CloudUploadOutlined
-        }
-    ]
-]
-
 const FavoriteScreen: React.FC = (() => {
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const { t } = useTranslation("common");
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
@@ -74,6 +33,11 @@ const FavoriteScreen: React.FC = (() => {
     const [uploadArtifactDialogOpen, setUploadArtifactDialogOpen] = useState(false);
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("");
+
+    const addOptions: MenuListConfig = useMemo(
+        () => getAddOptions(artifactTypes.value || [], true),
+        [artifactTypes]
+    );
 
     useEffect(() => {
         dispatch(loadRepositories());
@@ -93,24 +57,14 @@ const FavoriteScreen: React.FC = (() => {
                 setCreateRepositoryDialogOpen(true);
                 break;
             }
-            case "create-bpmn": {
-                setCreateArtifactType("BPMN");
-                break;
-            }
-            case "create-dmn": {
-                setCreateArtifactType("DMN");
-                break;
-            }
-            case "create-form": {
-                setCreateArtifactType("FORM");
-                break;
-            }
-            case "create-configuration": {
-                setCreateArtifactType("CONFIGURATION");
-                break;
-            }
             case "upload-file": {
                 setUploadArtifactDialogOpen(true);
+                break;
+            }
+            default: {
+                if (action.startsWith("create-file-")) {
+                    setCreateArtifactType(action.substring(12));
+                }
                 break;
             }
         }
@@ -121,7 +75,7 @@ const FavoriteScreen: React.FC = (() => {
     if (repositories.error || artifactTypes.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     artifactTypes.error && dispatch(loadArtifactTypes(true));
@@ -135,8 +89,8 @@ const FavoriteScreen: React.FC = (() => {
                 <ScreenHeader
                     onSearch={setSearch}
                     onAdd={onAddItemClicked}
-                    title={[{ title: "Alle Favoriten", link: "/favorites" }]}
-                    addOptions={ADD_OPTIONS}
+                    title={[{ title: t("breadcrumbs.allFavorites"), link: "/favorites" }]}
+                    addOptions={addOptions}
                     primary="add" />
             </ErrorBoundary>
 

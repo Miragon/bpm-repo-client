@@ -3,6 +3,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { DeleteOutlineOutlined, EditOutlined } from "@material-ui/icons";
 import clsx from "clsx";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { AssignmentTORoleEnum } from "../../api";
 import { THEME } from "../../theme";
 import { getAvatarColor } from "../Avatars/AvatarList";
@@ -95,6 +96,7 @@ interface Props {
 
 const UserListEntry: React.FC<Props> = props => {
     const classes = useStyles();
+    const { t } = useTranslation("common");
 
     return (
         <Card className={classes.root}>
@@ -121,10 +123,10 @@ const UserListEntry: React.FC<Props> = props => {
 
             <div className={classes.cardTagSection}>
                 <div className={clsx(classes.tag, classes.tagPrimary)}>
-                    {props.user.role === AssignmentTORoleEnum.Viewer && "Betrachter"}
-                    {props.user.role === AssignmentTORoleEnum.Member && "Mitglied"}
-                    {props.user.role === AssignmentTORoleEnum.Admin && "Administrator"}
-                    {props.user.role === AssignmentTORoleEnum.Owner && "Eigentümer"}
+                    {props.user.role === AssignmentTORoleEnum.Viewer && t("role.viewer")}
+                    {props.user.role === AssignmentTORoleEnum.Member && t("role.member")}
+                    {props.user.role === AssignmentTORoleEnum.Admin && t("role.admin")}
+                    {props.user.role === AssignmentTORoleEnum.Owner && t("role.owner")}
                 </div>
             </div>
 

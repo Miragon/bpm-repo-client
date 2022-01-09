@@ -41,9 +41,9 @@ const RepositoryMembersDialog: React.FC<Props> = props => {
         return assignments?.map(assignment => ({
             id: assignment.userId,
             role: assignment.role,
-            name: users?.find(user => user.id === assignment.userId)?.username || "Unknown"
+            name: users?.find(user => user.id === assignment.userId)?.username || t("repository.members.unknown")
         })) || [];
-    }, [assignments, users]);
+    }, [assignments, users, t]);
 
     const load = useCallback(async () => {
         if (!repository) {
@@ -86,9 +86,9 @@ const RepositoryMembersDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={load}
             open={open}
-            firstTitle="Benutzer hinzufügen"
+            firstTitle={t("repository.members.add")}
             onFirst={() => setAddMemberDialogOpen(true)}
-            title={t("repository.editUsers")}>
+            title={t("repository.members.manage")}>
 
             <UserList
                 users={userInfo}

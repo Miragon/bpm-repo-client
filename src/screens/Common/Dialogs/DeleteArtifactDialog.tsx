@@ -33,7 +33,7 @@ const DeleteArtifactDialog: React.FC<Props> = props => {
 
     const onDelete = useCallback(async () => {
         if (!artifact) {
-            setError("Keine Datei ausgewählt!");
+            setError(t("validation.noFile"));
             return;
         }
 

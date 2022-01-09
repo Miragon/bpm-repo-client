@@ -1,5 +1,6 @@
 import { AddBoxOutlined } from "@material-ui/icons";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Popup from "../Common/Popup";
 import MenuList, { MenuListConfig } from "../MenuList/MenuList";
 import ActionButton from "./ActionButton";
@@ -11,13 +12,15 @@ interface Props {
 }
 
 const AddButton: React.FC<Props> = props => {
+    const { t } = useTranslation("common");
+
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement>();
 
     return (
         <>
             <ActionButton
                 onClick={e => setMenuAnchor(e.currentTarget)}
-                label="Hinzufügen"
+                label={t("action.add")}
                 icon={AddBoxOutlined}
                 primary={props.primary}
                 active={false} />

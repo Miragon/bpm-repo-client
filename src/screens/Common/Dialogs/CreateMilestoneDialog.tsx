@@ -40,7 +40,7 @@ const CreateMilestoneDialog: React.FC<Props> = props => {
         }
 
         if (comment.length < 4) {
-            setError("Kommentar zu kurz!");
+            setError(t("validation.commentTooShort"));
             return;
         }
 

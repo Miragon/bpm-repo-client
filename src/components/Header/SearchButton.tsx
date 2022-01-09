@@ -2,6 +2,7 @@ import { TextField } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { THEME } from "../../theme";
 
 interface Props {
@@ -57,6 +58,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SearchButton: React.FC<Props> = props => {
     const classes = useStyles();
 
+    const { t } = useTranslation("common");
+
     const [search, setSearch] = useState("");
 
     return (
@@ -70,7 +73,7 @@ const SearchButton: React.FC<Props> = props => {
                         setSearch(e.target.value);
                         props.onSearch(e.target.value);
                     }}
-                    placeholder="Suchen..."
+                    placeholder={t("action.search")}
                     variant="outlined" />
             </div>
         </div>

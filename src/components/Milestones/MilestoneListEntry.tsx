@@ -151,7 +151,7 @@ const MilestoneListEntry: React.FC<Props> = props => {
                         title={props.milestone.comment}
                         className={classes.title}>
                         {!props.milestone.comment && (
-                            <span className={classes.fallback}>Kein Kommentar</span>
+                            <span className={classes.fallback}>{t("milestone.noComment")}</span>
                         )}
                         {props.milestone.comment}
                     </Typography>
@@ -161,7 +161,7 @@ const MilestoneListEntry: React.FC<Props> = props => {
             <div className={classes.cardTagSection}>
                 {props.milestone.latestMilestone && (
                     <div className={clsx(classes.tag, classes.tagPrimary)}>
-                        Latest
+                        {t("milestone.latest")}
                     </div>
                 )}
                 {props.milestone.deployments.map(deployment => (
@@ -169,7 +169,10 @@ const MilestoneListEntry: React.FC<Props> = props => {
                         arrow
                         key={deployment.id}
                         classes={{ tooltip: classes.tooltip, arrow: classes.tooltipArrow }}
-                        title={`${formatTimeSince(deployment.timestamp, t)} durch ${deployment.user}`}>
+                        title={t("milestone.authoredBy", {
+                            timeSince: formatTimeSince(deployment.timestamp, t),
+                            user: deployment.user
+                        }) as string}>
                         <div className={clsx(classes.tag, classes.tagSecondary)}>
                             {deployment.target}
                         </div>

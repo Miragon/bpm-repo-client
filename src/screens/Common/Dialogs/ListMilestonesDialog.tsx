@@ -131,7 +131,7 @@ const ListMilestonesDialog: React.FC<Props> = props => {
             {milestones && (
                 <MilestoneList
                     milestones={milestones}
-                    fallback="milestone.na"
+                    fallback="milestone.noMilestones"
                     onMenuClick={onMenuClick}
                     onClick={milestone => props.artifact && openFileInTool(props.artifactTypes, props.artifact.fileType, milestone.repositoryId, milestone.artifactId, milestone.milestone)}
                     menuEntries={MILESTONE_OPTIONS} />

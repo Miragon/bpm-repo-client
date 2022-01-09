@@ -43,12 +43,12 @@ const EditArtifactDialog: React.FC<Props> = props => {
 
     const onEdit = useCallback(async () => {
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
         if (!artifact) {
-            setError("Keine Datei ausgewählt!");
+            setError(t("validation.noFile"));
             return;
         }
 

@@ -49,7 +49,7 @@ const Menu: React.FC = () => {
                 icon={StarOutlineOutlined} />
             <MenuItem
                 href="/recent"
-                text={t("menu.recents")}
+                text={t("menu.recent")}
                 icon={ScheduleOutlined} />
             <MenuSpacer />
             <MenuLanguage />

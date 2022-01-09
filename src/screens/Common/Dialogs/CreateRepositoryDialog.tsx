@@ -37,7 +37,7 @@ const CreateRepositoryDialog: React.FC<Props> = props => {
 
     const onCreate = useCallback(async () => {
         if (title.length < 4) {
-            setError("Der Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 

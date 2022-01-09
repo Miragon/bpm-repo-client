@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultFileList from "../../../components/Files/DefaultFileList";
 import { FileDescription } from "../../../components/Files/FileListEntry";
@@ -29,6 +30,8 @@ interface Props {
 const ArtifactRecentSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
+
+    const { t } = useTranslation("common");
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
@@ -63,7 +66,7 @@ const ArtifactRecentSection: React.FC<Props> = props => {
     if (repositories.error || artifactTypes.error || recentArtifacts.error || favoriteArtifacts.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     artifactTypes.error && dispatch(loadArtifactTypes(true));
@@ -79,14 +82,14 @@ const ArtifactRecentSection: React.FC<Props> = props => {
 
     return (
         <>
-            <ScreenSectionHeader title="Zuletzt bearbeitet" />
+            <ScreenSectionHeader title={t("artifact.recent")} />
             <DefaultFileList
                 files={filtered}
                 pageSize={props.pageSize}
                 reloadFiles={props.onChange}
                 className={classes.fileList}
                 artifactTypes={artifactTypes.value || []}
-                fallback="recents.notAvailable" />
+                fallback="artifact.noRecent" />
         </>
     );
 };

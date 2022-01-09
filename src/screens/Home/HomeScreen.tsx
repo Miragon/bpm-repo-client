@@ -1,11 +1,5 @@
-import {
-    CloudUploadOutlined,
-    CreateNewFolderOutlined,
-    FormatShapesOutlined,
-    NoteAddOutlined,
-    TuneOutlined
-} from "@material-ui/icons";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +12,7 @@ import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
 import { openRepository } from "../../util/LinkUtils";
+import { getAddOptions } from "../../util/MenuUtils";
 import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
 import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
@@ -26,14 +21,11 @@ import ArtifactRecentSection from "../Common/Sections/ArtifactRecentSection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
 import RepositorySection from "../Common/Sections/RepositorySection";
 
-const CUSTOM_ICONS: { [key: string]: React.ElementType } = {
-    "CONFIGURATION": TuneOutlined,
-    "FORM": FormatShapesOutlined
-};
-
 const HomeScreen: React.FC = (() => {
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const { t } = useTranslation("common");
 
     const repositories = useSelector((state: RootState) => state.repositories);
     const artifactTypes = useSelector((state: RootState) => state.artifactTypes);
@@ -44,27 +36,10 @@ const HomeScreen: React.FC = (() => {
     const [createRepositoryDialogOpen, setCreateRepositoryDialogOpen] = useState(false);
     const [createArtifactType, setCreateArtifactType] = useState("");
 
-    const addOptions: MenuListConfig = useMemo(() => [
-        [
-            {
-                label: "repository.create",
-                value: "create-repository",
-                icon: CreateNewFolderOutlined
-            }
-        ],
-        (artifactTypes.value || []).map(type => ({
-            label: "artifact.create" + type.name,
-            value: "create-file-" + type.name,
-            icon: CUSTOM_ICONS[type.name] || NoteAddOutlined
-        })),
-        [
-            {
-                label: "artifact.upload",
-                value: "upload-file",
-                icon: CloudUploadOutlined
-            }
-        ]
-    ], [artifactTypes]);
+    const addOptions: MenuListConfig = useMemo(
+        () => getAddOptions(artifactTypes.value || [], true),
+        [artifactTypes]
+    );
 
     useEffect(() => {
         dispatch(loadRepositories());
@@ -102,7 +77,7 @@ const HomeScreen: React.FC = (() => {
     if (repositories.error || artifactTypes.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     artifactTypes.error && dispatch(loadArtifactTypes(true));
@@ -116,7 +91,7 @@ const HomeScreen: React.FC = (() => {
                 <ScreenHeader
                     onSearch={setSearch}
                     onAdd={onAddItemClicked}
-                    title={[{ title: "Modellverwaltung", link: "/" }]}
+                    title={[{ title: t("breadcrumbs.home"), link: "/" }]}
                     addOptions={addOptions}
                     primary="add" />
             </ErrorBoundary>

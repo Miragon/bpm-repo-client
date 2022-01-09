@@ -1,6 +1,7 @@
 import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArtifactApi, ArtifactTO } from "../../../api";
 import DefaultFileList from "../../../components/Files/DefaultFileList";
@@ -31,6 +32,8 @@ interface Props {
 const ArtifactSearchSection: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
+
+    const { t } = useTranslation("common");
 
     const searchTimeout = useRef<NodeJS.Timeout | undefined>();
 
@@ -88,7 +91,7 @@ const ArtifactSearchSection: React.FC<Props> = props => {
     if (repositories.error || artifactTypes.error || favoriteArtifacts.error || searchError) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     artifactTypes.error && dispatch(loadArtifactTypes(true));
@@ -100,7 +103,7 @@ const ArtifactSearchSection: React.FC<Props> = props => {
 
     return (
         <>
-            <ScreenSectionHeader title="Gefundene Dateien">
+            <ScreenSectionHeader title={t("artifact.searchResults")}>
                 {searching && (
                     <CircularProgress
                         size={16}

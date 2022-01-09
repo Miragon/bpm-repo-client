@@ -73,7 +73,7 @@ const RepositorySection: React.FC<Props> = props => {
     if (repositories.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => dispatch(loadRepositories(true)))} />
         );
     }
@@ -84,7 +84,7 @@ const RepositorySection: React.FC<Props> = props => {
 
     return (
         <>
-            <ScreenSectionHeader title={props.search ? "Projekte" : "Alle Projekte"} />
+            <ScreenSectionHeader title={t(props.search ? "breadcrumbs.repositories" : "breadcrumbs.allRepositories")} />
             <div className={classes.root}>
                 <div className={classes.content}>
                     {pageItems.map(repo => (

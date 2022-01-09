@@ -13,7 +13,7 @@ export interface ToastAction {
 }
 
 interface Props {
-    message: string | undefined | false;
+    message: string;
     severity?: Color;
     className?: string;
     onClose?: () => void;

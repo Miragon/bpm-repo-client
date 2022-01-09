@@ -77,12 +77,12 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
 
     const deploy = useCallback(async () => {
         if (!target) {
-            setError("Keine Zielumgebung ausgewählt!");
+            setError(t("validation.noTarget"));
             return;
         }
 
         if (selectedArtifacts.length === 0) {
-            setError("Keine Dateien ausgewählt!");
+            setError(t("validation.noArtifacts"));
             return;
         }
 
@@ -103,7 +103,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast(t("deployment.deployedMultiple", { deployedMilestones: response.result.length }));
+        makeSuccessToast(t("milestone.deployedMultiple", { deployedMilestones: response.result.length }));
         props.onClose(true);
         setTarget("");
         setSearch("");
@@ -120,7 +120,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             open={props.open}
             onClose={onCancel}
             icon={<LocalShippingOutlined className={classes.icon} />}
-            title={t("deployment.multiple")}
+            title={t("milestone.deployMultiple")}
             error={error}
             onCloseError={() => setError(undefined)}
             firstTitle={t("milestone.deployMultiple")}
@@ -128,10 +128,10 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             <SettingsForm large>
                 <SettingsSelect
                     disabled={disabled}
-                    label={t("deployment.target")}
+                    label={t("properties.target")}
                     value={target}
                     onChanged={setTarget}>
-                    <MenuItem value=""><em>Kein Ziel ausgewählt</em></MenuItem>
+                    <MenuItem value=""><em>{t("properties.noTarget")}</em></MenuItem>
                     {props.targets.map(target => (
                         <MenuItem
                             key={target}
@@ -145,7 +145,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
                 <div className={classes.search}>
                     <SearchTextField
                         className={classes.searchField}
-                        label="Dateien durchsuchen..."
+                        label={t("milestone.search")}
                         search={search}
                         onSearchChanged={setSearch} />
                 </div>
@@ -154,7 +154,7 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
                         <Typography
                             variant="body1"
                             className={classes.placeholder}>
-                            Keine Dateien gefunden.
+                            {t("milestone.noneFound")}
                         </Typography>
                     )}
                     {filteredArtifacts.map(artifact => (

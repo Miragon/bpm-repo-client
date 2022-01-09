@@ -1,5 +1,6 @@
 import { FilterListOutlined } from "@material-ui/icons";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Popup from "../Common/Popup";
 import MenuListTitle from "../MenuList/MenuListTitle";
 import SelectMenuList, { SelectMenuListConfig } from "../MenuList/SelectMenuList";
@@ -12,13 +13,15 @@ interface Props {
 }
 
 const FilterButton: React.FC<Props> = props => {
+    const { t } = useTranslation("common");
+
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement>();
 
     return (
         <>
             <ActionButton
                 onClick={e => setMenuAnchor(e.currentTarget)}
-                label="Filtern"
+                label={t("action.filter")}
                 icon={FilterListOutlined}
                 primary={false}
                 active={!!menuAnchor || props.active.length < props.filterOptions.flatMap(group => group).length} />
@@ -30,7 +33,7 @@ const FilterButton: React.FC<Props> = props => {
                 placement="bottom-end">
                 {() => (
                     <SelectMenuList
-                        title={<MenuListTitle title="Dateitypen filtern" />}
+                        title={<MenuListTitle title={t("action.filterBy")} />}
                         active={props.active}
                         options={props.filterOptions}
                         onChange={props.onChange} />

@@ -140,7 +140,7 @@ const FileListEntry: React.FC<Props> = props => {
                     <Typography
                         variant="body2"
                         className={classes.subtitle}>
-                        {props.file.repository?.name ?? "Unknown"}
+                        {props.file.repository?.name ?? t("artifact.unknownRepository")}
                     </Typography>
                 </div>
             </div>

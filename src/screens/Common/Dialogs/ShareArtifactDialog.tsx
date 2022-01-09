@@ -41,12 +41,12 @@ const ShareArtifactDialog: React.FC<Props> = props => {
         }
 
         if (!repositoryId) {
-            setError("Kein Projekt gewählt!");
+            setError(t("validation.noRepository"));
             return;
         }
 
         if (!role) {
-            setError("Keine Rolle gewählt!");
+            setError(t("validation.noRole"));
             return;
         }
 
@@ -63,7 +63,7 @@ const ShareArtifactDialog: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast(t("share.successful"));
+        makeSuccessToast(t("artifact.shared"));
         setRole("");
         setRepositoryId("");
         props.onClose(true);
@@ -85,10 +85,10 @@ const ShareArtifactDialog: React.FC<Props> = props => {
             <SettingsSelect
                 disabled={disabled}
                 value={repositoryId}
-                label={t("repository.target")}
+                label={t("properties.repository")}
                 onChanged={setRepositoryId}>
                 <MenuItem value="">
-                    <em>Kein Projekt ausgewählt</em>
+                    <em>{t("properties.noRepository")}</em>
                 </MenuItem>
                 {props.ownRepositories.map(repo => (
                     <MenuItem
@@ -102,22 +102,22 @@ const ShareArtifactDialog: React.FC<Props> = props => {
             <SettingsSelect
                 disabled={disabled}
                 value={role}
-                label="Rolle"
+                label={t("properties.role")}
                 onChanged={setRole}>
                 <MenuItem value="">
-                    <em>Keine Rolle ausgewählt</em>
+                    <em>{t("properties.noRole")}</em>
                 </MenuItem>
                 <MenuItem value={ShareWithRepositoryTORoleEnum.Viewer}>
-                    Betrachter
+                    {t("role.viewer")}
                 </MenuItem>
                 <MenuItem value={ShareWithRepositoryTORoleEnum.Member}>
-                    Mitglied
+                    {t("role.member")}
                 </MenuItem>
                 <MenuItem value={ShareWithRepositoryTORoleEnum.Admin}>
-                    Administrator
+                    {t("role.admin")}
                 </MenuItem>
                 <MenuItem value={ShareWithRepositoryTORoleEnum.Owner}>
-                    Besitzer
+                    {t("role.owner")}
                 </MenuItem>
             </SettingsSelect>
 

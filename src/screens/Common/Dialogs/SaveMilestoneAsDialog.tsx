@@ -40,7 +40,7 @@ const SaveMilestoneAsDialog: React.FC<Props> = props => {
         }
 
         if (title.length < 4) {
-            setError("Titel ist zu kurz!");
+            setError(t("validation.titleTooShort"));
             return;
         }
 
@@ -68,7 +68,7 @@ const SaveMilestoneAsDialog: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast(t("milestone.savedAsArtifact"));
+        makeSuccessToast(t("milestone.savedAsNewArtifact"));
         setTitle("");
         setDescription("");
         onClose(true);

@@ -61,11 +61,11 @@ const RepositoryRemoveMemberDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={() => setError(undefined)}
             open={open}
-            firstTitle="Benutzer entfernen"
+            firstTitle={t("repository.members.remove")}
             onFirst={remove}
-            title="Benutzer entfernen">
+            title={t("repository.members.remove")}>
 
-            Wollen Sie diesen Benutzer wirklich aus dem Projekt entfernen?
+            {t("repository.members.confirmRemove")}
 
         </PopupDialog>
     );

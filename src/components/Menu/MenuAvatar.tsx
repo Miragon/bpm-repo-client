@@ -84,7 +84,7 @@ const MenuAvatar: React.FC<Props> = props => {
     ]], [t, classes]);
 
     const onAction = useCallback((action: string) => {
-        console.log(action);
+        // TODO
     }, []);
 
     return (
@@ -96,7 +96,7 @@ const MenuAvatar: React.FC<Props> = props => {
                 {props.name?.substr(0, 1) ?? "?"}
             </Avatar>
             <span className={classes.menuItemText}>
-                Account
+                {t("menu.account")}
             </span>
 
             <Popup
@@ -108,7 +108,7 @@ const MenuAvatar: React.FC<Props> = props => {
                 arrowInset={10}>
                 {({ close }) => (
                     <MenuList
-                        title={<MenuListTitle title={props.name || "Unbekannter Benutzer"} />}
+                        title={<MenuListTitle title={props.name || t("menu.accountMenu.unknown")} />}
                         options={options}
                         onClick={value => {
                             setTimeout(close);

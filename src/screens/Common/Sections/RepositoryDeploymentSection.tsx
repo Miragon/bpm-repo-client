@@ -53,7 +53,7 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
     }, [loadMilestones, repositoryDeployments?.value]);
 
     const deployments: DeploymentInfo[] = useMemo(() => (repositoryDeployments?.value || []).map(deployment => {
-        const artifact = repositoryArtifacts.value?.find(a => a.id === deployment.artifactId);
+        const artifact = repositoryArtifacts?.value?.find(a => a.id === deployment.artifactId);
         const milestone = milestones.find(m => m.deployments.find(d => d.id === deployment.id));
         const repository = repositories.value?.find(r => r.id === deployment.repositoryId);
         return {
@@ -100,15 +100,15 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
         link.click();
     }, []);
 
-    if (repositories.error || repositoryArtifacts.error || repositoryDeployments.error) {
+    if (repositories.error || repositoryArtifacts?.error || repositoryDeployments?.error) {
         return (
             <PopupToast
-                message="Daten konnten nicht geladen werden."
+                message={t("exception.loadingError")}
                 action={retryAction(() => {
                     repositories.error && dispatch(loadRepositories(true));
                     if (props.repositoryId) {
-                        repositoryArtifacts.error && dispatch(loadRepositoryArtifacts(props.repositoryId, true));
-                        repositoryDeployments.error && dispatch(loadRepositoryDeployments(props.repositoryId, true));
+                        repositoryArtifacts?.error && dispatch(loadRepositoryArtifacts(props.repositoryId, true));
+                        repositoryDeployments?.error && dispatch(loadRepositoryDeployments(props.repositoryId, true));
                     }
                 })} />
         );
@@ -125,10 +125,10 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
 
     return (
         <>
-            <ScreenSectionHeader title="Veröffentlichte Dateien" />
+            <ScreenSectionHeader title={t("repository.deployments")} />
             <DeploymentList
                 deployments={pageItems}
-                fallback="deployments.na"
+                fallback="repository.noDeployments"
                 onDownloadClick={download} />
             <Pagination config={paginationConfig} />
         </>

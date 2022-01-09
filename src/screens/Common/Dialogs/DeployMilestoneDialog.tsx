@@ -39,7 +39,7 @@ const DeployMilestoneDialog: React.FC<Props> = props => {
         }
 
         if (!target) {
-            setError("Kein Ziel ausgewählt!");
+            setError(t("validation.noTarget"));
             return;
         }
 
@@ -78,10 +78,10 @@ const DeployMilestoneDialog: React.FC<Props> = props => {
 
             <SettingsSelect
                 disabled={disabled}
-                label={t("deployment.target")}
+                label={t("properties.target")}
                 value={target}
                 onChanged={setTarget}>
-                <MenuItem value=""><em>Kein Ziel ausgewählt</em></MenuItem>
+                <MenuItem value=""><em>{t("properties.noTarget")}</em></MenuItem>
                 {targets.map(target => (
                     <MenuItem
                         key={target}

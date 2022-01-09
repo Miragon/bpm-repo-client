@@ -45,7 +45,7 @@ const RepositoryEditMemberDialog: React.FC<Props> = props => {
         }
 
         if (!role) {
-            setError("Keine Rolle ausgewählt!");
+            setError(t("validation.noRole"));
             return;
         }
 
@@ -78,20 +78,20 @@ const RepositoryEditMemberDialog: React.FC<Props> = props => {
             onClose={onCancel}
             onCloseError={() => setError(undefined)}
             open={open}
-            title="Rolle bearbeiten"
+            title={t("repository.members.changeRole")}
             onFirst={edit}
             firstTitle={t("dialog.applyChanges")}>
 
             <SettingsSelect
                 disabled={false}
-                label="Neue Rolle"
+                label={t("properties.role")}
                 value={role}
                 onChanged={setRole}>
-                <MenuItem value=""><em>Keine Rolle ausgewählt</em></MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Viewer}>Betrachter</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Member}>Mitglied</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Admin}>Administrator</MenuItem>
-                <MenuItem value={AssignmentTORoleEnum.Owner}>Eigentümer</MenuItem>
+                <MenuItem value=""><em>{t("properties.noRole")}</em></MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Viewer}>{t("role.viewer")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Member}>{t("role.member")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Admin}>{t("role.admin")}</MenuItem>
+                <MenuItem value={AssignmentTORoleEnum.Owner}>{t("role.owner")}</MenuItem>
 
             </SettingsSelect>
 

@@ -111,12 +111,12 @@ const DefaultFileList: React.FC<Props> = props => {
             if (response.error) {
                 makeErrorToast(t(response.error));
             } else {
-                makeErrorToast("Favorit konnte nicht gespeichert werden.");
+                makeErrorToast(t("artifact.favoriteFailed"));
             }
             return;
         }
 
-        makeSuccessToast("Favorit gespeichert");
+        makeSuccessToast(t("artifact.favoriteSaved"));
         dispatch(loadFavoriteArtifacts(true));
     }, [dispatch, t]);
 
@@ -150,13 +150,13 @@ const DefaultFileList: React.FC<Props> = props => {
                     if (response.error) {
                         makeErrorToast(t(response.error));
                     } else {
-                        makeErrorToast("Download fehlgeschlagen.");
+                        makeErrorToast(t("artifact.downloadFailed"));
                     }
                     return;
                 }
 
                 downloadFile(response.result);
-                makeSuccessToast(t("download.started"));
+                makeSuccessToast(t("artifact.downloadStarted"));
                 break;
             }
             case "edit-file": {
