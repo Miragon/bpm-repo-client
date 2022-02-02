@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useTranslation } from "react-i18next";
 import { DeploymentTOStatusEnum } from "../../api";
 import { Done, Error } from "@material-ui/icons";
 import { CircularProgress, Tooltip } from "@material-ui/core";
@@ -20,6 +19,7 @@ interface Props {
     message: string | undefined;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getIcon(status: DeploymentTOStatusEnum, classes: any) {
     switch (status) {
         case DeploymentTOStatusEnum.Success:
@@ -27,7 +27,7 @@ function getIcon(status: DeploymentTOStatusEnum, classes: any) {
         case DeploymentTOStatusEnum.Error:
             return <Error className={classes.error} />;
         case DeploymentTOStatusEnum.Pending:
-            return <CircularProgress color="secondary" />;
+            return <CircularProgress color="secondary" style={{width: "24px", height: "24px"}} />;
         default:
             return (
                 <div>
@@ -40,17 +40,10 @@ function getIcon(status: DeploymentTOStatusEnum, classes: any) {
 const DeploymentStatus: React.FC<Props> = props => {
     const classes = useStyles();
 
-    const { t } = useTranslation("common");
-
     return (
-        <>
-            { props.message &&
-                <Tooltip title={ props.message }>
-                    { getIcon(props.status, classes) }
-                </Tooltip>
-            }
-            { !props.message && getIcon(props.status, classes)}
-        </>
+        <Tooltip title={ props.message ?? props.status }>
+            { getIcon(props.status, classes) }
+        </Tooltip>
     );
 };
 

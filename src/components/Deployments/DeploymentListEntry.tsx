@@ -71,8 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     cardActionMenu: {
-        // TODO improve design
-        width: "20px",
         marginLeft: "5px",
         marginRight: "5px"
     },
