@@ -9,6 +9,7 @@ import { THEME } from "../../theme";
 import { formatTimeSince } from "../../util/DateUtils";
 import FileIcon from "../Files/FileIcon";
 import { FileDescription } from "../Files/FileListEntry";
+import DeploymentStatus from "./DeploymentStatus";
 
 export interface DeploymentInfo {
     artifact: FileDescription | undefined;
@@ -69,7 +70,12 @@ const useStyles = makeStyles((theme: Theme) => ({
             fill: THEME.content.primary
         }
     },
-    cardActionMenu: {},
+    cardActionMenu: {
+        // TODO improve design
+        width: "20px",
+        marginLeft: "5px",
+        marginRight: "5px"
+    },
     cardBody: {
         display: "flex",
         flexDirection: "column"
@@ -175,6 +181,11 @@ const DeploymentListEntry: React.FC<Props> = props => {
                     <CloudDownloadOutlined />
                 </IconButton>
 
+                <div className={classes.cardActionMenu}>
+                    <DeploymentStatus
+                        status={props.deployment.deployment.status}
+                        message={props.deployment.deployment.message} />
+                </div>
             </div>
 
         </Card>
