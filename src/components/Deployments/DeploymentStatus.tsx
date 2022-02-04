@@ -27,7 +27,7 @@ function getIcon(status: DeploymentTOStatusEnum, classes: any) {
         case DeploymentTOStatusEnum.Error:
             return <Error className={classes.error} />;
         case DeploymentTOStatusEnum.Pending:
-            return <CircularProgress color="secondary" style={{width: "24px", height: "24px"}} />;
+            return <CircularProgress color="secondary" size={24} />;
         default:
             return (
                 <div>
