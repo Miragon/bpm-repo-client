@@ -2,18 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArtifactMilestoneTO, MilestoneApi } from "../../../api";
-import DeploymentList from "../../../components/Deployments/DeploymentList";
 import { DeploymentInfo } from "../../../components/Deployments/DeploymentListEntry";
 import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
-import Pagination from "../../../components/List/Pagination";
-import { usePagination } from "../../../components/List/usePagination";
 import { loadRepositoryArtifacts } from "../../../store/RepositoryArtifactState";
 import { loadRepositoryDeployments } from "../../../store/RepositoryDeploymentState";
 import { loadRepositories } from "../../../store/RepositoryState";
 import { RootState } from "../../../store/Store";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 import { makeErrorToast } from "../../../util/ToastUtils";
+import DeploymentListWrapper from "../../../components/Deployments/DeploymentListWrapper";
 
 interface Props {
     search: string;
@@ -65,6 +63,15 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
             } : undefined,
             milestone: milestone
         };
+    }).sort((a: DeploymentInfo, b: DeploymentInfo) => {
+        // sort descending
+        if (a.deployment.timestamp < b.deployment.timestamp) {
+            return 1;
+        }
+        else if (a.deployment.timestamp > b.deployment.timestamp) {
+            return -1;
+        }
+        return 0;
     }), [milestones, repositoryArtifacts, repositoryDeployments, repositories]);
 
     useEffect(() => {
@@ -80,25 +87,20 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
         if (props.loadKey > 0) {
             dispatch(loadRepositories(true));
         }
-    }, [dispatch, props.loadKey]);
-
-    // Reload if something changed in the other sections
-    useEffect(() => {
         if (props.loadKey > 0 && props.repositoryId) {
             dispatch(loadRepositoryDeployments(props.repositoryId, true));
             dispatch(loadRepositoryArtifacts(props.repositoryId, true));
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
 
-    const { pageItems, paginationConfig } = usePagination(deployments, 5);
-
-    const download = useCallback((deployment: DeploymentInfo) => {
-        const filePath = `/api/milestone/${deployment.artifact?.id}/${deployment.milestone?.id}/download`;
-        const link = document.createElement("a");
-        link.href = filePath;
-        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-        link.click();
-    }, []);
+    /**
+     * Fetch the repository deployments api
+     */
+    const reloadDeployments = useCallback((repositoryId: string) => {
+        // callback is called every 3 seconds
+        // TODO is there a better way to detect deployment changes
+        dispatch(loadRepositoryDeployments(repositoryId, true));
+    }, [dispatch]);
 
     if (repositories.error || repositoryArtifacts?.error || repositoryDeployments?.error) {
         return (
@@ -126,11 +128,10 @@ const RepositoryDeploymentSection: React.FC<Props> = props => {
     return (
         <>
             <ScreenSectionHeader title={t("repository.deployments")} />
-            <DeploymentList
-                deployments={pageItems}
-                fallback="repository.noDeployments"
-                onDownloadClick={download} />
-            <Pagination config={paginationConfig} />
+            <DeploymentListWrapper
+                repositoryId={props.repositoryId}
+                deployments={deployments}
+                doReloadDeployments={reloadDeployments} />
         </>
     );
 };

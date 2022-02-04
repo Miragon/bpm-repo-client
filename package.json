@@ -51,6 +51,7 @@
   "scripts": {
     "api-gen": "openapi-generator-cli generate -i http://localhost:8089/v3/api-docs -g typescript-axios -o src/api",
     "start": "cross-env BROWSER=none WDS_SOCKET_PORT=3000 PUBLIC_URL=/repository/ react-scripts start",
+    "start-non-proxy": "cross-env BROWSER=none WDS_SOCKET_PORT=3000 REACT_APP_BACKEND=http://localhost:8089 PUBLIC_URL=/repository/ react-scripts start",
     "build": "cross-env PUBLIC_URL=/repository/ react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

@@ -27,6 +27,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
+If you develop without a proxy (e.g. nginx) you can use the script `yarn run start-non-proxy` to use a locally running backend.
+**Important Notice:** If you choose this approach, you have to make sure that the backend server sends appropriate cors headers (e.g. `*`).
+
 
 ### `yarn build`
 
