@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: "0.75rem 0",
         borderRadius: "8px",
         padding: "1.25rem",
-        cursor: "pointer",
         transition: theme.transitions.create("box-shadow"),
         boxShadow: "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px",
         border: "1px solid #EAEAEA",
