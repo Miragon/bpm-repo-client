@@ -33,5 +33,5 @@ export const formatTimeSince = (date: string, t: TFunction<string>): string => {
         return t("duration.ago.oneDay");
     }
 
-    return parsed.toLocaleString(DateTime.DATE_SHORT);
+    return parsed.toLocaleString(DateTime.DATETIME_SHORT);
 };
