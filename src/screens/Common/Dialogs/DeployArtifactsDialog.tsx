@@ -103,7 +103,6 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast(t("milestone.deployedMultiple", { deployedMilestones: response.result.length }));
         props.onClose(true);
         setTarget("");
         setSearch("");
