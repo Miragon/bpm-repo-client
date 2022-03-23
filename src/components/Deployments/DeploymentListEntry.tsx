@@ -121,10 +121,6 @@ interface Props {
     onDownloadClick: () => void;
 }
 
-function getTranslationForTooltip(t: any, translationKey: string, additionalInfo: any): string {
-    return t(translationKey, additionalInfo)
-}
-
 const DeploymentListEntry: React.FC<Props> = props => {
     const classes = useStyles();
 
@@ -165,7 +161,7 @@ const DeploymentListEntry: React.FC<Props> = props => {
             </div>
 
             <div className={classes.cardTagSection}>
-                <Tooltip title={getTranslationForTooltip(t, "deployment.deployedToEnvironment", { env: props.deployment.deployment.target })}>
+                <Tooltip title={t<string>("deployment.deployedToEnvironment", { env: props.deployment.deployment.target })}>
                     <div className={clsx(classes.tag, classes.tagPrimary)}>
                         {props.deployment.deployment.target}
                     </div>
@@ -174,7 +170,7 @@ const DeploymentListEntry: React.FC<Props> = props => {
 
             <div className={classes.cardActionSection}>
 
-                <Tooltip title={getTranslationForTooltip(t, "artifact.download", {})}>
+                <Tooltip title={t<string>("artifact.download")}>
                     <IconButton
                         size="small"
                         className={classes.cardActionMenu}
