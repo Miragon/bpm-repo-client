@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, MenuItem, Typography } from "@material-ui/core";
+import { Checkbox, Chip, FormControlLabel, MenuItem, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useMemo, useState } from "react";
@@ -156,20 +156,21 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
                         </Typography>
                     )}
                     {filteredArtifacts.map(artifact => (
-                        <FormControlLabel
-                            key={artifact.id}
-                            label={artifact.name}
-                            className={classes.root}
-                            control={(
-                                <Checkbox
-                                    disableFocusRipple
-                                    disableRipple
-                                    disableTouchRipple
-                                    color="primary"
-                                    checked={selectedArtifacts.indexOf(artifact.id) !== -1}
-                                    disabled={disabled}
-                                    onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)} />
-                            )} />
+                        <div key={artifact.id} className={classes.root}>
+                            <FormControlLabel
+                                label={artifact.name}
+                                control={(
+                                    <Checkbox
+                                        disableFocusRipple
+                                        disableRipple
+                                        disableTouchRipple
+                                        color="primary"
+                                        checked={selectedArtifacts.indexOf(artifact.id) !== -1}
+                                        disabled={disabled}
+                                        onChange={(_, newValue) => onArtifactSelected(artifact.id, newValue)} />
+                                )} />
+                            <Chip label={artifact.fileType} />
+                        </div>
                     ))}
                 </div>
             </div>
