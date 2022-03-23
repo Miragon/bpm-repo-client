@@ -11,7 +11,6 @@ import SettingsForm from "../../../components/Form/SettingsForm";
 import SettingsSelect from "../../../components/Form/SettingsSelect";
 import { apiExec, hasFailed } from "../../../util/ApiUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
-import { makeSuccessToast } from "../../../util/ToastUtils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {},
