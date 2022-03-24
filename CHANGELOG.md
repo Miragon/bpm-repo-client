@@ -1,7 +1,20 @@
 # Changelog
 
-
 ## Unreleased
+
+### Added
+
+
+### Changed
+
+
+### Removed
+
+
+### Merged pull requests
+
+
+## 2022-03-24
 
 ### Added
 
@@ -22,6 +35,7 @@
 ### Merged pull requests
 
 - added changelog.md [\#19](https://github.com/FlowSquad/bpm-repo-client/pull/19) ([lmoesle](https://github.com/lmoesle))
+- bug/cocreation [\#20](https://github.com/FlowSquad/bpm-repo-client/pull/20) ([lmoesle](https://github.com/lmoesle))
 
 
 ## 2022-02-04
