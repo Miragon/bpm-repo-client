@@ -1,4 +1,4 @@
-import { Card, IconButton, Typography } from "@material-ui/core";
+import { Card, IconButton, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { CloudDownloadOutlined } from "@material-ui/icons";
 import clsx from "clsx";
@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: "0.75rem 0",
         borderRadius: "8px",
         padding: "1.25rem",
-        cursor: "pointer",
         transition: theme.transitions.create("box-shadow"),
         boxShadow: "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px",
         border: "1px solid #EAEAEA",
@@ -162,22 +161,26 @@ const DeploymentListEntry: React.FC<Props> = props => {
             </div>
 
             <div className={classes.cardTagSection}>
-                <div className={clsx(classes.tag, classes.tagPrimary)}>
-                    {props.deployment.deployment.target}
-                </div>
+                <Tooltip title={t<string>("deployment.deployedToEnvironment", { env: props.deployment.deployment.target })}>
+                    <div className={clsx(classes.tag, classes.tagPrimary)}>
+                        {props.deployment.deployment.target}
+                    </div>
+                </Tooltip>
             </div>
 
             <div className={classes.cardActionSection}>
 
-                <IconButton
-                    size="small"
-                    className={classes.cardActionMenu}
-                    onClick={e => {
-                        e.stopPropagation();
-                        props.onDownloadClick();
-                    }}>
-                    <CloudDownloadOutlined />
-                </IconButton>
+                <Tooltip title={t<string>("artifact.download")}>
+                    <IconButton
+                        size="small"
+                        className={classes.cardActionMenu}
+                        onClick={e => {
+                            e.stopPropagation();
+                            props.onDownloadClick();
+                        }}>
+                        <CloudDownloadOutlined />
+                    </IconButton>
+                </Tooltip>
 
                 <div className={classes.cardActionMenu}>
                     <DeploymentStatus

@@ -95,6 +95,9 @@
         "latest": "Latest",
         "authoredBy": "{{timeSince}} durch {{user}}"
     },
+    "deployment": {
+        "deployedToEnvironment": "Veröffentlicht in Umgebung {{env}}"
+    },
     "dialog": {
         "applyChanges": "Bestätigen",
         "create": "Erstellen"

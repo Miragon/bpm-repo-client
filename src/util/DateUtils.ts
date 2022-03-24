@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 import { TFunction } from "react-i18next";
 
 export const formatTimeSince = (date: string, t: TFunction<string>): string => {
-    const parsed = DateTime.fromISO(date);
+    const parsed = DateTime.fromISO(`${date}Z`);
     const duration = -parsed.diffNow().as("seconds");
 
     if (duration < 10) {
@@ -33,5 +33,5 @@ export const formatTimeSince = (date: string, t: TFunction<string>): string => {
         return t("duration.ago.oneDay");
     }
 
-    return parsed.toLocaleString(DateTime.DATE_SHORT);
+    return parsed.toLocaleString(DateTime.DATETIME_SHORT);
 };

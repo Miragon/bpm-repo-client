@@ -2,7 +2,7 @@ import { Card, IconButton, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { MoreVertOutlined } from "@material-ui/icons";
 import clsx from "clsx";
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ArtifactMilestoneTO } from "../../api";
 import { THEME } from "../../theme";
@@ -134,6 +134,20 @@ const MilestoneListEntry: React.FC<Props> = props => {
 
     const { t } = useTranslation("common");
 
+    const deployments = useMemo(() => {
+        const deployments = props.milestone.deployments
+            .sort((a, b) => {
+                return new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1
+            });
+
+        // return only last deployment for each target environment
+        return deployments
+            .filter((value, index, array) => {
+                return array
+                    .map(value => value.target).indexOf(value.target) === index
+            });
+    }, [props.milestone]);
+
     return (
         <Card
             onClick={props.onClick}
@@ -164,7 +178,7 @@ const MilestoneListEntry: React.FC<Props> = props => {
                         {t("milestone.latest")}
                     </div>
                 )}
-                {props.milestone.deployments.map(deployment => (
+                {deployments.map(deployment => (
                     <Tooltip
                         arrow
                         key={deployment.id}

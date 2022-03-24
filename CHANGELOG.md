@@ -1,7 +1,20 @@
 # Changelog
 
-
 ## Unreleased
+
+### Added
+
+
+### Changed
+
+
+### Removed
+
+
+### Merged pull requests
+
+
+## 2022-03-24
 
 ### Added
 
@@ -9,11 +22,20 @@
 
 ### Changed
 
+- For each milestone show only last deployment to each stage
+- Display time and date instead of only dates
+- Fixed timezone issues
+- Added tooltips to deployment list
+- Show artifact type in deployment dialog
+
 ### Removed
+
+- Misleading deployment toast message
 
 ### Merged pull requests
 
 - added changelog.md [\#19](https://github.com/FlowSquad/bpm-repo-client/pull/19) ([lmoesle](https://github.com/lmoesle))
+- bug/cocreation [\#20](https://github.com/FlowSquad/bpm-repo-client/pull/20) ([lmoesle](https://github.com/lmoesle))
 
 
 ## 2022-02-04
