@@ -9,7 +9,15 @@
 
 ### Changed
 
+- For each milestone show only last deployment to each stage
+- Display time and date instead of only dates
+- Fixed timezone issues
+- Added tooltips to deployment list
+- Show artifact type in deployment dialog
+
 ### Removed
+
+- Misleading deployment toast message
 
 ### Merged pull requests
 
