@@ -27,7 +27,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.3.7",
+    "@openapitools/openapi-generator-cli": "^2.4.26",
     "@types/luxon": "^2.0.3",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -49,7 +49,7 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "api-gen": "openapi-generator-cli generate -i http://localhost:8089/v3/api-docs -g typescript-axios -o src/api",
+    "api-gen": "openapi-generator-cli generate -i http://localhost:8092/v3/api-docs -g typescript-axios -o src/api",
     "start": "cross-env BROWSER=none WDS_SOCKET_PORT=3000 PUBLIC_URL=/repository/ react-scripts start",
     "start-non-proxy": "cross-env BROWSER=none WDS_SOCKET_PORT=3000 REACT_APP_BACKEND=http://localhost:8092 PUBLIC_URL=/repository/ react-scripts start",
     "build": "cross-env PUBLIC_URL=/repository/ react-scripts build",

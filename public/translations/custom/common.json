@@ -56,13 +56,15 @@
             "BPMN": "BPMN-Diagramm erstellen",
             "DMN": "DMN-Diagramm erstellen",
             "FORM": "Formular erstellen",
-            "CONFIGURATION": "Konfiguration erstellen"
+            "CONFIGURATION": "Konfiguration erstellen",
+            "ELEMENT_TEMPLATE": "Element-Template erstellen"
         },
         "filter": {
             "BPMN": "BPMN-Diagramme",
             "DMN": "DMN-Diagramme",
             "FORM": "Formulare",
-            "CONFIGURATION": "Konfigurationen"
+            "CONFIGURATION": "Konfigurationen",
+            "ELEMENT_TEMPLATE": "Element-Template"
         }
     },
     "duration": {

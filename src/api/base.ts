@@ -13,10 +13,10 @@
  */
 
 
-import {Configuration} from "./configuration";
+import { Configuration } from "./configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
-import globalAxios, {AxiosInstance, AxiosPromise} from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
 export const BASE_PATH = (process.env.REACT_APP_BACKEND ?? "/").replace(/\/+$/, "");
 

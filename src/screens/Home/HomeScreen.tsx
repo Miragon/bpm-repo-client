@@ -13,9 +13,9 @@ import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
 import { openRepository } from "../../util/LinkUtils";
 import { getAddOptions } from "../../util/MenuUtils";
-import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
+import WrapperCreateArtifactDialog from "../Common/Dialogs/artifacts/WrapperCreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
-import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
+import WrapperUploadArtifactDialog from "../Common/Dialogs/artifacts/WrapperUploadArtifactDialog";
 import ArtifactFavoriteSection from "../Common/Sections/ArtifactFavoriteSection";
 import ArtifactRecentSection from "../Common/Sections/ArtifactRecentSection";
 import ArtifactSearchSection from "../Common/Sections/ArtifactSearchSection";
@@ -54,9 +54,13 @@ const HomeScreen: React.FC = (() => {
     }, [dispatch, loadKey]);
 
     const onAddItemClicked = useCallback((action: string) => {
+        // if (action === "create-repository") {
+        //     setCreateRepositoryDialogOpen(true);
+        // }
+        // else if (action === "upload-file" || )
         switch (action) {
             case "create-repository": {
-                setCreateRepositoryDialogOpen(true);
+
                 break;
             }
             case "upload-file": {
@@ -136,9 +140,10 @@ const HomeScreen: React.FC = (() => {
                         repositoryId && history.push(openRepository(repositoryId));
                     }} />
 
-                <CreateArtifactDialog
+                <WrapperCreateArtifactDialog
                     repositories={repositories.value || []}
                     open={!!createArtifactType}
+                    types={artifactTypes.value || []}
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
@@ -148,7 +153,7 @@ const HomeScreen: React.FC = (() => {
                         }
                     }} />
 
-                <UploadArtifactDialog
+                <WrapperUploadArtifactDialog
                     open={uploadArtifactDialogOpen}
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);

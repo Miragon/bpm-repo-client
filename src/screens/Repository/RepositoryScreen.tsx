@@ -14,9 +14,9 @@ import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
 import { openRepository } from "../../util/LinkUtils";
 import { getAddOptions } from "../../util/MenuUtils";
-import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
+import WrapperCreateArtifactDialog from "../Common/Dialogs/artifacts/WrapperCreateArtifactDialog";
 import CreateRepositoryDialog from "../Common/Dialogs/CreateRepositoryDialog";
-import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
+import WrapperUploadArtifactDialog from "../Common/Dialogs/artifacts/WrapperUploadArtifactDialog";
 import RepositorySection from "../Common/Sections/RepositorySection";
 
 const RepositoryScreen: React.FC = (() => {
@@ -113,9 +113,10 @@ const RepositoryScreen: React.FC = (() => {
                         repositoryId && history.push(openRepository(repositoryId));
                     }} />
 
-                <CreateArtifactDialog
+                <WrapperCreateArtifactDialog
                     repositories={repositories.value || []}
                     open={!!createArtifactType}
+                    types={artifactTypes.value || []}
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
@@ -126,7 +127,7 @@ const RepositoryScreen: React.FC = (() => {
                         }
                     }} />
 
-                <UploadArtifactDialog
+                <WrapperUploadArtifactDialog
                     open={uploadArtifactDialogOpen}
                     onClose={result => {
                         setUploadArtifactDialogOpen(false);

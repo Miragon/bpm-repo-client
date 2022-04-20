@@ -12,10 +12,10 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { ArtifactApi, ArtifactTypeTO, MilestoneApi, RepositoryTO } from "../../api";
-import CopyArtifactDialog from "../../screens/Common/Dialogs/CopyArtifactDialog";
+import WrapperCopyArtifactDialog from "../../screens/Common/Dialogs/artifacts/WrapperCopyArtifactDialog";
 import CreateMilestoneDialog from "../../screens/Common/Dialogs/CreateMilestoneDialog";
 import DeleteArtifactDialog from "../../screens/Common/Dialogs/DeleteArtifactDialog";
-import EditArtifactDialog from "../../screens/Common/Dialogs/EditArtifactDialog";
+import WrapperEditArtifactDialog from "../../screens/Common/Dialogs/artifacts/WrapperEditArtifactDialog";
 import ListMilestonesDialog from "../../screens/Common/Dialogs/ListMilestonesDialog";
 import ShareArtifactDialog from "../../screens/Common/Dialogs/ShareArtifactDialog";
 import { loadFavoriteArtifacts } from "../../store/FavoriteArtifactState";
@@ -183,7 +183,7 @@ const DefaultFileList: React.FC<Props> = props => {
             <Pagination
                 className={props.paginationClassName}
                 config={paginationConfig} />
-            <EditArtifactDialog
+            <WrapperEditArtifactDialog
                 onClose={saved => {
                     setEditArtifact(undefined);
                     saved && props.reloadFiles();
@@ -197,7 +197,7 @@ const DefaultFileList: React.FC<Props> = props => {
                 }}
                 open={!!deleteArtifact}
                 artifact={deleteArtifact} />
-            <CopyArtifactDialog
+            <WrapperCopyArtifactDialog
                 open={!!copyArtifact}
                 onClose={() => setCopyArtifact(undefined)}
                 artifact={copyArtifact}

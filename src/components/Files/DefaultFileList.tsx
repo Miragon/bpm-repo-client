@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ArtifactApi, ArtifactTypeTO, MilestoneApi } from "../../api";
 import DeleteArtifactDialog from "../../screens/Common/Dialogs/DeleteArtifactDialog";
-import EditArtifactDialog from "../../screens/Common/Dialogs/EditArtifactDialog";
+import WrapperEditArtifactDialog from "../../screens/Common/Dialogs/artifacts/WrapperEditArtifactDialog";
 import { loadFavoriteArtifacts } from "../../store/FavoriteArtifactState";
 import { apiExec, hasFailed } from "../../util/ApiUtils";
 import { downloadFile } from "../../util/FileUtils";
@@ -128,7 +128,7 @@ const DefaultFileList: React.FC<Props> = props => {
                 onMenuClick={onMenuEntryClicked}
                 menuEntries={DEFAULT_OPTIONS} />
             <Pagination config={paginationConfig} />
-            <EditArtifactDialog
+            <WrapperEditArtifactDialog
                 onClose={saved => {
                     setEditArtifact(undefined);
                     saved && props.reloadFiles();

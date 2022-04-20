@@ -14,11 +14,11 @@ import { loadArtifactTypes } from "../../store/ArtifactTypeState";
 import { loadRepositories } from "../../store/RepositoryState";
 import { RootState } from "../../store/Store";
 import { getAddOptions } from "../../util/MenuUtils";
-import CreateArtifactDialog from "../Common/Dialogs/CreateArtifactDialog";
+import WrapperCreateArtifactDialog from "../Common/Dialogs/artifacts/WrapperCreateArtifactDialog";
 import DeleteRepositoryDialog from "../Common/Dialogs/DeleteRepositoryDialog";
 import EditRepositoryDialog from "../Common/Dialogs/EditRepositoryDialog";
 import RepositoryMembersDialog from "../Common/Dialogs/RepositoryMembersDialog";
-import UploadArtifactDialog from "../Common/Dialogs/UploadArtifactDialog";
+import WrapperUploadArtifactDialog from "../Common/Dialogs/artifacts/WrapperUploadArtifactDialog";
 import RepositoryDeploymentSection from "../Common/Sections/RepositoryDeploymentSection";
 import RepositoryFilesSection from "../Common/Sections/RepositoryFilesSection";
 import RepositorySharedSection from "../Common/Sections/RepositorySharedSection";
@@ -181,17 +181,18 @@ const RepositoryDetailsScreen: React.FC = (() => {
             </ContentLayout>
 
             <ErrorBoundary>
-                <CreateArtifactDialog
+                <WrapperCreateArtifactDialog
                     repositoryId={params.repositoryId}
                     repositories={repositories.value || []}
                     open={!!createArtifactType}
+                    types={artifactTypes.value || []}
                     type={createArtifactType}
                     onClose={result => {
                         setCreateArtifactType("");
                         result && reload();
                     }} />
 
-                <UploadArtifactDialog
+                <WrapperUploadArtifactDialog
                     open={uploadArtifactDialogOpen}
                     repositoryId={params.repositoryId}
                     onClose={result => {

@@ -56,13 +56,15 @@
             "BPMN": "Create BPMN diagram",
             "DMN": "Create DMN diagram",
             "FORM": "Create form",
-            "CONFIGURATION": "Create configuration"
+            "CONFIGURATION": "Create configuration",
+            "ELEMENT_TEMPLATE": "Create element template"
         },
         "filter": {
             "BPMN": "BPMN diagrams",
             "DMN": "DMN diagrams",
             "FORM": "Forms",
-            "CONFIGURATION": "Configurations"
+            "CONFIGURATION": "Configurations",
+            "ELEMENT_TEMPLATE": "Element-Template"
         }
     },
     "duration": {
@@ -113,7 +115,9 @@
         "repository": "Project",
         "noRepository": "No project selected",
         "target": "Target",
-        "noTarget": "No target selected"
+        "noTarget": "No target selected",
+        "type": "Type",
+        "noType": "No type selected"
     },
     "role": {
         "viewer": "Viewer",
