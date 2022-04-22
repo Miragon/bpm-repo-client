@@ -2,7 +2,7 @@ import { Card, IconButton, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { MoreVertOutlined, StarOutlined, StarOutlineOutlined } from "@material-ui/icons";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { TFunction, useTranslation } from "react-i18next";
 import { THEME } from "../../theme";
 import { formatTimeSince } from "../../util/DateUtils";
 import FileIcon from "./FileIcon";
@@ -26,7 +26,7 @@ export interface FileDescription {
     };
 }
 
-function getEditor(t: any, fileType: string): string {
+function getEditor(t: TFunction, fileType: string): string {
     // supported file types are bpmn, dmn and form
     if (fileType.toUpperCase() === "BPMN" || fileType.toUpperCase() === "DMN" || fileType.toUpperCase() === "FORM") {
         return t(`artifact.editorTooltip.${fileType.toUpperCase()}`);
