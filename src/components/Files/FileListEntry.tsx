@@ -1,4 +1,4 @@
-import { Card, IconButton, Typography } from "@material-ui/core";
+import { Card, IconButton, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { MoreVertOutlined, StarOutlined, StarOutlineOutlined } from "@material-ui/icons";
 import React from "react";
@@ -24,6 +24,14 @@ export interface FileDescription {
         existingArtifacts: number;
         assignedUsers: number;
     };
+}
+
+function getEditor(t: any, fileType: string): string {
+    // supported file types are bpmn, dmn and form
+    if (fileType.toUpperCase() === "BPMN" || fileType.toUpperCase() === "DMN" || fileType.toUpperCase() === "FORM") {
+        return t(`artifact.editorTooltip.${fileType.toUpperCase()}`);
+    }
+    return t("artifact.editorTooltip.FALLBACK");
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -119,65 +127,66 @@ const FileListEntry: React.FC<Props> = props => {
     const { t } = useTranslation("common");
 
     return (
-        <Card
-            onClick={props.onClick}
-            className={classes.root}
-            title={props.file.name}>
+        <Tooltip title={getEditor(t, props.file.fileType)}>
+            <Card
+                onClick={props.onClick}
+                className={classes.root}>
 
-            <div className={classes.cardMainSection}>
-                <div className={classes.cardIconWrapper}>
-                    <FileIcon
-                        color={THEME.content.primary}
-                        iconColor="white"
-                        type={props.file.fileType} />
+                <div className={classes.cardMainSection}>
+                    <div className={classes.cardIconWrapper}>
+                        <FileIcon
+                            color={THEME.content.primary}
+                            iconColor="white"
+                            type={props.file.fileType} />
+                    </div>
+                    <div className={classes.cardMainSectionText}>
+                        <Typography
+                            variant="body1"
+                            className={classes.title}>
+                            {props.file.name}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            className={classes.subtitle}>
+                            {props.file.repository?.name ?? t("artifact.unknownRepository")}
+                        </Typography>
+                    </div>
                 </div>
-                <div className={classes.cardMainSectionText}>
+
+                <div className={classes.cardSecondarySection}>
                     <Typography
                         variant="body1"
-                        className={classes.title}>
-                        {props.file.name}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        className={classes.subtitle}>
-                        {props.file.repository?.name ?? t("artifact.unknownRepository")}
+                        className={classes.timeSince}>
+                        {formatTimeSince(props.file.updatedDate, t)}
                     </Typography>
                 </div>
-            </div>
 
-            <div className={classes.cardSecondarySection}>
-                <Typography
-                    variant="body1"
-                    className={classes.timeSince}>
-                    {formatTimeSince(props.file.updatedDate, t)}
-                </Typography>
-            </div>
+                <div className={classes.cardActionSection}>
 
-            <div className={classes.cardActionSection}>
+                    <IconButton
+                        size="small"
+                        className={classes.cardActionFavorite}
+                        onClick={e => {
+                            e.stopPropagation();
+                            props.onFavorite(!props.file.favorite);
+                        }}>
+                        {props.file.favorite ? <StarOutlined /> : <StarOutlineOutlined />}
+                    </IconButton>
 
-                <IconButton
-                    size="small"
-                    className={classes.cardActionFavorite}
-                    onClick={e => {
-                        e.stopPropagation();
-                        props.onFavorite(!props.file.favorite);
-                    }}>
-                    {props.file.favorite ? <StarOutlined /> : <StarOutlineOutlined />}
-                </IconButton>
+                    <IconButton
+                        size="small"
+                        className={classes.cardActionMenu}
+                        onClick={e => {
+                            e.stopPropagation();
+                            props.onMenuClicked(e.currentTarget);
+                        }}>
+                        <MoreVertOutlined />
+                    </IconButton>
 
-                <IconButton
-                    size="small"
-                    className={classes.cardActionMenu}
-                    onClick={e => {
-                        e.stopPropagation();
-                        props.onMenuClicked(e.currentTarget);
-                    }}>
-                    <MoreVertOutlined />
-                </IconButton>
+                </div>
 
-            </div>
-
-        </Card>
+            </Card>
+        </Tooltip>
     );
 };
 

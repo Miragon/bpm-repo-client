@@ -65,6 +65,12 @@
             "FORM": "Forms",
             "CONFIGURATION": "Configurations",
             "ELEMENT_TEMPLATE": "Element-Template"
+        },
+        "editorTooltip": {
+            "BPMN": "Open in modeler",
+            "DMN": "Open in modeler",
+            "FORM": "Open in form editor",
+            "FALLBACK": "Upload new version"
         }
     },
     "duration": {

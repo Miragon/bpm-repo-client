@@ -17,8 +17,6 @@ import { Configuration } from './configuration';
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
-// @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
@@ -216,7 +214,19 @@ export interface ArtifactTypeTO {
      * @type {string}
      * @memberof ArtifactTypeTO
      */
-    url: string;
+    url?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ArtifactTypeTO
+     */
+    editable?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ArtifactTypeTO
+     */
+    deployable?: boolean;
 }
 /**
  * Client created object for updating accessible properties of an artifact
@@ -242,6 +252,12 @@ export interface ArtifactUpdateTO {
      * @memberof ArtifactUpdateTO
      */
     fileType?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArtifactUpdateTO
+     */
+    file?: string;
 }
 /**
  * Containing information about a user-repository relation
@@ -521,43 +537,6 @@ export enum ShareWithRepositoryTORoleEnum {
 }
 
 /**
- * Share-relation between an artifact an a team
- * @export
- * @interface ShareWithTeamTO
- */
-export interface ShareWithTeamTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ShareWithTeamTO
-     */
-    artifactId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShareWithTeamTO
-     */
-    teamId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShareWithTeamTO
-     */
-    role: ShareWithTeamTORoleEnum;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ShareWithTeamTORoleEnum {
-    Owner = 'OWNER',
-    Admin = 'ADMIN',
-    Member = 'MEMBER',
-    Viewer = 'VIEWER'
-}
-
-/**
  * 
  * @export
  * @interface SharedRepositoryTO
@@ -656,16 +635,22 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         copyToRepository: async (repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('copyToRepository', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling copyToRepository.');
+            }
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('copyToRepository', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling copyToRepository.');
+            }
             // verify required parameter 'artifactUpdateTO' is not null or undefined
-            assertParamExists('copyToRepository', 'artifactUpdateTO', artifactUpdateTO)
+            if (artifactUpdateTO === null || artifactUpdateTO === undefined) {
+                throw new RequiredError('artifactUpdateTO','Required parameter artifactUpdateTO was null or undefined when calling copyToRepository.');
+            }
             const localVarPath = `/api/artifact/copy/{repositoryId}/{artifactId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -679,13 +664,26 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactUpdateTO, localVarRequestOptions, configuration)
+            const nonString = typeof artifactUpdateTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(artifactUpdateTO !== undefined ? artifactUpdateTO : {})
+                : (artifactUpdateTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -699,13 +697,17 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         createArtifact: async (repositoryId: string, newArtifactTO: NewArtifactTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('createArtifact', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling createArtifact.');
+            }
             // verify required parameter 'newArtifactTO' is not null or undefined
-            assertParamExists('createArtifact', 'newArtifactTO', newArtifactTO)
+            if (newArtifactTO === null || newArtifactTO === undefined) {
+                throw new RequiredError('newArtifactTO','Required parameter newArtifactTO was null or undefined when calling createArtifact.');
+            }
             const localVarPath = `/api/artifact/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -719,13 +721,26 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(newArtifactTO, localVarRequestOptions, configuration)
+            const nonString = typeof newArtifactTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(newArtifactTO !== undefined ? newArtifactTO : {})
+                : (newArtifactTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -738,11 +753,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         deleteArtifact: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('deleteArtifact', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling deleteArtifact.');
+            }
             const localVarPath = `/api/artifact/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -754,12 +771,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -772,7 +796,7 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
         getAllFileTypes: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/artifact`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -784,12 +808,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -802,11 +833,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         getArtifact: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getArtifact', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling getArtifact.');
+            }
             const localVarPath = `/api/artifact/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -818,12 +851,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -836,11 +876,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         getArtifactsFromRepo: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getArtifactsFromRepo', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getArtifactsFromRepo.');
+            }
             const localVarPath = `/api/artifact/repository/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -852,12 +894,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -871,14 +920,18 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         getByRepoIdAndType: async (repositoryId: string, type: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getByRepoIdAndType', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getByRepoIdAndType.');
+            }
             // verify required parameter 'type' is not null or undefined
-            assertParamExists('getByRepoIdAndType', 'type', type)
+            if (type === null || type === undefined) {
+                throw new RequiredError('type','Required parameter type was null or undefined when calling getByRepoIdAndType.');
+            }
             const localVarPath = `/api/artifact/{repositoryId}/{type}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
                 .replace(`{${"type"}}`, encodeURIComponent(String(type)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -890,12 +943,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -908,7 +968,7 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
         getRecent: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/artifact/recent`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -920,12 +980,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -938,7 +1005,7 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
         getStarred: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/artifact/starred`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -950,12 +1017,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -968,11 +1042,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         lockArtifact: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('lockArtifact', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling lockArtifact.');
+            }
             const localVarPath = `/api/artifact/{artifactId}/lock`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -984,12 +1060,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1002,11 +1085,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         searchArtifacts: async (typedTitle: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'typedTitle' is not null or undefined
-            assertParamExists('searchArtifacts', 'typedTitle', typedTitle)
+            if (typedTitle === null || typedTitle === undefined) {
+                throw new RequiredError('typedTitle','Required parameter typedTitle was null or undefined when calling searchArtifacts.');
+            }
             const localVarPath = `/api/artifact/search/{typedTitle}`
                 .replace(`{${"typedTitle"}}`, encodeURIComponent(String(typedTitle)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1018,12 +1103,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1036,11 +1128,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         setStarred: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('setStarred', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling setStarred.');
+            }
             const localVarPath = `/api/artifact/starred/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1052,12 +1146,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1070,11 +1171,13 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         unlockArtifact: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('unlockArtifact', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling unlockArtifact.');
+            }
             const localVarPath = `/api/artifact/{artifactId}/unlock`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1086,12 +1189,19 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1105,13 +1215,17 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
          */
         updateArtifact: async (artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('updateArtifact', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling updateArtifact.');
+            }
             // verify required parameter 'artifactUpdateTO' is not null or undefined
-            assertParamExists('updateArtifact', 'artifactUpdateTO', artifactUpdateTO)
+            if (artifactUpdateTO === null || artifactUpdateTO === undefined) {
+                throw new RequiredError('artifactUpdateTO','Required parameter artifactUpdateTO was null or undefined when calling updateArtifact.');
+            }
             const localVarPath = `/api/artifact/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1125,13 +1239,26 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactUpdateTO, localVarRequestOptions, configuration)
+            const nonString = typeof artifactUpdateTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(artifactUpdateTO !== undefined ? artifactUpdateTO : {})
+                : (artifactUpdateTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1143,7 +1270,6 @@ export const ArtifactApiAxiosParamCreator = function (configuration?: Configurat
  * @export
  */
 export const ArtifactApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = ArtifactApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -1155,8 +1281,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async copyToRepository(repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.copyToRepository(repositoryId, artifactId, artifactUpdateTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).copyToRepository(repositoryId, artifactId, artifactUpdateTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1167,8 +1296,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async createArtifact(repositoryId: string, newArtifactTO: NewArtifactTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createArtifact(repositoryId, newArtifactTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).createArtifact(repositoryId, newArtifactTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1178,8 +1310,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async deleteArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteArtifact(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).deleteArtifact(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1188,8 +1323,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllFileTypes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTypeTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllFileTypes(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).getAllFileTypes(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1199,8 +1337,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArtifact(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).getArtifact(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1210,8 +1351,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getArtifactsFromRepo(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArtifactsFromRepo(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).getArtifactsFromRepo(repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1222,8 +1366,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getByRepoIdAndType(repositoryId: string, type: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getByRepoIdAndType(repositoryId, type, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).getByRepoIdAndType(repositoryId, type, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1232,8 +1379,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getRecent(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getRecent(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).getRecent(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1242,8 +1392,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getStarred(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getStarred(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).getStarred(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1253,8 +1406,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async lockArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.lockArtifact(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).lockArtifact(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1264,8 +1420,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async searchArtifacts(typedTitle: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchArtifacts(typedTitle, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).searchArtifacts(typedTitle, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1275,8 +1434,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async setStarred(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.setStarred(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).setStarred(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1286,8 +1448,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async unlockArtifact(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.unlockArtifact(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).unlockArtifact(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1298,8 +1463,11 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async updateArtifact(artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArtifact(artifactId, artifactUpdateTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ArtifactApiAxiosParamCreator(configuration).updateArtifact(artifactId, artifactUpdateTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -1309,7 +1477,6 @@ export const ArtifactApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const ArtifactApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ArtifactApiFp(configuration)
     return {
         /**
          * 
@@ -1321,7 +1488,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         copyToRepository(repositoryId: string, artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.copyToRepository(repositoryId, artifactId, artifactUpdateTO, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).copyToRepository(repositoryId, artifactId, artifactUpdateTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1332,7 +1499,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         createArtifact(repositoryId: string, newArtifactTO: NewArtifactTO, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.createArtifact(repositoryId, newArtifactTO, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).createArtifact(repositoryId, newArtifactTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1342,7 +1509,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         deleteArtifact(artifactId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteArtifact(artifactId, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).deleteArtifact(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1351,7 +1518,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getAllFileTypes(options?: any): AxiosPromise<Array<ArtifactTypeTO>> {
-            return localVarFp.getAllFileTypes(options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).getAllFileTypes(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1361,7 +1528,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getArtifact(artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.getArtifact(artifactId, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).getArtifact(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1371,7 +1538,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getArtifactsFromRepo(repositoryId: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getArtifactsFromRepo(repositoryId, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).getArtifactsFromRepo(repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1382,7 +1549,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getByRepoIdAndType(repositoryId: string, type: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getByRepoIdAndType(repositoryId, type, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).getByRepoIdAndType(repositoryId, type, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1391,7 +1558,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getRecent(options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getRecent(options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).getRecent(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1400,7 +1567,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getStarred(options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getStarred(options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).getStarred(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1410,7 +1577,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         lockArtifact(artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.lockArtifact(artifactId, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).lockArtifact(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1420,7 +1587,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         searchArtifacts(typedTitle: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.searchArtifacts(typedTitle, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).searchArtifacts(typedTitle, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1430,7 +1597,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         setStarred(artifactId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.setStarred(artifactId, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).setStarred(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1440,7 +1607,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         unlockArtifact(artifactId: string, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.unlockArtifact(artifactId, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).unlockArtifact(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1451,7 +1618,7 @@ export const ArtifactApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         updateArtifact(artifactId: string, artifactUpdateTO: ArtifactUpdateTO, options?: any): AxiosPromise<ArtifactTO> {
-            return localVarFp.updateArtifact(artifactId, artifactUpdateTO, options).then((request) => request(axios, basePath));
+            return ArtifactApiFp(configuration).updateArtifact(artifactId, artifactUpdateTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1650,10 +1817,12 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
          */
         deployMilestone: async (newDeploymentTO: NewDeploymentTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'newDeploymentTO' is not null or undefined
-            assertParamExists('deployMilestone', 'newDeploymentTO', newDeploymentTO)
+            if (newDeploymentTO === null || newDeploymentTO === undefined) {
+                throw new RequiredError('newDeploymentTO','Required parameter newDeploymentTO was null or undefined when calling deployMilestone.');
+            }
             const localVarPath = `/api/deploy`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1667,13 +1836,26 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(newDeploymentTO, localVarRequestOptions, configuration)
+            const nonString = typeof newDeploymentTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(newDeploymentTO !== undefined ? newDeploymentTO : {})
+                : (newDeploymentTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1686,10 +1868,12 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
          */
         deployMultipleMilestones: async (newDeploymentTO: Array<NewDeploymentTO>, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'newDeploymentTO' is not null or undefined
-            assertParamExists('deployMultipleMilestones', 'newDeploymentTO', newDeploymentTO)
+            if (newDeploymentTO === null || newDeploymentTO === undefined) {
+                throw new RequiredError('newDeploymentTO','Required parameter newDeploymentTO was null or undefined when calling deployMultipleMilestones.');
+            }
             const localVarPath = `/api/deploy/list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1703,13 +1887,26 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(newDeploymentTO, localVarRequestOptions, configuration)
+            const nonString = typeof newDeploymentTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(newDeploymentTO !== undefined ? newDeploymentTO : {})
+                : (newDeploymentTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1722,7 +1919,7 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
         getAllDeploymentTargets: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/deploy/target`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1734,12 +1931,19 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1752,11 +1956,13 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
          */
         getAllDeploymentsFromRepository: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getAllDeploymentsFromRepository', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getAllDeploymentsFromRepository.');
+            }
             const localVarPath = `/api/deploy/repository/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1768,12 +1974,19 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1785,7 +1998,6 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
  * @export
  */
 export const DeploymentApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = DeploymentApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -1795,8 +2007,11 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async deployMilestone(newDeploymentTO: NewDeploymentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deployMilestone(newDeploymentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await DeploymentApiAxiosParamCreator(configuration).deployMilestone(newDeploymentTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1806,8 +2021,11 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async deployMultipleMilestones(newDeploymentTO: Array<NewDeploymentTO>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactMilestoneTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deployMultipleMilestones(newDeploymentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await DeploymentApiAxiosParamCreator(configuration).deployMultipleMilestones(newDeploymentTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1816,8 +2034,11 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllDeploymentTargets(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllDeploymentTargets(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await DeploymentApiAxiosParamCreator(configuration).getAllDeploymentTargets(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -1827,8 +2048,11 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllDeploymentsFromRepository(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DeploymentTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllDeploymentsFromRepository(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await DeploymentApiAxiosParamCreator(configuration).getAllDeploymentsFromRepository(repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -1838,7 +2062,6 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const DeploymentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = DeploymentApiFp(configuration)
     return {
         /**
          * 
@@ -1848,7 +2071,7 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         deployMilestone(newDeploymentTO: NewDeploymentTO, options?: any): AxiosPromise<ArtifactMilestoneTO> {
-            return localVarFp.deployMilestone(newDeploymentTO, options).then((request) => request(axios, basePath));
+            return DeploymentApiFp(configuration).deployMilestone(newDeploymentTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1858,7 +2081,7 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         deployMultipleMilestones(newDeploymentTO: Array<NewDeploymentTO>, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
-            return localVarFp.deployMultipleMilestones(newDeploymentTO, options).then((request) => request(axios, basePath));
+            return DeploymentApiFp(configuration).deployMultipleMilestones(newDeploymentTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1867,7 +2090,7 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         getAllDeploymentTargets(options?: any): AxiosPromise<Array<string>> {
-            return localVarFp.getAllDeploymentTargets(options).then((request) => request(axios, basePath));
+            return DeploymentApiFp(configuration).getAllDeploymentTargets(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1877,7 +2100,7 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         getAllDeploymentsFromRepository(repositoryId: string, options?: any): AxiosPromise<Array<DeploymentTO>> {
-            return localVarFp.getAllDeploymentsFromRepository(repositoryId, options).then((request) => request(axios, basePath));
+            return DeploymentApiFp(configuration).getAllDeploymentsFromRepository(repositoryId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1954,13 +2177,17 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         createMilestone: async (artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('createMilestone', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling createMilestone.');
+            }
             // verify required parameter 'artifactMilestoneUploadTO' is not null or undefined
-            assertParamExists('createMilestone', 'artifactMilestoneUploadTO', artifactMilestoneUploadTO)
+            if (artifactMilestoneUploadTO === null || artifactMilestoneUploadTO === undefined) {
+                throw new RequiredError('artifactMilestoneUploadTO','Required parameter artifactMilestoneUploadTO was null or undefined when calling createMilestone.');
+            }
             const localVarPath = `/api/milestone/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -1974,13 +2201,26 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactMilestoneUploadTO, localVarRequestOptions, configuration)
+            const nonString = typeof artifactMilestoneUploadTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(artifactMilestoneUploadTO !== undefined ? artifactMilestoneUploadTO : {})
+                : (artifactMilestoneUploadTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -1994,14 +2234,18 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         downloadMilestone: async (artifactId: string, milestoneId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('downloadMilestone', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling downloadMilestone.');
+            }
             // verify required parameter 'milestoneId' is not null or undefined
-            assertParamExists('downloadMilestone', 'milestoneId', milestoneId)
+            if (milestoneId === null || milestoneId === undefined) {
+                throw new RequiredError('milestoneId','Required parameter milestoneId was null or undefined when calling downloadMilestone.');
+            }
             const localVarPath = `/api/milestone/{artifactId}/{milestoneId}/download`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
                 .replace(`{${"milestoneId"}}`, encodeURIComponent(String(milestoneId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2013,12 +2257,19 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2031,10 +2282,12 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         getAllByDeploymentIds: async (requestBody: Array<string>, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'requestBody' is not null or undefined
-            assertParamExists('getAllByDeploymentIds', 'requestBody', requestBody)
+            if (requestBody === null || requestBody === undefined) {
+                throw new RequiredError('requestBody','Required parameter requestBody was null or undefined when calling getAllByDeploymentIds.');
+            }
             const localVarPath = `/api/milestone/deployments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2048,13 +2301,26 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+            const nonString = typeof requestBody !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(requestBody !== undefined ? requestBody : {})
+                : (requestBody || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2067,11 +2333,13 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         getAllMilestones: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getAllMilestones', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling getAllMilestones.');
+            }
             const localVarPath = `/api/milestone/{artifactId}/milestone`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2083,12 +2351,19 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2102,14 +2377,18 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         getByMilestoneNumber: async (artifactId: string, milestone: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getByMilestoneNumber', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling getByMilestoneNumber.');
+            }
             // verify required parameter 'milestone' is not null or undefined
-            assertParamExists('getByMilestoneNumber', 'milestone', milestone)
+            if (milestone === null || milestone === undefined) {
+                throw new RequiredError('milestone','Required parameter milestone was null or undefined when calling getByMilestoneNumber.');
+            }
             const localVarPath = `/api/milestone/{artifactId}/milestoneNumber/{milestone}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
                 .replace(`{${"milestone"}}`, encodeURIComponent(String(milestone)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2121,12 +2400,19 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2139,11 +2425,13 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         getLatestMilestone: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getLatestMilestone', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling getLatestMilestone.');
+            }
             const localVarPath = `/api/milestone/{artifactId}/milestone/latest`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2155,12 +2443,19 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2174,14 +2469,18 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         getMilestone: async (artifactId: string, milestoneId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getMilestone', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling getMilestone.');
+            }
             // verify required parameter 'milestoneId' is not null or undefined
-            assertParamExists('getMilestone', 'milestoneId', milestoneId)
+            if (milestoneId === null || milestoneId === undefined) {
+                throw new RequiredError('milestoneId','Required parameter milestoneId was null or undefined when calling getMilestone.');
+            }
             const localVarPath = `/api/milestone/{artifactId}/milestone/{milestoneId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
                 .replace(`{${"milestoneId"}}`, encodeURIComponent(String(milestoneId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2193,12 +2492,19 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2211,10 +2517,12 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
          */
         updateMilestone: async (artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactMilestoneUpdateTO' is not null or undefined
-            assertParamExists('updateMilestone', 'artifactMilestoneUpdateTO', artifactMilestoneUpdateTO)
+            if (artifactMilestoneUpdateTO === null || artifactMilestoneUpdateTO === undefined) {
+                throw new RequiredError('artifactMilestoneUpdateTO','Required parameter artifactMilestoneUpdateTO was null or undefined when calling updateMilestone.');
+            }
             const localVarPath = `/api/milestone/update`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2228,13 +2536,26 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(artifactMilestoneUpdateTO, localVarRequestOptions, configuration)
+            const nonString = typeof artifactMilestoneUpdateTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(artifactMilestoneUpdateTO !== undefined ? artifactMilestoneUpdateTO : {})
+                : (artifactMilestoneUpdateTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2246,7 +2567,6 @@ export const MilestoneApiAxiosParamCreator = function (configuration?: Configura
  * @export
  */
 export const MilestoneApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MilestoneApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -2257,8 +2577,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async createMilestone(artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createMilestone(artifactId, artifactMilestoneUploadTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).createMilestone(artifactId, artifactMilestoneUploadTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2269,8 +2592,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async downloadMilestone(artifactId: string, milestoneId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadMilestone(artifactId, milestoneId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).downloadMilestone(artifactId, milestoneId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2280,8 +2606,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllByDeploymentIds(requestBody: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactMilestoneTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllByDeploymentIds(requestBody, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).getAllByDeploymentIds(requestBody, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2291,8 +2620,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllMilestones(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactMilestoneTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllMilestones(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).getAllMilestones(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2303,8 +2635,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getByMilestoneNumber(artifactId: string, milestone: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getByMilestoneNumber(artifactId, milestone, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).getByMilestoneNumber(artifactId, milestone, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2314,8 +2649,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getLatestMilestone(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getLatestMilestone(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).getLatestMilestone(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2326,8 +2664,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getMilestone(artifactId: string, milestoneId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMilestone(artifactId, milestoneId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).getMilestone(artifactId, milestoneId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2337,8 +2678,11 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async updateMilestone(artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactMilestoneTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateMilestone(artifactMilestoneUpdateTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await MilestoneApiAxiosParamCreator(configuration).updateMilestone(artifactMilestoneUpdateTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -2348,7 +2692,6 @@ export const MilestoneApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const MilestoneApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MilestoneApiFp(configuration)
     return {
         /**
          * 
@@ -2359,7 +2702,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         createMilestone(artifactId: string, artifactMilestoneUploadTO: ArtifactMilestoneUploadTO, options?: any): AxiosPromise<ArtifactMilestoneTO> {
-            return localVarFp.createMilestone(artifactId, artifactMilestoneUploadTO, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).createMilestone(artifactId, artifactMilestoneUploadTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2370,7 +2713,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         downloadMilestone(artifactId: string, milestoneId: string, options?: any): AxiosPromise<any> {
-            return localVarFp.downloadMilestone(artifactId, milestoneId, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).downloadMilestone(artifactId, milestoneId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2380,7 +2723,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         getAllByDeploymentIds(requestBody: Array<string>, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
-            return localVarFp.getAllByDeploymentIds(requestBody, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).getAllByDeploymentIds(requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2390,7 +2733,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         getAllMilestones(artifactId: string, options?: any): AxiosPromise<Array<ArtifactMilestoneTO>> {
-            return localVarFp.getAllMilestones(artifactId, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).getAllMilestones(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2401,7 +2744,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         getByMilestoneNumber(artifactId: string, milestone: number, options?: any): AxiosPromise<ArtifactMilestoneTO> {
-            return localVarFp.getByMilestoneNumber(artifactId, milestone, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).getByMilestoneNumber(artifactId, milestone, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2411,7 +2754,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         getLatestMilestone(artifactId: string, options?: any): AxiosPromise<ArtifactMilestoneTO> {
-            return localVarFp.getLatestMilestone(artifactId, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).getLatestMilestone(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2422,7 +2765,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         getMilestone(artifactId: string, milestoneId: string, options?: any): AxiosPromise<ArtifactMilestoneTO> {
-            return localVarFp.getMilestone(artifactId, milestoneId, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).getMilestone(artifactId, milestoneId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2432,7 +2775,7 @@ export const MilestoneApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         updateMilestone(artifactMilestoneUpdateTO: ArtifactMilestoneUpdateTO, options?: any): AxiosPromise<ArtifactMilestoneTO> {
-            return localVarFp.updateMilestone(artifactMilestoneUpdateTO, options).then((request) => request(axios, basePath));
+            return MilestoneApiFp(configuration).updateMilestone(artifactMilestoneUpdateTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2561,10 +2904,12 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
          */
         createUserAssignment: async (assignmentTO: AssignmentTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'assignmentTO' is not null or undefined
-            assertParamExists('createUserAssignment', 'assignmentTO', assignmentTO)
+            if (assignmentTO === null || assignmentTO === undefined) {
+                throw new RequiredError('assignmentTO','Required parameter assignmentTO was null or undefined when calling createUserAssignment.');
+            }
             const localVarPath = `/api/repoAssignment`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2578,13 +2923,26 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(assignmentTO, localVarRequestOptions, configuration)
+            const nonString = typeof assignmentTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(assignmentTO !== undefined ? assignmentTO : {})
+                : (assignmentTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2598,14 +2956,18 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
          */
         deleteUserAssignment: async (repositoryId: string, userId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('deleteUserAssignment', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling deleteUserAssignment.');
+            }
             // verify required parameter 'userId' is not null or undefined
-            assertParamExists('deleteUserAssignment', 'userId', userId)
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling deleteUserAssignment.');
+            }
             const localVarPath = `/api/repoAssignment/{repositoryId}/{userId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
                 .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2617,12 +2979,19 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2635,11 +3004,13 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
          */
         getAllAssignedUsers: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getAllAssignedUsers', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getAllAssignedUsers.');
+            }
             const localVarPath = `/api/repoAssignment/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2651,12 +3022,19 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2669,10 +3047,12 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
          */
         updateUserAssignment: async (assignmentTO: AssignmentTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'assignmentTO' is not null or undefined
-            assertParamExists('updateUserAssignment', 'assignmentTO', assignmentTO)
+            if (assignmentTO === null || assignmentTO === undefined) {
+                throw new RequiredError('assignmentTO','Required parameter assignmentTO was null or undefined when calling updateUserAssignment.');
+            }
             const localVarPath = `/api/repoAssignment`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2686,13 +3066,26 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(assignmentTO, localVarRequestOptions, configuration)
+            const nonString = typeof assignmentTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(assignmentTO !== undefined ? assignmentTO : {})
+                : (assignmentTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2704,7 +3097,6 @@ export const RepoAssignmentApiAxiosParamCreator = function (configuration?: Conf
  * @export
  */
 export const RepoAssignmentApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = RepoAssignmentApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -2714,8 +3106,11 @@ export const RepoAssignmentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async createUserAssignment(assignmentTO: AssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserAssignment(assignmentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepoAssignmentApiAxiosParamCreator(configuration).createUserAssignment(assignmentTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2726,8 +3121,11 @@ export const RepoAssignmentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async deleteUserAssignment(repositoryId: string, userId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserAssignment(repositoryId, userId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepoAssignmentApiAxiosParamCreator(configuration).deleteUserAssignment(repositoryId, userId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2737,8 +3135,11 @@ export const RepoAssignmentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllAssignedUsers(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AssignmentTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllAssignedUsers(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepoAssignmentApiAxiosParamCreator(configuration).getAllAssignedUsers(repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -2748,8 +3149,11 @@ export const RepoAssignmentApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async updateUserAssignment(assignmentTO: AssignmentTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssignmentTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserAssignment(assignmentTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepoAssignmentApiAxiosParamCreator(configuration).updateUserAssignment(assignmentTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -2759,7 +3163,6 @@ export const RepoAssignmentApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const RepoAssignmentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = RepoAssignmentApiFp(configuration)
     return {
         /**
          * 
@@ -2769,7 +3172,7 @@ export const RepoAssignmentApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         createUserAssignment(assignmentTO: AssignmentTO, options?: any): AxiosPromise<AssignmentTO> {
-            return localVarFp.createUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
+            return RepoAssignmentApiFp(configuration).createUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2780,7 +3183,7 @@ export const RepoAssignmentApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         deleteUserAssignment(repositoryId: string, userId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteUserAssignment(repositoryId, userId, options).then((request) => request(axios, basePath));
+            return RepoAssignmentApiFp(configuration).deleteUserAssignment(repositoryId, userId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2790,7 +3193,7 @@ export const RepoAssignmentApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         getAllAssignedUsers(repositoryId: string, options?: any): AxiosPromise<Array<AssignmentTO>> {
-            return localVarFp.getAllAssignedUsers(repositoryId, options).then((request) => request(axios, basePath));
+            return RepoAssignmentApiFp(configuration).getAllAssignedUsers(repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2800,7 +3203,7 @@ export const RepoAssignmentApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         updateUserAssignment(assignmentTO: AssignmentTO, options?: any): AxiosPromise<AssignmentTO> {
-            return localVarFp.updateUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
+            return RepoAssignmentApiFp(configuration).updateUserAssignment(assignmentTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2878,10 +3281,12 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          */
         createRepository: async (newRepositoryTO: NewRepositoryTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'newRepositoryTO' is not null or undefined
-            assertParamExists('createRepository', 'newRepositoryTO', newRepositoryTO)
+            if (newRepositoryTO === null || newRepositoryTO === undefined) {
+                throw new RequiredError('newRepositoryTO','Required parameter newRepositoryTO was null or undefined when calling createRepository.');
+            }
             const localVarPath = `/api/repo`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2895,13 +3300,26 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(newRepositoryTO, localVarRequestOptions, configuration)
+            const nonString = typeof newRepositoryTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(newRepositoryTO !== undefined ? newRepositoryTO : {})
+                : (newRepositoryTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2914,11 +3332,13 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          */
         deleteRepository: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('deleteRepository', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling deleteRepository.');
+            }
             const localVarPath = `/api/repo/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2930,12 +3350,19 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2948,7 +3375,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         getAllRepositories: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/repo`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2960,12 +3387,19 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -2978,7 +3412,7 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
         getManageableRepositories: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/repo/administration`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -2990,12 +3424,19 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3008,11 +3449,13 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          */
         getSingleRepository: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getSingleRepository', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getSingleRepository.');
+            }
             const localVarPath = `/api/repo/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3024,12 +3467,19 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3042,11 +3492,13 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          */
         searchRepositories: async (typedName: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'typedName' is not null or undefined
-            assertParamExists('searchRepositories', 'typedName', typedName)
+            if (typedName === null || typedName === undefined) {
+                throw new RequiredError('typedName','Required parameter typedName was null or undefined when calling searchRepositories.');
+            }
             const localVarPath = `/api/repo/search/{typedName}`
                 .replace(`{${"typedName"}}`, encodeURIComponent(String(typedName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3058,12 +3510,19 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3077,13 +3536,17 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
          */
         updateRepository: async (repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('updateRepository', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling updateRepository.');
+            }
             // verify required parameter 'repositoryUpdateTO' is not null or undefined
-            assertParamExists('updateRepository', 'repositoryUpdateTO', repositoryUpdateTO)
+            if (repositoryUpdateTO === null || repositoryUpdateTO === undefined) {
+                throw new RequiredError('repositoryUpdateTO','Required parameter repositoryUpdateTO was null or undefined when calling updateRepository.');
+            }
             const localVarPath = `/api/repo/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3097,13 +3560,26 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(repositoryUpdateTO, localVarRequestOptions, configuration)
+            const nonString = typeof repositoryUpdateTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(repositoryUpdateTO !== undefined ? repositoryUpdateTO : {})
+                : (repositoryUpdateTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3115,7 +3591,6 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
  * @export
  */
 export const RepositoryApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = RepositoryApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -3125,8 +3600,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async createRepository(newRepositoryTO: NewRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepositoryTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createRepository(newRepositoryTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).createRepository(newRepositoryTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3136,8 +3614,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async deleteRepository(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRepository(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).deleteRepository(repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3146,8 +3627,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllRepositories(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRepositories(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).getAllRepositories(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3156,8 +3640,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getManageableRepositories(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getManageableRepositories(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).getManageableRepositories(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3167,8 +3654,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getSingleRepository(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepositoryTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSingleRepository(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).getSingleRepository(repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3178,8 +3668,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async searchRepositories(typedName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RepositoryTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchRepositories(typedName, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).searchRepositories(typedName, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3190,8 +3683,11 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RepositoryTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRepository(repositoryId, repositoryUpdateTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await RepositoryApiAxiosParamCreator(configuration).updateRepository(repositoryId, repositoryUpdateTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -3201,7 +3697,6 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const RepositoryApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = RepositoryApiFp(configuration)
     return {
         /**
          * 
@@ -3211,7 +3706,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         createRepository(newRepositoryTO: NewRepositoryTO, options?: any): AxiosPromise<RepositoryTO> {
-            return localVarFp.createRepository(newRepositoryTO, options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).createRepository(newRepositoryTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3221,7 +3716,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         deleteRepository(repositoryId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteRepository(repositoryId, options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).deleteRepository(repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3230,7 +3725,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         getAllRepositories(options?: any): AxiosPromise<Array<RepositoryTO>> {
-            return localVarFp.getAllRepositories(options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).getAllRepositories(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3239,7 +3734,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         getManageableRepositories(options?: any): AxiosPromise<Array<RepositoryTO>> {
-            return localVarFp.getManageableRepositories(options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).getManageableRepositories(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3249,7 +3744,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         getSingleRepository(repositoryId: string, options?: any): AxiosPromise<RepositoryTO> {
-            return localVarFp.getSingleRepository(repositoryId, options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).getSingleRepository(repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3259,7 +3754,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         searchRepositories(typedName: string, options?: any): AxiosPromise<Array<RepositoryTO>> {
-            return localVarFp.searchRepositories(typedName, options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).searchRepositories(typedName, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3270,7 +3765,7 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          * @throws {RequiredError}
          */
         updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): AxiosPromise<RepositoryTO> {
-            return localVarFp.updateRepository(repositoryId, repositoryUpdateTO, options).then((request) => request(axios, basePath));
+            return RepositoryApiFp(configuration).updateRepository(repositoryId, repositoryUpdateTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3382,7 +3877,7 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
         getAllSharedArtifacts: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/share/artifacts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3394,12 +3889,19 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3412,11 +3914,13 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         getSharedArtifacts: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getSharedArtifacts', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getSharedArtifacts.');
+            }
             const localVarPath = `/api/share/repository/{repositoryId}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3428,12 +3932,19 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3446,11 +3957,13 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         getSharedArtifactsByType: async (type: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'type' is not null or undefined
-            assertParamExists('getSharedArtifactsByType', 'type', type)
+            if (type === null || type === undefined) {
+                throw new RequiredError('type','Required parameter type was null or undefined when calling getSharedArtifactsByType.');
+            }
             const localVarPath = `/api/share/artifacts/{type}`
                 .replace(`{${"type"}}`, encodeURIComponent(String(type)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3462,12 +3975,19 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3481,14 +4001,18 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         getSharedArtifactsFromRepositoryByType: async (repositoryId: string, type: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('getSharedArtifactsFromRepositoryByType', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling getSharedArtifactsFromRepositoryByType.');
+            }
             // verify required parameter 'type' is not null or undefined
-            assertParamExists('getSharedArtifactsFromRepositoryByType', 'type', type)
+            if (type === null || type === undefined) {
+                throw new RequiredError('type','Required parameter type was null or undefined when calling getSharedArtifactsFromRepositoryByType.');
+            }
             const localVarPath = `/api/share/repository/{repositoryId}/type/{type}`
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)))
                 .replace(`{${"type"}}`, encodeURIComponent(String(type)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3500,12 +4024,19 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3518,11 +4049,13 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         getSharedRepositories: async (artifactId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('getSharedRepositories', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling getSharedRepositories.');
+            }
             const localVarPath = `/api/share/relations/repository/{artifactId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3534,12 +4067,19 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3552,10 +4092,12 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         shareWithRepository: async (shareWithRepositoryTO: ShareWithRepositoryTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'shareWithRepositoryTO' is not null or undefined
-            assertParamExists('shareWithRepository', 'shareWithRepositoryTO', shareWithRepositoryTO)
+            if (shareWithRepositoryTO === null || shareWithRepositoryTO === undefined) {
+                throw new RequiredError('shareWithRepositoryTO','Required parameter shareWithRepositoryTO was null or undefined when calling shareWithRepository.');
+            }
             const localVarPath = `/api/share/repository`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3569,49 +4111,26 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shareWithRepositoryTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Share an artifact with all members of another team
-         * @param {ShareWithTeamTO} shareWithTeamTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        shareWithTeam: async (shareWithTeamTO: ShareWithTeamTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'shareWithTeamTO' is not null or undefined
-            assertParamExists('shareWithTeam', 'shareWithTeamTO', shareWithTeamTO)
-            const localVarPath = `/api/share/team`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
             }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shareWithTeamTO, localVarRequestOptions, configuration)
+            const nonString = typeof shareWithRepositoryTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(shareWithRepositoryTO !== undefined ? shareWithRepositoryTO : {})
+                : (shareWithRepositoryTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3625,14 +4144,18 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         unshareArtifactWithRepository: async (artifactId: string, repositoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('unshareArtifactWithRepository', 'artifactId', artifactId)
+            if (artifactId === null || artifactId === undefined) {
+                throw new RequiredError('artifactId','Required parameter artifactId was null or undefined when calling unshareArtifactWithRepository.');
+            }
             // verify required parameter 'repositoryId' is not null or undefined
-            assertParamExists('unshareArtifactWithRepository', 'repositoryId', repositoryId)
+            if (repositoryId === null || repositoryId === undefined) {
+                throw new RequiredError('repositoryId','Required parameter repositoryId was null or undefined when calling unshareArtifactWithRepository.');
+            }
             const localVarPath = `/api/share/repository/unshare/{artifactId}/{repositoryId}`
                 .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
                 .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3644,50 +4167,19 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Delete the sharing-relation to a specific repository
-         * @param {string} artifactId 
-         * @param {string} teamId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        unshareArtifactWithTeam: async (artifactId: string, teamId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'artifactId' is not null or undefined
-            assertParamExists('unshareArtifactWithTeam', 'artifactId', artifactId)
-            // verify required parameter 'teamId' is not null or undefined
-            assertParamExists('unshareArtifactWithTeam', 'teamId', teamId)
-            const localVarPath = `/api/share/team/unshare/{artifactId}/{teamId}`
-                .replace(`{${"artifactId"}}`, encodeURIComponent(String(artifactId)))
-                .replace(`{${"teamId"}}`, encodeURIComponent(String(teamId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
             }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3700,10 +4192,12 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
          */
         updateShareWithRepository: async (shareWithRepositoryTO: ShareWithRepositoryTO, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'shareWithRepositoryTO' is not null or undefined
-            assertParamExists('updateShareWithRepository', 'shareWithRepositoryTO', shareWithRepositoryTO)
+            if (shareWithRepositoryTO === null || shareWithRepositoryTO === undefined) {
+                throw new RequiredError('shareWithRepositoryTO','Required parameter shareWithRepositoryTO was null or undefined when calling updateShareWithRepository.');
+            }
             const localVarPath = `/api/share/repository`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -3717,49 +4211,26 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shareWithRepositoryTO, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Update the share-role of a relation with a team
-         * @param {ShareWithTeamTO} shareWithTeamTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateShareWithTeam: async (shareWithTeamTO: ShareWithTeamTO, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'shareWithTeamTO' is not null or undefined
-            assertParamExists('updateShareWithTeam', 'shareWithTeamTO', shareWithTeamTO)
-            const localVarPath = `/api/share/team`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
             }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shareWithTeamTO, localVarRequestOptions, configuration)
+            const nonString = typeof shareWithRepositoryTO !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(shareWithRepositoryTO !== undefined ? shareWithRepositoryTO : {})
+                : (shareWithRepositoryTO || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -3771,7 +4242,6 @@ export const ShareApiAxiosParamCreator = function (configuration?: Configuration
  * @export
  */
 export const ShareApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = ShareApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -3780,8 +4250,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getAllSharedArtifacts(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllSharedArtifacts(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).getAllSharedArtifacts(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3791,8 +4264,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getSharedArtifacts(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifacts(repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).getSharedArtifacts(repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3802,8 +4278,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getSharedArtifactsByType(type: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifactsByType(type, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).getSharedArtifactsByType(type, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3814,8 +4293,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getSharedArtifactsFromRepositoryByType(repositoryId: string, type: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtifactTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedArtifactsFromRepositoryByType(repositoryId, type, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).getSharedArtifactsFromRepositoryByType(repositoryId, type, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3825,8 +4307,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getSharedRepositories(artifactId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SharedRepositoryTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSharedRepositories(artifactId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).getSharedRepositories(artifactId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3836,19 +4321,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async shareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithRepositoryTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.shareWithRepository(shareWithRepositoryTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Share an artifact with all members of another team
-         * @param {ShareWithTeamTO} shareWithTeamTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async shareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithTeamTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.shareWithTeam(shareWithTeamTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).shareWithRepository(shareWithRepositoryTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3859,20 +4336,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async unshareArtifactWithRepository(artifactId: string, repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.unshareArtifactWithRepository(artifactId, repositoryId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Delete the sharing-relation to a specific repository
-         * @param {string} artifactId 
-         * @param {string} teamId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async unshareArtifactWithTeam(artifactId: string, teamId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.unshareArtifactWithTeam(artifactId, teamId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).unshareArtifactWithRepository(artifactId, repositoryId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -3882,19 +4350,11 @@ export const ShareApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async updateShareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithRepositoryTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateShareWithRepository(shareWithRepositoryTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Update the share-role of a relation with a team
-         * @param {ShareWithTeamTO} shareWithTeamTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareWithTeamTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateShareWithTeam(shareWithTeamTO, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await ShareApiAxiosParamCreator(configuration).updateShareWithRepository(shareWithRepositoryTO, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -3904,7 +4364,6 @@ export const ShareApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const ShareApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ShareApiFp(configuration)
     return {
         /**
          * 
@@ -3913,7 +4372,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getAllSharedArtifacts(options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getAllSharedArtifacts(options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).getAllSharedArtifacts(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3923,7 +4382,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getSharedArtifacts(repositoryId: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getSharedArtifacts(repositoryId, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).getSharedArtifacts(repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3933,7 +4392,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getSharedArtifactsByType(type: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getSharedArtifactsByType(type, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).getSharedArtifactsByType(type, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3944,7 +4403,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getSharedArtifactsFromRepositoryByType(repositoryId: string, type: string, options?: any): AxiosPromise<Array<ArtifactTO>> {
-            return localVarFp.getSharedArtifactsFromRepositoryByType(repositoryId, type, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).getSharedArtifactsFromRepositoryByType(repositoryId, type, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3954,7 +4413,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getSharedRepositories(artifactId: string, options?: any): AxiosPromise<Array<SharedRepositoryTO>> {
-            return localVarFp.getSharedRepositories(artifactId, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).getSharedRepositories(artifactId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3964,17 +4423,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         shareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): AxiosPromise<ShareWithRepositoryTO> {
-            return localVarFp.shareWithRepository(shareWithRepositoryTO, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Share an artifact with all members of another team
-         * @param {ShareWithTeamTO} shareWithTeamTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        shareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): AxiosPromise<ShareWithTeamTO> {
-            return localVarFp.shareWithTeam(shareWithTeamTO, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).shareWithRepository(shareWithRepositoryTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3985,18 +4434,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         unshareArtifactWithRepository(artifactId: string, repositoryId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.unshareArtifactWithRepository(artifactId, repositoryId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Delete the sharing-relation to a specific repository
-         * @param {string} artifactId 
-         * @param {string} teamId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        unshareArtifactWithTeam(artifactId: string, teamId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.unshareArtifactWithTeam(artifactId, teamId, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).unshareArtifactWithRepository(artifactId, repositoryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4006,17 +4444,7 @@ export const ShareApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         updateShareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any): AxiosPromise<ShareWithRepositoryTO> {
-            return localVarFp.updateShareWithRepository(shareWithRepositoryTO, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Update the share-role of a relation with a team
-         * @param {ShareWithTeamTO} shareWithTeamTO 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any): AxiosPromise<ShareWithTeamTO> {
-            return localVarFp.updateShareWithTeam(shareWithTeamTO, options).then((request) => request(axios, basePath));
+            return ShareApiFp(configuration).updateShareWithRepository(shareWithRepositoryTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4102,18 +4530,6 @@ export class ShareApi extends BaseAPI {
 
     /**
      * 
-     * @summary Share an artifact with all members of another team
-     * @param {ShareWithTeamTO} shareWithTeamTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ShareApi
-     */
-    public shareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any) {
-        return ShareApiFp(this.configuration).shareWithTeam(shareWithTeamTO, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Delete the sharing-relation to a specific repository
      * @param {string} artifactId 
      * @param {string} repositoryId 
@@ -4127,19 +4543,6 @@ export class ShareApi extends BaseAPI {
 
     /**
      * 
-     * @summary Delete the sharing-relation to a specific repository
-     * @param {string} artifactId 
-     * @param {string} teamId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ShareApi
-     */
-    public unshareArtifactWithTeam(artifactId: string, teamId: string, options?: any) {
-        return ShareApiFp(this.configuration).unshareArtifactWithTeam(artifactId, teamId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Update the share-role of a relation with a repository
      * @param {ShareWithRepositoryTO} shareWithRepositoryTO 
      * @param {*} [options] Override http request option.
@@ -4148,18 +4551,6 @@ export class ShareApi extends BaseAPI {
      */
     public updateShareWithRepository(shareWithRepositoryTO: ShareWithRepositoryTO, options?: any) {
         return ShareApiFp(this.configuration).updateShareWithRepository(shareWithRepositoryTO, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Update the share-role of a relation with a team
-     * @param {ShareWithTeamTO} shareWithTeamTO 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ShareApi
-     */
-    public updateShareWithTeam(shareWithTeamTO: ShareWithTeamTO, options?: any) {
-        return ShareApiFp(this.configuration).updateShareWithTeam(shareWithTeamTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4179,7 +4570,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         createUser: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -4191,12 +4582,19 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -4209,10 +4607,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          */
         getMultipleUsers: async (requestBody: Array<string>, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'requestBody' is not null or undefined
-            assertParamExists('getMultipleUsers', 'requestBody', requestBody)
+            if (requestBody === null || requestBody === undefined) {
+                throw new RequiredError('requestBody','Required parameter requestBody was null or undefined when calling getMultipleUsers.');
+            }
             const localVarPath = `/api/user/multiple`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -4226,13 +4626,26 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+            const nonString = typeof requestBody !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(requestBody !== undefined ? requestBody : {})
+                : (requestBody || "");
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -4245,7 +4658,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         getUserInfo: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/currentUser`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -4257,12 +4670,19 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -4275,7 +4695,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         getUserName: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/registeredEmail`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -4287,12 +4707,19 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -4305,11 +4732,13 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          */
         searchUsers: async (typedName: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'typedName' is not null or undefined
-            assertParamExists('searchUsers', 'typedName', typedName)
+            if (typedName === null || typedName === undefined) {
+                throw new RequiredError('typedName','Required parameter typedName was null or undefined when calling searchUsers.');
+            }
             const localVarPath = `/api/user/search/{typedName}`
                 .replace(`{${"typedName"}}`, encodeURIComponent(String(typedName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
@@ -4321,12 +4750,19 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
-                url: toPathString(localVarUrlObj),
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                 options: localVarRequestOptions,
             };
         },
@@ -4338,7 +4774,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
  * @export
  */
 export const UserApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -4347,8 +4782,11 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async createUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).createUser(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -4358,8 +4796,11 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getMultipleUsers(requestBody: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserInfoTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMultipleUsers(requestBody, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).getMultipleUsers(requestBody, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -4368,8 +4809,11 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getUserInfo(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserInfoTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserInfo(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).getUserInfo(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -4378,8 +4822,11 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async getUserName(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserName(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).getUserName(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
         /**
          * 
@@ -4389,8 +4836,11 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async searchUsers(typedName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserInfoTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchUsers(typedName, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).searchUsers(typedName, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
         },
     }
 };
@@ -4400,7 +4850,6 @@ export const UserApiFp = function(configuration?: Configuration) {
  * @export
  */
 export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = UserApiFp(configuration)
     return {
         /**
          * 
@@ -4409,7 +4858,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         createUser(options?: any): AxiosPromise<UserTO> {
-            return localVarFp.createUser(options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).createUser(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4419,7 +4868,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         getMultipleUsers(requestBody: Array<string>, options?: any): AxiosPromise<Array<UserInfoTO>> {
-            return localVarFp.getMultipleUsers(requestBody, options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).getMultipleUsers(requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4428,7 +4877,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         getUserInfo(options?: any): AxiosPromise<UserInfoTO> {
-            return localVarFp.getUserInfo(options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).getUserInfo(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4437,7 +4886,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         getUserName(options?: any): AxiosPromise<string> {
-            return localVarFp.getUserName(options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).getUserName(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4447,7 +4896,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         searchUsers(typedName: string, options?: any): AxiosPromise<Array<UserInfoTO>> {
-            return localVarFp.searchUsers(typedName, options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).searchUsers(typedName, options).then((request) => request(axios, basePath));
         },
     };
 };

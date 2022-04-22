@@ -22,7 +22,7 @@ export interface SimpleArtifact {
 interface Props {
     dialogTitleLabel: string;
     dialogSaveButtonLabel: string;
-    action: "create" | "edit" | "copy" | "upload";
+    action: "create" | "edit" | "copy" | "upload" | "upload-edit";
     artifactTitle?: string;
     artifactDescription?: string;
     artifactType?: string;
@@ -140,7 +140,7 @@ const ArtifactDialog: React.FC<Props> = props => {
 
                 {props.children}
 
-                {props.action !== "edit" &&
+                {!(props.action === "edit" || props.action === "upload-edit") &&
                     <SettingsSelect
                         disabled={disabled}
                         value={repository}
@@ -159,12 +159,12 @@ const ArtifactDialog: React.FC<Props> = props => {
                 }
 
                 <SettingsSelect
-                    disabled={props.action === "edit" || props.action === "copy" || disabled}
+                    disabled={props.action === "edit" || props.action === "copy" || props.action === "upload-edit" || disabled}
                     value={type}
                     label={t("properties.type")}
                     onChanged={setType}>
                     <MenuItem value=""><em>{t("properties.noType")}</em></MenuItem>
-                    {(props.action === "edit" || props.action === "copy") &&
+                    {(props.action === "edit" || props.action === "copy" || props.action === "upload-edit") &&
                         <MenuItem value={type}><em>{type}</em></MenuItem>
                     }
                     {types.map(ty => (

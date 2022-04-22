@@ -27,6 +27,7 @@ import { usePagination } from "../List/usePagination";
 import Pagination from "../List/Pagination";
 import FileList from "./FileList";
 import { FileDescription } from "./FileListEntry";
+import WrapperUploadEditArtifactDialog from "../../screens/Common/Dialogs/artifacts/WrapperUploadEditArtifactDialog";
 
 const DETAIL_OPTIONS = [
     [
@@ -102,6 +103,8 @@ const DefaultFileList: React.FC<Props> = props => {
     const [copyArtifact, setCopyArtifact] = useState<FileDescription>();
     const [editArtifact, setEditArtifact] = useState<FileDescription>();
     const [deleteArtifact, setDeleteArtifact] = useState<FileDescription>();
+    const [showUploadDialog, setShowUploadDialog] = useState<boolean>(false);
+    const [file, setFile] = useState<FileDescription>();
 
     const { pageItems, paginationConfig } = usePagination(props.files, 10);
 
@@ -170,6 +173,13 @@ const DefaultFileList: React.FC<Props> = props => {
         }
     }, [props.artifactTypes, t]);
 
+    const openFile = useCallback(file => {
+        const openedFile = openFileInTool(props.artifactTypes, file.fileType, file.repository.id, file.id);
+        // if file is not opened in editor show an upload dialog
+        setShowUploadDialog(!openedFile);
+        setFile(file);
+    }, [props.artifactTypes]);
+
     return (
         <>
             <FileList
@@ -177,12 +187,18 @@ const DefaultFileList: React.FC<Props> = props => {
                 className={props.className}
                 fallback={props.fallback}
                 onFavorite={onFavoriteClicked}
-                onClick={file => file.repository && openFileInTool(props.artifactTypes, file.fileType, file.repository.id, file.id)}
+                onClick={file => file.repository && openFile(file)}
                 onMenuClick={onMenuEntryClicked}
                 menuEntries={DETAIL_OPTIONS} />
             <Pagination
                 className={props.paginationClassName}
                 config={paginationConfig} />
+            {file &&
+                <WrapperUploadEditArtifactDialog
+                    artifact={file}
+                    open={showUploadDialog}
+                    onClose={() => setShowUploadDialog(false)} />
+            }
             <WrapperEditArtifactDialog
                 onClose={saved => {
                     setEditArtifact(undefined);

@@ -65,6 +65,12 @@
             "FORM": "Formulare",
             "CONFIGURATION": "Konfigurationen",
             "ELEMENT_TEMPLATE": "Element-Template"
+        },
+        "editorTooltip": {
+            "BPMN": "Im Modeler öffnen",
+            "DMN": "Im Modeler öffnen",
+            "FORM": "Im Formular Editor erstellen",
+            "FALLBACK": "Neue Version hochladen"
         }
     },
     "duration": {

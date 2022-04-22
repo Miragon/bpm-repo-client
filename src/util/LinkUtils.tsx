@@ -6,15 +6,17 @@ import { ArtifactTypeTO } from "../api";
  * "latest") to request the file from backend
  */
 export const openFileInTool = (fileTypes: Array<ArtifactTypeTO>, fileType: string, repositoryId: string, artifactId: string, milestone?: number): boolean => {
-    const urlNamespace = fileTypes.find((types: ArtifactTypeTO) => types.name.toLowerCase() === fileType.toLowerCase())?.url;
-    if (urlNamespace) {
+    const artifactType = fileTypes.find((types: ArtifactTypeTO) => types.name.toLowerCase() === fileType.toLowerCase());
+    if (artifactType?.editable) {
+        const urlNamespace = artifactType.url;
         if (milestone) {
             window.open(`/${urlNamespace}/#/${artifactId}/${milestone}`, "_blank");
         } else {
             window.open(`/${urlNamespace}/#/${artifactId}/latest`, "_blank");
         }
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }

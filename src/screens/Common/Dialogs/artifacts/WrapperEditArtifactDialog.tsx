@@ -7,7 +7,7 @@ import { makeSuccessToast } from "../../../../util/ToastUtils";
 import ArtifactDialog, { SimpleArtifact } from "./ArtifactDialog";
 
 interface Props {
-    artifact: FileDescription | undefined;
+    artifact?: FileDescription;
     open: boolean;
     onClose: (saved: boolean) => void;
 }
