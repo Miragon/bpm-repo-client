@@ -65,7 +65,7 @@ const WrapperUploadArtifactDialog: React.FC<Props> = props => {
         setError(undefined);
         setDisabled(true);
 
-        const response = await apiExec(ArtifactApi, api => api.updateArtifact(updatedArtifact.repositoryId, {
+        const response = await apiExec(ArtifactApi, api => api.updateArtifact(artifact.id, {
             fileType: updatedArtifact.type,
             description: updatedArtifact.description || "",
             name: updatedArtifact.title,
@@ -85,7 +85,7 @@ const WrapperUploadArtifactDialog: React.FC<Props> = props => {
         setFile(undefined);
         setFileName(undefined);
         setDescription(undefined)
-    }, [onClose, t, file]);
+    }, [file, t, onClose, artifact.id]);
 
     return (
         <ArtifactDialog
