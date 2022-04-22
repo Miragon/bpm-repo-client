@@ -26,7 +26,9 @@ export interface FileDescription {
     };
 }
 
-function getEditor(t: TFunction, fileType: string): string {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getEditor(t: any, fileType: string): string {
     // supported file types are bpmn, dmn and form
     if (fileType.toUpperCase() === "BPMN" || fileType.toUpperCase() === "DMN" || fileType.toUpperCase() === "FORM") {
         return t(`artifact.editorTooltip.${fileType.toUpperCase()}`);
