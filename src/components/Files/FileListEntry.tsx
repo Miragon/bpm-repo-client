@@ -2,7 +2,7 @@ import { Card, IconButton, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { MoreVertOutlined, StarOutlined, StarOutlineOutlined } from "@material-ui/icons";
 import React from "react";
-import { TFunction, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { THEME } from "../../theme";
 import { formatTimeSince } from "../../util/DateUtils";
 import FileIcon from "./FileIcon";
