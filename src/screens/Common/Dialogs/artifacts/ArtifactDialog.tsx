@@ -62,7 +62,7 @@ const ArtifactDialog: React.FC<Props> = props => {
         onClose
     } = props;
 
-    const [error, setError] = useState<string | undefined>(errorMsg);
+    const [error, setError] = useState<string>();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -83,11 +83,19 @@ const ArtifactDialog: React.FC<Props> = props => {
         if (artifactDescription) {
             setDescription(artifactDescription);
         }
-    }, [artifactDescription, artifactRepository, artifactTitle, artifactType, setType])
+        if (errorMsg) {
+            setError(errorMsg);
+        }
+    }, [artifactDescription, artifactRepository, artifactTitle, artifactType, errorMsg])
 
     const onSave = useCallback(async () => {
         if (title.length < 4) {
             setError(t("validation.titleTooShort"));
+            return;
+        }
+
+        if (title.includes(".")) {
+            setError(t("validation.titleContainsInvalidCharacter"));
             return;
         }
 

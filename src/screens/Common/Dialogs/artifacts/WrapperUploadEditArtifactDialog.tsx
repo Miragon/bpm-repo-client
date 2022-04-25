@@ -44,16 +44,16 @@ const WrapperUploadArtifactDialog: React.FC<Props> = props => {
     useEffect(() => {
         setFileName(artifact.name);
         setDescription(artifact.description);
-    }, [artifact.description, artifact.name, file])
+    }, [artifact.description, artifact.name])
 
-    const onFileChanged = useCallback((file: File) => {
+    const onFileChanged = useCallback((blobFile: File) => {
         const reader = new FileReader();
         reader.addEventListener("load", (event: ProgressEvent<FileReader>) => {
             if (typeof event.target?.result === "string") {
                 setFile(event.target?.result);
             }
         });
-        reader.readAsText(file);
+        reader.readAsText(blobFile);
     }, []);
 
     const onUpdate = useCallback(async (updatedArtifact: SimpleArtifact) => {

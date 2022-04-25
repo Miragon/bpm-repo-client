@@ -179,6 +179,7 @@
     },
     "validation": {
         "titleTooShort": "The title is too short!",
+        "titleContainsInvalidCharacter": "The title contains an invalid character ('.')!",
         "commentTooShort": "The comment is too short!",
         "noFile": "No file selected!",
         "noRepository": "No project selected!",

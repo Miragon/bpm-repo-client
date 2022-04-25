@@ -177,6 +177,7 @@
     },
     "validation": {
         "titleTooShort": "Der Titel ist zu kurz!",
+        "titleContainsInvalidCharacter": "Der Titel enthält ein verbotenes Zeichen ('.')!",
         "commentTooShort": "Der Kommentar ist zu kurz!",
         "noFile": "Keine Datei ausgewählt!",
         "noRepository": "Kein Projekt ausgewählt!",
