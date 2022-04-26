@@ -70,7 +70,7 @@
             "BPMN": "Im Modeler öffnen",
             "DMN": "Im Modeler öffnen",
             "FORM": "Im Formular Editor erstellen",
-            "FALLBACK": "Neue Version hochladen"
+            "noEditor": "Neue Version hochladen"
         }
     },
     "duration": {

@@ -33,7 +33,7 @@ function getEditor(t: any, fileType: string): string {
     if (fileType.toUpperCase() === "BPMN" || fileType.toUpperCase() === "DMN" || fileType.toUpperCase() === "FORM") {
         return t(`artifact.editorTooltip.${fileType.toUpperCase()}`);
     }
-    return t("artifact.editorTooltip.FALLBACK");
+    return t("artifact.editorTooltip.noEditor");
 }
 
 const useStyles = makeStyles((theme: Theme) => ({

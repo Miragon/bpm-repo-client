@@ -44,7 +44,7 @@ const WrapperUploadEditArtifactDialog: React.FC<Props> = props => {
     useEffect(() => {
         setFileName(artifact.name);
         setDescription(artifact.description);
-    }, [artifact.description, artifact.name])
+    }, [artifact.description, artifact.name]);
 
     const onFileChanged = useCallback((blobFile: File) => {
         const reader = new FileReader();
@@ -91,7 +91,7 @@ const WrapperUploadEditArtifactDialog: React.FC<Props> = props => {
         <ArtifactDialog
             dialogTitleLabel={t("artifact.upload")}
             dialogSaveButtonLabel={t("dialog.applyChanges")}
-            action="upload-edit"
+            action="edit"
             repositories={[]}
             types={[]}
             artifactRepository={artifact.repository?.id}

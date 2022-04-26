@@ -70,7 +70,7 @@
             "BPMN": "Open in modeler",
             "DMN": "Open in modeler",
             "FORM": "Open in form editor",
-            "FALLBACK": "Upload new version"
+            "noEditor": "Upload new version"
         }
     },
     "duration": {
