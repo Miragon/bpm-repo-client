@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     }
 });
 
-const WrapperUploadArtifactDialog: React.FC<Props> = props => {
+const WrapperUploadEditArtifactDialog: React.FC<Props> = props => {
     const classes = useStyles();
     const { t } = useTranslation("common");
 
@@ -122,4 +122,4 @@ const WrapperUploadArtifactDialog: React.FC<Props> = props => {
     );
 };
 
-export default WrapperUploadArtifactDialog;
+export default WrapperUploadEditArtifactDialog;
