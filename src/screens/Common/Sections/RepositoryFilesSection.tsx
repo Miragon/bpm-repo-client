@@ -207,6 +207,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
                 }}
                 repositoryId={props.repositoryId}
                 artifacts={files}
+                artifactTypes={artifactTypes.value || []}
                 targets={deploymentTargets.value || []} />
         </>
     );

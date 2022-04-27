@@ -56,13 +56,21 @@
             "BPMN": "BPMN-Diagramm erstellen",
             "DMN": "DMN-Diagramm erstellen",
             "FORM": "Formular erstellen",
-            "CONFIGURATION": "Konfiguration erstellen"
+            "CONFIGURATION": "Konfiguration erstellen",
+            "ELEMENT_TEMPLATE": "Element-Template erstellen"
         },
         "filter": {
             "BPMN": "BPMN-Diagramme",
             "DMN": "DMN-Diagramme",
             "FORM": "Formulare",
-            "CONFIGURATION": "Konfigurationen"
+            "CONFIGURATION": "Konfigurationen",
+            "ELEMENT_TEMPLATE": "Element-Template"
+        },
+        "editorTooltip": {
+            "BPMN": "Im Modeler öffnen",
+            "DMN": "Im Modeler öffnen",
+            "FORM": "Im Formular Editor erstellen",
+            "noEditor": "Neue Version hochladen"
         }
     },
     "duration": {
@@ -169,6 +177,7 @@
     },
     "validation": {
         "titleTooShort": "Der Titel ist zu kurz!",
+        "titleContainsInvalidCharacter": "Der Titel enthält ein verbotenes Zeichen ('.')!",
         "commentTooShort": "Der Kommentar ist zu kurz!",
         "noFile": "Keine Datei ausgewählt!",
         "noRepository": "Kein Projekt ausgewählt!",

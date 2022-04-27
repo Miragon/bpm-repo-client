@@ -14,6 +14,27 @@
 ### Merged pull requests
 
 
+## 2022-04-27
+
+### Added
+
+- Introduce new artifact type element-template
+- Added configuration options editable and deployable for artifact types
+- Enable updating artifacts by file upload
+- Disable deployment of non-deployable artifacts
+
+### Changed
+
+- Refactoring dialog components
+
+### Removed
+
+
+### Merged pull requests
+
+- feat/element-templates [\#21](https://github.com/FlowSquad/bpm-repo-client/pull/21) ([lmoesle](https://github.com/lmoesle))
+
+
 ## 2022-03-24
 
 ### Added

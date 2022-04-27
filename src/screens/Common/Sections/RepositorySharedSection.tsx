@@ -208,6 +208,7 @@ const RepositorySharedSection: React.FC<Props> = props => {
                 onClose={() => setDeployArtifactsOpen(false)}
                 repositoryId={props.repositoryId}
                 artifacts={files}
+                artifactTypes={artifactTypes.value || []}
                 targets={deploymentTargets.value || []} />
         </>
     );

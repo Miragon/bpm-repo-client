@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { LocalShippingOutlined } from "@material-ui/icons";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DeploymentApi, NewDeploymentTO } from "../../../api";
+import { ArtifactTypeTO, DeploymentApi, NewDeploymentTO } from "../../../api";
 import { FileDescription } from "../../../components/Files/FileListEntry";
 import PopupDialog from "../../../components/Form/PopupDialog";
 import SearchTextField from "../../../components/Form/SearchTextField";
@@ -49,6 +49,7 @@ interface Props {
     onClose: (deployed: boolean) => void;
     repositoryId: string;
     artifacts: FileDescription[];
+    artifactTypes: ArtifactTypeTO[];
     targets: string[];
 }
 
@@ -71,8 +72,14 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
     }, []);
 
     const filteredArtifacts = useMemo(() => {
-        return filterArtifactList(search, props.artifacts);
-    }, [props.artifacts, search]);
+        // remove all artifacts that are not deployable
+        const artifacts = props.artifacts.filter(artifact => {
+            const foundArtifactTypes = props.artifactTypes
+                .filter(artifactType => artifactType.name === artifact.fileType);
+            return foundArtifactTypes.length === 1 ? foundArtifactTypes[0].deployable : false;
+        });
+        return filterArtifactList(search, artifacts);
+    }, [props.artifacts, props.artifactTypes, search]);
 
     const deploy = useCallback(async () => {
         if (!target) {

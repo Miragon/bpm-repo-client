@@ -2,7 +2,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React from "react";
 import File from "../Icons/File";
-import { BpmnIcon, ConfigurationIcon, DmnIcon, FormIcon, UnknownIcon } from "../Icons/FileIcons";
+import { BpmnIcon, ConfigurationIcon, DmnIcon, ElementTemplateIcon, FormIcon, UnknownIcon } from "../Icons/FileIcons";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -22,6 +22,7 @@ const ICONS: { [key: string]: string } = {
     dmn: DmnIcon,
     configuration: ConfigurationIcon,
     form: FormIcon,
+    element_template: ElementTemplateIcon,
     unknown: UnknownIcon
 };
 

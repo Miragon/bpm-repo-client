@@ -1,9 +1,10 @@
 import { ArtifactMilestoneTO } from "../api";
 
+const BASE_PATH = process.env.REACT_APP_BACKEND ?? "/";
+
 export const downloadFile = (milestone: ArtifactMilestoneTO): void => {
-    const filePath = `/api/milestone/${milestone.artifactId}/${milestone.id}/download`;
+    const filePath = `${BASE_PATH}/api/milestone/${milestone.artifactId}/${milestone.id}/download`;
     const link = document.createElement("a");
     link.href = filePath;
-    link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
     link.click();
 };
