@@ -7,18 +7,17 @@ import { ArtifactTypeTO } from "../api";
  */
 export const openFileInTool = (fileTypes: Array<ArtifactTypeTO>, fileType: string, repositoryId: string, artifactId: string, milestone?: number): boolean => {
     const artifactType = fileTypes.find((types: ArtifactTypeTO) => types.name.toLowerCase() === fileType.toLowerCase());
-    if (artifactType?.editable) {
-        const urlNamespace = artifactType.url;
-        if (milestone) {
-            window.open(`/${urlNamespace}/#/${artifactId}/${milestone}`, "_blank");
-        } else {
-            window.open(`/${urlNamespace}/#/${artifactId}/latest`, "_blank");
-        }
-        return true;
-    }
-    else {
+    if (!artifactType?.editable) {
         return false;
     }
+
+    const urlNamespace = artifactType.url;
+    if (milestone) {
+        window.open(`/${urlNamespace}/#/${artifactId}/${milestone}`, "_blank");
+    } else {
+        window.open(`/${urlNamespace}/#/${artifactId}/latest`, "_blank");
+    }
+    return true;
 }
 
 export const openRepository = (repositoryId: string): string => {

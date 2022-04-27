@@ -74,12 +74,9 @@ const DeployArtifactsDialog: React.FC<Props> = props => {
     const filteredArtifacts = useMemo(() => {
         // remove all artifacts that are not deployable
         const artifacts = props.artifacts.filter(artifact => {
-            for (const artifactType of props.artifactTypes) {
-                if (artifactType.name === artifact.fileType) {
-                    return artifactType.deployable;
-                }
-            }
-            return false;
+            const foundArtifactTypes = props.artifactTypes
+                .filter(artifactType => artifactType.name === artifact.fileType);
+            return foundArtifactTypes.length === 1 ? foundArtifactTypes[0].deployable : false;
         });
         return filterArtifactList(search, artifacts);
     }, [props.artifacts, props.artifactTypes, search]);
