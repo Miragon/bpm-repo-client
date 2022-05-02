@@ -11,7 +11,6 @@ import { makeErrorToast, makeSuccessToast } from "../../util/ToastUtils";
 import { usePagination } from "../List/usePagination";
 import { FileDescription } from "./FileListEntry";
 import { MenuListConfig } from "../MenuList/MenuList";
-import Pagination from "../List/Pagination";
 import WrapperEditArtifactDialog from "../../screens/Common/Dialogs/artifacts/WrapperEditArtifactDialog";
 import DeleteArtifactDialog from "../../screens/Common/Dialogs/DeleteArtifactDialog";
 import FileList from "./FileList";
@@ -19,6 +18,7 @@ import WrapperCopyArtifactDialog from "../../screens/Common/Dialogs/artifacts/Wr
 import ShareArtifactDialog from "../../screens/Common/Dialogs/ShareArtifactDialog";
 import CreateMilestoneDialog from "../../screens/Common/Dialogs/CreateMilestoneDialog";
 import ListMilestonesDialog from "../../screens/Common/Dialogs/ListMilestonesDialog";
+import CustomPagination from "../List/CustomPagination";
 
 
 interface Props {
@@ -137,7 +137,7 @@ const WrapperFileList: React.FC<Props> = props => {
                 onClick={file => file.repository && openFile(file)}
                 onMenuClick={onMenuEntryClicked}
                 menuEntries={props.menuEntries} />
-            <Pagination className={props.paginationClassName} config={paginationConfig} />
+            <CustomPagination className={props.paginationClassName} config={paginationConfig} />
             {editArtifact &&
                 <WrapperEditArtifactDialog
                     onClose={saved => {

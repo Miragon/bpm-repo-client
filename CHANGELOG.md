@@ -7,6 +7,7 @@
 
 ### Changed
 
+* Refactoring pagination component to avoid visual overflow
 
 ### Removed
 
