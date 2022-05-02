@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { PopupToast, retryAction } from "../../../components/Form/PopupToast";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
-import Pagination from "../../../components/List/Pagination";
+import CustomPagination from "../../../components/List/CustomPagination";
 import { usePagination } from "../../../components/List/usePagination";
 import RepositoryCard from "../../../components/Repositories/RepositoryCard";
 import { loadRepositories } from "../../../store/RepositoryState";
@@ -101,7 +101,7 @@ const RepositorySection: React.FC<Props> = props => {
                         </Typography>
                     )}
                 </div>
-                <Pagination config={paginationConfig} />
+                <CustomPagination config={paginationConfig} />
             </div>
         </>
     );

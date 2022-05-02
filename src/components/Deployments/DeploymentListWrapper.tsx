@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { DeploymentInfo } from "./DeploymentListEntry";
-import Pagination from "../List/Pagination";
+import CustomPagination from "../List/CustomPagination";
 import { usePagination } from "../List/usePagination";
 import DeploymentList from "./DeploymentList";
 
@@ -45,7 +45,7 @@ const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
                 deployments={pageItems}
                 fallback="repository.noDeployments"
                 onDownloadClick={download} />
-            <Pagination config={paginationConfig} />
+            <CustomPagination config={paginationConfig} />
         </>
     );
 };
