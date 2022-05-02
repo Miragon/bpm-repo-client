@@ -61,7 +61,9 @@ const WrapperFileList: React.FC<Props> = props => {
             return;
         }
 
-        makeSuccessToast(t("artifact.favoriteSaved"));
+        // file.favorite still contains the old value even though the api call changed it
+        // therefore you have to use the opposite of !file.favorite
+        makeSuccessToast(t(!file.favorite ? "artifact.favoriteSaved" : "artifact.favoriteRemoved"));
         dispatch(loadFavoriteArtifacts(true));
     }, [dispatch, t]);
 

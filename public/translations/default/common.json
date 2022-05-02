@@ -51,6 +51,7 @@
         "noFavorites": "You have not marked any files as favorites yet.",
         "favoriteFailed": "Favorite could not be saved!",
         "favoriteSaved": "Favorite saved",
+        "favoriteRemoved": "Favorite removed",
         "unknownRepository": "Unknown",
         "create": {
             "BPMN": "Create BPMN diagram",
