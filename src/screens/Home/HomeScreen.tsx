@@ -54,13 +54,9 @@ const HomeScreen: React.FC = (() => {
     }, [dispatch, loadKey]);
 
     const onAddItemClicked = useCallback((action: string) => {
-        // if (action === "create-repository") {
-        //     setCreateRepositoryDialogOpen(true);
-        // }
-        // else if (action === "upload-file" || )
         switch (action) {
             case "create-repository": {
-
+                setCreateRepositoryDialogOpen(true);
                 break;
             }
             case "upload-file": {
