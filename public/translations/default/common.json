@@ -148,6 +148,7 @@
         "favorites": "Favorites",
         "recent": "Recent",
         "account": "Account",
+        "language": "Language",
         "accountMenu": {
             "account": "My account",
             "logout": "Logout",
