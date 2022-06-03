@@ -3,7 +3,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { CloudDownloadOutlined } from "@material-ui/icons";
 import clsx from "clsx";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { TFunction, useTranslation } from "react-i18next";
 import { ArtifactMilestoneTO, DeploymentTO, DeploymentTOStatusEnum } from "../../api";
 import { THEME } from "../../theme";
 import { formatTimeSince } from "../../util/DateUtils";
@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-function deploymentMessage(t: any, deployment: DeploymentTO): string {
+function deploymentMessage(t: TFunction<"common">, deployment: DeploymentTO): string {
     if (deployment.status === DeploymentTOStatusEnum.Error) {
         // the message contains an error message which should not get translated
         return deployment.message ?? t("deployment.genericError");
