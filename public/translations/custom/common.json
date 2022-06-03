@@ -105,7 +105,10 @@
         "authoredBy": "{{timeSince}} durch {{user}}"
     },
     "deployment": {
-        "deployedToEnvironment": "Veröffentlicht in Umgebung {{env}}"
+        "deployedToEnvironment": "Veröffentlicht in Umgebung {{env}}",
+        "success": "Erfolgreich veröffentlicht!",
+        "pending": "Wird veröffentlicht",
+        "genericError": "Es ist ein Fehler aufgetreten!"
     },
     "dialog": {
         "applyChanges": "Bestätigen",

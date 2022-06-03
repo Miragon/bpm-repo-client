@@ -105,7 +105,10 @@
         "authoredBy": "{{timeSince}} by {{user}}"
     },
     "deployment": {
-        "deployedToEnvironment": "Deployed to environment {{env}}"
+        "deployedToEnvironment": "Deployed to environment {{env}}",
+        "success": "Successfully deployed!",
+        "pending": "Deployment in progress",
+        "genericError": "An error occurred!"
     },
     "dialog": {
         "applyChanges": "Apply changes",
