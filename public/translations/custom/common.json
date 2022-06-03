@@ -125,7 +125,8 @@
         "repository": "Projekt",
         "noRepository": "Kein Projekt ausgewählt",
         "target": "Ziel",
-        "noTarget": "Kein Ziel ausgewählt"
+        "noTarget": "Kein Ziel ausgewählt",
+        "type": "Typ"
     },
     "role": {
         "viewer": "Betrachter",
