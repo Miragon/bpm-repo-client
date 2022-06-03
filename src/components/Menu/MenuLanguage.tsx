@@ -7,6 +7,7 @@ import { THEME } from "../../theme";
 import Popup from "../Common/Popup";
 import MenuList, { MenuListConfig } from "../MenuList/MenuList";
 import MenuListTitle from "../MenuList/MenuListTitle";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
     menuItem: {
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const MenuAvatar: React.FC = () => {
     const classes = useStyles();
+    const { t } = useTranslation("common");
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLDivElement>();
     const [activeLanguage, setActiveLanguage] = useState(
@@ -99,7 +101,7 @@ const MenuAvatar: React.FC = () => {
             <div className={classes.menuItemContent}>
                 <TranslateOutlined className={classes.menuItemIcon} />
                 <span className={classes.menuItemText}>
-                    Language
+                    {t("menu.language")}
                 </span>
             </div>
 

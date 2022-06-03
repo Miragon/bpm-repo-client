@@ -86,26 +86,29 @@
         }
     },
     "milestone": {
-        "create": "Milestone erstellen",
-        "created": "Milestone erstellt",
-        "deploy": "Milestone veröffentlichen",
-        "deployMultiple": "Milestones veröffentlichen",
-        "deployed": "Milestone veröffentlicht",
-        "deployedMultiple": "{{deployedMilestones}} Milestones veröffentlicht",
-        "download": "Milestone herunterladen",
-        "openLatest": "Aktuellen Milestone öffnen",
-        "list": "Milestones anzeigen",
+        "create": "Meilenstein erstellen",
+        "created": "Meilenstein erstellt",
+        "deploy": "Meilenstein veröffentlichen",
+        "deployMultiple": "Meilensteine veröffentlichen",
+        "deployed": "Meilenstein veröffentlicht",
+        "deployedMultiple": "{{deployedMilestones}} Meilensteine veröffentlicht",
+        "download": "Meilenstein herunterladen",
+        "openLatest": "Aktuellen Meilenstein öffnen",
+        "list": "Meilensteine anzeigen",
         "saveAsNewArtifact": "Als neue Datei speichern",
         "savedAsNewArtifact": "Als neue Datei gespeichert",
-        "noMilestones": "Sie haben noch keine Milestones erstellt.",
-        "noneFound": "Keine Milestones gefunden.",
-        "search": "Milestones durchsuchen...",
+        "noMilestones": "Sie haben noch keine Meilensteine erstellt.",
+        "noneFound": "Keine Meilensteine gefunden.",
+        "search": "Meilensteine durchsuchen...",
         "noComment": "Kein Kommentar",
-        "latest": "Latest",
+        "latest": "Neueste",
         "authoredBy": "{{timeSince}} durch {{user}}"
     },
     "deployment": {
-        "deployedToEnvironment": "Veröffentlicht in Umgebung {{env}}"
+        "deployedToEnvironment": "Veröffentlicht in Umgebung {{env}}",
+        "success": "Erfolgreich veröffentlicht!",
+        "pending": "Wird veröffentlicht",
+        "genericError": "Es ist ein Fehler aufgetreten!"
     },
     "dialog": {
         "applyChanges": "Bestätigen",
@@ -122,7 +125,8 @@
         "repository": "Projekt",
         "noRepository": "Kein Projekt ausgewählt",
         "target": "Ziel",
-        "noTarget": "Kein Ziel ausgewählt"
+        "noTarget": "Kein Ziel ausgewählt",
+        "type": "Typ"
     },
     "role": {
         "viewer": "Betrachter",
@@ -145,7 +149,8 @@
         "projects": "Projekte",
         "favorites": "Favoriten",
         "recent": "Verlauf",
-        "account": "Account",
+        "account": "Konto",
+        "language": "Sprache",
         "accountMenu": {
             "account": "Mein Account",
             "logout": "Logout",
@@ -193,9 +198,9 @@
         "loadingError": "Daten konnten nicht geladen werden!",
         "alreadyDeployed": "Diese Datei wurde bereits im selben Ziel veröffentlicht!",
         "versionNotFound": "Diese Version wurde nicht gefunden!",
-        "milestoneNotFound": "Dieser Milestone wurde nicht gefunden!",
+        "milestoneNotFound": "Dieser Meilenstein wurde nicht gefunden!",
         "artifactNotFound": "Diese Datei wurde nicht gefunden!",
-        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten, da ein neuer Milestone verfügbar ist!",
+        "historicalDataAccess": "Sie können diese Datei nicht bearbeiten, da ein neuer Meilenstein verfügbar ist!",
         "locked": "Diese Datei wird derzeit von einem anderen Benutzer bearbeitet!",
         "repositoryNotFound": "Dieses Projekt wurde nicht gefunden!",
         "repositoryNameInUse": "Dieser Projektname ist bereits vergeben!",
@@ -206,7 +211,7 @@
         "cantShareWithParentRepo": "Eine Datei kann nur mit anderen Projekten geteilt werden!",
         "shareWithRepositoryNotFound": "Diese Datei wird noch nicht mit diesem Projekt geteilt!",
         "shareWithTeamNotFound": "Diese Datei wird noch nicht mit diesem Team geteilt!",
-        "currentUserNotFound": "Sie haben noch keinen Account!",
+        "currentUserNotFound": "Sie haben noch kein Konto!",
         "usernameInUse": "Dieser Benutzername ist bereits vergeben!"
     }
 }
