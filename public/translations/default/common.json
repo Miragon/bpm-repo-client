@@ -105,7 +105,10 @@
         "authoredBy": "{{timeSince}} by {{user}}"
     },
     "deployment": {
-        "deployedToEnvironment": "Deployed to environment {{env}}"
+        "deployedToEnvironment": "Deployed to environment {{env}}",
+        "success": "Successfully deployed!",
+        "pending": "Deployment in progress",
+        "genericError": "An error occurred!"
     },
     "dialog": {
         "applyChanges": "Apply changes",
@@ -123,8 +126,8 @@
         "noRepository": "No project selected",
         "target": "Target",
         "noTarget": "No target selected",
-        "type": "Type",
-        "noType": "No type selected"
+        "noType": "No type selected",
+        "type": "Type"
     },
     "role": {
         "viewer": "Viewer",
@@ -148,6 +151,7 @@
         "favorites": "Favorites",
         "recent": "Recent",
         "account": "Account",
+        "language": "Language",
         "accountMenu": {
             "account": "My account",
             "logout": "Logout",
