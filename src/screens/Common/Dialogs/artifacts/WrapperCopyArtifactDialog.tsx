@@ -33,8 +33,8 @@ const WrapperCopyArtifactDialog: React.FC<Props> = props => {
 
         setDisabled(true);
         const response = await apiExec(ArtifactApi, api => api.copyToRepository(updatedArtifact.repositoryId, artifact.id, {
-            description: description || "",
-            name: title,
+            description: updatedArtifact.description || "",
+            name: updatedArtifact.title,
             fileType: updatedArtifact.type
         }));
         setDisabled(false);
@@ -46,7 +46,7 @@ const WrapperCopyArtifactDialog: React.FC<Props> = props => {
 
         makeSuccessToast("artifact.copied");
         props.onClose(true);
-    }, [description, props, t, title]);
+    }, [props, t]);
 
     return (
         <ArtifactDialog

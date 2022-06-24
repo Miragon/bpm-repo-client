@@ -29,7 +29,6 @@ const WrapperCreateArtifactDialog: React.FC<Props> = props => {
     const onCreate = useCallback(async (artifact: SimpleArtifact) => {
         setError(undefined);
         setDisabled(true);
-        console.log(artifact);
         const response = await apiExec(ArtifactApi, api => api.createArtifact(artifact.repositoryId, {
             fileType: artifact.type,
             description: artifact.description || "",

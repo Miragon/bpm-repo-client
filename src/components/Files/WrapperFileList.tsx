@@ -159,7 +159,10 @@ const WrapperFileList: React.FC<Props> = props => {
             {props.repositories &&
                 <WrapperCopyArtifactDialog
                     open={ !!copyArtifact }
-                    onClose={ () => setCopyArtifact(undefined) }
+                    onClose={ copy => {
+                        setCopyArtifact(undefined);
+                        copy && props.reloadFiles();
+                    }}
                     artifact={ copyArtifact }
                     repositories={ props.repositories } />
             }
