@@ -28,7 +28,6 @@ const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
             const timer = setTimeout(() => {
                 props.doReloadDeployments(props.repositoryId)
                 setRetries(retries + 1);
-                console.log(retries);
             }, time * 1000);
             return () => clearTimeout(timer);
         }
