@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { DeploymentInfo } from "./DeploymentListEntry";
 import CustomPagination from "../List/CustomPagination";
 import { usePagination } from "../List/usePagination";
@@ -12,19 +12,27 @@ interface Props {
 
 const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
 
+    const [retries, setRetries] = useState(1);
+
     /**
-     * If props.deployments change check if any deployments status is PENDING
-     * and trigger reload of deployments (after waiting for 3 seconds)
+     * If props.deployments change check if any deployments status is PENDING and trigger reload of deployments
+     * It uses an exponential backoff (10^x) and does 3 retries to avoid server issues.
      *
      * NOTE: New deployments always start with the status PENDING.
      * The status changes to SUCCESS or ERROR if the deployments finishes.
      */
     useEffect(() => {
-        if (props.deployments.find(deployment => deployment.deployment.status === "PENDING")) {
-            const timer = setTimeout(() => props.doReloadDeployments(props.repositoryId), 3000);
+        if (props.deployments.find(deployment => deployment.deployment.status === "PENDING") && retries < 4) {
+            // reload every 10, 100, 1000 seconds
+            const time = 10 ** retries;
+            const timer = setTimeout(() => {
+                props.doReloadDeployments(props.repositoryId)
+                setRetries(retries + 1);
+                console.log(retries);
+            }, time * 1000);
             return () => clearTimeout(timer);
         }
-    }, [props]);
+    }, [retries, props]);
 
     /**
      * Downloads artifact of the deployment
