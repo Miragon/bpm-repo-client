@@ -59,7 +59,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: "center"
     },
     cardMainSectionText: {
+        marginBottom: "50px",
         display: "flex",
+        width: "min-content",
+        maxWidth: "650px", //change this should Project size be generic
+        //border: "solid 3px #ccc",
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        hyphens: "auto",
         flexDirection: "column"
     },
     cardSecondarySection: {
@@ -113,6 +120,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: "rgba(0, 0, 0, 0.54)",
         width: "100%",
         textAlign: "right"
+    },
+    overFlow: {
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        hyphens: "auto"
     }
 }));
 
@@ -127,6 +139,13 @@ const FileListEntry: React.FC<Props> = props => {
     const classes = useStyles();
 
     const { t } = useTranslation("common");
+
+    //swap props.file.name in cardMainSectionText
+    const fixName = () => {
+        return props.file.name;
+        //props.file.name.toggle("overFlow");
+    }
+    //oder formatOverFlow(props.file.name, t)
 
     return (
         <Tooltip title={getEditor(t, props.file.fileType)}>
