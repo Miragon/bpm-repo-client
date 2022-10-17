@@ -10,6 +10,7 @@ import ActionButton from "../../../components/Header/ActionButton";
 import FilterButton from "../../../components/Header/FilterButton";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import SortButton from "../../../components/Header/SortButton";
+import DownloadButton from "../../../components/Header/DownloadButton";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadDeploymentTargets } from "../../../store/DeploymentTargetState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
@@ -147,6 +148,17 @@ const RepositorySharedSection: React.FC<Props> = props => {
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
 
+    /**
+     * Downloads all artifact of the selected repository
+     **/
+    const download = useCallback(() => {
+        const filePath = `/api/artifact/${props.repositoryId}/download`;
+        const link = document.createElement("a");
+        link.href = filePath;
+        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
+        link.click();
+    }, [props.repositoryId]);
+
     if (repositories.error
         || artifactTypes.error
         || ownRepositories.error
@@ -177,6 +189,8 @@ const RepositorySharedSection: React.FC<Props> = props => {
         <>
             <ScreenSectionHeader title={t("repository.shared")}>
                 <div className={classes.headerActions}>
+                    <DownloadButton
+                        onDownloadClick={download}/>
                     <ActionButton
                         label={t("milestone.deployMultiple")}
                         icon={LocalShippingOutlined}
