@@ -22,6 +22,10 @@ import { getFilterConfig, getSortConfig } from "../../../util/MenuUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
+import {apiExec, hasFailed} from "../../../util/ApiUtils";
+import { RepositoryApi } from "../../../api";
+import {makeErrorToast, makeSuccessToast} from "../../../util/ToastUtils";
+import {downloadFile} from "../../../util/FileUtils";
 
 const useStyles = makeStyles({
     fileList: {
@@ -151,13 +155,20 @@ const RepositoryFilesSection: React.FC<Props> = props => {
     /**
      * Downloads all artifact of the selected repository
      **/
-    const download = useCallback(() => {
-        const filePath = `/api/artifact/${props.repositoryId}/download`;
-        const link = document.createElement("a");
-        link.href = filePath;
-        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-        link.click();
-    }, [props.repositoryId]);
+    const download = useCallback(async () => {
+        const response = await apiExec(RepositoryApi, api => api.zipDownloadProject(props.repositoryId));
+        if (hasFailed(response)) {
+            if (response.error) {
+                makeErrorToast(t(response.error));
+            } else {
+                makeErrorToast(t("artifact.downloadFailed"));
+            }
+            return;
+        }
+
+        downloadFile(response.result);
+        makeSuccessToast(t("artifact.downloadStarted"));
+    }, [props.repositoryId, t]);
 
 
     if (repositories.error
@@ -187,7 +198,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
             <ScreenSectionHeader title={t("repository.files")}>
                 <div className={classes.headerActions}>
                     <DownloadButton
-                        onDownloadClick={download} />
+                        onDownloadClick={download}/>
                     <ActionButton
                         label={t("milestone.deployMultiple")}
                         icon={LocalShippingOutlined}

@@ -80,9 +80,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     title: {
         fontSize: "0.85rem",
         fontWeight: 600,
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        overflow: "hidden"
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        hyphens: "auto"
     },
     subtitle: {
         marginTop: "-0.25rem",

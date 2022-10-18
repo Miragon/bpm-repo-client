@@ -1,4 +1,4 @@
-import { IconButton } from "@material-ui/core";
+import {IconButton, Tooltip} from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React, { MouseEventHandler } from "react";
@@ -50,25 +50,26 @@ const ActionButton: React.FC<Props> = props => {
     const classes = useStyles();
 
     return (
-        <IconButton
-            title={props.label}
-            onClick={props.onClick}
-            className={clsx(
-                classes.actionButton,
-                props.primary ? classes.actionButtonPrimary : classes.actionButtonDefault,
-                props.active && props.primary && classes.actionButtonPrimaryActive,
-                props.active && !props.primary && classes.actionButtonDefaultActive
-            )}>
-            {React.createElement(props.icon, {
-                className: clsx(
-                    classes.actionButtonIcon,
-                    props.primary ? classes.actionButtonIconPrimary : classes.actionButtonIconDefault,
-                    props.active && props.primary && classes.actionButtonIconPrimaryActive,
-                    props.active && !props.primary && classes.actionButtonIconDefaultActive,
-                    props.iconClassName
-                )
-            })}
-        </IconButton>
+        <Tooltip title={props.label}>
+            <IconButton
+                onClick={props.onClick}
+                className={clsx(
+                    classes.actionButton,
+                    props.primary ? classes.actionButtonPrimary : classes.actionButtonDefault,
+                    props.active && props.primary && classes.actionButtonPrimaryActive,
+                    props.active && !props.primary && classes.actionButtonDefaultActive
+                )}>
+                {React.createElement(props.icon, {
+                    className: clsx(
+                        classes.actionButtonIcon,
+                        props.primary ? classes.actionButtonIconPrimary : classes.actionButtonIconDefault,
+                        props.active && props.primary && classes.actionButtonIconPrimaryActive,
+                        props.active && !props.primary && classes.actionButtonIconDefaultActive,
+                        props.iconClassName
+                    )
+                })}
+            </IconButton>
+        </Tooltip>
     );
 };
 

@@ -3,6 +3,11 @@ import { DeploymentInfo } from "./DeploymentListEntry";
 import CustomPagination from "../List/CustomPagination";
 import { usePagination } from "../List/usePagination";
 import DeploymentList from "./DeploymentList";
+import {apiExec, hasFailed} from "../../util/ApiUtils";
+import { MilestoneApi } from "../../api";
+import {makeErrorToast, makeSuccessToast} from "../../util/ToastUtils";
+import {downloadFile} from "../../util/FileUtils";
+import {useTranslation} from "react-i18next";
 
 interface Props {
     repositoryId: string;
@@ -36,13 +41,27 @@ const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
     /**
      * Downloads artifact of the deployment
      */
-    const download = useCallback((deployment: DeploymentInfo) => {
-        const filePath = `/api/milestone/${deployment.artifact?.id}/${deployment.milestone?.id}/download`;
-        const link = document.createElement("a");
-        link.href = filePath;
-        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-        link.click();
-    }, []);
+    const { t } = useTranslation("common");
+    const download = useCallback( async (deployment: DeploymentInfo) => {
+        const artifactId = deployment.artifact?.id;
+        const milestoneId = deployment.milestone?.id;
+        if(!artifactId || !milestoneId) {
+            return;
+        }
+        const response = await apiExec(MilestoneApi, api => api.downloadMilestone(artifactId, milestoneId));
+        if (hasFailed(response)) {
+            if (response.error) {
+                makeErrorToast(t(response.error));
+            } else {
+                makeErrorToast(t("artifact.downloadFailed"));
+            }
+            return;
+        }
+
+        downloadFile(response.result);
+        makeSuccessToast(t("artifact.downloadStarted"));
+    },[t] );
+
 
     const { pageItems, paginationConfig } = usePagination(props.deployments, 5);
 
