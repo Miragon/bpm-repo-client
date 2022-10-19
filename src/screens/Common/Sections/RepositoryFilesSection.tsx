@@ -161,13 +161,12 @@ const RepositoryFilesSection: React.FC<Props> = props => {
             if (response.error) {
                 makeErrorToast(t(response.error));
             } else {
-                makeErrorToast(t("artifact.downloadFailed"));
+                makeErrorToast(t("project.downloadFailed"));
             }
             return;
         }
-
-        downloadFile(response.result);
-        makeSuccessToast(t("artifact.downloadStarted"));
+        //downloadFile(response.result);
+        makeSuccessToast(t("project.downloadStarted"));
     }, [props.repositoryId, t]);
 
 

@@ -38,17 +38,16 @@ const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
         }
     }, [retries, props]);
 
+    const { t } = useTranslation("common");
     /**
      * Downloads artifact of the deployment
      */
-    const { t } = useTranslation("common");
     const download = useCallback( async (deployment: DeploymentInfo) => {
         const artifactId = deployment.artifact?.id;
-        const milestoneId = deployment.milestone?.id;
-        if(!artifactId || !milestoneId) {
+        if(!artifactId) {
             return;
         }
-        const response = await apiExec(MilestoneApi, api => api.downloadMilestone(artifactId, milestoneId));
+        const response = await apiExec(MilestoneApi, api => api.getLatestMilestone(artifactId));
         if (hasFailed(response)) {
             if (response.error) {
                 makeErrorToast(t(response.error));
@@ -57,7 +56,6 @@ const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
             }
             return;
         }
-
         downloadFile(response.result);
         makeSuccessToast(t("artifact.downloadStarted"));
     },[t] );
