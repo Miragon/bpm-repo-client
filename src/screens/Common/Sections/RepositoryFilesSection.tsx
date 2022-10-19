@@ -155,7 +155,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
      **/
     const download = useCallback(async () => {
         downloadProject(props.repositoryId);
-        makeSuccessToast(t("project.downloadStarted"));
+        makeSuccessToast(t("repository.downloadStarted"));
     }, [props.repositoryId, t]);
 
 

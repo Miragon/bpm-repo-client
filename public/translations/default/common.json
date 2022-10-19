@@ -15,6 +15,9 @@
         "deployments": "All deployments",
         "noDeployments": "No files have been deployed from this project yet.",
         "avatarYou": "{{name}} (You)",
+        "download": "Download project",
+        "downloadFailed": "Zip-Download failed",
+        "downloadStarted": "Zip-Download started",
         "members": {
             "manage": "Manage members",
             "add": "Add user",

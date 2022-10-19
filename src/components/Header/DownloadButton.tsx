@@ -16,7 +16,7 @@ const DownloadButton: React.FC<Props> = props => {
                 e.stopPropagation();
                 props.onDownloadClick();
             }}
-            label={t("Download Project")}
+            label={t("repository.download")}
             icon={GetAppSharp}
             primary={false}
             active={false} />

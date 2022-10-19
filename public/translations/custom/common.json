@@ -15,6 +15,9 @@
         "deployments": "Alle Veröffentlichungen",
         "noDeployments": "Es wurden noch keine Dateien aus diesem Projekt veröffentlicht.",
         "avatarYou": "{{name}} (Sie)",
+        "download": "Projekt herunterladen",
+        "downloadFailed": "Zip-Download fehlgeschlagen",
+        "downloadStarted": "Zip-Download gestartet",
         "members": {
             "manage": "Mitglieder verwalten",
             "add": "Benutzer hinzufügen",
