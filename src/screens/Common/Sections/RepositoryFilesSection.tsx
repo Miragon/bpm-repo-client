@@ -22,10 +22,8 @@ import { getFilterConfig, getSortConfig } from "../../../util/MenuUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
-import {apiExec, hasFailed} from "../../../util/ApiUtils";
-import { RepositoryApi } from "../../../api";
-import {makeErrorToast, makeSuccessToast} from "../../../util/ToastUtils";
-import {downloadFile} from "../../../util/FileUtils";
+import {makeSuccessToast} from "../../../util/ToastUtils";
+import {downloadProject} from "../../../util/FileUtils";
 
 const useStyles = makeStyles({
     fileList: {
@@ -156,16 +154,7 @@ const RepositoryFilesSection: React.FC<Props> = props => {
      * Downloads all artifact of the selected repository
      **/
     const download = useCallback(async () => {
-        const response = await apiExec(RepositoryApi, api => api.zipDownloadProject(props.repositoryId));
-        if (hasFailed(response)) {
-            if (response.error) {
-                makeErrorToast(t(response.error));
-            } else {
-                makeErrorToast(t("project.downloadFailed"));
-            }
-            return;
-        }
-        //downloadFile(response.result);
+        downloadProject(props.repositoryId);
         makeSuccessToast(t("project.downloadStarted"));
     }, [props.repositoryId, t]);
 
