@@ -10,6 +10,7 @@ import ActionButton from "../../../components/Header/ActionButton";
 import FilterButton from "../../../components/Header/FilterButton";
 import ScreenSectionHeader from "../../../components/Header/ScreenSectionHeader";
 import SortButton from "../../../components/Header/SortButton";
+import DownloadButton from "../../../components/Header/DownloadButton";
 import { loadArtifactTypes } from "../../../store/ArtifactTypeState";
 import { loadDeploymentTargets } from "../../../store/DeploymentTargetState";
 import { loadFavoriteArtifacts } from "../../../store/FavoriteArtifactState";
@@ -21,6 +22,8 @@ import { getFilterConfig, getSortConfig } from "../../../util/MenuUtils";
 import { filterArtifactList } from "../../../util/SearchUtils";
 import { sortByString } from "../../../util/SortUtils";
 import DeployArtifactsDialog from "../Dialogs/DeployArtifactsDialog";
+import {makeSuccessToast} from "../../../util/ToastUtils";
+import {downloadProject} from "../../../util/FileUtils";
 
 const useStyles = makeStyles({
     fileList: {
@@ -147,6 +150,14 @@ const RepositorySharedSection: React.FC<Props> = props => {
         }
     }, [dispatch, props.loadKey, props.repositoryId]);
 
+    /**
+     * Downloads all artifact of the selected repository
+     **/
+    const download = useCallback(async () => {
+        downloadProject(props.repositoryId);
+        makeSuccessToast(t("repository.downloadStarted"));
+    }, [props.repositoryId, t]);
+
     if (repositories.error
         || artifactTypes.error
         || ownRepositories.error
@@ -177,6 +188,8 @@ const RepositorySharedSection: React.FC<Props> = props => {
         <>
             <ScreenSectionHeader title={t("repository.shared")}>
                 <div className={classes.headerActions}>
+                    <DownloadButton
+                        onDownloadClick={download}/>
                     <ActionButton
                         label={t("milestone.deployMultiple")}
                         icon={LocalShippingOutlined}

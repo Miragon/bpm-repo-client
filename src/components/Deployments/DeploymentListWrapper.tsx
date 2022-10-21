@@ -3,6 +3,9 @@ import { DeploymentInfo } from "./DeploymentListEntry";
 import CustomPagination from "../List/CustomPagination";
 import { usePagination } from "../List/usePagination";
 import DeploymentList from "./DeploymentList";
+import {makeSuccessToast} from "../../util/ToastUtils";
+import {downloadFile} from "../../util/FileUtils";
+import {useTranslation} from "react-i18next";
 
 interface Props {
     repositoryId: string;
@@ -33,16 +36,19 @@ const DeploymentListWrapper: React.FC<Props> = (props: Props) => {
         }
     }, [retries, props]);
 
+    const { t } = useTranslation("common");
     /**
      * Downloads artifact of the deployment
      */
-    const download = useCallback((deployment: DeploymentInfo) => {
-        const filePath = `/api/milestone/${deployment.artifact?.id}/${deployment.milestone?.id}/download`;
-        const link = document.createElement("a");
-        link.href = filePath;
-        link.download = filePath.substr(filePath.lastIndexOf("/") + 1);
-        link.click();
-    }, []);
+    const download = useCallback( async (deployment: DeploymentInfo) => {
+        const milestone = deployment.milestone;
+        if(!milestone) {
+            return;
+        }
+        downloadFile(milestone);
+        makeSuccessToast(t("artifact.downloadStarted"));
+    },[t] );
+
 
     const { pageItems, paginationConfig } = usePagination(props.deployments, 5);
 

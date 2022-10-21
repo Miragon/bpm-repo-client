@@ -3088,6 +3088,40 @@ export const RepositoryApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Download a repositorie based on its name
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zipDownloadProject: async (repositoryId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'repositoryId' is not null or undefined
+            assertParamExists('zipDownloadProject', 'repositoryId', repositoryId)
+            const localVarPath = `/api/repo/{repositoryId}/download`
+                .replace(`{${"repositoryId"}}`, encodeURIComponent(String(repositoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3174,6 +3208,17 @@ export const RepositoryApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateRepository(repositoryId, repositoryUpdateTO, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary Download a repositorie based on its name
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async zipDownloadProject(repositoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.zipDownloadProject(repositoryId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -3252,6 +3297,16 @@ export const RepositoryApiFactory = function (configuration?: Configuration, bas
          */
         updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any): AxiosPromise<RepositoryTO> {
             return localVarFp.updateRepository(repositoryId, repositoryUpdateTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Download a repositorie based on its name
+         * @param {string} repositoryId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zipDownloadProject(repositoryId: string, options?: any): AxiosPromise<any> {
+            return localVarFp.zipDownloadProject(repositoryId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3344,6 +3399,18 @@ export class RepositoryApi extends BaseAPI {
      */
     public updateRepository(repositoryId: string, repositoryUpdateTO: RepositoryUpdateTO, options?: any) {
         return RepositoryApiFp(this.configuration).updateRepository(repositoryId, repositoryUpdateTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Download a repositorie based on its name
+     * @param {string} repositoryId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RepositoryApi
+     */
+    public zipDownloadProject(repositoryId: string, options?: any) {
+        return RepositoryApiFp(this.configuration).zipDownloadProject(repositoryId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
